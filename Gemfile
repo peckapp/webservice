@@ -38,3 +38,13 @@ gem 'spring',        group: :development
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+
+
+### SCRAPING
+# Feedjira provides a powerful and dead simple RSS scraping tool
+gem 'feedjira'
+
+# nokogiri HTML, XML, SAX, and Reader parser. can search using XPath or CSS selectors
+gem 'nokogiri'
+
+
