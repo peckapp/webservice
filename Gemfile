@@ -39,7 +39,6 @@ gem 'spring',        group: :development
 # gem 'debugger', group: [:development, :test]
 
 
-
 ### SCRAPING
 # Feedjira provides a powerful and dead simple RSS scraping tool
 gem 'feedjira'
@@ -47,4 +46,5 @@ gem 'feedjira'
 # nokogiri HTML, XML, SAX, and Reader parser. can search using XPath or CSS selectors
 gem 'nokogiri'
 
-
+# Clockwork as a replacement for cron to handle automated job scheduling. Useful for scraping tasks
+gem 'clockwork'
