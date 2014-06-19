@@ -11,7 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140619195439) do
+ActiveRecord::Schema.define(version: 20140619231324) do
+
+  create_table "activity_logs", force: true do |t|
+    t.integer  "sender",           null: false
+    t.integer  "receiver",         null: false
+    t.integer  "event_author",     null: false
+    t.string   "category",         null: false
+    t.integer  "from_event"
+    t.integer  "circle_id"
+    t.string   "type_of_activity", null: false
+    t.string   "message",          null: false
+    t.boolean  "read_status",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "activity_logs", ["circle_id"], name: "index_activity_logs_on_circle_id", using: :btree
+  add_index "activity_logs", ["event_author"], name: "index_activity_logs_on_event_author", using: :btree
+  add_index "activity_logs", ["from_event"], name: "index_activity_logs_on_from_event", using: :btree
+  add_index "activity_logs", ["receiver"], name: "index_activity_logs_on_receiver", using: :btree
+  add_index "activity_logs", ["sender"], name: "index_activity_logs_on_sender", using: :btree
+  add_index "activity_logs", ["type_of_activity"], name: "index_activity_logs_on_type_of_activity", using: :btree
 
   create_table "athletic_events", force: true do |t|
     t.integer  "institution_id",   null: false
@@ -74,6 +95,19 @@ ActiveRecord::Schema.define(version: 20140619195439) do
   add_index "circles", ["institution_id"], name: "index_circles_on_institution_id", using: :btree
   add_index "circles", ["user_id"], name: "index_circles_on_user_id", using: :btree
 
+  create_table "clubs", force: true do |t|
+    t.integer  "institution_id", null: false
+    t.string   "club_name",      null: false
+    t.text     "description"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "clubs", ["club_name"], name: "index_clubs_on_club_name", using: :btree
+  add_index "clubs", ["institution_id"], name: "index_clubs_on_institution_id", using: :btree
+  add_index "clubs", ["user_id"], name: "index_clubs_on_user_id", using: :btree
+
   create_table "configurations", force: true do |t|
     t.integer  "institution_id",   null: false
     t.string   "mascot"
@@ -93,6 +127,16 @@ ActiveRecord::Schema.define(version: 20140619195439) do
 
   add_index "departments", ["institution_id"], name: "index_departments_on_institution_id", using: :btree
   add_index "departments", ["name"], name: "index_departments_on_name", using: :btree
+
+  create_table "dining_opportunities", force: true do |t|
+    t.string   "type",           null: false
+    t.integer  "institution_id", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "dining_opportunities", ["institution_id"], name: "index_dining_opportunities_on_institution_id", using: :btree
+  add_index "dining_opportunities", ["type"], name: "index_dining_opportunities_on_type", using: :btree
 
   create_table "dining_periods", force: true do |t|
     t.integer  "dining_place_id",       null: false
@@ -121,6 +165,31 @@ ActiveRecord::Schema.define(version: 20140619195439) do
   add_index "dining_places", ["institution_id"], name: "index_dining_places_on_institution_id", using: :btree
   add_index "dining_places", ["name"], name: "index_dining_places_on_name", using: :btree
 
+  create_table "event_attendees", force: true do |t|
+    t.integer  "user_id",        null: false
+    t.integer  "added_by",       null: false
+    t.string   "category",       null: false
+    t.integer  "event_attended", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "event_attendees", ["added_by"], name: "index_event_attendees_on_added_by", using: :btree
+  add_index "event_attendees", ["event_attended"], name: "index_event_attendees_on_event_attended", using: :btree
+  add_index "event_attendees", ["user_id"], name: "index_event_attendees_on_user_id", using: :btree
+
+  create_table "event_comments", force: true do |t|
+    t.string   "category",     null: false
+    t.integer  "comment_from", null: false
+    t.integer  "user_id",      null: false
+    t.text     "comment",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "event_comments", ["comment_from"], name: "index_event_comments_on_comment_from", using: :btree
+  add_index "event_comments", ["user_id"], name: "index_event_comments_on_user_id", using: :btree
+
   create_table "event_members", force: true do |t|
     t.integer  "simple_event_id", null: false
     t.integer  "user_id",         null: false
@@ -133,6 +202,18 @@ ActiveRecord::Schema.define(version: 20140619195439) do
   add_index "event_members", ["invited_by"], name: "index_event_members_on_invited_by", using: :btree
   add_index "event_members", ["simple_event_id"], name: "index_event_members_on_simple_event_id", using: :btree
   add_index "event_members", ["user_id"], name: "index_event_members_on_user_id", using: :btree
+
+  create_table "event_views", force: true do |t|
+    t.integer  "user_id",      null: false
+    t.string   "category",     null: false
+    t.integer  "event_viewed", null: false
+    t.datetime "date_viewed"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "event_views", ["event_viewed"], name: "index_event_views_on_event_viewed", using: :btree
+  add_index "event_views", ["user_id"], name: "index_event_views_on_user_id", using: :btree
 
   create_table "institutions", force: true do |t|
     t.string   "name",             null: false
@@ -181,6 +262,29 @@ ActiveRecord::Schema.define(version: 20140619195439) do
   add_index "menu_items", ["dining_place_id"], name: "index_menu_items_on_dining_place_id", using: :btree
   add_index "menu_items", ["institution_id"], name: "index_menu_items_on_institution_id", using: :btree
 
+  create_table "notification_views", force: true do |t|
+    t.integer  "user_id",         null: false
+    t.integer  "activity_log_id", null: false
+    t.datetime "date_viewed"
+    t.boolean  "viewed",          null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "notification_views", ["activity_log_id"], name: "index_notification_views_on_activity_log_id", using: :btree
+  add_index "notification_views", ["user_id"], name: "index_notification_views_on_user_id", using: :btree
+
+  create_table "push_notifications", force: true do |t|
+    t.integer  "user_id",    null: false
+    t.string   "type",       null: false
+    t.string   "response"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "push_notifications", ["type"], name: "index_push_notifications_on_type", using: :btree
+  add_index "push_notifications", ["user_id"], name: "index_push_notifications_on_user_id", using: :btree
+
   create_table "simple_events", force: true do |t|
     t.string   "title",             limit: 100,                 null: false
     t.text     "event_description"
@@ -205,6 +309,26 @@ ActiveRecord::Schema.define(version: 20140619195439) do
   add_index "simple_events", ["institution_id"], name: "index_simple_events_on_institution_id", using: :btree
   add_index "simple_events", ["title"], name: "index_simple_events_on_title", using: :btree
   add_index "simple_events", ["user_id"], name: "index_simple_events_on_user_id", using: :btree
+
+  create_table "subscriptions", force: true do |t|
+    t.integer  "user_id",       null: false
+    t.string   "category",      null: false
+    t.integer  "subscribed_to", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "subscriptions", ["subscribed_to"], name: "index_subscriptions_on_subscribed_to", using: :btree
+  add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
+
+  create_table "user_device_tokens", force: true do |t|
+    t.integer  "user_id",    null: false
+    t.string   "token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_device_tokens", ["user_id"], name: "index_user_device_tokens_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.integer  "institution_id",                  null: false
