@@ -11,7 +11,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140619174757) do
+ActiveRecord::Schema.define(version: 20140619184123) do
+
+  create_table "circle_members", force: true do |t|
+    t.integer  "circle_id",  null: false
+    t.integer  "user_id",    null: false
+    t.integer  "invited_by", null: false
+    t.datetime "date_added"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "circle_members", ["circle_id"], name: "index_circle_members_on_circle_id", using: :btree
+  add_index "circle_members", ["invited_by"], name: "index_circle_members_on_invited_by", using: :btree
+  add_index "circle_members", ["user_id"], name: "index_circle_members_on_user_id", using: :btree
+
+  create_table "circles", force: true do |t|
+    t.integer  "institution_id", null: false
+    t.integer  "user_id",        null: false
+    t.string   "circle_name",    null: false
+    t.string   "image_link"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "circles", ["circle_name"], name: "index_circles_on_circle_name", using: :btree
+  add_index "circles", ["institution_id"], name: "index_circles_on_institution_id", using: :btree
+  add_index "circles", ["user_id"], name: "index_circles_on_user_id", using: :btree
 
   create_table "configurations", force: true do |t|
     t.integer  "institution_id",   null: false
@@ -32,6 +58,46 @@ ActiveRecord::Schema.define(version: 20140619174757) do
 
   add_index "departments", ["institution_id"], name: "index_departments_on_institution_id", using: :btree
   add_index "departments", ["name"], name: "index_departments_on_name", using: :btree
+
+  create_table "dining_periods", force: true do |t|
+    t.integer  "dining_place_id",       null: false
+    t.integer  "dining_opportunity_id", null: false
+    t.time     "start_time",            null: false
+    t.time     "end_time",              null: false
+    t.integer  "day_of_week"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "dining_periods", ["dining_opportunity_id"], name: "index_dining_periods_on_dining_opportunity_id", using: :btree
+  add_index "dining_periods", ["dining_place_id"], name: "index_dining_periods_on_dining_place_id", using: :btree
+
+  create_table "dining_places", force: true do |t|
+    t.integer  "institution_id", null: false
+    t.string   "name",           null: false
+    t.string   "details_link"
+    t.float    "gps_longitude"
+    t.float    "gps_latitude"
+    t.float    "range"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "dining_places", ["institution_id"], name: "index_dining_places_on_institution_id", using: :btree
+  add_index "dining_places", ["name"], name: "index_dining_places_on_name", using: :btree
+
+  create_table "event_members", force: true do |t|
+    t.integer  "event_id",   null: false
+    t.integer  "user_id",    null: false
+    t.integer  "invited_by", null: false
+    t.datetime "date_added"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "event_members", ["event_id"], name: "index_event_members_on_event_id", using: :btree
+  add_index "event_members", ["invited_by"], name: "index_event_members_on_invited_by", using: :btree
+  add_index "event_members", ["user_id"], name: "index_event_members_on_user_id", using: :btree
 
   create_table "events", force: true do |t|
     t.string   "title",             limit: 100,                 null: false
@@ -88,6 +154,22 @@ ActiveRecord::Schema.define(version: 20140619174757) do
 
   add_index "locations", ["institution_id"], name: "index_locations_on_institution_id", using: :btree
   add_index "locations", ["name"], name: "index_locations_on_name", using: :btree
+
+  create_table "menu_items", force: true do |t|
+    t.integer  "institution_id",   null: false
+    t.integer  "dining_place_id",  null: false
+    t.integer  "dining_period_id"
+    t.string   "details_link"
+    t.string   "small_price"
+    t.string   "large_price"
+    t.string   "combo_price"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "menu_items", ["dining_period_id"], name: "index_menu_items_on_dining_period_id", using: :btree
+  add_index "menu_items", ["dining_place_id"], name: "index_menu_items_on_dining_place_id", using: :btree
+  add_index "menu_items", ["institution_id"], name: "index_menu_items_on_institution_id", using: :btree
 
   create_table "users", force: true do |t|
     t.integer  "institution_id",                  null: false
