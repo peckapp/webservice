@@ -15,12 +15,14 @@ default: &default
   pool: 5
   username: peck_dev_user
   password: QKyJ2]BbiQD{6W6=H72)iNRV&
-  # socket: /tmp/mysql.sock
-  socket: /var/run/mysqld/mysqld.sock
+
+
 
 development:
   <<: *default
   database: peck_development
+  # osx socket
+  socket: /tmp/mysql.sock
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -28,6 +30,8 @@ development:
 test:
   <<: *default
   database: webservice_test
+  # osx socket
+  socket: /tmp/mysql.sock
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -53,3 +57,5 @@ production:
   database: webservice_production
   username: webservice
   password: <%= ENV['WEBSERVICE_DATABASE_PASSWORD'] %>
+  # ubuntu socket
+  socket: /var/run/mysqld/mysqld.sock
