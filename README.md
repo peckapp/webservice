@@ -12,22 +12,33 @@ This rails application serves as the API with which the mobile applications inte
  - automated, customized tasks that retreive data from member institutions at regular and dynamic time intervals to ensure that the most up-to-date information is being presented to users
  - accuracy and reliability of this system is absolutely key to our service
 
+## Development environments
+
+- ruby version 2.1.2
+- `rvm` ruby version manager tool
+- `mysql` installation
+
+
+**IMPORTANT** DO NOT use the `rbenv` ruby versioning tool with this project. All developers must be using the `rvm` tool found at the [RVM official website](https://rvm.io) where you can get information on the install process. Before attempting to work in the app, make sure that all remnants of rbenv has been removed from you shell configuration files, including `.bash_profile`, `.bashrc`, `.profile`, and any others that your shell may load on startup.
+
+Setup a mysql database and user for the development environment based on the settings specified in `config/database.yml`.
+
 ## Production environment
 
-While this application will be largely run in development environments on the Mac OSX laptops of the developers, the production environment will be Ubuntu 12.04 running the Nginx web server.
+While this application will be built in development environments on the Mac OSX laptops of the developers, the production environment will be Ubuntu 12.04 running the Nginx web server. (CentOS is another more stable server linux distribution that is an optino as well. It is less feature-rich however.)
 
-There are many options for the structure of the backend system, several of which are described in the digital-ocean documentation linked to in the wiki pages.
+There are many options for the structure of the backend system, several of which are described in the Digital Ocean documentation linked to in the wiki pages.
 
 ### System setup
 
 #### Ruby
-We plan to be using Ruby 2.1.1 and the various Gems specified in the gem file, with the major extensions to the standard rails dependencies falling into the catagory of scraping libraries.
+We will be using Ruby 2.1.2 and the various Gems specified in the gem file, with the major extensions to the standard rails dependencies falling into the catagory of scraping libraries.
 
 #### Database Setup
 We will be using the mySQL database for this rails application. The database configuration information that needs to be matched on your development machine can be found in the database.yml configuration file.
 
 #### Automated Services
-The scraping jobs will be running at automated intervals in the production environment, as well as other database analysis tasks to manage subscriptions and seggustions of events to the users.
+The scraping jobs will be running at automated intervals in the production environment, as well as other database analysis tasks to manage subscriptions and seggustions of events to the users. These tasks will be automated using the `clockwork` ruby gem.
 
 ### Our initial production system
 
