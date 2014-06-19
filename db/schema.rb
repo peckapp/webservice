@@ -11,7 +11,42 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140619184123) do
+ActiveRecord::Schema.define(version: 20140619195439) do
+
+  create_table "athletic_events", force: true do |t|
+    t.integer  "institution_id",   null: false
+    t.integer  "athletic_team_id", null: false
+    t.string   "opponent"
+    t.float    "team_score"
+    t.float    "opponent_score"
+    t.string   "home_or_away"
+    t.string   "location",         null: false
+    t.string   "result"
+    t.text     "note"
+    t.datetime "date_and_time"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "athletic_events", ["athletic_team_id"], name: "index_athletic_events_on_athletic_team_id", using: :btree
+  add_index "athletic_events", ["date_and_time"], name: "index_athletic_events_on_date_and_time", using: :btree
+  add_index "athletic_events", ["institution_id"], name: "index_athletic_events_on_institution_id", using: :btree
+  add_index "athletic_events", ["location"], name: "index_athletic_events_on_location", using: :btree
+  add_index "athletic_events", ["opponent"], name: "index_athletic_events_on_opponent", using: :btree
+
+  create_table "athletic_teams", force: true do |t|
+    t.integer  "institution_id", null: false
+    t.string   "sport_name",     null: false
+    t.string   "gender",         null: false
+    t.string   "head_coach"
+    t.string   "team_link"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "athletic_teams", ["gender"], name: "index_athletic_teams_on_gender", using: :btree
+  add_index "athletic_teams", ["institution_id"], name: "index_athletic_teams_on_institution_id", using: :btree
+  add_index "athletic_teams", ["sport_name"], name: "index_athletic_teams_on_sport_name", using: :btree
 
   create_table "circle_members", force: true do |t|
     t.integer  "circle_id",  null: false
@@ -87,42 +122,17 @@ ActiveRecord::Schema.define(version: 20140619184123) do
   add_index "dining_places", ["name"], name: "index_dining_places_on_name", using: :btree
 
   create_table "event_members", force: true do |t|
-    t.integer  "event_id",   null: false
-    t.integer  "user_id",    null: false
-    t.integer  "invited_by", null: false
+    t.integer  "simple_event_id", null: false
+    t.integer  "user_id",         null: false
+    t.integer  "invited_by",      null: false
     t.datetime "date_added"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "event_members", ["event_id"], name: "index_event_members_on_event_id", using: :btree
   add_index "event_members", ["invited_by"], name: "index_event_members_on_invited_by", using: :btree
+  add_index "event_members", ["simple_event_id"], name: "index_event_members_on_simple_event_id", using: :btree
   add_index "event_members", ["user_id"], name: "index_event_members_on_user_id", using: :btree
-
-  create_table "events", force: true do |t|
-    t.string   "title",             limit: 100,                 null: false
-    t.text     "event_description"
-    t.integer  "institution_id",                                null: false
-    t.integer  "user_id"
-    t.integer  "department_id"
-    t.integer  "club_id"
-    t.boolean  "open",                          default: false
-    t.string   "image_url"
-    t.integer  "circle_id"
-    t.integer  "comment_count"
-    t.datetime "start_date",                                    null: false
-    t.datetime "end_date",                                      null: false
-    t.boolean  "deleted",                       default: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "events", ["circle_id"], name: "index_events_on_circle_id", using: :btree
-  add_index "events", ["club_id"], name: "index_events_on_club_id", using: :btree
-  add_index "events", ["department_id"], name: "index_events_on_department_id", using: :btree
-  add_index "events", ["institution_id"], name: "index_events_on_institution_id", using: :btree
-  add_index "events", ["title"], name: "index_events_on_title", using: :btree
-  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
   create_table "institutions", force: true do |t|
     t.string   "name",             null: false
@@ -170,6 +180,31 @@ ActiveRecord::Schema.define(version: 20140619184123) do
   add_index "menu_items", ["dining_period_id"], name: "index_menu_items_on_dining_period_id", using: :btree
   add_index "menu_items", ["dining_place_id"], name: "index_menu_items_on_dining_place_id", using: :btree
   add_index "menu_items", ["institution_id"], name: "index_menu_items_on_institution_id", using: :btree
+
+  create_table "simple_events", force: true do |t|
+    t.string   "title",             limit: 100,                 null: false
+    t.text     "event_description"
+    t.integer  "institution_id",                                null: false
+    t.integer  "user_id"
+    t.integer  "department_id"
+    t.integer  "club_id"
+    t.boolean  "open",                          default: false
+    t.string   "image_url"
+    t.integer  "circle_id"
+    t.integer  "comment_count"
+    t.datetime "start_date",                                    null: false
+    t.datetime "end_date",                                      null: false
+    t.boolean  "deleted",                       default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "simple_events", ["circle_id"], name: "index_simple_events_on_circle_id", using: :btree
+  add_index "simple_events", ["club_id"], name: "index_simple_events_on_club_id", using: :btree
+  add_index "simple_events", ["department_id"], name: "index_simple_events_on_department_id", using: :btree
+  add_index "simple_events", ["institution_id"], name: "index_simple_events_on_institution_id", using: :btree
+  add_index "simple_events", ["title"], name: "index_simple_events_on_title", using: :btree
+  add_index "simple_events", ["user_id"], name: "index_simple_events_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.integer  "institution_id",                  null: false
