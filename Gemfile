@@ -48,3 +48,6 @@ gem 'nokogiri'
 
 # Clockwork as a replacement for cron to handle automated job scheduling. Useful for scraping tasks
 gem 'clockwork'
+
+# Bcrypt for password encryption
+gem 'bcrypt', '~> 3.1.7'

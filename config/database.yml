@@ -14,13 +14,13 @@ default: &default
   encoding: utf8
   pool: 5
   username: peck_dev_user
-  password: QKyJ2]BbiQD{6W6=H72)iNRV&
-  # socket: /tmp/mysql.sock
-  socket: /var/run/mysqld/mysqld.sock
+  password: peckapp
+  socket: /tmp/mysql.sock
+  #socket: /var/run/mysqld/mysqld.sock
 
 development:
   <<: *default
-  database: peck_development
+  database: webservice_development
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
