@@ -5,4 +5,6 @@ class Institution < ActiveRecord::Base
   has_many :locations
   has_many :dining_places
   has_many :menu_items
+  has_many :circles #anthoney
+
 end
