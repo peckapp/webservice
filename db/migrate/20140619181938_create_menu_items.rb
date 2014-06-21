@@ -1,6 +1,7 @@
 class CreateMenuItems < ActiveRecord::Migration
   def change
     create_table :menu_items do |t|
+      t.string "name", :null => false
       t.integer "institution_id", :null => false # link to institutions table
       t.integer "dining_place_id", :null => false # link to dining places table
       t.integer "dining_period_id" # could this ever be null??

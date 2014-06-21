@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140619231324) do
+ActiveRecord::Schema.define(version: 20140620151904) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
@@ -109,14 +109,11 @@ ActiveRecord::Schema.define(version: 20140619231324) do
   add_index "clubs", ["user_id"], name: "index_clubs_on_user_id", using: :btree
 
   create_table "configurations", force: true do |t|
-    t.integer  "institution_id",   null: false
     t.string   "mascot"
     t.string   "config_file_name", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "configurations", ["institution_id"], name: "index_configurations_on_institution_id", using: :btree
 
   create_table "departments", force: true do |t|
     t.string   "name",           null: false
@@ -151,6 +148,14 @@ ActiveRecord::Schema.define(version: 20140619231324) do
   add_index "dining_periods", ["dining_opportunity_id"], name: "index_dining_periods_on_dining_opportunity_id", using: :btree
   add_index "dining_periods", ["dining_place_id"], name: "index_dining_periods_on_dining_place_id", using: :btree
 
+  create_table "dining_periods_menu_items", id: false, force: true do |t|
+    t.integer "dining_period_id", null: false
+    t.integer "menu_item_id",     null: false
+  end
+
+  add_index "dining_periods_menu_items", ["dining_period_id"], name: "index_dining_periods_menu_items_on_dining_period_id", using: :btree
+  add_index "dining_periods_menu_items", ["menu_item_id"], name: "index_dining_periods_menu_items_on_menu_item_id", using: :btree
+
   create_table "dining_places", force: true do |t|
     t.integer  "institution_id", null: false
     t.string   "name",           null: false
@@ -164,6 +169,14 @@ ActiveRecord::Schema.define(version: 20140619231324) do
 
   add_index "dining_places", ["institution_id"], name: "index_dining_places_on_institution_id", using: :btree
   add_index "dining_places", ["name"], name: "index_dining_places_on_name", using: :btree
+
+  create_table "dining_places_menu_items", id: false, force: true do |t|
+    t.integer "dining_place_id", null: false
+    t.integer "menu_item_id",    null: false
+  end
+
+  add_index "dining_places_menu_items", ["dining_place_id"], name: "index_dining_places_menu_items_on_dining_place_id", using: :btree
+  add_index "dining_places_menu_items", ["menu_item_id"], name: "index_dining_places_menu_items_on_menu_item_id", using: :btree
 
   create_table "event_attendees", force: true do |t|
     t.integer  "user_id",        null: false
@@ -247,6 +260,7 @@ ActiveRecord::Schema.define(version: 20140619231324) do
   add_index "locations", ["name"], name: "index_locations_on_name", using: :btree
 
   create_table "menu_items", force: true do |t|
+    t.string   "name",             null: false
     t.integer  "institution_id",   null: false
     t.integer  "dining_place_id",  null: false
     t.integer  "dining_period_id"
