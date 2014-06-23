@@ -5,19 +5,32 @@ class User < ActiveRecord::Base
   has_secure_password
   ########
 
+  ### user's home institution ###
+  belongs_to :institution #
+  ###############################
 
-  belongs_to :institution
-  has_many :circles, :through => :circle_members #anthoney
-  has_and_belongs_to_many :circle_members
+  #### CIRCLES ###
+  has_many :circles, :through => :circle_members #
+  has_and_belongs_to_many :circle_members # 
+  ################
 
-  has_many :simple_events, :through => :event_members # anthoney
-  has_and_belongs_to_many :event_members #anthoney
+  ### EVENTS ###
+  has_many :simple_events #
+  has_and_belongs_to_many :event_attendees #anthoney
+  has_and_belongs_to_many :event_attendees #anthoney
+  ##############
 
+  ### CLUBS ####
+  belongs_to :club #
+  ##############
 
-  belongs_to :club #anthoney. Admin belongs to the club.
+  ### EVENT COMMENTS ###
   has_many :event_comments # anthoney. A user can have many event comments.
+  ######################
 
+  ### SUBSCRIPTIONS ###
   has_and_belongs_to_many :subscriptions #anthoney.
+  #####################
 
   # implementation of event attendees here...
 

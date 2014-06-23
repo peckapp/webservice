@@ -3,7 +3,7 @@ class CreateActivityLogs < ActiveRecord::Migration
     create_table :activity_logs do |t|
       t.integer "sender", :null => false, :references => "users" # links to users table
       t.integer "receiver", :null => false, :references => "users"
-      t.integer "event_author", :null => false, :references => "users"
+      # t.integer "event_author", :null => false, :references => "users"
       t.string "category", :null => false # simple or athletic event?
       t.integer "from_event"
       t.integer "circle_id" # links to circles table
@@ -15,7 +15,7 @@ class CreateActivityLogs < ActiveRecord::Migration
     end
     add_index("activity_logs", "sender")
     add_index("activity_logs", "receiver")
-    add_index("activity_logs", "event_author")
+    # add_index("activity_logs", "event_author")
     add_index("activity_logs", "from_event")
     add_index("activity_logs", "circle_id")
     add_index("activity_logs", "type_of_activity")

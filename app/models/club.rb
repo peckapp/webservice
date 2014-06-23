@@ -1,5 +1,11 @@
 class Club < ActiveRecord::Base
+
+  ### club event creation ###
   has_many :simple_events
-  belongs_to :institution # anthoney.club belongs to specific institution
-  has_one :admin, :class_name => "User", :foreign_key => "user_id" # anthoney. a club has one admin.
+
+  ### club home institution ###
+  belongs_to :institution
+
+  ### club administrator (only one admin per club?) ###
+  has_one :admin, :class_name => "User", :foreign_key => "user_id" 
 end

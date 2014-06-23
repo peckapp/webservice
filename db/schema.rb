@@ -11,12 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140620151904) do
+ActiveRecord::Schema.define(version: 20140620183254) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
     t.integer  "receiver",         null: false
-    t.integer  "event_author",     null: false
     t.string   "category",         null: false
     t.integer  "from_event"
     t.integer  "circle_id"
@@ -28,7 +27,6 @@ ActiveRecord::Schema.define(version: 20140620151904) do
   end
 
   add_index "activity_logs", ["circle_id"], name: "index_activity_logs_on_circle_id", using: :btree
-  add_index "activity_logs", ["event_author"], name: "index_activity_logs_on_event_author", using: :btree
   add_index "activity_logs", ["from_event"], name: "index_activity_logs_on_from_event", using: :btree
   add_index "activity_logs", ["receiver"], name: "index_activity_logs_on_receiver", using: :btree
   add_index "activity_logs", ["sender"], name: "index_activity_logs_on_sender", using: :btree
@@ -81,6 +79,14 @@ ActiveRecord::Schema.define(version: 20140620151904) do
   add_index "circle_members", ["circle_id"], name: "index_circle_members_on_circle_id", using: :btree
   add_index "circle_members", ["invited_by"], name: "index_circle_members_on_invited_by", using: :btree
   add_index "circle_members", ["user_id"], name: "index_circle_members_on_user_id", using: :btree
+
+  create_table "circle_members_users", id: false, force: true do |t|
+    t.integer "user_id",          null: false
+    t.integer "circle_member_id", null: false
+  end
+
+  add_index "circle_members_users", ["circle_member_id"], name: "index_circle_members_users_on_circle_member_id", using: :btree
+  add_index "circle_members_users", ["user_id"], name: "index_circle_members_users_on_user_id", using: :btree
 
   create_table "circles", force: true do |t|
     t.integer  "institution_id", null: false
@@ -202,19 +208,6 @@ ActiveRecord::Schema.define(version: 20140620151904) do
 
   add_index "event_comments", ["comment_from"], name: "index_event_comments_on_comment_from", using: :btree
   add_index "event_comments", ["user_id"], name: "index_event_comments_on_user_id", using: :btree
-
-  create_table "event_members", force: true do |t|
-    t.integer  "simple_event_id", null: false
-    t.integer  "user_id",         null: false
-    t.integer  "invited_by",      null: false
-    t.datetime "date_added"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "event_members", ["invited_by"], name: "index_event_members_on_invited_by", using: :btree
-  add_index "event_members", ["simple_event_id"], name: "index_event_members_on_simple_event_id", using: :btree
-  add_index "event_members", ["user_id"], name: "index_event_members_on_user_id", using: :btree
 
   create_table "event_views", force: true do |t|
     t.integer  "user_id",      null: false
