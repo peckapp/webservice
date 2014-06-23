@@ -9,4 +9,7 @@ class ActivityLog < ActiveRecord::Base
   ### receiver of activity log ###
   belongs_to :receiver, :class_name => "User", :foreign_key => "receiver"
 
+  ### activity log => notification view ###
+  has_one :notification_view #
+
 end

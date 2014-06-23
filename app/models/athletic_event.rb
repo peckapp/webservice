@@ -1,4 +1,8 @@
 class AthleticEvent < ActiveRecord::Base
-  belongs_to :institution # anthoney.
-  belongs_to :athletic_team # anthoney. 
+# verified
+  ### institution of event ###
+  belongs_to :institution #
+
+  ### team concerned ###
+  belongs_to :athletic_team #
 end

@@ -1,4 +1,8 @@
 class NotificationView < ActiveRecord::Base
-  has_many :users # anthoney.
-  # activity logs? implement here.
+# verified
+  ### notofication is viewed by its host user ###
+  belongs_to :user #
+
+  ### notification => activity log ###
+  belongs_to :activity_log #
 end

@@ -1,4 +1,8 @@
 class AthleticTeam < ActiveRecord::Base
-  has_many :athletic_events # anthoney. team has many athletic events
-  belongs_to :institution # anthoney. team belongs to the institution.
+# verified
+  ### team concerned in each athletic event ###
+  has_many :athletic_events #
+
+  ### home institution of each athletic team ###
+  belongs_to :institution #
 end

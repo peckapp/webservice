@@ -1,5 +1,5 @@
 class Institution < ActiveRecord::Base
-
+# verified
   ### home to these users ###
   has_many :users #
 
@@ -21,19 +21,19 @@ class Institution < ActiveRecord::Base
   ### home institution for each circle ###
   has_many :circles #
 
-  ###
-  has_many :athletic_events # anthoney. an institution has many athletic events.
+  ### home institution of each athletic event ###
+  has_many :athletic_events #
 
-  ###
-  has_many :athletic_teams # anthoney. an institution has many athletic teams.
+  ### home institution of each athletic team ###
+  has_many :athletic_teams #
 
-  ###
-  has_many :clubs # anthoney. an institution has many clubs.
+  ### home institution of each club ###
+  has_many :clubs #
 
   ### home institution for each dining opportunity ###
   has_many :dining_opportunities #
 
-  ###
-  has_many :simple_events
+  ### institution where event is taking place ###
+  has_many :simple_events #
 
 end

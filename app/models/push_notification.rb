@@ -1,3 +1,5 @@
 class PushNotification < ActiveRecord::Base
-  belongs_to :user # anthoney.
+# verified
+  ### user associated to notification ###
+  belongs_to :user #
 end

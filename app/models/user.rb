@@ -11,13 +11,13 @@ class User < ActiveRecord::Base
 
   #### CIRCLES ###
   has_many :circles, :through => :circle_members #
-  has_and_belongs_to_many :circle_members # 
+  has_and_belongs_to_many :circle_members #
   ################
 
   ### EVENTS ###
   has_many :simple_events #
-  has_and_belongs_to_many :event_attendees #anthoney
-  has_and_belongs_to_many :event_attendees #anthoney
+  has_and_belongs_to_many :event_attendees ## => attendee
+  # has_and_belongs_to_many :event_attendees ## => inviter
   ##############
 
   ### CLUBS ####
@@ -25,21 +25,29 @@ class User < ActiveRecord::Base
   ##############
 
   ### EVENT COMMENTS ###
-  has_many :event_comments # anthoney. A user can have many event comments.
+  has_many :event_comments #
   ######################
 
   ### SUBSCRIPTIONS ###
-  has_and_belongs_to_many :subscriptions #anthoney.
+  has_and_belongs_to_many :subscriptions #
   #####################
 
-  # implementation of event attendees here...
+  ### devices on which peck is used ###
+  has_and_belongs_to_many :user_device_tokens #
+  #####################################
 
-  has_one :user_device_token # anthoney
+  ### user viewed a specific event ###
+  belongs_to :event_view #
+  ####################################
 
-  belongs_to :event_view # anthoney
+  ### ACTIVITY LOG ###
+  has_many :activity_logs ## => sender
+  # has_many :activity_logs ## => receiver
+  ####################
 
-  belongs_to :notification_view # anthoney
-
-  has_many :push_notifications # anthoney
+  ### NOTIFICATIONS ###
+  has_many :notification_views #
+  has_many :push_notifications #
+  #####################
 
 end

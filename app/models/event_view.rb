@@ -1,3 +1,5 @@
 class EventView < ActiveRecord::Base
-  has_many :users # anthoney.
+# verified
+  ### user who viewed the event ###
+  has_many :users #
 end
