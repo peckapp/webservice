@@ -5,7 +5,7 @@ class CreateCircleMembers < ActiveRecord::Migration
       t.integer "user_id", :null => false # links to users table. Member
       t.integer "invited_by", :null => false, :references => "users" # links to users table. member was invited by this user
       t.datetime "date_added"
-
+      # t.boolean "administrator", :null => false      
       t.timestamps
     end
     add_index("circle_members", "circle_id")

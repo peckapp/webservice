@@ -10,6 +10,7 @@ class CreateAthleticEvents < ActiveRecord::Migration
       t.string "location", :null => false
       t.string "result" # i.e. position, score, etc
       t.text "note" # other information about event
+      # t.string "creator",    creater of the event
       t.datetime "date_and_time"
 
       t.timestamps

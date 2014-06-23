@@ -5,6 +5,7 @@ class CreateCircles < ActiveRecord::Migration
       t.integer "user_id", :null => false # links to users table. Author
       t.string "circle_name", :null => false
       t.string "image_link"
+      # t.boolean "public", :null => false     is the circle viewable by everyone?
 
       t.timestamps
     end

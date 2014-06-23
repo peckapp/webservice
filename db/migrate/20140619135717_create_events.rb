@@ -16,7 +16,6 @@ class CreateEvents < ActiveRecord::Migration
       t.datetime "start_date", :null => false
       t.datetime "end_date", :null => false
       t.boolean "deleted", :default => false # keeps track of whether event has been deleted
-
       t.timestamps
     end
     add_index("events", "title")
