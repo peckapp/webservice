@@ -4,7 +4,6 @@ class CreateDiningPeriodsMenuItemsJoin < ActiveRecord::Migration
       t.integer "dining_period_id", :null => false
       t.integer "menu_item_id", :null => false
     end
-    add_index("dining_periods_menu_items", "dining_period_id")
-    add_index("dining_periods_menu_items", "menu_item_id")
+    add_index("dining_periods_menu_items", ["dining_period_id", "menu_item_id"], :name => "dining_periods_menu_items_index")
   end
 end

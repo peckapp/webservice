@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-
+# verified
   ########
   # each user has an encrypted secure password
   has_secure_password
@@ -16,8 +16,8 @@ class User < ActiveRecord::Base
 
   ### EVENTS ###
   has_many :simple_events #
-  has_and_belongs_to_many :event_attendees ## => attendee
-  # has_and_belongs_to_many :event_attendees ## => inviter
+  has_and_belongs_to_many :event_attendees, :join_table => "attendees_users" #
+  has_and_belongs_to_many :event_attendees, :join_table => "inviters_users" #
   ##############
 
   ### CLUBS ####
@@ -29,7 +29,7 @@ class User < ActiveRecord::Base
   ######################
 
   ### SUBSCRIPTIONS ###
-  has_and_belongs_to_many :subscriptions #
+  has_many :subscriptions #
   #####################
 
   ### devices on which peck is used ###
@@ -41,8 +41,8 @@ class User < ActiveRecord::Base
   ####################################
 
   ### ACTIVITY LOG ###
-  has_many :activity_logs ## => sender
-  # has_many :activity_logs ## => receiver
+  has_many :activity_logs_sent, :class_name => "ActivityLog" #
+  has_many :activity_logs_received, :class_name => "ActivityLog" #
   ####################
 
   ### NOTIFICATIONS ###
