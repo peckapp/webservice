@@ -48,3 +48,6 @@ gem 'nokogiri'
 
 # Clockwork as a replacement for cron to handle automated job scheduling. Useful for scraping tasks
 gem 'clockwork'
+
+# Bloom Filter for crawlers to keep track of which pages have been traversed
+gem 'bloomfilter-rb', '~> 2.1.1'
