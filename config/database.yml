@@ -14,13 +14,12 @@ default: &default
   encoding: utf8
   pool: 5
   username: peck_dev_user
-  password: QKyJ2]BbiQD{6W6=H72)iNRV&
-
 
 
 development:
   <<: *default
-  database: peck_development
+  database: webservice_development
+  password: peckapp
   # osx socket
   socket: /tmp/mysql.sock
 

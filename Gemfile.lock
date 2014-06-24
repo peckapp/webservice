@@ -30,6 +30,7 @@ GEM
     arel (5.0.1.20140414130214)
     bloomfilter-rb (2.1.1)
       redis
+    bcrypt (3.1.7)
     builder (3.2.2)
     clockwork (0.7.5)
       activesupport
@@ -131,7 +132,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+<<<<<<< HEAD
   bloomfilter-rb (~> 2.1.1)
+=======
+  bcrypt (~> 3.1.7)
+>>>>>>> 671b96ed81b4691001e5b623e6d338ca62fe3920
   clockwork
   coffee-rails (~> 4.0.0)
   feedjira

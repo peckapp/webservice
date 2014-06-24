@@ -51,3 +51,6 @@ gem 'clockwork'
 
 # Bloom Filter for crawlers to keep track of which pages have been traversed
 gem 'bloomfilter-rb', '~> 2.1.1'
+
+# Bcrypt for password encryption
+gem 'bcrypt', '~> 3.1.7'
