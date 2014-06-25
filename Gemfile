@@ -57,3 +57,6 @@ gem 'bcrypt', '~> 3.1.7'
 
 # rabl rails
 gem 'rabl-rails'
+
+# devise
+gem 'devise', '~> 3.2.4'
