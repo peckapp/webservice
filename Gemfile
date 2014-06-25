@@ -54,3 +54,6 @@ gem 'bloomfilter-rb', '~> 2.1.1'
 
 # Bcrypt for password encryption
 gem 'bcrypt', '~> 3.1.7'
+
+# rabl rails
+gem 'rabl-rails'
