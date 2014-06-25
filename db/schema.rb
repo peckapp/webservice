@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140623190625) do
+ActiveRecord::Schema.define(version: 20140624130823) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
@@ -239,6 +239,17 @@ ActiveRecord::Schema.define(version: 20140623190625) do
   add_index "event_views", ["event_viewed"], name: "index_event_views_on_event_viewed", using: :btree
   add_index "event_views", ["user_id"], name: "index_event_views_on_user_id", using: :btree
 
+  create_table "events_page_urls", force: true do |t|
+    t.integer  "institution_id", null: false
+    t.string   "url",            null: false
+    t.string   "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "events_page_urls", ["institution_id"], name: "index_events_page_urls_on_institution_id", using: :btree
+  add_index "events_page_urls", ["type"], name: "index_events_page_urls_on_type", using: :btree
+
   create_table "institutions", force: true do |t|
     t.string   "name",             null: false
     t.string   "street_address",   null: false
@@ -324,9 +335,10 @@ ActiveRecord::Schema.define(version: 20140623190625) do
     t.integer  "user_id"
     t.integer  "department_id"
     t.integer  "club_id"
+    t.integer  "circle_id"
+    t.string   "event_url"
     t.boolean  "open",                          default: false
     t.string   "image_url"
-    t.integer  "circle_id"
     t.integer  "comment_count"
     t.datetime "start_date",                                    null: false
     t.datetime "end_date",                                      null: false
