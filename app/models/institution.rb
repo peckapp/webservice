@@ -36,4 +36,7 @@ class Institution < ActiveRecord::Base
   ### institution where event is taking place ###
   has_many :simple_events #
 
+  ### caches urls where events for the institution can be found ###
+  has_many :events_page_urls #
+
 end

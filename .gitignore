@@ -18,6 +18,8 @@
 # emacs temp files
 *~
 
+perms.sh
+
 ## others from github's .gitignore templates
 
 *.rbc
