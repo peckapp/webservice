@@ -1,3 +1,3 @@
-object :@dining_opportunity
+collection :@dining_opportunities
 
-attributes :type, :institution_id, :created_at, :updated_at
+attributes :id, :type, :institution_id, :created_at, :updated_at

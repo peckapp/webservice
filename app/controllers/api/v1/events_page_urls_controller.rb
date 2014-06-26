@@ -28,7 +28,7 @@ module Api
     private
 
       def events_page_url_params
-        params.require(:institution_id, :url, :type, :created_at, :updated_at)
+        params.require(:institution_id, :url, :type)
       end
     end
   end

@@ -28,7 +28,7 @@ module Api
     private
 
       def event_comment_params
-        params.require(:event_comment).permit(:category, :comment_from, :user_id, :comment, :created_at, :updated_at)
+        params.require(:event_comment).permit(:category, :comment_from, :user_id, :comment)
       end
     end
   end

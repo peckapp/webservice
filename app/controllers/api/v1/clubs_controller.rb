@@ -28,7 +28,7 @@ module Api
     private
 
       def club_params
-        params.require(:club).permit(:institution_id, :club_name, :description, :user_id, :created_at, :updated_at)
+        params.require(:club).permit(:institution_id, :club_name, :description, :user_id)
       end
     end
   end

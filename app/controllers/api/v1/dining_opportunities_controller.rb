@@ -28,7 +28,7 @@ module Api
     private
 
       def dining_opportunity_params
-        params.require(:dining_opportunity).permit(:type, :institution_id, :created_at, :updated_at)
+        params.require(:dining_opportunity).permit(:type, :institution_id)
       end
     end
   end

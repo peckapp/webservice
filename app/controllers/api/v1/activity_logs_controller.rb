@@ -28,7 +28,7 @@ module Api
     private
 
       def activity_log_params
-        params.require(:activity_log).permit(:sender, :receiver, :category, :from_event, :circle_id, :type_of_activity,:message, :read_status, :created_at, :updated_at)
+        params.require(:activity_log).permit(:sender, :receiver, :category, :from_event, :circle_id, :type_of_activity,:message, :read_status)
       end
     end
   end

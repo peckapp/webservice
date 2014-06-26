@@ -28,7 +28,7 @@ module Api
     private
 
       def dining_place_params
-        params.require(:dining_place).permit(:institution_id, :name, :details_link, :gps_longitude, :gps_latitude, :range, :created_at, :updated_at)
+        params.require(:dining_place).permit(:institution_id, :name, :details_link, :gps_longitude, :gps_latitude, :range)
       end
     end
   end

@@ -28,7 +28,7 @@ module Api
     private
 
       def configuration_params
-        params.require(:configuration).permit(:mascot, :config_file_name, :created_at, :updated_at)
+        params.require(:configuration).permit(:mascot, :config_file_name)
       end
     end
   end

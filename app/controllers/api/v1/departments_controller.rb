@@ -28,7 +28,7 @@ module Api
     private
 
       def department_params
-        params.require(:department).permit(:name, :institution_id, :created_at, :updated_at)
+        params.require(:department).permit(:name, :institution_id)
       end
     end
   end

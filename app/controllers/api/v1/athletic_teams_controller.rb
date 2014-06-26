@@ -28,7 +28,7 @@ module Api
     private
 
       def athletic_team_params
-        params.require(:athletic_team).permit(:institution_id, :sport_name, :gender, :head_coach, :team_link, :created_at, :updated_at)
+        params.require(:athletic_team).permit(:institution_id, :sport_name, :gender, :head_coach, :team_link)
       end
     end
   end
