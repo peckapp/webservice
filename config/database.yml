@@ -18,7 +18,7 @@ default: &default
 
 development:
   <<: *default
-  database: peck_development
+  database: webservice_development
   password: peckapp
   # password: QKyJ2]BbiQD{6W6=H72)iNRV&
   # osx socket
