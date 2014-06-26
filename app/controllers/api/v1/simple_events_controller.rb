@@ -5,7 +5,7 @@ module Api
     respond_to :json
 
     def index
-      @simple_events = SimpleEvent.all
+      @simple_events = SimpleEvent.sorted
     end
 
     def show
