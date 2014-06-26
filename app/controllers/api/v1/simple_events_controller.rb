@@ -17,7 +17,8 @@ module Api
     end
 
     def update
-      @simple_event = SimpleEvent.find(params[:id]).update_attributes(simple_event_params)
+      @simple_event = SimpleEvent.find(params[:id])
+      @simple_event.update_attributes(simple_event_params)
     end
 
     def destroy

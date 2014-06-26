@@ -1,0 +1,2 @@
+module AthleticTeamsHelper
+end

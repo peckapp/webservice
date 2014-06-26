@@ -17,7 +17,8 @@ module Api
     end
 
     def update
-      @activity_log = ActivityLog.find(params[:id]).update_attributes(activity_log_params)
+      @activity_log = ActivityLog.find(params[:id])
+      @activity_log.update_attributes(activity_log_params)
     end
 
     def destroy

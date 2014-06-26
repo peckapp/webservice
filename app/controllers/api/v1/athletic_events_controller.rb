@@ -17,7 +17,8 @@ module Api
     end
 
     def update
-      @athletic_event = ActivityLog.find(params[:id]).update_attributes(athletic_event_params)
+      @athletic_event = ActivityLog.find(params[:id])
+      @athletic_event.update_attributes(athletic_event_params)
     end
 
     def destroy

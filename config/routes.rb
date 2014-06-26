@@ -6,12 +6,10 @@ Rails.application.routes.draw do
     # /api/... Api::
     # adds versioning capabilities to the API using separate modules
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
-      resources :simple_events
-      resources :activity_logs
+      resources :simple_events, :activity_logs, :athletic_events, :athletic_teams, :circles
     end
     scope module: :v2, constraints: ApiConstraints.new(version: 2) do
-      resources :simple_events
-      resources :activity_logs
+      resources :simple_events, :activity_logs, :athletic_events, :athletic_teams, :circles
     end
   end
   # You can have the root of your site routed with "root"
