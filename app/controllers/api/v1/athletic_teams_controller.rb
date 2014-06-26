@@ -5,24 +5,24 @@ module Api
     respond_to :json
 
     def index
-      @athletic_teams = ActivityLog.all
+      @athletic_teams = AthleticTeam.all
     end
 
     def show
-      @athletic_team = ActivityLog.find(params[:id])
+      @athletic_team = AthleticTeam.find(params[:id])
     end
 
     def create
-      @athletic_team = ActivityLog.create(athletic_team_params)
+      @athletic_team = AthleticTeam.create(athletic_team_params)
     end
 
     def update
-      @athletic_team = ActivityLog.find(params[:id])
+      @athletic_team = AthleticTeam.find(params[:id])
       @athletic_team.update_attributes(athletic_team_params)
     end
 
     def destroy
-      @athletic_team = ActivityLog.find(params[:id]).destroy
+      @athletic_team = AthleticTeam.find(params[:id]).destroy
     end
 
     private

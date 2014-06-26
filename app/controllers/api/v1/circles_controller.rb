@@ -5,24 +5,24 @@ module Api
     respond_to :json
 
     def index
-      @circles = SimpleEvent.all
+      @circles = Circle.all
     end
 
     def show
-      @circle = SimpleEvent.find(params[:id])
+      @circle = Circle.find(params[:id])
     end
 
     def create
-      @circle = SimpleEvent.create(circle_params)
+      @circle = Circle.create(circle_params)
     end
 
     def update
-      @circle = SimpleEvent.find(params[:id])
+      @circle = Circle.find(params[:id])
       @circle.update_attributes(circle_params)
     end
 
     def destroy
-      @circle = SimpleEvent.find(params[:id]).destroy
+      @circle = Circle.find(params[:id]).destroy
     end
 
     private
