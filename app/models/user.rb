@@ -5,6 +5,14 @@ class User < ActiveRecord::Base
   has_secure_password
   ########
 
+  # must have authentication token
+  devise :token_authenticatable
+
+  # devise authentication
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+
+  attr_accessible :email, :authentication_token, :password, :password_confirmation, :remember_me
+
   ### user's home institution ###
   belongs_to :institution #
   ###############################

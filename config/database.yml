@@ -19,7 +19,8 @@ default: &default
 development:
   <<: *default
   database: peck_development
-  password: QKyJ2]BbiQD{6W6=H72)iNRV&
+  password: peckapp
+  # password: QKyJ2]BbiQD{6W6=H72)iNRV&
   # osx socket
   # socket: /tmp/mysql.sock
   # ubuntu socket
