@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     # /api/... Api::
     # adds versioning capabilities to the API using separate modules
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
-      resources :simple_events
+      resources :simple_events, :event_attendees, :event_comments, :event_views, :events_page_urls, :institutions
     end
     scope module: :v2, constraints: ApiConstraints.new(version: 2) do
       resources :simple_events
