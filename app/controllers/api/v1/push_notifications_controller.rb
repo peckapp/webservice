@@ -2,6 +2,8 @@ module Api
   module V1
     class PushNotificationsController < ApplicationController #Api::BaseController
 
+    # before_action :confirm_admin
+
     respond_to :json
 
     def index

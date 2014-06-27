@@ -1,6 +1,9 @@
 module Api
   module V1
     class DiningPeriodsController < ApplicationController #Api::BaseController
+    
+    # before_action :confirm_admin
+    # :except => [:index, :show]
 
     respond_to :json
 

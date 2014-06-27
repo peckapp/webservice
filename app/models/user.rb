@@ -2,16 +2,20 @@ class User < ActiveRecord::Base
 # verified
   ########
   # each user has an encrypted secure password
-  # has_secure_password
+  has_secure_password
   ########
 
-  # must have authentication token
-  # devise :token_authenticatable
+  #### Callbacks #######
 
-  # devise authentication
-  # devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  ######################
 
-  # attr_accessible :email, :authentication_token, :password, :password_confirmation, :remember_me
+  #### Validations ###############
+  # validates_presence_of :institution_id
+  # validates_presence_of :first_name
+  # validates_presence_of :last_name
+  # validates :username, :presence => true, :uniqueness => true
+  # validates :api_key, :presence => true, :uniqueness => true
+  ###############################
 
   ### user's home institution ###
   belongs_to :institution #

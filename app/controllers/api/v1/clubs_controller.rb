@@ -2,6 +2,10 @@ module Api
   module V1
     class ClubsController < ApplicationController #Api::BaseController
 
+    # :before_action => :confirm_admin
+    # :except => [:index, :show]
+
+    # give club admin power?
     respond_to :json
 
     def index
