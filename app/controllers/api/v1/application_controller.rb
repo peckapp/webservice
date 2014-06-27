@@ -9,9 +9,12 @@ class ApplicationController < ActionController::Base
 #       return true
 #     end
 #   end
-
+#
 #   def confirm_admin
 #   end
+    # def confirm_institution
+    #   unless session
+    # end
 #
 #
 #
