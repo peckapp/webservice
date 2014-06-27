@@ -60,4 +60,4 @@ production:
   username: webservice
   password: <%= ENV['WEBSERVICE_DATABASE_PASSWORD'] %>
   # ubuntu socket
-  socket: /var/run/mysqld/mysqld.sock
+  #socket: /var/run/mysqld/mysqld.sock
