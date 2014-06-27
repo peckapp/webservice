@@ -3,13 +3,26 @@ module Api
     class SimpleEventsController < ApplicationController #Api::BaseController
 
     respond_to :json
+    @default_image_url = "/public/event_image.png"
 
     def index
       @simple_events = SimpleEvent.sorted
+
+      # return a default image url if it is null
+      for event in @simple_events
+        if event.image_url = "null"
+          event.image_url = "/public/event_image.png"
+        end
+      end
     end
 
     def show
       @simple_event = SimpleEvent.find(params[:id])
+
+      # return a default image url if it is null
+      if @simple_event.image_url = "null"
+        @simple_event.image_url = "/public/event_image.png"
+      end
     end
 
     def create
