@@ -20,11 +20,12 @@ development:
   <<: *default
   database: webservice_development
   password: peckapp
-  # password: QKyJ2]BbiQD{6W6=H72)iNRV&
+<<<<<<< HEAD
+  #password: QKyJ2]BbiQD{6W6=H72)iNRV&
   # osx socket
   socket: /tmp/mysql.sock
   # ubuntu socket
-  # socket: /var/run/mysqld/mysqld.sock
+  #socket: /var/run/mysqld/mysqld.sock
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -60,4 +61,4 @@ production:
   username: webservice
   password: <%= ENV['WEBSERVICE_DATABASE_PASSWORD'] %>
   # ubuntu socket
-  socket: /var/run/mysqld/mysqld.sock
+  #socket: /var/run/mysqld/mysqld.sock
