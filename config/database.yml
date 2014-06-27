@@ -20,7 +20,6 @@ development:
   <<: *default
   database: webservice_development
   password: peckapp
-<<<<<<< HEAD
   #password: QKyJ2]BbiQD{6W6=H72)iNRV&
   # osx socket
   socket: /tmp/mysql.sock
