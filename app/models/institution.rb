@@ -1,5 +1,23 @@
 class Institution < ActiveRecord::Base
 # verified
+
+  ### Validations ###
+  # validates_presence_of :name
+  # validates :street_address, :presence => true, :uniqueness => true
+  # validates_presence_of :city
+  # validates_presence_of :state
+  # validates_presence_of :country
+  # validates_presence_of :gps_longitude
+  # validates_presence_of :gps_latitude
+  # validates_presence_of :range
+  # validates_presence_of :configuration_id
+  # validates :api_key, :presence => true, :uniqueness => true
+
+  ###################
+
+  ### Callbacks ###
+  #################
+
   ### home to these users ###
   has_many :users #
 

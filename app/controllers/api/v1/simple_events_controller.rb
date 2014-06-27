@@ -2,6 +2,9 @@ module Api
   module V1
     class SimpleEventsController < ApplicationController #Api::BaseController
 
+    # before_action :confirm_logged_in
+    # :except => [:index, :show]
+
     respond_to :json
     @default_image_url = "/public/event_image.png"
 
