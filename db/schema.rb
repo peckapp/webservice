@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140624130823) do
+ActiveRecord::Schema.define(version: 20140625185318) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
@@ -382,18 +382,19 @@ ActiveRecord::Schema.define(version: 20140624130823) do
   add_index "user_device_tokens_users", ["user_device_token_id", "user_id"], name: "user_device_tokens_users_index", using: :btree
 
   create_table "users", force: true do |t|
-    t.integer  "institution_id",                  null: false
-    t.string   "first_name",                      null: false
-    t.string   "last_name",                       null: false
-    t.string   "username",                        null: false
+    t.integer  "institution_id",                       null: false
+    t.string   "first_name",                           null: false
+    t.string   "last_name",                            null: false
+    t.string   "username",                             null: false
     t.text     "blurb"
     t.string   "facebook_link"
     t.string   "facebook_token"
     t.string   "password_digest"
-    t.string   "api_key",                         null: false
-    t.boolean  "active",          default: false
+    t.string   "api_key",                              null: false
+    t.boolean  "active",               default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "authentication_token"
   end
 
   add_index "users", ["institution_id"], name: "index_users_on_institution_id", using: :btree

@@ -15,4 +15,8 @@ class SimpleEvent < ActiveRecord::Base
   ### event's home institution ###
   belongs_to :institution #
 
+  ### Scopes ###
+
+  scope :sorted, lambda {order("simple_events.start_date ASC")}
+
 end

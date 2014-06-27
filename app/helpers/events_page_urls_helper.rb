@@ -1,0 +1,2 @@
+module EventsPageUrlsHelper
+end
