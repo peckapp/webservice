@@ -60,3 +60,6 @@ gem 'rabl-rails'
 
 # devise
 gem 'devise', '~> 3.2.4'
+
+# image thumbnails
+gem 'dragonfly', '~> 1.0.5'
