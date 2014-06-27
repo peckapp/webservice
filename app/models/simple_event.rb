@@ -20,5 +20,6 @@ class SimpleEvent < ActiveRecord::Base
 
   ### Scopes ###
   scope :sorted, lambda {order("simple_events.start_date ASC")}
+  #scope :explore, lambda {select("*")}
 
 end

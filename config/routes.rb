@@ -9,6 +9,8 @@ Rails.application.routes.draw do
 
       resources :simple_events, :activity_logs, :athletic_events, :athletic_teams, :circles, :circle_members, :clubs, :configurations, :departments, :dining_opportunities, :dining_periods, :dining_places,:event_attendees, :event_comments, :event_views, :events_page_urls, :institutions, :locations, :menu_items, :notification_views, :push_notifications, :simple_events, :subscriptions, :user_device_tokens, :users
 
+      resources :explore
+
     end
     scope module: :v2, constraints: ApiConstraints.new(version: 2) do
       resources :simple_events
