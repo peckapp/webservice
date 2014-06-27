@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
 # verified
   ########
   # each user has an encrypted secure password
-  has_secure_password
+  # has_secure_password
   ########
 
   #### Callbacks #######
