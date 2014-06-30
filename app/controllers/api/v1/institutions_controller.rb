@@ -2,8 +2,8 @@ module Api
   module V1
     class InstitutionsController < ApplicationController #Api::BaseController
 
-    :before_action
-    respond_to :json
+      :before_action
+      respond_to :json
 
       def index
         @institutions = Institution.all
