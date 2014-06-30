@@ -8,11 +8,19 @@ module Api
     respond_to :json
 
     def index
-      @athletic_events = institution_index(AthleticEvent)
+      if params[:athletic_team_id]
+        @athletic_events = AthleticEvent.where(:athletic_team_id => params[:athletic_team_id])
+      else
+        @athletic_events = institution_index(AthleticEvent)
+      end
     end
 
     def show
-      @athletic_event = institution_show(AthleticEvent)
+      if params[:athletic_team_id]
+        @athletic_event = AthleticEvent.where(:athletic_team_id => params[:athletic_team_id]).find(params[:id])
+      else
+        @athletic_event = institution_show(AthleticEvent)
+      end
     end
 
     def create

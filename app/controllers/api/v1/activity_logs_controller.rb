@@ -4,15 +4,27 @@ module Api
 
     # before_action :confirm_admin
     # :except => [:index, :show]
-    
+
     respond_to :json
 
     def index
-      @activity_logs = ActivityLog.all
+      if params[:user_id]
+        @activity_logs = ActivityLog.where(:receiver => params[:user_id])
+      elsif params[:circle_id]
+        @activity_logs = ActivityLog.where(:circle_id => params[:circle_id])
+      else
+        @activity_logs = ActivityLog.all
+      end
     end
 
     def show
-      @activity_log = ActivityLog.find(params[:id])
+      if params[:user_id]
+        @activity_log = ActivityLog.where(:receiver => params[:user_id]).find(params[:id])
+      elsif params[:circle_id]
+        @activity_log = ActivityLog.where(:circle_id => params[:circle_id]).find(params[:id])
+      else
+        @activity_log = ActivityLog.find(params[:id])
+      end
     end
 
     def create

@@ -5,4 +5,7 @@ class DiningPlace < ActiveRecord::Base
 
   ### host dining place of menu item ###
   has_and_belongs_to_many :menu_items #
+
+  ### host dining place of dining period ###
+  has_and_belongs_to_many :dining_periods #
 end

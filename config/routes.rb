@@ -9,9 +9,9 @@ Rails.application.routes.draw do
 
       resources :simple_events, :activity_logs, :athletic_events, :athletic_teams, :clubs, :configurations, :departments, :dining_opportunities, :dining_periods, :dining_places,:event_attendees, :event_comments, :event_views, :events_page_urls, :institutions, :locations, :menu_items, :notification_views, :push_notifications, :simple_events, :subscriptions, :user_device_tokens, :users, :explore
 
-      # Circle members for a particular circle
+      # Separation by circles
       resources :circles do
-        resources :circle_members
+        resources :circle_members, :activity_logs
       end
 
       # Menu Items for a particular dining place
@@ -74,14 +74,14 @@ Rails.application.routes.draw do
         resources :dining_opportunities
       end
 
-      # Dining places for a particular dining period
-      resources :dining_periods do
-        resources :dining_places
-      end
-
       # Dining periods for a particular dining place
       resources :dining_places do
         resources :dining_periods
+      end
+
+      # Dining places for a particular dining period
+      resources :dining_periods do
+        resources :dining_places
       end
 
       # Users for a particular user device token
@@ -94,13 +94,20 @@ Rails.application.routes.draw do
         resources :user_device_tokens
       end
 
+      # separation by institutions
       resources :institutions do
-        resources :users, :simple_events, :circles, :circle_members
-        resources :circles do
-          resources :circle_members
-        end
+        resources :users, :simple_events, :circles, :circle_members, :athletic_events, :athletic_teams, :clubs, :departments, :dining_opportunities, :dining_periods, :dining_places
       end
 
+      # separation by users
+      resources :users do
+        resources :activity_logs
+      end
+
+      # separation by athletic teams
+      resources :athletic_teams do
+        resources :athletic_events
+      end
 
     end
 

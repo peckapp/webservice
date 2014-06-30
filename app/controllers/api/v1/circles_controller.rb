@@ -9,11 +9,19 @@ module Api
     respond_to :json
 
     def index
-      @circles = institution_index(Circle)
+      if params[:user_id]
+        @circles = Circle.where(:user_id => params[:user_id])
+      else
+        @circles = institution_index(Circle)
+      end
     end
 
     def show
-      @circle = institution_show(Circle)
+      if params[:user_id]
+        @circle = Circle.where(:user_id => params[:user_id]).find(params[:id])
+      else
+        @circle = institution_show(Circle)
+      end
     end
 
     def create

@@ -9,14 +9,23 @@ module Api
     respond_to :json
 
     def index
+      # filter circle members by circle id.
       if params[:circle_id]
         @circle_members = CircleMember.where(:circle_id => params[:circle_id])
+
+      # filter circle members by institution id
+      elsif params[:institution_id]
+        @circle_members = CircleMember.joins(:circle).where("circles.institution_id" => params[:institution_id])
       else
+
+        # otherwise return all circle members
         @circle_members = CircleMember.all
       end
     end
 
     def show
+      if params[:institution_id]
+        @circle_member = CircleMember.joins(:circle).where("circles.institution_id" => params[:institution_id]).find(params[:id])
         @circle_member = CircleMember.find(params[:id])
     end
 

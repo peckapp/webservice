@@ -10,7 +10,7 @@ module Api
     def index
       @athletic_teams = institution_index(AthleticTeam)
     end
-
+    
     def show
       @athletic_team = institution_show(AthleticTeam)
     end

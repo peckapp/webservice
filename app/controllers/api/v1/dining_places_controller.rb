@@ -8,7 +8,11 @@ module Api
     respond_to :json
 
     def index
-      @dining_places = institution_index(DiningPlace)
+      if params[:dining_period_id]
+        @dining_places = DiningPeriod.joins(:dining_places).where("dining_periods.dining_place_id" => params[:dining_period_id])
+      else
+        @dining_places = institution_index(DiningPlace)
+      end
     end
 
     def show
