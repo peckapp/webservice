@@ -8,7 +8,6 @@ module Api
         @simple_events = SimpleEvent.sorted
         puts DateTime.now.utc
         @explore = []
-
         for event in @simple_events
           puts event
           if !event.start_date.past?
