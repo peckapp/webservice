@@ -10,14 +10,14 @@ module Api
 
     def index
       if params[:circle_id]
-        @circle_members = CircleMember.where(:circle_id => :params[:circle_id])
+        @circle_members = CircleMember.where(:circle_id => params[:circle_id])
       else
         @circle_members = CircleMember.all
       end
     end
 
     def show
-      @circle_member = CircleMember.find(params[:id])
+        @circle_member = CircleMember.find(params[:id])
     end
 
     def create

@@ -7,11 +7,97 @@ Rails.application.routes.draw do
     # adds versioning capabilities to the API using separate modules
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
 
+<<<<<<< HEAD
+      resources :simple_events, :activity_logs, :athletic_events, :athletic_teams, :clubs, :configurations, :departments, :dining_opportunities, :dining_periods, :dining_places,:event_attendees, :event_comments, :event_views, :events_page_urls, :institutions, :locations, :menu_items, :notification_views, :push_notifications, :simple_events, :subscriptions, :user_device_tokens, :users
+=======
       resources :simple_events, :activity_logs, :athletic_events, :athletic_teams, :circle_members, :clubs, :configurations, :departments, :dining_opportunities, :dining_periods, :dining_places,:event_attendees, :event_comments, :event_views, :events_page_urls, :institutions, :locations, :menu_items, :notification_views, :push_notifications, :simple_events, :subscriptions, :user_device_tokens, :users, :explore
+>>>>>>> d5a5d1efad39e0c29b161c82fc425dbeb85b7132
 
+      # Circle members for a particular circle
       resources :circles do
         resources :circle_members
       end
+
+      # Menu Items for a particular dining place
+      resources :dining_places do
+        resources :menu_items
+      end
+
+      # Dining places for a particular menu item
+      resources :menu_items do
+        resources :dining_places
+      end
+
+      # Menu Items for a particular dining period
+      resources :dining_periods do
+        resources :menu_items
+      end
+
+      # Dining periods for a particular menu item
+      resources :menu_items do
+        resources :dining_periods
+      end
+
+      # Inviters for a particular circle member
+      resources :circle_members do
+        resources :users
+      end
+
+      # Circle members for a particular inviter
+      resources :users do
+        resources :circle_members
+      end
+
+      # Inviters for a particular event attendee
+      resources :event_attendees do
+        resources :inviters
+      end
+
+      # Event Attendees for a particular inviter
+      resources :inviters do
+        resources :event_attendees
+      end
+
+      # Attendees for a particular attendee
+      resources :event_attendees do
+        resources :attendees
+      end
+
+      # Event attendees for a particular attendee
+      resources :attendees do
+        resources :event_attendees
+      end
+
+      # Dining periods for a particular dining opportunity
+      resources :dining_opportunities do
+        resources :dining_periods
+      end
+
+      # Dining opportunities for a particular dining period
+      resources :dining_periods do
+        resources :dining_opportunities
+      end
+
+      # Dining places for a particular dining period
+      resources :dining_periods do
+        resources :dining_places
+      end
+
+      # Dining periods for a particular dining place
+      resources :dining_places do
+        resources :dining_periods
+      end
+
+      # Users for a particular user device token
+      resources :user_device_tokens do
+        resources :users
+      end
+
+      # User device tokens for a particular user
+      resources :users do
+        resources :user_device_tokens
+      end
+
     end
 
     scope module: :v2, constraints: ApiConstraints.new(version: 2) do
