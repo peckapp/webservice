@@ -2,51 +2,50 @@ module Api
   module V1
     class CircleMembersController < ApplicationController #Api::BaseController
 
-    # before_action :confirm_logged_in
-    # :except => [:index, :show]
+      # before_action :confirm_logged_in
+      # :except => [:index, :show]
 
-     # give circle admin power?
-    respond_to :json
+      # give circle admin power?
+      respond_to :json
 
-    def index
-      # filter circle members by circle id.
-      if params[:circle_id]
-        @circle_members = CircleMember.where(:circle_id => params[:circle_id])
+        def index
+          if params[:circle_id]
+            @circle_members = CircleMember.where(:circle_id => params[:circle_id])
 
-      # filter circle members by institution id
-      elsif params[:institution_id]
-        @circle_members = CircleMember.joins(:circle).where("circles.institution_id" => params[:institution_id])
-      else
+        # filter circle members by institution id
+        elsif params[:institution_id]
+          @circle_members = CircleMember.joins(:circle).where("circles.institution_id" => params[:institution_id])
+        else
 
-        # otherwise return all circle members
-        @circle_members = CircleMember.all
+          # otherwise return all circle members
+          @circle_members = CircleMember.all
+        end
       end
-    end
 
-    def show
-      if params[:institution_id]
-        @circle_member = CircleMember.joins(:circle).where("circles.institution_id" => params[:institution_id]).find(params[:id])
+      def create
+          @circle_member = CircleMember.create(circle_member_params)
+
+
+      def show
+        if params[:institution_id]
+          @circle_member = CircleMember.joins(:circle).where("circles.institution_id" => params[:institution_id]).find(params[:id])
+        end
+      end
+
+      def update
         @circle_member = CircleMember.find(params[:id])
-    end
-
-    def create
-      @circle_member = CircleMember.create(circle_member_params)
-    end
-
-    def update
-      @circle_member = CircleMember.find(params[:id])
-      @circle_member.update_attributes(circle_member_params)
-    end
-
-    def destroy
-      @circle_member = CircleMember.find(params[:id]).destroy
-    end
-
-    private
-
-      def circle_member_params
-        params.require(:circle_member).permit(:circle_id, :user_id, :invited_by, :date_added)
+        @circle_member.update_attributes(circle_member_params)
       end
+
+      def destroy
+        @circle_member = CircleMember.find(params[:id]).destroy
+      end
+
+      private
+
+        def circle_member_params
+          params.require(:circle_member).permit(:circle_id, :user_id, :invited_by, :date_added)
+        end
     end
   end
 end
