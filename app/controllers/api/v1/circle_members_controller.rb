@@ -9,7 +9,11 @@ module Api
     respond_to :json
 
     def index
-      @circle_members = CircleMember.all
+      if params[:circle_id]
+        @circle_members = CircleMember.where(:circle_id => :params[:circle_id])
+      else
+        @circle_members = CircleMember.all
+      end
     end
 
     def show

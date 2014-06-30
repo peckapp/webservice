@@ -6,7 +6,7 @@ module Api
     # :except => [:index, :show]
 
     respond_to :json
-    @default_image_url = "/images/event.png"
+    # @default_image_url = "/images/event.png"
 
     def index
       @simple_events = SimpleEvent.sorted
@@ -14,7 +14,7 @@ module Api
       # return a default image url if it is null
       for event in @simple_events
         if event.image_url = "null"
-          event.image_url = @default_image_url
+          event.image_url = "/images/event.png"
         end
       end
     end
@@ -24,7 +24,7 @@ module Api
 
       # return a default image url if it is null
       if @simple_event.image_url = "null"
-        @simple_event.image_url = @default_image_url
+        @simple_event.image_url = "/images/event.png"
       end
     end
 
