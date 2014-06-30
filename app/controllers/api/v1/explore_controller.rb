@@ -3,7 +3,7 @@ module Api
     class ExploreController < ApplicationController #Api::BaseController
 
       respond_to :json
-      
+
       def index
         @positions = {}
         position = 1
