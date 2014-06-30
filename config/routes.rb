@@ -7,7 +7,11 @@ Rails.application.routes.draw do
     # adds versioning capabilities to the API using separate modules
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
 
+<<<<<<< HEAD
       resources :simple_events, :activity_logs, :athletic_events, :athletic_teams, :clubs, :configurations, :departments, :dining_opportunities, :dining_periods, :dining_places,:event_attendees, :event_comments, :event_views, :events_page_urls, :institutions, :locations, :menu_items, :notification_views, :push_notifications, :simple_events, :subscriptions, :user_device_tokens, :users
+=======
+      resources :simple_events, :activity_logs, :athletic_events, :athletic_teams, :circle_members, :clubs, :configurations, :departments, :dining_opportunities, :dining_periods, :dining_places,:event_attendees, :event_comments, :event_views, :events_page_urls, :institutions, :locations, :menu_items, :notification_views, :push_notifications, :simple_events, :subscriptions, :user_device_tokens, :users, :explore
+>>>>>>> d5a5d1efad39e0c29b161c82fc425dbeb85b7132
 
       # Circle members for a particular circle
       resources :circles do

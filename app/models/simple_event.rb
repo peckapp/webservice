@@ -21,6 +21,8 @@ class SimpleEvent < ActiveRecord::Base
   belongs_to :institution #
 
   ### Scopes ###
+  # sorts 
   scope :sorted, lambda {order("simple_events.start_date ASC")}
+  #scope :explore, lambda {select("*")}
 
 end
