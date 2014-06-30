@@ -7,11 +7,11 @@ module Api
     respond_to :json
 
     def index
-      @menu_items = MenuItem.all
+      @menu_items = institution_index(MenuItem)
     end
 
     def show
-      @menu_item = MenuItem.find(params[:id])
+      @menu_item = institution_show(MenuItem)
     end
 
     def create

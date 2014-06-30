@@ -94,6 +94,14 @@ Rails.application.routes.draw do
         resources :user_device_tokens
       end
 
+      resources :institutions do
+        resources :users, :simple_events, :circles, :circle_members
+        resources :circles do
+          resources :circle_members
+        end
+      end
+
+
     end
 
     scope module: :v2, constraints: ApiConstraints.new(version: 2) do

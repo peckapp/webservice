@@ -8,11 +8,11 @@ module Api
     respond_to :json
 
     def index
-      @athletic_events = AthleticEvent.all
+      @athletic_events = institution_index(AthleticEvent)
     end
 
     def show
-      @athletic_event = AthleticEvent.find(params[:id])
+      @athletic_event = institution_show(AthleticEvent)
     end
 
     def create

@@ -7,11 +7,10 @@ module Api
     respond_to :json
 
     def index
-      @locations = Location.all
-    end
+      @locations = institution_index(Location)
 
     def show
-      @location = Location.find(params[:id])
+      @location = institution_show(Location)
     end
 
     def create
