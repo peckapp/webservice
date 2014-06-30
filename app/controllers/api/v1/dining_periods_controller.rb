@@ -1,60 +1,42 @@
 module Api
   module V1
     class DiningPeriodsController < ApplicationController #Api::BaseController
-<<<<<<< HEAD
-
-    # before_action :confirm_admin
-    # :except => [:index, :show]
-=======
->>>>>>> 2e96ec34a63448eb9af096b20702efa0a79fc92c
 
       # before_action :confirm_admin
       # :except => [:index, :show]
 
-<<<<<<< HEAD
-    def index
-      # If given a dining place id, find all dining periods for that dining place
-      if params[:dining_place_id]
-        @dining_periods = DiningPeriod.where(:dining_place_id => params[:dining_place_id])
+      def index
+        # If given a dining place id, find all dining periods for that dining place
+        if params[:dining_place_id]
+          @dining_periods = DiningPeriod.where(:dining_place_id => params[:dining_place_id])
 
         # If given a dining opportunity id, find all dining periods for that dining opportunity
-      elsif params[:dining_opportunity_id]
-        @dining_periods = DiningPeriod.where(:dining_opportunity_id => params[:dining_opportunity_id])
+        elsif params[:dining_opportunity_id]
+          @dining_periods = DiningPeriod.where(:dining_opportunity_id => params[:dining_opportunity_id])
 
-      # If given an institution id, find all dining periods for that institution
-      elsif params[:institution_id]
-        @dining_periods = DiningPeriod.joins(:dining_places).where("circles.institution_id" => params[:institution_id])
+        # If given an institution id, find all dining periods for that institution
+        elsif params[:institution_id]
+          @dining_periods = DiningPeriod.joins(:dining_places).where("circles.institution_id" => params[:institution_id])
 
         # Otherwise, return all dining periods
-      else
-        @dining_periods = DiningPeriod.all
-      end
-    end
-
-    def show
-      if params[:dining_place_id]
-        @dining_period = DiningPeriod.where(:dining_place_id => params[:dining_place_id]).find(params[:id])
-
-      elsif params[:dining_opportunity_id]
-        @dining_period = DiningPeriod.where(:dining_opportunity_id => params[:dining_opportunity_id]).find(params[:id])
-
-      elsif params[:institution_id]
-          @dining_period = DiningPeriod.joins(:dining_places).where("circles.institution_id" => params[:institution_id]).find(params[:id])
-
-      else
-        @dining_period = DiningPeriod.find(params[:id])
-      end
-    end
-=======
-      respond_to :json
->>>>>>> 2e96ec34a63448eb9af096b20702efa0a79fc92c
-
-      def index
-        @dining_periods = DiningPeriod.all
+        else
+          @dining_periods = DiningPeriod.all
+        end
       end
 
       def show
-        @dining_period = DiningPeriod.find(params[:id])
+        if params[:dining_place_id]
+          @dining_period = DiningPeriod.where(:dining_place_id => params[:dining_place_id]).find(params[:id])
+
+        elsif params[:dining_opportunity_id]
+          @dining_period = DiningPeriod.where(:dining_opportunity_id => params[:dining_opportunity_id]).find(params[:id])
+
+        elsif params[:institution_id]
+            @dining_period = DiningPeriod.joins(:dining_places).where("circles.institution_id" => params[:institution_id]).find(params[:id])
+
+        else
+          @dining_period = DiningPeriod.find(params[:id])
+        end
       end
 
       def create
