@@ -2,6 +2,9 @@ module Api
   module V1
     class AthleticTeamsController < ApplicationController #Api::BaseController
 
+    # before_action => :confirm_admin
+    # :except => [:index, :show]
+
     respond_to :json
 
     def index
