@@ -6,7 +6,6 @@ module Api
     # :except => [:index, :show]
 
     respond_to :json
-    # @default_image_url = "/images/event.png"
 
     def index
       if params[:institution_id]
@@ -51,6 +50,7 @@ module Api
         params.require(:simple_event).permit(:title, :event_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :event_url, :open, :image_url, :comment_count, :start_date, :end_date)
 
       end
+
     end
   end
 end
