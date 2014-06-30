@@ -8,11 +8,11 @@ module Api
     respond_to :json
 
     def index
-      @users = User.all
+      @users = institution_index(User)
     end
 
     def show
-      @user = User.find(params[:id])
+      @user = institution_show(User)
     end
 
     def create

@@ -8,11 +8,11 @@ module Api
     respond_to :json
 
     def index
-      @dining_places = DiningPlace.all
+      @dining_places = institution_index(DiningPlace)
     end
 
     def show
-      @dining_place = DiningPlace.find(params[:id])
+      @dining_place = institution_show(DiningPlace)
     end
 
     def create

@@ -8,8 +8,11 @@ module Api
     respond_to :json
 
     def index
-      @simple_events = SimpleEvent.sorted
-
+      if params[:institution_id]
+        @simple_events = SimpleEvent.where(:institution_id => params[:institution_id])
+      else
+        @simple_events = SimpleEvent.sorted
+      end
       # return a default image url if it is null
       for event in @simple_events
         if event.image_url = "null"
@@ -19,7 +22,7 @@ module Api
     end
 
     def show
-      @simple_event = SimpleEvent.find(params[:id])
+      @simple_event = institution_show(SimpleEvent)
 
       # return a default image url if it is null
       if @simple_event.image_url = "null"

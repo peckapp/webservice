@@ -6,11 +6,11 @@ module Api
     respond_to :json
 
     def index
-      @events_page_urls = EventsPageUrl.all
+      @events_page_urls = institution_index(EventPageUrl)
     end
 
     def show
-      @events_page_url = EventsPageUrl.find(params[:id])
+      @events_page_url = institution_show(EventPageUrl)
     end
 
     def create

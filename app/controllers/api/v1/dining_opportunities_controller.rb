@@ -7,11 +7,11 @@ module Api
     respond_to :json
 
     def index
-      @dining_opportunities = DiningOpportunity.all
+      @dining_opportunities = institution_index(DiningOpportunity)
     end
 
     def show
-      @dining_opportunity = DiningOpportunity.find(params[:id])
+      @dining_opportunity = institution_show(DiningOpportunity)
     end
 
     def create

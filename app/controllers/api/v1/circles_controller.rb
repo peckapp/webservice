@@ -9,11 +9,11 @@ module Api
     respond_to :json
 
     def index
-      @circles = Circle.all
+      @circles = institution_index(Circle)
     end
 
     def show
-      @circle = Circle.find(params[:id])
+      @circle = institution_show(Circle)
     end
 
     def create
