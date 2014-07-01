@@ -7,25 +7,26 @@ module Api
 
       respond_to :json
 
+      # Have to use ::Configuration to resolve ambiguity with namespace.
       def index
-        @configurations = Configuration.all
+        @configurations = ::Configuration.all
       end
 
       def show
-        @configuration = Configuration.find(params[:id])
+        @configuration = ::Configuration.find(params[:id])
       end
 
       def create
-        @configuration = Configuration.create(configuration_params)
+        @configuration = ::Configuration.create(configuration_params)
       end
 
       def update
-        @configuration = Configuration.find(params[:id])
+        @configuration = ::Configuration.find(params[:id])
         @configuration.update_attributes(configuration_params)
       end
 
       def destroy
-        @configuration = Configuration.find(params[:id]).destroy
+        @configuration = ::Configuration.find(params[:id]).destroy
       end
 
       private

@@ -14,12 +14,12 @@ Rails.application.routes.draw do
         resources :circle_members, :activity_logs
       end
 
-      # Menu Items for a particular dining place
+      # Separation by dining places
       resources :dining_places do
-        resources :menu_items
+        resources :menu_items, :dining_opportunities
       end
 
-      # Dining places for a particular menu item
+      # Separation by menu items
       resources :menu_items do
         resources :dining_places
       end
@@ -41,27 +41,7 @@ Rails.application.routes.draw do
 
       # Circle members for a particular inviter
       resources :users do
-        resources :circle_members
-      end
-
-      # Inviters for a particular event attendee
-      resources :event_attendees do
-        resources :inviters
-      end
-
-      # Event Attendees for a particular inviter
-      resources :inviters do
-        resources :event_attendees
-      end
-
-      # Attendees for a particular attendee
-      resources :event_attendees do
-        resources :attendees
-      end
-
-      # Event attendees for a particular attendee
-      resources :attendees do
-        resources :event_attendees
+        resources :circle_members, :circles, :activity_logs
       end
 
       # Dining periods for a particular dining opportunity
