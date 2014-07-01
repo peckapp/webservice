@@ -9,7 +9,8 @@ module Api
 
       def index
         if params[:dining_period_id]
-          @dining_places = DiningPeriod.joins(:dining_places).where("dining_periods.dining_place_id" => params[:dining_period_id])
+          @dining_places = DiningPlace.joins(:dining_periods_dining_places).where("dining_places.id" => "dining_periods_dining_places.dining_place_id").joins(:dining_periods).where("dining_periods_dining_places.dining_period_id" => params[:dining_period_id])
+          puts "-----------> #{@dining_places}"
         else
           @dining_places = institution_index(DiningPlace)
         end
