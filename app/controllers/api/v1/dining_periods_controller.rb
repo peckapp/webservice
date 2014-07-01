@@ -8,7 +8,7 @@ module Api
       def index
         # If given a dining place id, find all dining periods for that dining place
         if params[:dining_place_id]
-          @dining_periods = DiningPeriod.where(:dining_place_id => params[:dining_place_id])
+          @dining_periods = DiningPeriod.joins(:dining_periods_dining_places).where("dining_periods.id" => "dining_periods_dining_places.dining_period_id").joins(:dining_places).where("dining_periods_dining_places.dining_place_id" => params[:dining_place_id])
 
         # If given a dining opportunity id, find all dining periods for that dining opportunity
         elsif params[:dining_opportunity_id]
