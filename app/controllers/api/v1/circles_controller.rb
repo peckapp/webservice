@@ -31,7 +31,6 @@ module Api
       def show
         @circle = institution_show(Circle)
       end
->>>>>>> 2e96ec34a63448eb9af096b20702efa0a79fc92c
 
       def create
         @circle = Circle.create(circle_params)
