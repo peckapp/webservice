@@ -60,3 +60,5 @@ gem 'rabl-rails'
 
 # devise
 gem 'devise', '~> 3.2.4'
+
+gem 'hirb', '~> 0.7.2'

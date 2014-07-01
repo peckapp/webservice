@@ -11,6 +11,7 @@ module Api
           @dining_periods = DiningPeriod.where(:dining_place_id => params[:dining_place_id])
 
           # If given a dining opportunity id, find all dining periods for that dining opportunity
+
         elsif params[:dining_opportunity_id]
           @dining_periods = DiningPeriod.where(:dining_opportunity_id => params[:dining_opportunity_id])
 

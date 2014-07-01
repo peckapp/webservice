@@ -7,5 +7,5 @@ class DiningPlace < ActiveRecord::Base
   has_and_belongs_to_many :menu_items #
 
   ### host dining place of dining period ###
-  has_and_belongs_to_many :dining_periods #
+  has_and_belongs_to_many :dining_periods, :join_table => :dining_periods_dining_places #
 end
