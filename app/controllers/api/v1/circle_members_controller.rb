@@ -8,9 +8,9 @@ module Api
       # give circle admin power?
       respond_to :json
 
-        def index
-          if params[:circle_id]
-            @circle_members = CircleMember.where(:circle_id => params[:circle_id])
+      def index
+        if params[:circle_id]
+          @circle_members = CircleMember.where(:circle_id => params[:circle_id])
 
         # filter circle members by institution id
         elsif params[:institution_id]
@@ -23,8 +23,8 @@ module Api
       end
 
       def create
-          @circle_member = CircleMember.create(circle_member_params)
-
+        @circle_member = CircleMember.create(circle_member_params)
+      end
 
       def show
         if params[:institution_id]
