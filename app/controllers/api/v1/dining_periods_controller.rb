@@ -56,7 +56,7 @@ module Api
       private
 
         def dining_period_params
-          params.require(:dining_period).permit(:dining_place_id, :dining_opportunity_id, :start_time, :end_time, :day_of_week)
+          params.require(:dining_period).permit(:start_time, :end_time, :day_of_week)
         end
     end
   end
