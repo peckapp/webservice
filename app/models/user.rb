@@ -23,13 +23,13 @@ class User < ActiveRecord::Base
 
   #### CIRCLES ###
   has_many :circles, :through => :circle_members #
-  has_and_belongs_to_many :circle_members #
+  has_many :circle_members #
   ################
 
   ### EVENTS ###
   has_many :simple_events #
-  has_and_belongs_to_many :event_attendees, :join_table => "attendees_users" #
-  has_and_belongs_to_many :event_attendees, :join_table => "inviters_users" #
+  has_many :event_attendees #
+  has_many :event_attendees_as_inviters, :class_name => "EventAttendee" #
   ##############
 
   ### CLUBS ####
