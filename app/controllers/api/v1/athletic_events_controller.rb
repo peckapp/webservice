@@ -7,7 +7,6 @@ module Api
 
       respond_to :json
 
-<<<<<<< HEAD
     def index
       if params[:athletic_team_id]
         @athletic_events = AthleticEvent.where(:athletic_team_id => params[:athletic_team_id])
@@ -23,15 +22,6 @@ module Api
         @athletic_event = institution_show(AthleticEvent)
       end
     end
-=======
-      def index
-        @athletic_events = institution_index(AthleticEvent)
-      end
-
-      def show
-        @athletic_event = institution_show(AthleticEvent)
-      end
->>>>>>> 2e96ec34a63448eb9af096b20702efa0a79fc92c
 
       def create
         @athletic_event = AthleticEvent.create(athletic_event_params)
