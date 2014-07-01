@@ -28,7 +28,6 @@ module Api
         @circles = institution_index(Circle)
       end
 
-
       def create
         @circle = Circle.create(circle_params)
       end

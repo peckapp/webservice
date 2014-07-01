@@ -7,14 +7,13 @@ module Api
 
       respond_to :json
 
+    def index
+      @athletic_teams = institution_index(AthleticTeam)
+    end
 
-      def index
-        @athletic_teams = institution_index(AthleticTeam)
-      end
-
-      def show
-        @athletic_team = institution_show(AthleticTeam)
-      end
+    def show
+      @athletic_team = institution_show(AthleticTeam)
+    end
 
       def create
         @athletic_team = AthleticTeam.create(athletic_team_params)
