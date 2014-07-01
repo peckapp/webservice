@@ -24,6 +24,7 @@ module Api
 
       def create
           @circle_member = CircleMember.create(circle_member_params)
+        end
 
 
       def show

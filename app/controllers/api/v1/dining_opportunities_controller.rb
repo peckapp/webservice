@@ -13,7 +13,7 @@ module Api
 
         # if given a dining place id, find all dining opportunities for that dining place.
         elsif params[:dining_place_id]
-          @dining_opportunities = DiningOpportunity.where(:dining_place_id => params[:dining_place_id])
+          @dining_opportunities = DiningOpportunity.joins(:dining_places).where("dining_opportunities_dining_places.dining_place_id" =>  params[:dining_place_id])
 
         # otherwise, follow the institutions template from the application controller.
         else

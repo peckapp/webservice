@@ -10,7 +10,8 @@ module Api
         if params[:dining_place_id]
           @dining_periods = DiningPlace.find(params[:dining_place_id]).dining_periods
 
-        # If given a dining opportunity id, find all dining periods for that dining opportunity
+          # If given a dining opportunity id, find all dining periods for that dining opportunity
+
         elsif params[:dining_opportunity_id]
           @dining_periods = DiningPeriod.where(:dining_opportunity_id => params[:dining_opportunity_id])
 
@@ -18,7 +19,7 @@ module Api
         elsif params[:institution_id]
           @dining_periods = DiningPeriod.joins(:dining_places).where("circles.institution_id" => params[:institution_id])
 
-        # Otherwise, return all dining periods
+          # Otherwise, return all dining periods
         else
           @dining_periods = DiningPeriod.all
         end
@@ -55,7 +56,7 @@ module Api
       private
 
         def dining_period_params
-          params.require(:dining_period).permit(:dining_place_id, :dining_opportunity_id, :start_time, :end_time, :day_of_week)
+          params.require(:dining_period).permit(:start_time, :end_time, :day_of_week)
         end
     end
   end
