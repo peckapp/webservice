@@ -14,7 +14,7 @@ module Api
           @dining_places = institution_index(DiningPlace)
         end
       end
-      
+
       def show
         @dining_place = institution_show(DiningPlace)
       end
