@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140625185318) do
+ActiveRecord::Schema.define(version: 20140701152307) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
@@ -361,7 +361,7 @@ ActiveRecord::Schema.define(version: 20140625185318) do
     t.boolean  "active",               default: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "authentication_token"
+    t.string   "authentication_token",                 null: false
   end
 
   add_index "users", ["institution_id"], name: "index_users_on_institution_id", using: :btree
