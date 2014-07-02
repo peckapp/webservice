@@ -20,7 +20,9 @@ module Api
 
         # add authentication token that is randomly generated
         uparams[:authentication_token] = "#{rand}randomstringofcharacters#{rand}"
-        puts uparams
+
+        uparams[:api_key] = SecureRandom.hex(25)
+
         @user = User.create(uparams)
       end
 
@@ -38,8 +40,6 @@ module Api
         def user_params
           # not allowed for mass assignment are: authentication_token, password_digest, created_at, updated_at
           params.require(:user).permit(:institution_id, :first_name, :last_name, :username, :blurb, :facebook_link, :active)
-
-
         end
     end
   end
