@@ -8,11 +8,11 @@ module Api
       respond_to :json
 
     def index
-      @athletic_teams = institution_index(AthleticTeam)
+      @athletic_teams = specific_index(AthleticTeam, :institution_id)
     end
-    
+
     def show
-      @athletic_team = institution_show(AthleticTeam)
+      @athletic_team = specific_show(AthleticTeam, :institution_id)
     end
 
       def create

@@ -8,15 +8,20 @@ module Api
       respond_to :json
 
       def index
-        @users = institution_index(User)
+        @users = specific_index(User, :institution_id)
       end
 
       def show
-        @user = institution_show(User)
+        @user = specific_show(User, :institution_id)
       end
 
       def create
-        @user = User.create(user_params)
+        uparams = user_params
+
+        # add authentication token that is randomly generated
+        uparams[:api_key] = SecureRandom.hex(25)
+
+        @user = User.create(uparams)
       end
 
       def update
@@ -31,8 +36,8 @@ module Api
       private
 
         def user_params
-
-          params.require(:user).permit(:institution_id, :first_name, :last_name, :username, :blurb, :facebook_link, :facebook_token, :password_digest, :api_key, :active, :created_at, :updated_at, :authentication_token)
+          # not allowed for mass assignment are: authentication_token, password_digest, created_at, updated_at
+          params.require(:user).permit(:institution_id, :first_name, :last_name, :username, :blurb, :facebook_link, :facebook_token, :api_key, :active)
 
         end
     end

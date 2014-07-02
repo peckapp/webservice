@@ -8,11 +8,11 @@ module Api
       respond_to :json
 
       def index
-        @departments = institution_index(Department)
+        @departments = specific_index(Department, :institution_id)
       end
 
       def show
-        @department = institution_show(Department)
+        @department = specific_show(Department, :institution_id)
       end
 
       def create

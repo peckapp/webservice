@@ -9,7 +9,15 @@ module Api
 
       def index
         if params[:institution_id]
-          @simple_events = SimpleEvent.where(:institution_id => params[:institution_id])
+          @simple_events = specific_index(SimpleEvent, :institution_id)
+        elsif params[:user_id]
+          @simple_events = specific_index(SimpleEvent, :user_id)
+        elsif params[:department_id]
+          @simple_events = specific_index(SimpleEvent, :department_id)
+        elsif params[:club_id]
+          @simple_events = specific_index(SimpleEvent, :club_id)
+        elsif params[:circle_id]
+          @simple_events = specific_index(SimpleEvent, :circle_id)
         else
           @simple_events = SimpleEvent.sorted
         end
@@ -22,7 +30,19 @@ module Api
       end
 
       def show
-        @simple_event = institution_show(SimpleEvent)
+        if params[:institution_id]
+          @simple_event = specific_show(SimpleEvent, :institution_id)
+        elsif params[:user_id]
+          @simple_events = specific_show(SimpleEvent, :user_id)
+        elsif params[:department_id]
+          @simple_events = specific_show(SimpleEvent, :department_id)
+        elsif params[:club_id]
+          @simple_events = specific_show(SimpleEvent, :club_id)
+        elsif params[:circle_id]
+          @simple_events = specific_show(SimpleEvent, :circle_id)
+        else
+          @simple_event = SimpleEvent.find(params[:id])
+        end
 
         # return a default image url if it is null
         if @simple_event.image_url = "null"

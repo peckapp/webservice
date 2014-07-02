@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140701152307) do
+ActiveRecord::Schema.define(version: 20140702031136) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
@@ -298,6 +298,15 @@ ActiveRecord::Schema.define(version: 20140701152307) do
   add_index "push_notifications", ["type"], name: "index_push_notifications_on_type", using: :btree
   add_index "push_notifications", ["user_id"], name: "index_push_notifications_on_user_id", using: :btree
 
+  create_table "rss_pages", force: true do |t|
+    t.integer  "institution_id",                  null: false
+    t.string   "url",                             null: false
+    t.integer  "scrape_interval", default: 1440
+    t.boolean  "paginated",       default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "simple_events", force: true do |t|
     t.string   "title",             limit: 100,                 null: false
     t.text     "event_description"
@@ -350,18 +359,18 @@ ActiveRecord::Schema.define(version: 20140701152307) do
 
   create_table "users", force: true do |t|
     t.integer  "institution_id",                       null: false
-    t.string   "first_name",                           null: false
-    t.string   "last_name",                            null: false
-    t.string   "username",                             null: false
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "username"
     t.text     "blurb"
     t.string   "facebook_link"
     t.string   "facebook_token"
     t.string   "password_digest"
-    t.string   "api_key",                              null: false
+    t.string   "api_key"
     t.boolean  "active",               default: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "authentication_token",                 null: false
+    t.string   "authentication_token"
   end
 
   add_index "users", ["institution_id"], name: "index_users_on_institution_id", using: :btree

@@ -12,7 +12,7 @@ module Api
         if params[:user_id]
           @activity_logs = ActivityLog.where(:receiver => params[:user_id])
         elsif params[:circle_id]
-          @activity_logs = ActivityLog.where(:circle_id => params[:circle_id])
+          @activity_logs = specific_index(ActivityLog, :circle_id)
         else
           @activity_logs = ActivityLog.all
         end
@@ -22,18 +22,10 @@ module Api
         if params[:user_id]
           @activity_log = ActivityLog.where(:receiver => params[:user_id]).find(params[:id])
         elsif params[:circle_id]
-          @activity_log = ActivityLog.where(:circle_id => params[:circle_id]).find(params[:id])
+          @activity_log = specific_show(ActivityLog, :circle_id)
         else
           @activity_log = ActivityLog.find(params[:id])
         end
-      end
-
-      def index
-        @activity_logs = ActivityLog.all
-      end
-
-      def show
-        @activity_log = ActivityLog.find(params[:id])
       end
 
       def create

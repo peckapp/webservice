@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
+
   require 'api_constraints'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
+
   namespace :api, defaults: {format: 'json'}  do
     # /api/... Api::
     # adds versioning capabilities to the API using separate modules
@@ -14,54 +16,30 @@ Rails.application.routes.draw do
         resources :circle_members, :activity_logs
       end
 
-      # Menu Items for a particular dining place
+      # Separation by dining places
       resources :dining_places do
-        resources :menu_items
+        resources :menu_items, :dining_opportunities, :dining_periods
       end
 
-      # Dining places for a particular menu item
+      # Separation by menu items
       resources :menu_items do
-        resources :dining_places
+        resources :dining_places, :dining_periods
       end
 
-      # Menu Items for a particular dining period
+      # Separation by dining periods
       resources :dining_periods do
-        resources :menu_items
+        resources :menu_items, :dining_opportunities, :dining_places
       end
 
-      # Dining periods for a particular menu item
-      resources :menu_items do
-        resources :dining_periods
-      end
 
       # Inviters for a particular circle member
       resources :circle_members do
         resources :users
       end
 
-      # Circle members for a particular inviter
+      # Separation by users
       resources :users do
-        resources :circle_members
-      end
-
-      # Inviters for a particular event attendee
-      resources :event_attendees do
-        resources :inviters
-      end
-
-      # Event Attendees for a particular inviter
-      resources :inviters do
-        resources :event_attendees
-      end
-
-      # Attendees for a particular attendee
-      resources :event_attendees do
-        resources :attendees
-      end
-
-      # Event attendees for a particular attendee
-      resources :attendees do
-        resources :event_attendees
+        resources :circle_members, :circles, :activity_logs, :user_device_tokens
       end
 
       # Dining periods for a particular dining opportunity
@@ -69,29 +47,9 @@ Rails.application.routes.draw do
         resources :dining_periods
       end
 
-      # Dining opportunities for a particular dining period
-      resources :dining_periods do
-        resources :dining_opportunities
-      end
-
-      # Dining periods for a particular dining place
-      resources :dining_places do
-        resources :dining_periods
-      end
-
-      # Dining places for a particular dining period
-      resources :dining_periods do
-        resources :dining_places
-      end
-
       # Users for a particular user device token
       resources :user_device_tokens do
         resources :users
-      end
-
-      # User device tokens for a particular user
-      resources :users do
-        resources :user_device_tokens
       end
 
       # separation by institutions
@@ -99,22 +57,22 @@ Rails.application.routes.draw do
         resources :users, :simple_events, :circles, :circle_members, :athletic_events, :athletic_teams, :clubs, :departments, :dining_opportunities, :dining_periods, :dining_places
       end
 
-      # separation by users
-      resources :users do
-        resources :activity_logs
-      end
-
       # separation by athletic teams
       resources :athletic_teams do
         resources :athletic_events
       end
-
     end
 
     scope module: :v2, constraints: ApiConstraints.new(version: 2) do
       resources :simple_events
     end
   end
+
+  # scraping capabilities and other automated tasks
+  namespace :tasks do
+    get 'rss_scraper/scrape'
+  end
+
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 

@@ -10,26 +10,18 @@ module Api
 
       def index
         if params[:user_id]
-          @circles = Circle.where(:user_id => params[:user_id])
+          @circles = specific_index(Circle, :user_id)
         else
-          @circles = institution_index(Circle)
+          @circles = specific_index(Circle, :institution_id)
         end
       end
 
       def show
         if params[:user_id]
-          @circle = Circle.where(:user_id => params[:user_id]).find(params[:id])
+          @circle = specific_show(Circle, :user_id)
         else
-          @circle = institution_show(Circle)
+          @circle = specific_show(Circle, :institution_id)
         end
-      end
-
-      def index
-        @circles = institution_index(Circle)
-      end
-
-      def show
-        @circle = institution_show(Circle)
       end
 
       def create

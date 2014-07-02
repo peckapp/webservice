@@ -10,13 +10,11 @@ module Api
 
       def index
         if params[:circle_id]
-          @circle_members = CircleMember.where(:circle_id => params[:circle_id])
-
+          @circle_members = specific_index(Circle, :circle_id)
         # filter circle members by institution id
         elsif params[:institution_id]
           @circle_members = CircleMember.joins(:circle).where("circles.institution_id" => params[:institution_id])
         else
-
           # otherwise return all circle members
           @circle_members = CircleMember.all
         end
@@ -27,8 +25,12 @@ module Api
       end
 
       def show
-        if params[:institution_id]
+        if params[:circle_id]
+          @circle_member = specific_show(Circle, :circle_id)
+        elsif params[:institution_id]
           @circle_member = CircleMember.joins(:circle).where("circles.institution_id" => params[:institution_id]).find(params[:id])
+        else
+          @circle_member = CircleMember.find(params[:id])
         end
       end
 
