@@ -8,11 +8,11 @@ module Api
       respond_to :json
 
       def index
-        @events_page_urls = institution_index(EventPageUrl)
+        @events_page_urls = specific_index(EventPageUrl, :institution_id)
       end
 
       def show
-        @events_page_url = institution_show(EventPageUrl)
+        @events_page_url = specific_show(EventPageUrl, :institution_id)
       end
 
       def create

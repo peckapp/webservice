@@ -8,11 +8,19 @@ module Api
       respond_to :json
 
       def index
-        @subscriptions = Subscription.all
+        if params[:user_id]
+          @subscriptions = specific_index(Subscription, :user_id)
+        else
+          @subscriptions = Subscription.all
+        end
       end
 
       def show
-        @subscription = Subscription.find(params[:id])
+        if params[:user_id]
+          @subscription = specific_show(Subscription, :user_id)
+        else
+          @subscription = Subscription.find(params[:id])
+        end
       end
 
       def create

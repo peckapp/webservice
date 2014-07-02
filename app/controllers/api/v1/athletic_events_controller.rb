@@ -9,17 +9,17 @@ module Api
 
       def index
         if params[:athletic_team_id]
-          @athletic_events = AthleticEvent.where(:athletic_team_id => params[:athletic_team_id])
+          @athletic_events = specific_index(AthleticEvent, :athletic_team_id)
         else
-          @athletic_events = institution_index(AthleticEvent)
+          @athletic_events = specific_index(AthleticEvent, :institution_id)
         end
       end
 
       def show
         if params[:athletic_team_id]
-          @athletic_event = AthleticEvent.where(:athletic_team_id => params[:athletic_team_id]).find(params[:id])
+          @athletic_event = specific_show(AthleticEvent, :athletic_team_id)
         else
-          @athletic_event = institution_show(AthleticEvent)
+          @athletic_event = specific_show(AthleticEvent, :institution_id)
         end
       end
 

@@ -8,11 +8,21 @@ module Api
       respond_to :json
 
       def index
-        @event_attendees = EventAttendee.all
+        if params[:user_id]
+          @event_attendees = EventAttendee.where(:attendee => "user_id")
+        elsif params[:institution]
+          @event_attendees = EventAttendee.joins(:attendee).where("users.institution_id" => params[:institution_id])
+        else
+          @event_attendees = EventAttendee.all
       end
 
       def show
-        @event_attendee = EventAttendee.find(params[:id])
+        if params[:user_id]
+          @event_attendees = EventAttendee.where(:attendee => "user_id").find(params[:id])
+        elsif params[:institution]
+          @event_attendees = EventAttendee.joins(:attendee).where("users.institution_id" => params[:institution_id]).find(params[:id])
+        else
+          @event_attendee = EventAttendee.find(params[:id])
       end
 
       def create

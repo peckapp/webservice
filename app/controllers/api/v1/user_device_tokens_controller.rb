@@ -7,11 +7,18 @@ module Api
       respond_to :json
 
       def index
-        @user_device_tokens = UserDevice.all
+        if params[:user_id]
+          @user_device_tokens = specific_index(UserDeviceToken, :user_id)
+        else
+          @user_device_tokens = UserDevice.all
+        end
       end
 
       def show
-        @user_device_token = UserDevice.find(params[:id])
+        if params[:user_id]
+          @user_device_token = specific_show(UserDeviceToken, :user_id)
+        else
+          @user_device_token = UserDevice.find(params[:id])
       end
 
       def create
