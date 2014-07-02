@@ -10,7 +10,7 @@ module Api
 
         def index
           if params[:circle_id]
-            @circle_members = specific_index(Circle, :circle_id)
+            @circle_members = specific_index(CircleMember, :circle_id)
 
         # filter circle members by institution id
         elsif params[:institution_id]
