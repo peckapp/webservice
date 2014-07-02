@@ -10,11 +10,6 @@ module Api
         # if given a dining period id, find all dining opportunities with that dining period id.
         if params[:dining_period_id]
           @dining_opportunities = DiningPeriod.find(params[:dining_period_id]).dining_opportunities
-
-        # if given a dining place id, find all dining opportunities for that dining place.
-        elsif params[:dining_place_id]
-          @dining_opportunities = DiningPlace.find(params[:dining_place_id]).dining_opportunities
-
         # otherwise, follow the template from the application controller.
         else
           @dining_opportunities = specific_index(DiningOpportunity, :institution_id)
