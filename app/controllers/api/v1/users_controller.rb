@@ -8,7 +8,8 @@ module Api
       respond_to :json
 
       def index
-        @users = institution_index(User)
+        # @users = institution_index(User)
+        @users = User.where(:institution_id => params[:institution_id])
       end
 
       def show
@@ -32,7 +33,8 @@ module Api
 
         def user_params
 
-          params.require(:user).permit(:institution_id, :first_name, :last_name, :username, :blurb, :facebook_link, :facebook_token, :password_digest, :api_key, :active, :created_at, :updated_at, :authentication_token)
+          # not allowed for mass assignment are: authentication_token, password_digest, created_at, updated_at
+          params.require(:user).permit(:institution_id, :first_name, :last_name, :username, :blurb, :facebook_link, :facebook_token, :api_key, :active)
 
         end
     end

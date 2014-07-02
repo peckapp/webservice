@@ -1,2 +1,3 @@
 module Tasks::RssScraperHelper
+  
 end
