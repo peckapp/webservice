@@ -25,6 +25,7 @@ class ApplicationController < ActionController::Base
     end
     return theModel
   end
+end
 
   # Merge conflict, wanted to be sure correct one was chosen
   #def institution_show(model)
