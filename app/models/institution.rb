@@ -57,4 +57,7 @@ class Institution < ActiveRecord::Base
   ### caches urls where events for the institution can be found ###
   has_many :events_page_urls #
 
+  ### rss pages to scrape
+  has_many :rss_pages
+
 end

@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
+
   require 'api_constraints'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
+
   namespace :api, defaults: {format: 'json'}  do
     # /api/... Api::
     # adds versioning capabilities to the API using separate modules
@@ -65,6 +67,12 @@ Rails.application.routes.draw do
       resources :simple_events
     end
   end
+
+  # scraping capabilities and other automated tasks
+  namespace :tasks do
+    get 'rss_scraper/scrape'
+  end
+
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
