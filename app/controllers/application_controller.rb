@@ -30,3 +30,4 @@ class ApplicationController < ActionController::Base
   #def institution_show(model)
   #  if params[:institution_id]
   #    theModel = model.where(institution_id: params[:institution_id], active: true).find(params[:id])
+end
