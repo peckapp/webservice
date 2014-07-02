@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   #  if params[:institution_id]
   #    models = model.where(institution_id: params[:institution_id], active: true)
 
-  def specfic_index(model, parameter)
+  def specific_index(model, parameter)
     if params[parameter]
       models = model.where(parameter => params[parameter], active: true)
     else
@@ -31,3 +31,4 @@ end
   #def institution_show(model)
   #  if params[:institution_id]
   #    theModel = model.where(institution_id: params[:institution_id], active: true).find(params[:id])
+end
