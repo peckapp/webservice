@@ -3,11 +3,6 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   # protect_from_forgery with: :exception
 
-  # Merge conflict, wanted to be sure correct one was chosen
-  #def institution_index(model)
-  #  if params[:institution_id]
-  #    models = model.where(institution_id: params[:institution_id], active: true)
-
   def specific_index(model, parameter)
     if params[parameter]
       models = model.where(parameter => params[parameter])
@@ -25,10 +20,4 @@ class ApplicationController < ActionController::Base
     end
     return theModel
   end
-end
-
-  # Merge conflict, wanted to be sure correct one was chosen
-  #def institution_show(model)
-  #  if params[:institution_id]
-  #    theModel = model.where(institution_id: params[:institution_id], active: true).find(params[:id])
 end
