@@ -7,7 +7,7 @@ module Api
       def index
         @positions = {}
         position = 1
-        @simple_events = SimpleEvent.sorted
+        @simple_events = specific_index(SimpleEvent,:institution_ids).sorted
         @explore = []
         for event in @simple_events
           if !event.start_date.past?
