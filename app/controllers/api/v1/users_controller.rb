@@ -17,7 +17,12 @@ module Api
       end
 
       def create
-        @user = User.create(user_params)
+        uparams = user_params
+
+        # add authentication token that is randomly generated
+        uparams[:authentication_token] = "#{rand}randomstringofcharacters#{rand}"
+
+        @user = User.create(uparams)
       end
 
       def update
