@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
 
   def show(model, *parameter)
     if params[parameter]
-      theModel = model.where(parameter => params[parameter).find(params[:id])
+      theModel = model.where(parameter => params[parameter]).find(params[:id])
     else
       theModel = model.find(params[:id])
     end
