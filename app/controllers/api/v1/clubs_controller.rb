@@ -9,11 +9,11 @@ module Api
       respond_to :json
 
       def index
-        @clubs = institution_index(Club)
+        @clubs = specific_index(Club, :institution_id)
       end
 
       def show
-        @club = institution_show(Club)
+        @club = specific_show(Club, :institution_id)
       end
 
       def create

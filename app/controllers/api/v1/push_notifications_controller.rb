@@ -7,11 +7,17 @@ module Api
       respond_to :json
 
       def index
-        @push_notifications = PushNotification.all
+        if params[:user_id]
+          @push_notifications = specific_index(PushNotification, :user_id)
+        else
+          @push_notifications = PushNotification.all
       end
 
       def show
-        @push_notification = PushNotification.find(params[:id])
+        if params[:user_id]
+          @push_notification = specific_show(PushNotification, :user_id)
+        else
+          @push_notification = PushNotification.find(params[:id])
       end
 
       def create
