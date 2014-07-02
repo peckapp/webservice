@@ -10,18 +10,18 @@ class ApplicationController < ActionController::Base
 
   def specific_index(model, parameter)
     if params[parameter]
-      models = model.where(parameter => params[parameter], active: true)
+      models = model.where(parameter => params[parameter])
     else
-      models = model.where(active: true)
+      models = model.all
     end
     return models
   end
 
   def specific_show(model, parameter)
     if params[parameter]
-      theModel = model.where(parameter => params[parameter], active: true).find(params[:id])
+      theModel = model.where(parameter => params[parameter]).find(params[:id])
     else
-      theModel = model.where(active: true).find(params[:id])
+      theModel = model.find(params[:id])
     end
     return theModel
   end
