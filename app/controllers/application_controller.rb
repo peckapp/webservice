@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
     result = model.all
 
     flat_parameters = parameters.flatten!
-    
+
     if flat_parameters.count >= 1
       for p in flat_parameters do
         if params[p]
