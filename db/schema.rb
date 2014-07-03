@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140703140249) do
+ActiveRecord::Schema.define(version: 20140703183525) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
@@ -110,7 +110,7 @@ ActiveRecord::Schema.define(version: 20140703140249) do
     t.string   "category",     null: false
     t.integer  "comment_from", null: false
     t.integer  "user_id",      null: false
-    t.text     "comment",      null: false
+    t.text     "content",      null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
