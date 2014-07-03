@@ -4,6 +4,7 @@ class UserDeviceTokensControllerTest < ActionController::TestCase
 
   def setup
     @controller = Api::V1::UserDeviceTokensController.new
+    @attributes = [:token, :format, :id]
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end
 
@@ -17,7 +18,13 @@ class UserDeviceTokensControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get :show, :format => :json, :id => 1
+    params = {:id => 10, :token => "soybeans", :format => :json}
+    params.keys.each do |attribute|
+      unless @attributes.include? attribute
+        assert(false, "Attribute not found in database table.")
+      end
+    end
+    get :show, params
     assert_response :success
   end
 
@@ -29,12 +36,12 @@ class UserDeviceTokensControllerTest < ActionController::TestCase
 
   test "should patch update" do
     params = {institution: 2, user_id: 2}
-    patch :update, :id => 1, user_device_token: params, :format => :json
+    patch :update, :id => 20, user_device_token: params, :format => :json
     assert_response(:success)
   end
 
   test "should delete" do
-    delete :destroy, :format => :json, :id => 1
+    delete :destroy, :format => :json, :id => 12
     assert_response :success
   end
 end

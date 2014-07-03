@@ -1,0 +1,24 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined.  If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+
+# subscriptions from user 1
+<% 10.times do |n| %>
+user_<%= n %>:
+  id: <%= n + 10 %>
+  user_id: 1
+  category: "bros"
+  subscribed_to: 2
+<% end %>
+
+# subscriptions from user 2
+<% 10.times do |n| %>
+user_<%= n + 10 %>:
+  id: <%= n + 20 %>
+  user_id: 2
+  category: "peanuts"
+  subscribed_to: 1
+<% end %>
