@@ -1,6 +1,6 @@
 module Api
   module V1
-    class EventCommentsController < ApplicationController #Api::BaseController
+    class CommentsController < ApplicationController #Api::BaseController
 
       # before_action :confirm_logged_in
       # :except => [:index, :show]
@@ -8,30 +8,30 @@ module Api
       respond_to :json
 
       def index
-        @event_comments = EventComment.all
+        @comments = Comment.all
       end
 
       def show
-        @event_comment = EventComment.find(params[:id])
+        @comment = Comment.find(params[:id])
       end
 
       def create
-        @event_comment = EventComment.create(event_comment_params)
+        @comment = Comment.create(comment_params)
       end
 
       def update
-        @event_comment = EventComment.find(params[:id])
-        @event_comment.update_attributes(event_comment_params)
+        @comment = Comment.find(params[:id])
+        @comment.update_attributes(comment_params)
       end
 
       def destroy
-        @event_comment = EventComment.find(params[:id]).destroy
+        @comment = Comment.find(params[:id]).destroy
       end
 
       private
 
-        def event_comment_params
-          params.require(:event_comment).permit(:category, :comment_from, :user_id, :comment)
+        def comment_params
+          params.require(:comment).permit(:category, :comment_from, :user_id, :comment)
         end
     end
   end

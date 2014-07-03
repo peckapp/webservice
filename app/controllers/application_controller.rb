@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   # protect_from_forgery with: :exception
 
-  def specific_index(model, parameter)
+  def specific_index(model, *parameters)
     if params[parameter]
       models = model.where(parameter => params[parameter])
     else

@@ -1,2 +1,2 @@
-module EventCommentsHelper
+module CommentsHelper
 end

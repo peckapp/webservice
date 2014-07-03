@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
   ##############
 
   ### EVENT COMMENTS ###
-  has_many :event_comments #
+  has_many :comments #
   ######################
 
   ### SUBSCRIPTIONS ###
