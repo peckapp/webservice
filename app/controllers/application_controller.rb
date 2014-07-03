@@ -22,12 +22,22 @@ class ApplicationController < ActionController::Base
     return result
   end
 
-  def specific_show(model, parameter)
-    if params[parameter]
-      theModel = model.where(parameter => params[parameter]).find(params[:id])
-    else
-      theModel = model.find(params[:id])
+  def specific_show(model, *parameters)
+
+    result = model.all
+
+    # [[parameters]] => [parameters]
+    flat_parameters = parameters.flatten!
+
+    # if there is at least one parameter, filter result
+    if ! flat_parameters.blank?
+      for p in flat_parameters do
+        if params[p]
+          result = result.where(p => params[p])
+        end
+      end
     end
-    return theModel
+
+    return result.find(params[:id])
   end
 end

@@ -3,6 +3,7 @@ require 'test_helper'
 class PushNotificationsControllerTest < ActionController::TestCase
   def setup
     @controller = Api::V1::PushNotificationsController.new
+    @attributes = [:id, :user_id, :type, :response, :format]
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end
 
@@ -16,7 +17,13 @@ class PushNotificationsControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get :show, :format => :json, :id => 1
+    params = {:id => 10, :institution_id => 2, :open => true, :format => :json}
+    params.keys.each do |attribute|
+      unless @attributes.include? attribute
+        assert(false, "Attribute not found in database table.")
+      end
+    end
+    get :show, params
     assert_response :success
   end
 

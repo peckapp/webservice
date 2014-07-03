@@ -15,9 +15,9 @@ class CircleMember < ActiveRecord::Base
   #
   # private
   #
-  # def date_added_is_date?
-  #   unless date_added.is_a?(Date)
-  #     errors.add(:date_added, 'must be a valid date')
-  #   end
-  # end
+  def self.date_added_is_date?
+    unless date_added.is_a?(Date)
+      errors.add(:date_added, 'must be a valid date')
+    end
+  end
 end
