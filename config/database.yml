@@ -33,6 +33,7 @@ development:
 test:
   <<: *default
   database: webservice_test
+  password: peckapp
   # osx socket
   socket: /tmp/mysql.sock
 

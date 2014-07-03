@@ -9,15 +9,15 @@ module Api
       respond_to :json
 
 
-        def index
-          if params[:circle_id]
-            @circle_members = specific_index(CircleMember, :circle_id)
+      def index
+        if params[:circle_id]
+          @circle_members = specific_index(CircleMember, :circle_id)
           # filter circle members by institution id
-          elsif params[:institution_id]
-            @circle_members = CircleMember.joins(:circle).where("circles.institution_id" => params[:institution_id])
-          else
+        elsif params[:institution_id]
+          @circle_members = CircleMember.joins(:circle).where("circles.institution_id" => params[:institution_id])
+        else
             # otherwise return all circle members
-            @circle_members = CircleMember.all
+          @circle_members = CircleMember.all
         end
       end
 
