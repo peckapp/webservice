@@ -46,19 +46,28 @@ gem 'feedjira'
 # nokogiri HTML, XML, SAX, and Reader parser. can search using XPath or CSS selectors
 gem 'nokogiri'
 
+# mechanize for traversing webpages and links
+gem 'mechanize'
+
 # Clockwork as a replacement for cron to handle automated job scheduling. Useful for scraping tasks
 gem 'clockwork'
 
+# Restclient for gathering pages
+gem 'rest-client'
+
+### API
+# rabl rails for api
+gem 'rabl-rails'
+
+### UTILITIES
 # Bloom Filter for crawlers to keep track of which pages have been traversed
 gem 'bloomfilter-rb', '~> 2.1.1'
 
 # Bcrypt for password encryption
 gem 'bcrypt', '~> 3.1.7'
 
-# rabl rails for api
-gem 'rabl-rails'
-
 # devise
 gem 'devise', '~> 3.2.4'
 
+# primitive gui display of database models
 gem 'hirb', '~> 0.7.2'

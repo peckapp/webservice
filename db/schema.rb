@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140702212001) do
+ActiveRecord::Schema.define(version: 20140703183344) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
@@ -350,6 +350,8 @@ ActiveRecord::Schema.define(version: 20140702212001) do
     t.boolean  "deleted",                       default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.float    "latitude"
+    t.float    "longitude"
   end
 
   add_index "simple_events", ["circle_id"], name: "index_simple_events_on_circle_id", using: :btree
