@@ -56,7 +56,6 @@ module Api
 
         @menu_item_id = dining_period_create_params[:menu_item_id]
           MenuItem.find(@menu_item_id).dining_periods << @dining_period
-        end
       end
 
       def update

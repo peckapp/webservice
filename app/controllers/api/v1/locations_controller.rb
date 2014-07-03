@@ -8,6 +8,7 @@ module Api
 
       def index
         @locations = specific_index(Location, :institution_id)
+      end
 
       def show
         @location = specific_show(Location, :institution_id)

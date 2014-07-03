@@ -1,6 +1,6 @@
 module Api
   module V1
-    class UserDevicesController < ApplicationController #Api::BaseController
+    class UserDeviceTokensController < ApplicationController #Api::BaseController
 
       # before_action :confirm_admin
       # :except => [:index, :show]
@@ -10,7 +10,7 @@ module Api
         if params[:user_id]
           @user_device_tokens = specific_index(UserDeviceToken, :user_id)
         else
-          @user_device_tokens = UserDevice.all
+          @user_device_tokens = UserDeviceToken.all
         end
       end
 
@@ -18,20 +18,21 @@ module Api
         if params[:user_id]
           @user_device_token = specific_show(UserDeviceToken, :user_id)
         else
-          @user_device_token = UserDevice.find(params[:id])
+          @user_device_token = UserDeviceToken.find(params[:id])
+        end
       end
 
       def create
-        @user_device_token = UserDevice.create(user_device_token_params)
+        @user_device_token = UserDeviceToken.create(user_device_token_params)
       end
 
       def update
-        @user_device_token = UserDevice.find(params[:id])
+        @user_device_token = UserDeviceToken.find(params[:id])
         @user_device_token.update_attributes(user_device_token_params)
       end
 
       def destroy
-        @user_device_token = UserDevice.find(params[:id]).destroy
+        @user_device_token = UserDeviceToken.find(params[:id]).destroy
       end
 
       private

@@ -13,6 +13,7 @@ module Api
           @menu_items = DiningPlace.find(params[:dining_place_id]).menu_items
         else
           @menu_items = specific_index(MenuItem, :institution_id)
+        end
       end
 
       def show
@@ -22,6 +23,7 @@ module Api
           @menu_items = DiningPlace.find(params[:dining_place_id]).menu_items.find(params_id)
         else
           @menu_item = specific_show(MenuItem, :institution_id)
+        end
       end
 
       def create

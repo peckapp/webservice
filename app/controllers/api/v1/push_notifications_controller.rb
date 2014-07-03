@@ -11,6 +11,7 @@ module Api
           @push_notifications = specific_index(PushNotification, :user_id)
         else
           @push_notifications = PushNotification.all
+        end
       end
 
       def show
@@ -18,6 +19,7 @@ module Api
           @push_notification = specific_show(PushNotification, :user_id)
         else
           @push_notification = PushNotification.find(params[:id])
+        end
       end
 
       def create
