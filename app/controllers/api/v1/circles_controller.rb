@@ -9,8 +9,16 @@ module Api
       respond_to :json
 
       def index
-        if params[:institution_id]
-          @circles = specific_index(Circle, :institution_id)
+        search_params = []
+
+        puts params
+
+        for key in params.keys do
+          break if key == "format" || "authentication"
+          search_params << key
+        end
+        puts "search_params: #{search_params}"
+        @circles = specific_index(Circle, search_params)
       end
 
       def show
