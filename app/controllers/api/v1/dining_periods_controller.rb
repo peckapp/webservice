@@ -6,26 +6,20 @@ module Api
       # :except => [:index, :show]
 
       def index
-        # If given a dining place id, find all dining periods for that dining place
-        if params[:dining_place_id]
-          @dining_periods = DiningPlace.find(params[:dining_place_id]).dining_periods
 
-        # If given a dining opportunity id, find all dining periods for that dining opportunity
-        elsif params[:dining_opportunity_id]
-          @dining_periods = DiningOpportunity.find(params[:dining_opportunity_id]).dining_periods
-
-        # If given a menu item id, find all dining periods for that menu item.
-        elsif params[:menu_item_id]
-          @dining_periods = MenuItem.find(params[:menu_item_id]).dining_periods
-
-        # If given an institution id, find all dining periods for that institution
-        elsif params[:institution_id]
+        if params[:institution_id]
           @dining_periods = DiningPeriod.joins(:dining_places).where("dining_places.institution_id" => params[:institution_id])
-
-        # Otherwise, return all dining periods
         else
-          @dining_periods = DiningPeriod.all
+          search_params = []
+
+          for key in params.keys do
+            # break off when irrelevent params are reached
+            break if key == "format"
+            search_params << key
+          end
+          @dining_periods = specific_index(DiningPeriod, search_params)
         end
+
       end
 
       def show
