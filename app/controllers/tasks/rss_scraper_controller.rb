@@ -17,13 +17,14 @@ class Tasks::RssScraperController < ApplicationController
 
       page = Nokogiri::XML(RestClient.get(url))
 
-      feed.xpath('//rss/channel/item').each { |item|
+      page.xpath('//rss/channel/item').each { |item|
 
-        se = SimpleEvent.new
+        event = SimpleEvent.new
 
-        se.institution_id = institution_id
+        event.institution_id = institution_id
 
         item.children.each { |child|
+
           next if child.blank?
 
           if child.class == Nokogiri::XML::Element then
@@ -32,6 +33,16 @@ class Tasks::RssScraperController < ApplicationController
             puts "unexpected child type: #{child.class}"
           end
         }
+        # a start_date is required
+        next if event.start_date.blank?
+
+        # if end_date is null, give the event a default length of an hour
+        if event.end_date.blank?
+          # adds an hour to start_date
+          event.end_date = event.start_date.advance( hours: 1 )
+        end
+
+        non_duplicative_save(event, {title: event.title, start_date: event.start_date})
 
       }
 
@@ -44,15 +55,18 @@ class Tasks::RssScraperController < ApplicationController
         event.title = property.content.squish
 
       elsif name.match(/description/)
-        se.description = preperty.content.squish
+        event.event_description = property.content.squish
+
+      elsif name.match(/pubDate/)
+        event.start_date = DateTime.parse(property.content)
 
       elsif name.match(/link/)
         # williams' link html seems to be broken and missing a close tag, this handles that error
         link = item.css('link').first.text.squish
         if link != ""
-          se.event_url = link
+          event.event_url = link
         else
-          se.event_url = item.css('link').first.next.text.squish
+          event.event_url = property.css('link').first.next.text.squish
         end
 
       elsif name.match(/latitude|lat/)
@@ -63,8 +77,21 @@ class Tasks::RssScraperController < ApplicationController
 
       end
 
-      puts "filled event: #{event}"
+      puts "filled event: #{event.inspect}"
 
+    end
+
+    def non_duplicative_save(object, hash)
+      # method only applies to subclass models of the rails ActiveRecord::Base class
+      if object.class.superclass == ActiveRecord::Base
+        if ! object.class.exists?(hash)
+          object.save
+        else
+          # do nothing
+        end
+      else
+        puts "attempting to save an object which is not a subclass of ActiveRecord::Base"
+      end
     end
 
 end
