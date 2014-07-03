@@ -12,4 +12,11 @@ class ActivityLog < ActiveRecord::Base
   ### activity log => notification view ###
   has_one :notification_view #
 
+  # validates :sender, :presence => true, :numericality => true
+  # validates :receiver, :presence => true, :numericality => true
+  # validates :category, :presence => true
+  # validates :type_of_activity, :presence => true
+  # validates :message, :presence => true
+  # validates :read_status, :presence => true
+
 end

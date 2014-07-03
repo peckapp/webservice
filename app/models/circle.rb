@@ -11,4 +11,9 @@ class Circle < ActiveRecord::Base
 
   ### circle's activity ###
   has_many :activity_logs #
+
+  # validates :institution_id, :presence => true, :numericality => true
+  # validates :user_id, :presence => true, :numericality => true
+  # validates :circle_name, :presence => true
+  
 end

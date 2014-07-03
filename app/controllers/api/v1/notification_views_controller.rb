@@ -11,6 +11,7 @@ module Api
           @notification_views = specific_index(NotificationView, :user_id)
         else
           @notification_views = NotificationView.all
+        end
       end
 
       def show
@@ -18,6 +19,7 @@ module Api
           @notification_view = specific_show(NotificiationView, :user_id)
         else
           @notification_view = NotificationView.find(params[:id])
+        end
       end
 
       def create
