@@ -81,17 +81,6 @@ class Tasks::RssScraperController < ApplicationController
 
     end
 
-    def non_duplicative_save(object, hash)
-      # method only applies to subclass models of the rails ActiveRecord::Base class
-      if object.class.superclass == ActiveRecord::Base
-        if ! object.class.exists?(hash)
-          object.save
-        else
-          # do nothing
-        end
-      else
-        puts "attempting to save an object which is not a subclass of ActiveRecord::Base"
-      end
-    end
+    
 
 end
