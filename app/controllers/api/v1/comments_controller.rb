@@ -8,7 +8,13 @@ module Api
       respond_to :json
 
       def index
-        @comments = Comment.all
+        search_params = []
+
+        for key in params.keys do
+          break if key == "format"
+          search_params << key
+        end
+        @comments = specific_index(Comment, search_params)
       end
 
       def show
@@ -31,7 +37,7 @@ module Api
       private
 
         def comment_params
-          params.require(:comment).permit(:category, :comment_from, :user_id, :comment)
+          params.require(:comment).permit(:category, :comment_from, :user_id, :content)
         end
     end
   end

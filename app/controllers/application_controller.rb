@@ -7,9 +7,11 @@ class ApplicationController < ActionController::Base
 
     result = model.all
 
+    # [[parameters]] => [parameters]
     flat_parameters = parameters.flatten!
 
-    if flat_parameters.count >= 1
+    # if there is at least one parameter, filter result
+    if ! flat_parameters.blank?
       for p in flat_parameters do
         if params[p]
           result = result.where(p => params[p])
