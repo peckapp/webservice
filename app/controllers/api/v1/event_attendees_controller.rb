@@ -14,6 +14,7 @@ module Api
           @event_attendees = EventAttendee.joins(:attendee).where("users.institution_id" => params[:institution_id])
         else
           @event_attendees = EventAttendee.all
+        end
       end
 
       def show
@@ -23,6 +24,7 @@ module Api
           @event_attendees = EventAttendee.joins(:attendee).where("users.institution_id" => params[:institution_id]).find(params[:id])
         else
           @event_attendee = EventAttendee.find(params[:id])
+        end
       end
 
       def create
