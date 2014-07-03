@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140702031136) do
+ActiveRecord::Schema.define(version: 20140702212001) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
@@ -133,19 +133,21 @@ ActiveRecord::Schema.define(version: 20140702031136) do
   add_index "dining_opportunities", ["institution_id"], name: "index_dining_opportunities_on_institution_id", using: :btree
   add_index "dining_opportunities", ["type"], name: "index_dining_opportunities_on_type", using: :btree
 
-  create_table "dining_opportunities_dining_periods", id: false, force: true do |t|
+  create_table "dining_opportunities_dining_places", id: false, force: true do |t|
     t.integer "dining_opportunity_id", null: false
-    t.integer "dining_period_id",      null: false
+    t.integer "dining_place_id",       null: false
   end
 
-  add_index "dining_opportunities_dining_periods", ["dining_opportunity_id", "dining_period_id"], name: "dining_opportunities_dining_periods_index", using: :btree
+  add_index "dining_opportunities_dining_places", ["dining_opportunity_id", "dining_place_id"], name: "dining_opportunities_dining_places_index", using: :btree
 
   create_table "dining_periods", force: true do |t|
-    t.time     "start_time",  null: false
-    t.time     "end_time",    null: false
+    t.time     "start_time",            null: false
+    t.time     "end_time",              null: false
     t.integer  "day_of_week"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "dining_opportunity_id", null: false
+    t.integer  "dining_place_id",       null: false
   end
 
   create_table "dining_periods_dining_places", id: false, force: true do |t|
@@ -263,14 +265,17 @@ ActiveRecord::Schema.define(version: 20140702031136) do
   add_index "locations", ["name"], name: "index_locations_on_name", using: :btree
 
   create_table "menu_items", force: true do |t|
-    t.string   "name",           null: false
-    t.integer  "institution_id", null: false
+    t.string   "name",                  null: false
+    t.integer  "institution_id",        null: false
     t.string   "details_link"
     t.string   "small_price"
     t.string   "large_price"
     t.string   "combo_price"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "dining_opportunity_id", null: false
+    t.integer  "dining_place_id",       null: false
+    t.date     "date_available",        null: false
   end
 
   add_index "menu_items", ["institution_id"], name: "index_menu_items_on_institution_id", using: :btree
