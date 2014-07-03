@@ -4,12 +4,20 @@ class ApplicationController < ActionController::Base
   # protect_from_forgery with: :exception
 
   def specific_index(model, *parameters)
-    if params[parameter]
-      models = model.where(parameter => params[parameter])
-    else
-      models = model.all
+
+    result = model.all
+
+    flat_parameters = parameters.flatten!
+    
+    if flat_parameters.count >= 1
+      for p in flat_parameters do
+        if params[p]
+          result = result.where(p => params[p])
+        end
+      end
     end
-    return models
+
+    return result
   end
 
   def specific_show(model, parameter)
