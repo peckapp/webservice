@@ -1,8 +1,8 @@
 require 'test_helper'
 
-class EventCommentsControllerTest < ActionController::TestCase
+class CommentsControllerTest < ActionController::TestCase
   def setup
-    @controller = Api::V1::EventCommentsController.new
+    @controller = Api::V1::CommentsController.new
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end
 
@@ -22,13 +22,13 @@ class EventCommentsControllerTest < ActionController::TestCase
 
   test "should post create" do
     params = {institution: 1, bob: "bob", user_id: 1}
-    post :create, event_comment: params, :format => :json
+    post :create, comment: params, :format => :json
     assert_response :success
   end
 
   test "should patch update" do
     params = {user_id: 5}
-    patch :update, :id => 1, event_comment: params, :format => :json
+    patch :update, :id => 1, comment: params, :format => :json
     assert_response(:success)
   end
 

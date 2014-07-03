@@ -1,4 +1,4 @@
-class EventComment < ActiveRecord::Base
+class Comment < ActiveRecord::Base
 # verified
   ### author of comment ###
   belongs_to :user #
