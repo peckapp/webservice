@@ -43,7 +43,7 @@ class Tasks::RssScraperController < ApplicationController
           event.end_date = event.start_date.advance( hours: 1 )
         end
 
-        result = ModelDuplication.non_duplicative_save(event, {title: event.title, start_date: event.start_date})
+        result = ModelDuplication.non_duplicative_save(event, title: event.title, start_date: event.start_date)
 
         if result then puts "filled event: #{event.inspect}" end
       }
