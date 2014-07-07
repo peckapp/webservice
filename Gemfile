@@ -49,11 +49,16 @@ gem 'nokogiri'
 # mechanize for traversing webpages and links
 gem 'mechanize'
 
-# Clockwork as a replacement for cron to handle automated job scheduling. Useful for scraping tasks
-gem 'clockwork'
-
 # Restclient for gathering pages
 gem 'rest-client'
+
+# Sidekiq for running background jobs in seperate threads - https://github.com/mperham/sidekiq
+gem 'sidekiq'
+# sidetiq for scheduling those bacground jobs - https://github.com/tobiassvn/sidetiq
+gem 'sidetiq'
+# gems for the sidekiq interface
+gem 'sinatra', require: false
+gem 'slim'
 
 ### API
 # rabl rails for api
