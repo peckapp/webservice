@@ -8,7 +8,7 @@ module Api
 
       def index
         if params[:user_id]
-          @notification_views = specific_index(NotificationView, :user_id)
+          @notification_views = specific_index(NotificationView, params)
         else
           @notification_views = NotificationView.all
         end
@@ -39,7 +39,7 @@ module Api
 
         def notification_view_params
 
-          params.require(:notification_view).permit(:user_id, :activity_log_id, :date_viewed, :viewed)
+          params.require(:notification_view).permit(:institution_id, :user_id, :activity_log_id, :date_viewed, :viewed)
 
         end
     end

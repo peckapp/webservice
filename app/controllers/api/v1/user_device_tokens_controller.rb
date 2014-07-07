@@ -8,7 +8,7 @@ module Api
 
       def index
         if params[:user_id]
-          @user_device_tokens = specific_index(UserDeviceToken, :user_id)
+          @user_device_tokens = specific_index(UserDeviceToken, params)
         else
           @user_device_tokens = UserDeviceToken.all
         end
@@ -39,7 +39,7 @@ module Api
 
         def user_device_token_params
 
-          params.require(:user_device_token).permit(:user_id, :token)
+          params.require(:user_device_token).permit(:institution_id, :user_id, :token)
 
         end
     end

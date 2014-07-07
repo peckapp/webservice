@@ -9,16 +9,16 @@ module Api
       respond_to :json
 
       def index
-        search_params = []
 
-        puts params
+        @circles = specific_index(Circle, params)
 
-        for key in params.keys do
-          break if key == "format" || "authentication"
-          search_params << key
+        # hash mapping circle id to array of its members for display in json
+        @member_ids = {}
+
+        for c in @circles  
+          @member_ids[c.id] = CircleMember.where("circle_id" => c.id).pluck(:user_id)
         end
-        puts "search_params: #{search_params}"
-        @circles = specific_index(Circle, search_params)
+
       end
 
       def show
@@ -27,6 +27,9 @@ module Api
         else
           @circle = specific_show(Circle, :institution_id)
         end
+
+        # array of this circle's members for display in json
+        @member_ids = CircleMember.where("circle_id" => params[:id]).pluck(:user_id)
       end
 
       def create

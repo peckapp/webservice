@@ -31,7 +31,7 @@ module Api
       private
 
         def event_view_params
-          params.require(:event_view).permit(:user_id, :category, :event_viewed, :date_viewed)
+          params.require(:event_view).permit(:institution_id, :user_id, :category, :event_viewed, :date_viewed)
         end
     end
   end
