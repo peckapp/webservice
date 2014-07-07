@@ -40,7 +40,7 @@ module Api
 
         def subscription_params
 
-          params.require(:subscription).permit(:user_id, :category, :subscribed_to)
+          params.require(:subscription).permit(:institution_id, :user_id, :category, :subscribed_to)
 
         end
     end

@@ -32,7 +32,7 @@ module Api
       private
 
         def configuration_params
-          params.require(:configuration).permit(:mascot, :config_file_name)
+          params.require(:configuration).permit(:institution_id, :mascot, :config_file_name)
         end
     end
   end
