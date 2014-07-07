@@ -9,15 +9,8 @@ module Api
       respond_to :json
 
       def index
-        search_params = []
 
-        # collect all relevent search parameters from url
-        for key in params.keys do
-          break if key == "format" || "authentication"
-          search_params << key
-        end
-
-        @circles = specific_index(Circle, search_params)
+        @circles = specific_index(Circle, params)
 
         # hash mapping circle id to array of its members for display in json
         @member_ids = {}
