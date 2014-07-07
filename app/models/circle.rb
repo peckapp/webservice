@@ -15,5 +15,7 @@ class Circle < ActiveRecord::Base
   # validates :institution_id, :presence => true, :numericality => true
   # validates :user_id, :presence => true, :numericality => true
   # validates :circle_name, :presence => true
-  
+  before_save :
+
+  def valid_
 end

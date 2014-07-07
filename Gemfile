@@ -71,3 +71,6 @@ gem 'devise', '~> 3.2.4'
 
 # primitive gui display of database models
 gem 'hirb', '~> 0.7.2'
+
+# validating dates
+gem 'validates_timeliness', '~> 3.0'

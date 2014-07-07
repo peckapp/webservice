@@ -4,7 +4,10 @@ class UserDeviceTokensControllerTest < ActionController::TestCase
 
   def setup
     @controller = Api::V1::UserDeviceTokensController.new
-    @attributes = [:token, :format, :id]
+    @attributes = [:token, :institution_id, :format, :id]
+    @params_show = {:id => 11, :institution_id => 5, :token => "blob", :format => :json}
+    @params_create = {:institution_id => 2, :token => "dope_token"}
+    @params_update = {:token => "jill"}
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end
 
@@ -13,35 +16,22 @@ class UserDeviceTokensControllerTest < ActionController::TestCase
   end
 
   test "should get index" do
-    get :index, :format => :json
-    assert_response :success
+    get_index(@controller)
   end
 
   test "should get show" do
-    params = {:id => 10, :token => "soybeans", :format => :json}
-    params.keys.each do |attribute|
-      unless @attributes.include? attribute
-        assert(false, "Attribute not found in database table.")
-      end
-    end
-    get :show, params
-    assert_response :success
+    get_show(@params_show, @controller, @attributes, 10)
   end
 
   test "should post create" do
-    params = {institution: 1, bob: "bob", user_id: 1}
-    post :create, user_device_token: params, :format => :json
-    assert_response :success
+    post_create(@params_create, @controller)
   end
 
   test "should patch update" do
-    params = {institution: 2, user_id: 2}
-    patch :update, :id => 20, user_device_token: params, :format => :json
-    assert_response(:success)
+    patch_update(@params_update, @controller, 20)
   end
 
-  test "should delete" do
-    delete :destroy, :format => :json, :id => 12
-    assert_response :success
+  test "should delete destroy" do
+    delete_destroy(@controller, 21)
   end
 end
