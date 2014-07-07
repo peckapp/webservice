@@ -1,6 +1,7 @@
 class Tasks::RssScraperController < ApplicationController
 
   require 'date'
+  include ModelDuplication
 
   def scrape
     puts "in scrape method"
@@ -42,8 +43,9 @@ class Tasks::RssScraperController < ApplicationController
           event.end_date = event.start_date.advance( hours: 1 )
         end
 
-        non_duplicative_save(event, {title: event.title, start_date: event.start_date})
+        result = ModelDuplication.non_duplicative_save(event, title: event.title, start_date: event.start_date)
 
+        if result then puts "filled event: #{event.inspect}" end
       }
 
     end
@@ -61,12 +63,19 @@ class Tasks::RssScraperController < ApplicationController
         event.start_date = DateTime.parse(property.content)
 
       elsif name.match(/link/)
+        puts property.to_html
         # williams' link html seems to be broken and missing a close tag, this handles that error
-        link = item.css('link').first.text.squish
-        if link != ""
-          event.event_url = link
-        else
-          event.event_url = property.css('link').first.next.text.squish
+        link_elem = property.css('link')
+        if ! link_elem.blank?
+          # standard situation where the text of the element is the link
+          link = link_elem.first.text.squish
+
+          if link.blank?
+            # another attempt that gets the next element, done this way due to strange parsing results in testing
+            link = property.css('link').first.next.text.squish
+          end
+
+          if ! link.blank? && link.uri? then event.event_url = link end
         end
 
       elsif name.match(/latitude|lat/)
@@ -77,21 +86,15 @@ class Tasks::RssScraperController < ApplicationController
 
       end
 
-      puts "filled event: #{event.inspect}"
-
     end
 
-    def non_duplicative_save(object, hash)
-      # method only applies to subclass models of the rails ActiveRecord::Base class
-      if object.class.superclass == ActiveRecord::Base
-        if ! object.class.exists?(hash)
-          object.save
-        else
-          # do nothing
-        end
-      else
-        puts "attempting to save an object which is not a subclass of ActiveRecord::Base"
-      end
+    def uri?(string)
+      uri = URI.parse(string)
+      %w( http https ).include?(uri.scheme)
+    rescue URI::BadURIError
+      false
+    rescue URI::InvalidURIError
+      false
     end
 
 end
