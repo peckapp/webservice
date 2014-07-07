@@ -23,22 +23,9 @@ class ApplicationController < ActionController::Base
     return result
   end
 
-  def specific_show(model, params_hash)
-
-    search_params = model_search_params(model,params_hash)
-
-    result = model.all
-
-    # if there is at least one parameter, filter result
-    if ! params_hash.blank?
-      for p in params_hash
-        if params[p]
-          result = result.where(p => params[p])
-        end
-      end
-    end
-
-    return result.find(params[:id])
+  # show instance of model
+  def specific_show(model, id)
+    model.find(id)
   end
 
   private

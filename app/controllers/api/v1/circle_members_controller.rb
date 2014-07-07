@@ -18,7 +18,7 @@ module Api
       end
 
       def show
-        @circle_member = CircleMember.find(params[:id])
+        @circle_member = specific_show(CircleMember, params[:id])
       end
 
       def update
