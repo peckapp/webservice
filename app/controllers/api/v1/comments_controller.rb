@@ -11,7 +11,7 @@ module Api
         search_params = []
 
         for key in params.keys do
-          break if key == "format" || "authentication"
+          break if key == "format" # || "authentication"
           search_params << key
         end
         @comments = specific_index(Comment, search_params)
@@ -37,7 +37,7 @@ module Api
       private
 
         def comment_params
-          params.require(:comment).permit(:category, :comment_from, :user_id, :content)
+          params.require(:comment).permit(:category, :comment_from, :user_id, :content, :institution_id)
         end
     end
   end
