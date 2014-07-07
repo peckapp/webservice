@@ -8,6 +8,9 @@ class PushNotification < ActiveRecord::Base
   ### Callbacks ###
   #################
 
+  ### Institution ###
+  belongs_to :institution
+
   ### user associated to notification ###
   belongs_to :user #
 end
