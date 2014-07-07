@@ -12,14 +12,14 @@ module Api
         @simple_events = specific_index(SimpleEvent, params)
 
         for event in @simple_events
-          event.image_url = valid_image_url(event)
+          event.image_url = valid_event_image(event)
         end
       end
 
       def show
         @simple_events = specific_show(SimpleEvent, params)
 
-        event.image_url = valid_image_url(event)
+        event.image_url = valid_event_image(event)
       end
 
       def create

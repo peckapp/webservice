@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
 
     # if there is at least one parameter, filter result
     if ! search_params.blank?
-      for p in params_hash do
+      for p in search_params do
         if params[p]
           result = result.where(p => params[p])
         end
@@ -56,6 +56,7 @@ class ApplicationController < ActionController::Base
         next unless model.column_names.include?(key)
         search_params << key
       end
+      search_params
     end
 
 end
