@@ -8,6 +8,9 @@ class Subscription < ActiveRecord::Base
   ### Callbacks ###
   #################
 
+  ### Institution ###
+  belongs_to :institution
+
   ### user subscriptions ###
   belongs_to :user #
 end

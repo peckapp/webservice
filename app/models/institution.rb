@@ -60,4 +60,16 @@ class Institution < ActiveRecord::Base
   ### rss pages to scrape
   has_many :rss_pages
 
+  ### other relationships ###
+  has_many :activity_logs
+  has_many :circle_members
+  has_many :comments
+  has_many :dining_periods
+  has_many :event_attendees
+  has_many :event_views
+  has_many :notification_views
+  has_many :push_notifications
+  has_many :subscriptions
+  has_many :user_device_tokens
+
 end
