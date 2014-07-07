@@ -8,13 +8,7 @@ module Api
       respond_to :json
 
       def index
-        search_params = []
-
-        for key in params.keys do
-          break if key == "format" || "authentication"
-          search_params << key
-        end
-        @comments = specific_index(Comment, search_params)
+        @comments = specific_index(Comment, params)
 
       end
 

@@ -8,7 +8,7 @@ module Api
 
       def index
         if params[:user_id]
-          @user_device_tokens = specific_index(UserDeviceToken, :user_id)
+          @user_device_tokens = specific_index(UserDeviceToken, params)
         else
           @user_device_tokens = UserDeviceToken.all
         end

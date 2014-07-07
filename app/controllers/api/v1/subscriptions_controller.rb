@@ -9,7 +9,7 @@ module Api
 
       def index
         if params[:user_id]
-          @subscriptions = specific_index(Subscription, :user_id)
+          @subscriptions = specific_index(Subscription, params)
         else
           @subscriptions = Subscription.all
         end

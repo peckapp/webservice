@@ -8,7 +8,7 @@ module Api
 
       def index
         if params[:user_id]
-          @notification_views = specific_index(NotificationView, :user_id)
+          @notification_views = specific_index(NotificationView, params)
         else
           @notification_views = NotificationView.all
         end
