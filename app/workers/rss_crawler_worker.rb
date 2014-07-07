@@ -6,7 +6,9 @@ class RssCrawlerWorker
   recurrence { daily }
 
   def perform
-    
+
   end
+
+  
 
 end
