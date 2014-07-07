@@ -38,8 +38,7 @@ module Api
       private
 
         def push_notification_params
-
-          params.require(:push_notification).permit(:institution_id, :user_id, :type, :response)
+          params.require(:push_notification).permit(:user_id, :institution_id, :notification_type, :response)
 
         end
     end

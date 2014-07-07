@@ -9,6 +9,7 @@
 <% 10.times do |n| %>
 user_<%= n + 10 %>:
   token: "soybeans"
+  institution_id: 1
   id: <%= n + 10 %>
 <% end %>
 
@@ -16,5 +17,6 @@ user_<%= n + 10 %>:
 <% 10.times do |n| %>
 user_<%= n + 20 %>:
   token: "soybeans"
+  institution_id: 2
   id: <%= n + 20 %>
 <% end %>

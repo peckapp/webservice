@@ -7,9 +7,4 @@ class ExploreControllerTest < ActionController::TestCase
 
   def teardown
   end
-
-  test "should get index" do
-    get :index, :format => :json
-    assert_response :success
-  end
 end

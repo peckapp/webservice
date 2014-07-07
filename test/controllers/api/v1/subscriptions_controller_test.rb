@@ -5,6 +5,9 @@ class SubscriptionsControllerTest < ActionController::TestCase
     @controller = Api::V1::SubscriptionsController.new
     @attributes = [:id, :user_id, :category, :subscribed_to, :format]
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
+    @params_show = {:id => 2, :user_id => 1, :category => "math", :format => :json}
+    @params_create = {:user_id => 5, :category => "physics"}
+    @params_update = {:category => "statistics"}
   end
 
   def teardown
@@ -12,35 +15,22 @@ class SubscriptionsControllerTest < ActionController::TestCase
   end
 
   test "should get index" do
-    get :index, :format => :json
-    assert_response :success
+    get_index(@controller)
   end
 
   test "should get show" do
-    params = {:id => 10, :user_id => 1, :category => "bros", :subscribed_to => 2, :format => :json}
-    params.keys.each do |attribute|
-      unless @attributes.include? attribute
-        assert(false, "Attribute not found in database table.")
-      end
-    end
-    get :show, params
-    assert_response :success
+    get_show(@params_show, @controller, @attributes, 10)
   end
 
   test "should post create" do
-    params = {:category => "idk", :user_id => 1, :subscribed_to => 8}
-    post :create, subscription: params, :format => :json
-    assert_response :success
+    post_create(@params_create, @controller)
   end
 
   test "should patch update" do
-    params = {user_id: 2}
-    patch :update, :id => 15, subscription: params, :format => :json
-    assert_response(:success)
+    patch_update(@params_update, @controller, 20)
   end
 
-  test "should delete" do
-    delete :destroy, :format => :json, :id => 16
-    assert_response :success
+  test "should delete destroy" do
+    delete_destroy(@controller, 21)
   end
 end
