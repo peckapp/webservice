@@ -10,4 +10,7 @@ class Subscription < ActiveRecord::Base
 
   ### user subscriptions ###
   belongs_to :user #
+
+  ### subscriptions of an institution ###
+  belongs_to :institution
 end

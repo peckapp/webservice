@@ -8,6 +8,7 @@ class CircleMember < ActiveRecord::Base
   ### inviters of each circle member ###
   belongs_to :inviter, :class_name => "User", :foreign_key => "invited_by" #
 
+  belongs_to :institution
   # validates :circle_id, :presence => true, :numericality => true
   # validates :user_id, :presence => true, :numericality => true
   # validates :invited_by, :presence => true, :numericality => true

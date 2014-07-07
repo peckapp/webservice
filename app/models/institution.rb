@@ -60,4 +60,10 @@ class Institution < ActiveRecord::Base
   ### rss pages to scrape
   has_many :rss_pages
 
+  ### home institution of each circle member ###
+  has_many :circle_members
+
+  ### home institution of each subscription ###
+  has_many :subscriptions
+
 end

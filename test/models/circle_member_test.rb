@@ -7,5 +7,6 @@ class CircleMemberTest < ActiveSupport::TestCase
 
   test "method test" do
     CircleMember.date_added_is_date?
+    assert true
   end
 end
