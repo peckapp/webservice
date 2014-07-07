@@ -15,7 +15,7 @@ module Api
           search_params << key
         end
         @comments = specific_index(Comment, search_params)
-        
+
       end
 
       def show
@@ -38,7 +38,9 @@ module Api
       private
 
         def comment_params
+
           params.require(:comment).permit(:institution_id, :category, :comment_from, :user_id, :content)
+
         end
     end
   end
