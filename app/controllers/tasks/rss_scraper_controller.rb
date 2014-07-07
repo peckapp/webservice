@@ -1,7 +1,6 @@
 class Tasks::RssScraperController < ApplicationController
 
   require 'date'
-  include ModelDuplication
 
   def scrape
     puts "in scrape method"
