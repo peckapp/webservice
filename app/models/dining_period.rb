@@ -8,4 +8,7 @@ class DiningPeriod < ActiveRecord::Base
 
   ### dining periods for these opportunities ###
   belongs_to :dining_opportunity #
+
+  ### Institution ###
+  belongs_to :institution
 end

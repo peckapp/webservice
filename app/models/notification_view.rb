@@ -10,6 +10,9 @@ class NotificationView < ActiveRecord::Base
   ### Callbacks ###
   #################
 
+  ### Institution ###
+  belongs_to :institution
+
   ### notification is viewed by its host user ###
   belongs_to :user #
 

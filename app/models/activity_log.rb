@@ -1,5 +1,8 @@
 class ActivityLog < ActiveRecord::Base
 
+  ### Institution ###
+  belongs_to :institution
+
   ### if activity originates from a circle ###
   belongs_to :circle #
 
