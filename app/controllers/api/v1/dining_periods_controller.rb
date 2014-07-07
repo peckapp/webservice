@@ -6,16 +6,7 @@ module Api
       # :except => [:index, :show]
 
       def index
-
-          search_params = []
-
-          for key in params.keys do
-            # break off when irrelevent params are reached
-            break if key == "format" || "authentication"
-            search_params << key
-          end
-          @dining_periods = specific_index(DiningPeriod, search_params)
-
+          @dining_periods = specific_index(DiningPeriod, params)
       end
 
       def show

@@ -7,18 +7,13 @@ class ApplicationController < ActionController::Base
 
     search_params = model_search_params(model,params_hash)
 
-    for key in params_hash.keys do
-      next unless model.column_names.include?(key)
-      search_params << key
-    end
-
-    # use authentication institution_id to get initial set
-    
+    # uses authentication institution_id to get initial set
+    # result = allowed_model_instances(model, params[:authentication])
     result = model.all
 
     # if there is at least one parameter, filter result
     if ! search_params.blank?
-      for p in params_hash do
+      for p in search_params do
         if params[p]
           result = result.where(p => params[p])
         end
@@ -48,14 +43,20 @@ class ApplicationController < ActionController::Base
 
   private
 
+    def allowed_model_instances(model, auth_params)
+      # basic authentication check
+      model.where(institution_id: auth_params[:institution_id])
+    end
+
     # returns a hash of only the search parameters that apply to the specific model being queried
     def model_search_params(model, params)
       search_params = []
 
-      for key in params_hash.keys do
+      for key in params.keys do
         next unless model.column_names.include?(key)
         search_params << key
       end
+      search_params
     end
 
 end

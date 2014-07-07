@@ -8,7 +8,7 @@ module Api
 
       def index
         if params[:user_id]
-          @push_notifications = specific_index(PushNotification, :user_id)
+          @push_notifications = specific_index(PushNotification, params)
         else
           @push_notifications = PushNotification.all
         end
