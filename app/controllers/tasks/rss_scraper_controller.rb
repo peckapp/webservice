@@ -2,7 +2,7 @@ class Tasks::RssScraperController < ApplicationController
 
   require 'date'
 
-  def scrape
+  def self.scrape
     puts "in scrape method"
     Tasks::RssPage.all.each { |page|
       parse_and_store(page.url, page.institution_id)
@@ -11,7 +11,7 @@ class Tasks::RssScraperController < ApplicationController
 
   private
 
-    def parse_and_store(url,institution_id)
+    def self.parse_and_store(url,institution_id)
       # feed = Feedjira::Feed.fetch_and_parse(url)
       puts "in parse_and_store"
 
@@ -42,14 +42,14 @@ class Tasks::RssScraperController < ApplicationController
           event.end_date = event.start_date.advance( hours: 1 )
         end
 
-        result = ModelDuplication.non_duplicative_save(event, title: event.title, start_date: event.start_date)
+        result = ModelDuplication.non_duplicative_save(event, title: event.title, start_date: event.start_date, institution_id: event.institution_id)
 
         if result then puts "filled event: #{event.inspect}" else puts "event #{event.inspect} was a duplicate" end
       }
 
     end
 
-    def insert_property_into_event(property,event)
+    def self.insert_property_into_event(property,event)
       name = property.name
 
       if name.match(/title/)
@@ -87,7 +87,7 @@ class Tasks::RssScraperController < ApplicationController
 
     end
 
-    def uri?(string)
+    def self.uri?(string)
       uri = URI.parse(string)
       %w( http https ).include?(uri.scheme)
     rescue URI::BadURIError

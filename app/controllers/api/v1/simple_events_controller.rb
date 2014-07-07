@@ -8,19 +8,13 @@ module Api
       respond_to :json
 
       def index
-        if params[:institution_id]
-          @simple_events = specific_index(SimpleEvent, :institution_id)
-        elsif params[:user_id]
-          @simple_events = specific_index(SimpleEvent, :user_id)
-        elsif params[:department_id]
-          @simple_events = specific_index(SimpleEvent, :department_id)
-        elsif params[:club_id]
-          @simple_events = specific_index(SimpleEvent, :club_id)
-        elsif params[:circle_id]
-          @simple_events = specific_index(SimpleEvent, :circle_id)
-        else
-          @simple_events = SimpleEvent.sorted
+        search_params = []
+
+        for key in params.keys do
+          break if key == "format" || "authentication"
+          search_params << key
         end
+        @simple_events = specific_index(SimpleEvent, search_params)
         # return a default image url if it is null
         for event in @simple_events
           if event.image_url = "null"
