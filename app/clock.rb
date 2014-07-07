@@ -4,6 +4,12 @@
 require 'clockwork'
 module Clockwork
 
+  configure do |config|
+    config[:sleep_timeout] = 5
+    config[:logger] = Logger.new(Rails.root.join('log/clockwork.log'))
+    config[:tz] = 'EST'
+  end
+
   handler do |job|
     puts "Running #{job}"
   end
@@ -18,5 +24,5 @@ module Clockwork
   every(1.hour, 'hourly.job')
 
   every(1.day, 'midnight.job', :at => '00:00')
-  
+
 end

@@ -23,22 +23,26 @@ class ModelDuplication
         }
       end
       # checks database for the object's existence
-      if ! object.class.exists?(attrs)
+      if object.class.exists?(attrs)
         return true
       else
         return false
       end
     else
-      return false
+      raise "Attempted to find a model match for type other than an ActiveRecord::Base subclass"
     end
   end
 
   def self.non_duplicative_save(object, *attrs)
-    if ! self.model_match_exists(object, attrs[0])
-      object.save
-      return true
-    else
-      return false
+    begin
+      if ! self.model_match_exists(object, attrs[0])
+        object.save
+        return true
+      else
+        return false
+      end
+    rescue
+      puts "error rescued in non_duplicative_save"
     end
 
   end

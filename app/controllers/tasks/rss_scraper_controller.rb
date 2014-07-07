@@ -44,7 +44,7 @@ class Tasks::RssScraperController < ApplicationController
 
         result = ModelDuplication.non_duplicative_save(event, title: event.title, start_date: event.start_date)
 
-        if result then puts "filled event: #{event.inspect}" end
+        if result then puts "filled event: #{event.inspect}" else puts "event #{event.inspect} was a duplicate" end
       }
 
     end
