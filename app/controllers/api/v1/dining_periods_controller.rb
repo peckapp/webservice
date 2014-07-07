@@ -7,18 +7,14 @@ module Api
 
       def index
 
-        if params[:institution_id]
-          @dining_periods = DiningPeriod.joins(:dining_places).where("dining_places.institution_id" => params[:institution_id])
-        else
           search_params = []
 
           for key in params.keys do
             # break off when irrelevent params are reached
-            break if key == "format"
+            break if key == "format" || "authentication"
             search_params << key
           end
           @dining_periods = specific_index(DiningPeriod, search_params)
-        end
 
       end
 
@@ -64,11 +60,11 @@ module Api
       private
 
         def dining_period_create_params
-          params.require(:dining_period).permit(:start_time, :end_time, :day_of_week, :dining_place_id, :dining_opportunity_id, :menu_item_id)
+          params.require(:dining_period).permit(:institution_id, :start_time, :end_time, :day_of_week, :dining_place_id, :dining_opportunity_id, :menu_item_id)
         end
 
         def dining_period_update_params
-          params.require(:dining_period).permit(:start_time, :end_time, :day_of_week)
+          params.require(:dining_period).permit(:institution_id, :start_time, :end_time, :day_of_week)
         end
     end
   end

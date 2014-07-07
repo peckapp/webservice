@@ -47,7 +47,7 @@ module Api
       private
 
         def circle_member_params
-          params.require(:circle_member).permit(:circle_id, :user_id, :invited_by, :date_added)
+          params.require(:circle_member).permit(:institution_id, :circle_id, :user_id, :invited_by, :date_added)
         end
     end
   end

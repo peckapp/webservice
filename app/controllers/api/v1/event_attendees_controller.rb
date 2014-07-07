@@ -43,7 +43,7 @@ module Api
       private
 
         def event_attendee_params
-          params.require(:event_attendee).permit(:user_id, :added_by, :category, :event_attended)
+          params.require(:event_attendee).permit(:institution_id, :user_id, :added_by, :category, :event_attended)
         end
     end
   end
