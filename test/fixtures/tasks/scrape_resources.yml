@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  url: MyString
+  institution_id: 1
+  resource_type: MyString
+  scrape_interval: 1
+  validated: false
+
+two:
+  url: MyString
+  institution_id: 1
+  resource_type: MyString
+  scrape_interval: 1
+  validated: false
