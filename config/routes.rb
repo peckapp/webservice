@@ -1,6 +1,11 @@
+
+# enables the sidekiq job interface to be displayed
+require 'sidekiq/web'
+# simplifies the versioning constraints for API interactions
+require 'api_constraints'
+
 Rails.application.routes.draw do
 
-  require 'api_constraints'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -72,6 +77,8 @@ Rails.application.routes.draw do
   namespace :tasks do
     get 'rss_scraper/scrape'
   end
+
+  mount Sidekiq::Web, at: '/tasks'
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'

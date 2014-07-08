@@ -5,19 +5,21 @@
 # below each fixture, per the syntax in the comments below
 #
 
-# subscriptions from user 1
+# subscriptions from user 1, institution 1
 <% 10.times do |n| %>
 user_<%= n %>:
   id: <%= n + 10 %>
+  institution_id: 1
   user_id: 1
   category: "bros"
   subscribed_to: 2
 <% end %>
 
-# subscriptions from user 2
+# subscriptions from user 2, institution 2
 <% 10.times do |n| %>
 user_<%= n + 10 %>:
   id: <%= n + 20 %>
+  institution_id: 2
   user_id: 2
   category: "peanuts"
   subscribed_to: 1

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140703211157) do
+ActiveRecord::Schema.define(version: 20140707200947) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
@@ -301,15 +301,15 @@ ActiveRecord::Schema.define(version: 20140703211157) do
   add_index "notification_views", ["user_id"], name: "index_notification_views_on_user_id", using: :btree
 
   create_table "push_notifications", force: true do |t|
-    t.integer  "user_id",        null: false
-    t.string   "type",           null: false
+    t.integer  "user_id",           null: false
+    t.string   "notification_type", null: false
     t.string   "response"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "institution_id", null: false
+    t.integer  "institution_id",    null: false
   end
 
-  add_index "push_notifications", ["type"], name: "index_push_notifications_on_type", using: :btree
+  add_index "push_notifications", ["notification_type"], name: "index_push_notifications_on_notification_type", using: :btree
   add_index "push_notifications", ["user_id"], name: "index_push_notifications_on_user_id", using: :btree
 
   create_table "rss_pages", force: true do |t|

@@ -3,6 +3,10 @@ require 'test_helper'
 class EventAttendeesControllerTest < ActionController::TestCase
   def setup
     @controller = Api::V1::EventAttendeesController.new
+    @attributes = []
+    @params_show = {}
+    @params_create = {}
+    @params_update = {}
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end
 
@@ -11,29 +15,22 @@ class EventAttendeesControllerTest < ActionController::TestCase
   end
 
   test "should get index" do
-    get :index, :format => :json
-    assert_response :success
+    get_index(@controller)
   end
 
   test "should get show" do
-    get :show, :format => :json, :id => 1
-    assert_response :success
+    get_show(@params_show, @controller, @attributes, 10)
   end
 
   test "should post create" do
-    params = {institution: 1, bob: "bob", user_id: 1}
-    post :create, event_attendee: params, :format => :json
-    assert_response :success
+    post_create(@params_create, @controller)
   end
 
   test "should patch update" do
-    params = {user_id: 5}
-    patch :update, :id => 1, event_attendee: params, :format => :json
-    assert_response(:success)
+    patch_update(@params_update, @controller, 20)
   end
 
-  test "should delete" do
-    delete :destroy, :format => :json, :id => 1
-    assert_response :success
+  test "should delete destroy" do
+    delete_destroy(@controller, 21)
   end
 end

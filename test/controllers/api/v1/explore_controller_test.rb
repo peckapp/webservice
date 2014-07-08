@@ -9,7 +9,6 @@ class ExploreControllerTest < ActionController::TestCase
   end
 
   test "should get index" do
-    get :index, :format => :json
-    assert_response :success
+    get_index(@controller)
   end
 end
