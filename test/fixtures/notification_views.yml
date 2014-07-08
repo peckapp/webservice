@@ -1,0 +1,38 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined.  If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+
+<% 10.times do |n| %>
+notification_view_<%= n + 10 %>:
+  id: <%= n + 10 %>
+  activity_log_id: 1
+  institution_id: 2
+  user_id: 2
+  viewed: true
+  date_viewed: 2007-12-04 00:00:00
+<% end %>
+
+
+<% 10.times do |n| %>
+notification_view_<%= n + 20 %>:
+  id: <%= n + 20 %>
+  activity_log_id: 2
+  institution_id: 1
+  user_id: 3
+  viewed: false
+  date_viewed: 2007-12-04 00:00:00
+<% end %>
+
+
+<% 10.times do |n| %>
+notification_view_<%= n + 30 %>:
+ id: <%= n + 30 %>
+ institution_id: 1
+ activity_log_id: 3
+ user_id: 1
+ viewed: false
+ date_viewed: 2007-12-04 00:00:00
+<% end %>

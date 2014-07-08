@@ -1,0 +1,28 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined.  If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+
+# menu_item device tokens set 1
+<% 10.times do |n| %>
+menu_item_<%= n + 10 %>:
+  id: <%= n + 10 %>
+  name: "chicken"
+  institution_id: 1
+  dining_opportunity_id: 2
+  dining_place_id: 1
+  date_available: 2007-12-04
+<% end %>
+
+# menu_item device tokens set 2
+<% 10.times do |n| %>
+menu_item_<%= n + 20 %>:
+  id: <%= n + 20 %>
+  name: "soybeans"
+  institution_id: 2
+  dining_place_id: 2
+  dining_opportunity_id: 1
+  date_available: 2007-12-04
+<% end %>

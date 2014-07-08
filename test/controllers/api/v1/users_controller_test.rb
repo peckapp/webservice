@@ -6,7 +6,7 @@ class UsersControllerTest < ActionController::TestCase
   def setup
     @controller = Api::V1::UsersController.new
     @attributes = [:id, :institution_id, :first_name, :last_name, :username, :blurb, :facebook_link, :active, :format]
-    @params_show = {:institution_id => 1, :first_name => "John", :last_name => "Doe", :username => "jdoe", :active => true, :format => :json}
+    @params_show = {:id => 10, :institution_id => 1, :first_name => "John", :last_name => "Doe", :username => "jdoe", :active => true, :format => :json}
     @params_create = {:institution_id => 5, :first_name => "Sam", :last_name => "Adams", :username => "sadams", :active => true}
     @params_update = {:first_name => "John", :active => false}
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
@@ -21,7 +21,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get_show(@params_show, @controller, @attributes, 10)
+    get_show(@params_show, @controller, @attributes)
   end
 
   test "should post create" do

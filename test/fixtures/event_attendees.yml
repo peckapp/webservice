@@ -1,0 +1,41 @@
+<% 10.times do |n| %>
+event_attendee_<%= n + 10 %>:
+  id: <%= n + 10 %>
+  user_id: 1
+  added_by: 2
+  category: "simple"
+  event_attended: 3
+  institution_id: 1
+<% end %>
+
+
+<% 10.times do |n| %>
+event_attendee_<%= n + 20 %>:
+  id: <%= n + 20 %>
+  user_id: 2
+  added_by: 3
+  category: "athletic"
+  event_attended: 2
+  institution_id: 1
+<% end %>
+
+<% 10.times do |n| %>
+event_attendee_<%= n + 30 %>:
+  id: <%= n + 30 %>
+  user_id: 1
+  added_by: 3
+  category: "simple"
+  event_attended: 2
+  institution_id: 8
+<% end %>
+
+
+<% 10.times do |n| %>
+event_attendee_<%= n + 40 %>:
+ id: <%= n + 40 %>
+ user_id: 4
+ added_by: 2
+ category: "athletic"
+ event_attended: 1
+ institution_id: 3
+<% end %>
