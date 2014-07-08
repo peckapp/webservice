@@ -27,7 +27,7 @@ class ConfigurationsControllerTest < ActionController::TestCase
   end
 
   test "should patch update" do
-    patch_update(@params_update, @controller, 2, :configuration)
+    patch_update(@params_update, @controller, 20, :configuration)
   end
 
   test "should delete destroy" do

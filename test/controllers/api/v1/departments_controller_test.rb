@@ -27,7 +27,7 @@ class DepartmentsControllerTest < ActionController::TestCase
   end
 
   test "should patch update" do
-    patch_update(@params_update, @controller, 1, :department)
+    patch_update(@params_update, @controller, 20, :department)
   end
 
   test "should delete destroy" do

@@ -5,7 +5,7 @@ class SimpleEventsControllerControllerTest < ActionController::TestCase
     @controller = Api::V1::SimpleEventsController.new
     @attributes = [:id, :title, :event_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :event_url, :open, :image_url, :comment_count, :start_date, :end_date, :deleted, :latitude, :longitude, :format]
     @params_show = {:id => 20, :title => "Summer Observatory", :open => true}
-    @params_create = {:title => "Super Dope Event", :institution_id => 3, :user_id => 3, :open => true, :start_date => 2007-12-04 00:00:00, :end_date => 2007-12-04 00:00:00, :format => :json}
+    @params_create = {:title => "Super Dope Event", :institution_id => 3, :user_id => 3, :open => true, :start_date => DateTime.current, :end_date => DateTime.current + 1.hour, :format => :json}
     @params_update = {:title => "Less Dope Event"}
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end
