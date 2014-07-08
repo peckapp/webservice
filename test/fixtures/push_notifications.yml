@@ -16,14 +16,14 @@ user_<%= n + 10 %>:
 <% end %>
 
 <% 10.times do |n| %>
-user_<%= n + 0 %>:
+user_<%= n + 20 %>:
   id: <%= n + 20 %>
   user_id: <%= n + 30 %>
   notification_type: "bob"
   institution_id: 3
 <% end %>
 
-# circles from institution 4, circle 4
+
 <% 10.times do |n| %>
 user_<%= n + 30 %>:
  id: <%= n + 30 %>

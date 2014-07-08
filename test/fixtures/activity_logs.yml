@@ -1,0 +1,56 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined.  If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+
+
+<% 10.times do |n| %>
+user_<%= n %>:
+  id: <%= n + 10 %>
+  sender: <%= n + 10 %>
+  receiver: 1
+  read_status: true
+  message: "So fun"
+  institution_id: 1
+  type_of_activity: "simple"
+  category: "foo"
+<% end %>
+
+
+<% 10.times do |n| %>
+user_<%= n + 10 %>:
+  id: <%= n + 20 %>
+  sender: <%= n + 20 %>
+  receiver: 2
+  read_status: false
+  message: "More fun"
+  institution_id: 2
+  type_of_activity: "athletic"
+  category: "bill"
+<% end %>
+
+<% 10.times do |n| %>
+user_<%= n + 20 %>:
+  id: <%= n + 30 %>
+  sender: <%= n + 30 %>
+  receiver: 3
+  read_status: true
+  message: "Less fun"
+  institution_id: 3
+  type_of_activity: "simple"
+  category: "bob"
+<% end %>
+
+<% 10.times do |n| %>
+user_<%= n + 30 %>:
+ id: <%= n + 40 %>
+ sender: <%= n + 40 %>
+ receiver: 4
+ message: "Too much fun"
+ read_status: false
+ institution_id: 4
+ type_of_activity: "athletic"
+ category: "dog"
+<% end %>

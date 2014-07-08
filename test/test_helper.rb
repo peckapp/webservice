@@ -28,15 +28,15 @@ class ActiveSupport::TestCase
       assert_response :success
     end
 
-    def post_create(params_create, controller)
+    def post_create(params_create, controller, type)
        @controller = controller
-       post :create, push_notification: params_create, :format => :json
+       post :create, type => params_create, :format => :json
        assert_response :success
     end
 
-    def patch_update(params_update, controller, id)
+    def patch_update(params_update, controller, id, type)
       @controller = controller
-      patch :update, :id => id, push_notification: params_update, :format => :json
+      patch :update, :id => id, type => params_update, :format => :json
       assert_response(:success)
     end
 

@@ -14,9 +14,11 @@ class CircleMember < ActiveRecord::Base
 
   belongs_to :institution
 
-  # validates :circle_id, :presence => true, :numericality => true
-  # validates :user_id, :presence => true, :numericality => true
-  # validates :invited_by, :presence => true, :numericality => true
+  ### Redundant checks ###
+  validates :circle_id, :presence => true, :numericality => true
+  validates :user_id, :presence => true, :numericality => true
+  validates :invited_by, :presence => true, :numericality => true
+
   before_save :valid_circle_id
   before_save :valid_user_id
   before_save :valid_invited_by
@@ -73,7 +75,7 @@ class CircleMember < ActiveRecord::Base
     end
     return error_messages
   end
-  
+
   def default_date_added
     if date_added.blank?
       self.date_added = self.created_at
