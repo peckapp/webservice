@@ -1,0 +1,29 @@
+<% 10.times do |n| %>
+dining_opportunity_<%= n + 10 %>:
+  id: <%= n + 10 %>
+  dining_opportunity_type: "breakfast"
+  institution_id: 1
+<% end %>
+
+
+<% 10.times do |n| %>
+dining_opportunity_<%= n + 20 %>:
+  id: <%= n + 20 %>
+  dining_opportunity_type: "lunch"
+  institution_id: 1
+<% end %>
+
+<% 10.times do |n| %>
+dining_opportunity_<%= n + 30 %>:
+  id: <%= n + 30 %>
+  dining_opportunity_type: "dinner"
+  institution_id: 8
+<% end %>
+
+
+<% 10.times do |n| %>
+dining_opportunity_<%= n + 40 %>:
+ id: <%= n + 40 %>
+ dining_opportunity_type: "brunch"
+ institution_id: 3
+<% end %>

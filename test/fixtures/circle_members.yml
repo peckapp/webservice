@@ -7,7 +7,7 @@
 
 # circle members from institution 1, circle 1
 <% 10.times do |n| %>
-user_<%= n %>:
+circle_member_<%= n %>:
   id: <%= n %>
   circle_id: 1
   user_id: <%= n + 10 %>
@@ -18,7 +18,7 @@ user_<%= n %>:
 
 # circle members from institution 2, circle 2
 <% 10.times do |n| %>
-user_<%= n + 10 %>:
+circle_member_<%= n + 10 %>:
   id: <%= n + 10 %>
   circle_id: 2
   user_id: <%= n + 20 %>
@@ -29,7 +29,7 @@ user_<%= n + 10 %>:
 
 #  circle members from institution 3, circle 3
 <% 10.times do |n| %>
-user_<%= n + 0 %>:
+circle_member_<%= n + 20 %>:
   id: <%= n + 20 %>
   circle_id: 3
   user_id: <%= n + 30 %>
@@ -40,7 +40,7 @@ user_<%= n + 0 %>:
 
 # circles from institution 4, circle 4
 <% 10.times do |n| %>
-user_<%= n + 30 %>:
+circle_member_<%= n + 30 %>:
  id: <%= n + 30 %>
  circle_id: 4
  user_id: <%= n + 40 %>

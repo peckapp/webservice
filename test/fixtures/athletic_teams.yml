@@ -5,18 +5,19 @@
 # below each fixture, per the syntax in the comments below
 #
 
-# user_device_token device tokens set 1
+
 <% 10.times do |n| %>
-user_device_token_<%= n + 10 %>:
-  token: "soybeans"
-  institution_id: 1
+athletic_team_<%= n %>:
   id: <%= n + 10 %>
+  institution_id: 1
+  sport_name: "basketball"
+  gender: "female"
 <% end %>
 
-# user_device_token device tokens set 2
 <% 10.times do |n| %>
-user_device_token_<%= n + 20 %>:
-  token: "soybeans"
-  institution_id: 2
+athletic_team_<%= n + 10 %>:
   id: <%= n + 20 %>
+  institution_id: 2
+  sport_name: "baseball"
+  gender: "male"
 <% end %>

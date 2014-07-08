@@ -1,0 +1,19 @@
+
+configuration_one:
+  id: 1
+  config_file_name: "configs/lolz"
+  institution_id: 1
+  mascot: "Red Pig"
+
+
+configuration_two:
+  id: 2
+  config_file_name: "configs/troll"
+  institution_id: 1
+  mascot: "Lord Jeff"
+
+configuration_three:
+  id: 3
+  config_file_name: "configs/bro"
+  institution_id: 1
+  mascot: "Bird"

@@ -1,0 +1,29 @@
+<% 10.times do |n| %>
+club_<%= n + 10 %>:
+  id: <%= n + 10 %>
+  club_name: "Mario"
+  institution_id: 1
+<% end %>
+
+
+<% 10.times do |n| %>
+club_<%= n + 20 %>:
+  id: <%= n + 20 %>
+  club_name: "The Hobbit"
+  institution_id: 1
+<% end %>
+
+<% 10.times do |n| %>
+club_<%= n + 30 %>:
+  id: <%= n + 30 %>
+  club_name: "Dope Club"
+  institution_id: 2
+<% end %>
+
+
+<% 10.times do |n| %>
+club_<%= n + 40 %>:
+ id: <%= n + 40 %>
+ club_name: "Emma Watson Fan Club"
+ institution_id: 4
+<% end %>

@@ -1,6 +1,6 @@
 
 <% 10.times do |n| %>
-user_<%= n %>:
+push_notification_<%= n %>:
   id: <%= n %>
   user_id: <%= n + 10 %>
   institution_id: 1
@@ -8,7 +8,7 @@ user_<%= n %>:
 <% end %>
 
 <% 10.times do |n| %>
-user_<%= n + 10 %>:
+push_notification_<%= n + 10 %>:
   id: <%= n + 10 %>
   user_id: <%= n + 20 %>
   institution_id: 2
@@ -16,16 +16,16 @@ user_<%= n + 10 %>:
 <% end %>
 
 <% 10.times do |n| %>
-user_<%= n + 0 %>:
+push_notification_<%= n + 20 %>:
   id: <%= n + 20 %>
   user_id: <%= n + 30 %>
   notification_type: "bob"
   institution_id: 3
 <% end %>
 
-# circles from institution 4, circle 4
+
 <% 10.times do |n| %>
-user_<%= n + 30 %>:
+push_notification_<%= n + 30 %>:
  id: <%= n + 30 %>
  user_id: <%= n + 40 %>
  institution_id: 4

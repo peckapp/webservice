@@ -1,0 +1,16 @@
+
+department_one:
+  id: 1
+  name: "Chemistry"
+  institution_id: 1
+
+
+department_two:
+  id: 2
+  name: "Biology"
+  institution_id: 1
+
+department_three:
+  id: 3
+  name: "Math"
+  institution_id: 1

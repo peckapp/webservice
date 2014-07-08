@@ -7,10 +7,10 @@ class ActivityLog < ActiveRecord::Base
   belongs_to :circle #
 
   ### sender of activity log ###
-  belongs_to :sender, :class_name => "User", :foreign_key => "sender"
+  belongs_to :messenger, :class_name => "User", :foreign_key => "sender"
 
   ### receiver of activity log ###
-  belongs_to :receiver, :class_name => "User", :foreign_key => "receiver"
+  belongs_to :receipient, :class_name => "User", :foreign_key => "receiver"
 
   ### activity log => notification view ###
   has_one :notification_view #

@@ -7,7 +7,7 @@
 
 # subscriptions from user 1, institution 1
 <% 10.times do |n| %>
-user_<%= n %>:
+subscription_<%= n %>:
   id: <%= n + 10 %>
   institution_id: 1
   user_id: 1
@@ -17,7 +17,7 @@ user_<%= n %>:
 
 # subscriptions from user 2, institution 2
 <% 10.times do |n| %>
-user_<%= n + 10 %>:
+subscription_<%= n + 10 %>:
   id: <%= n + 20 %>
   institution_id: 2
   user_id: 2
