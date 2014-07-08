@@ -1,4 +1,5 @@
 module ModelDatabaseValidations
+  extend ActiveSupport::Concern 
   def validate_attribute(parameter, type)
     error_messages = []
     if self.parameter.blank?
