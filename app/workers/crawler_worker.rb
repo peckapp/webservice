@@ -9,8 +9,13 @@ class CrawlerWorker
 
   recurrence { daily }
 
-  def perform
+  # bloom filter as a persistent class variable
+  # use is for efficiency, not accuracy, so occasional race conditions won't matter
+  @@bf = nil
 
+  def perform
+    seeds = Tasks::ScrapeResource.where(type: 'seed')
+    crawl_loop()
   end
 
   private
@@ -26,12 +31,71 @@ class CrawlerWorker
 
       # bloom filter to prevent repeated page crawls
       k = (0.7 * bf_bits).ceil
-      bf = BloomFilter::Native.new(size: page_quantity, hashes: k, seed: 1)
+      @@bf = BloomFilter::Native.new(size: page_quantity, hashes: k, seed: 1) if @@bf.blank?
 
       # inserts a page into the queue as a seed
       root_page = agent.get(root_url)
       crawl_queue.insert(0,root_page)
 
+      while ! @crawl_queue.empty? do
+        page = @crawl_queue.pop
+
+        next unless page.kind_of? Mechanize::Page
+
+        page.links.each do |l|
+          next if @@bf.include?(l.href.to_s) # link has already been traversed
+          @@bf.insert(l.href.to_s) # otherwise insert it
+
+          # necessary conditions for the link to be followed
+          next unless acceptable_link_format?(l) && within_domain?(l.uri)
+
+          begin
+            new_page = l.click
+            crawl_queue.insert(0,new_page)
+          rescue Timeout::Error
+            # resuest timed out, could repeat it or add to queue, but for now just continue on
+          rescue Mechanize::ResponseCodeError => exception
+            # handle various response code errors
+            if exception.response_code == '403'
+              new_page = exception.page
+            else
+              raise # Some other error, re-raise for now
+            end
+          end
+
+          PageCrawlWorker.perform_async(new_page.uri)
+
+          # sleep time to keep the crawl interval unpredictable and prevent lockout from certain sites
+          sleep(1 + rand)
+
+        end # end inner link traversal
+
+      end # end outer while loop
+
+    end # end crawl_loop method
+
+    # utility methods for the crawler
+
+    def acceptable_link_format?(link)
+      begin
+        if link.uri.to_s.match(/#/) || link.uri.to_s.empty? then return false end # handles anchor links within the page
+        scheme = link.uri.scheme
+        if (scheme != nil) && (scheme != "http") && (scheme != "https") then return false end # eliminates non http,https, or relative links
+        # prevents download of media files, should be a better way to do this than by explicit checks for each type
+        if link.uri.to_s.match(/.pdf|.jgp|.jgp2|.png|.gif/) then return false end
+      rescue
+        return false
+      end
+      true
+    end
+
+    def within_domain?(link)
+      if link.relative?
+        true # handles relative links within the site
+      else
+        # matches the current links host with the top-level domain string of the root URI
+        link.host.match(@root_host.to_s) ? true : false
+      end
     end
 
 end

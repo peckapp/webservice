@@ -2,6 +2,8 @@
 
 class PageCrawlWorker
 
-  
+  def perform(url)
+    
+  end
 
 end
