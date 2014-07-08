@@ -24,7 +24,7 @@ class UserDeviceTokensControllerTest < ActionController::TestCase
   end
 
   test "should post create" do
-    post_create(@params_create, @controller)
+    post_create(@params_create, @controller, :user_device_token)
   end
 
   test "should patch update" do
