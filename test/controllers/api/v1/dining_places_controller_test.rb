@@ -23,11 +23,11 @@ class DiningPlacesControllerTest < ActionController::TestCase
   end
 
   test "should post create" do
-    post_create(@params_create, @controller)
+    post_create(@params_create, @controller, :dining_places)
   end
 
   test "should patch update" do
-    patch_update(@params_update, @controller, 20)
+    patch_update(@params_update, @controller, 20, :dining_places)
   end
 
   test "should delete destroy" do

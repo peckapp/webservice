@@ -23,11 +23,11 @@ class NotificationViewsControllerTest < ActionController::TestCase
   end
 
   test "should post create" do
-    post_create(@params_create, @controller)
+    post_create(@params_create, @controller, :notification_view)
   end
 
   test "should patch update" do
-    patch_update(@params_update, @controller, 20)
+    patch_update(@params_update, @controller, 20, :notification_view)
   end
 
   test "should delete destroy" do
