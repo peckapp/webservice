@@ -7,7 +7,7 @@
 
 
 <% 10.times do |n| %>
-user_<%= n %>:
+athletic_team_<%= n %>:
   id: <%= n + 10 %>
   institution_id: 1
   sport_name: "basketball"
@@ -15,7 +15,7 @@ user_<%= n %>:
 <% end %>
 
 <% 10.times do |n| %>
-user_<%= n + 10 %>:
+athletic_team_<%= n + 10 %>:
   id: <%= n + 20 %>
   institution_id: 2
   sport_name: "baseball"

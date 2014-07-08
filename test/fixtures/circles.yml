@@ -6,7 +6,7 @@
 #
 
 <% 10.times do |n| %>
-user_<%= n + 10 %>:
+circle_<%= n + 10 %>:
   id: <%= n + 10 %>
   circle_name: "Multiple Girls"
   user_id: <%= n + 20 %>
@@ -14,7 +14,7 @@ user_<%= n + 10 %>:
 <% end %>
 
 <% 10.times do |n| %>
-user_<%= n + 20 %>:
+circle_<%= n + 20 %>:
   id: <%= n + 20 %>
   circle_name: "Math People"
   user_id: <%= n + 30 %>
@@ -22,7 +22,7 @@ user_<%= n + 20 %>:
 <% end %>
 
 <% 10.times do |n| %>
-user_<%= n + 30 %>:
+circle_<%= n + 30 %>:
  id: <%= n + 30 %>
  circle_name: "Counter-Strike Party"
  user_id: <%= n + 40 %>

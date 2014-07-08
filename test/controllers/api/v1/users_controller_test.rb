@@ -6,7 +6,7 @@ class UsersControllerTest < ActionController::TestCase
   def setup
     @controller = Api::V1::UsersController.new
     @attributes = [:id, :institution_id, :first_name, :last_name, :username, :blurb, :facebook_link, :active, :format]
-    @params_show = {:id => 2, :institution_id => 1, :first_name => "John", :last_name => "Doe", :username => "jdoe", :active => true, :format => :json}
+    @params_show = {:institution_id => 1, :first_name => "John", :last_name => "Doe", :username => "jdoe", :active => true, :format => :json}
     @params_create = {:institution_id => 5, :first_name => "Sam", :last_name => "Adams", :username => "sadams", :active => true}
     @params_update = {:first_name => "John", :active => false}
     ActionController::Parameters.action_on_unpermitted_parameters = :raise

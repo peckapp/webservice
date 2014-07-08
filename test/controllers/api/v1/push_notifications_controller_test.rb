@@ -5,7 +5,7 @@ class PushNotificationsControllerTest < ActionController::TestCase
   def setup
     @controller = Api::V1::PushNotificationsController.new
     @attributes = [:id, :institution_id, :user_id, :notification_type, :response, :format]
-    @params_show = {:id => 22, :institution_id => 3, :notification_type => "bob", :format => :json}
+    @params_show = {:institution_id => 3, :notification_type => "bob", :format => :json}
     @params_create = {:institution_id => 1, user_id: 1, :notification_type => "james"}
     @params_update = {:user_id => 5}
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
@@ -20,7 +20,7 @@ class PushNotificationsControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get_show(@params_show, @controller, @attributes, 10)
+    get_show(@params_show, @controller, @attributes, 22)
   end
 
   test "should post create" do

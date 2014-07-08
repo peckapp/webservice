@@ -4,7 +4,7 @@ class AthleticTeamsControllerTest < ActionController::TestCase
   def setup
     @controller = Api::V1::AthleticTeamsController.new
     @attributes = [:id, :institution_id, :sport_name, :gender, :head_coach, :team_link, :format]
-    @params_show = {:id => 12, :institution_id => 1, :gender => "female", :format => :json}
+    @params_show = {:institution_id => 1, :gender => "female", :format => :json}
     @params_create = {:institution_id => 2, :sport_name => "swimming", :gender => "male"}
     @params_update = {:sport_name => "rugby"}
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
@@ -19,7 +19,7 @@ class AthleticTeamsControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get_show(@params_show, @controller, @attributes, 10)
+    get_show(@params_show, @controller, @attributes, 12)
   end
 
   test "should post create" do

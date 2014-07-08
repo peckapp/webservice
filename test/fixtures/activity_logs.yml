@@ -7,7 +7,7 @@
 
 
 <% 10.times do |n| %>
-user_<%= n %>:
+activity_log_<%= n %>:
   id: <%= n + 10 %>
   sender: <%= n + 10 %>
   receiver: 1
@@ -20,7 +20,7 @@ user_<%= n %>:
 
 
 <% 10.times do |n| %>
-user_<%= n + 10 %>:
+activity_log_<%= n + 10 %>:
   id: <%= n + 20 %>
   sender: <%= n + 20 %>
   receiver: 2
@@ -32,7 +32,7 @@ user_<%= n + 10 %>:
 <% end %>
 
 <% 10.times do |n| %>
-user_<%= n + 20 %>:
+activity_log_<%= n + 20 %>:
   id: <%= n + 30 %>
   sender: <%= n + 30 %>
   receiver: 3
@@ -44,7 +44,7 @@ user_<%= n + 20 %>:
 <% end %>
 
 <% 10.times do |n| %>
-user_<%= n + 30 %>:
+activity_log_<%= n + 30 %>:
  id: <%= n + 40 %>
  sender: <%= n + 40 %>
  receiver: 4

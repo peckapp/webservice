@@ -7,7 +7,7 @@
 
 
 <% 10.times do |n| %>
-user_<%= n %>:
+athletic_event_<%= n %>:
   id: <%= n + 10 %>
   athletic_team_id: <%= n + 10 %>
   institution_id: 1
@@ -16,7 +16,7 @@ user_<%= n %>:
 
 
 <% 10.times do |n| %>
-user_<%= n + 10 %>:
+athletic_event_<%= n + 10 %>:
   id: <%= n + 20 %>
   athletic_team_id: <%= n + 20 %>
   institution_id: 2
@@ -24,7 +24,7 @@ user_<%= n + 10 %>:
 <% end %>
 
 <% 10.times do |n| %>
-user_<%= n + 20 %>:
+athletic_event_<%= n + 20 %>:
   id: <%= n + 30 %>
   athletic_team_id: <%= n + 30 %>
   institution_id: 3
@@ -33,7 +33,7 @@ user_<%= n + 20 %>:
 
 
 <% 10.times do |n| %>
-user_<%= n + 30 %>:
+athletic_event_<%= n + 30 %>:
  id: <%= n + 40 %>
  athletic_team_id: <%= n + 40 %>
  institution_id: 4
