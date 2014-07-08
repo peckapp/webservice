@@ -15,18 +15,14 @@ module Api
         # hash mapping circle id to array of its members for display in json
         @member_ids = {}
 
-        for c in @circles  
+        for c in @circles
           @member_ids[c.id] = CircleMember.where("circle_id" => c.id).pluck(:user_id)
         end
 
       end
 
       def show
-        if params[:user_id]
-          @circle = specific_show(Circle, :user_id)
-        else
-          @circle = specific_show(Circle, :institution_id)
-        end
+        @circle = specific_show(Circle, params[:id])
 
         # array of this circle's members for display in json
         @member_ids = CircleMember.where("circle_id" => params[:id]).pluck(:user_id)
