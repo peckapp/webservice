@@ -21,7 +21,7 @@ class ActivityLog < ActiveRecord::Base
   # validates :type_of_activity, :presence => true
   # validates :message, :presence => true
   # validates :read_status, :presence => true
-  before save :validate_user_id, :validate_institution_id, :validate_message, :validate_read_status, :validate_category, :validate_type_of_activity
+  # before save :validate_user_id, :validate_institution_id, :validate_message, :validate_read_status, :validate_category, :validate_type_of_activity
 
   # private
   def validate_message

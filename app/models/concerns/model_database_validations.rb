@@ -21,6 +21,10 @@ module ModelDatabaseValidations
   def validate_category
   end
 
+  def validate_circle_name
+    validate_attribute(self.circle_name, "circle_name", String, "String")
+  end
+
   def validate_institution_id
     validate_attribute(self.institution_id, "institution_id", Fixnum, "Fixnum")
   end
