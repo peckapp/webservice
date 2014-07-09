@@ -1,4 +1,5 @@
 class AthleticEvent < ActiveRecord::Base
+  include ModelBeforeSaveValidations
 # verified
   ### institution of event ###
   belongs_to :institution #

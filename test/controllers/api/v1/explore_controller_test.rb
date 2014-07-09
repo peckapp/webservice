@@ -5,10 +5,8 @@ class ExploreControllerTest < ActionController::TestCase
     @controller = Api::V1::ExploreController.new
   end
 
-  def teardown
+  test "should get index" do
+    get :index, :format => :json
+    assert_response :success, "Index action not successful"
   end
-
-  # test "should get index" do
-  #   get_index(@controller)
-  # end
 end

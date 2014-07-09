@@ -19,7 +19,7 @@ class Circle < ActiveRecord::Base
   before_save :validate_institution_id, :validate_circle_name, :validate_user_id
 
 # private
-  def validate_circle_name
-    validate_attribute(self.circle_name, "circle_name", String, "String")
-  end
+  # def validate_circle_name
+  #   validate_attribute(self.circle_name, "circle_name", String, "String")
+  # end
 end
