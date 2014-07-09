@@ -8,7 +8,7 @@ class ExploreControllerTest < ActionController::TestCase
   def teardown
   end
 
-  test "should get index" do
-    get_index(@controller)
-  end
+  # test "should get index" do
+  #   get_index(@controller)
+  # end
 end

@@ -7,19 +7,11 @@ module Api
       respond_to :json
 
       def index
-        if params[:user_id]
           @notification_views = specific_index(NotificationView, params)
-        else
-          @notification_views = NotificationView.all
-        end
       end
 
       def show
-        if params[:user_id]
-          @notification_view = specific_show(NotificationView, :user_id)
-        else
-          @notification_view = NotificationView.find(params[:id])
-        end
+          @notification_view = specific_show(NotificationView, params)
       end
 
       def create

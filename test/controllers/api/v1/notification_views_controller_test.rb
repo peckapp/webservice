@@ -13,24 +13,24 @@ class NotificationViewsControllerTest < ActionController::TestCase
   def teardown
      ActionController::Parameters.action_on_unpermitted_parameters = false
   end
-
-  test "should get index" do
-    get_index(@controller)
-  end
-
-  test "should get show" do
-    get_show(@params_show, @controller, @attributes)
-  end
-
-  test "should post create" do
-    post_create(@params_create, @controller, :notification_view)
-  end
-
-  test "should patch update" do
-    patch_update(@params_update, @controller, 20, :notification_view)
-  end
-
-  test "should delete destroy" do
-    delete_destroy(@controller, 21)
-  end
+  # 
+  # test "should get index" do
+  #   get_index(@controller)
+  # end
+  #
+  # test "should get show" do
+  #   get_show(@params_show, @controller, @attributes)
+  # end
+  #
+  # test "should post create" do
+  #   post_create(@params_create, @controller, :notification_view)
+  # end
+  #
+  # test "should patch update" do
+  #   patch_update(@params_update, @controller, 20, :notification_view)
+  # end
+  #
+  # test "should delete destroy" do
+  #   delete_destroy(@controller, 21)
+  # end
 end

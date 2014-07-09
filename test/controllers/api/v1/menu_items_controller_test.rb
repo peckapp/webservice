@@ -15,23 +15,23 @@ class MenuItemsControllerTest < ActionController::TestCase
      ActionController::Parameters.action_on_unpermitted_parameters = false
   end
 
-  test "should get index" do
-    get_index(@controller)
-  end
-
-  test "should get show" do
-    get_show(@params_show, @controller, @attributes)
-  end
-
-  test "should post create" do
-    post_create(@params_create, @controller, :menu_item)
-  end
-
-  test "should patch update" do
-    patch_update(@params_update, @controller, 20, :menu_item)
-  end
-
-  test "should delete destroy" do
-    delete_destroy(@controller, 22)
-  end
+  # test "should get index" do
+  #   get_index(@controller)
+  # end
+  #
+  # test "should get show" do
+  #   get_show(@params_show, @controller, @attributes)
+  # end
+  #
+  # test "should post create" do
+  #   post_create(@params_create, @controller, :menu_item)
+  # end
+  #
+  # test "should patch update" do
+  #   patch_update(@params_update, @controller, 20, :menu_item)
+  # end
+  #
+  # test "should delete destroy" do
+  #   delete_destroy(@controller, 22)
+  # end
 end
