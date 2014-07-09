@@ -10,5 +10,5 @@ class DiningPlace < ActiveRecord::Base
   has_many :dining_periods #
 
   ### dining opportunities ###
-  has_and_belongs_to_many :dining_opportunities #
+  has_and_belongs_to_many :dining_opportunities, :join_table => :dining_opportunities_dining_places #
 end
