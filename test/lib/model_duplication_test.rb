@@ -34,13 +34,13 @@ class ModelDuplicationTest < ActionController::TestCase
 
   test "current or create new for preexisting object"
     menu_item = MenuItem.find(1)
-    result = ModelDuplication.current_or_create_new(menu_item)
-    assert_not result.blank?
+    result = ModelDuplication.current_or_create_new(menu_item.attributes)
+    assert_equal(menu_item, result)
   end
 
   test "current or create new for non-existant object"
     menu_item = self.random_menu_item
-    result = ModelDuplication.current_or_create_new(menu_item)
+    result = ModelDuplication.current_or_create_new(menu_item.attributes)
     assert_not result.blank?
   end
 
