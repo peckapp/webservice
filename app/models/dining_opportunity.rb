@@ -8,4 +8,7 @@ class DiningOpportunity < ActiveRecord::Base
 
   ### dining places ###
   has_and_belongs_to_many :dining_places #
+
+  ### available menu items ###
+  has_many :menu_items #
 end

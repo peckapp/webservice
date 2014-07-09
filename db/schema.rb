@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140709020206) do
+ActiveRecord::Schema.define(version: 20140709131856) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
@@ -68,13 +68,6 @@ ActiveRecord::Schema.define(version: 20140709020206) do
   add_index "athletic_teams", ["institution_id"], name: "index_athletic_teams_on_institution_id", using: :btree
   add_index "athletic_teams", ["sport_name"], name: "index_athletic_teams_on_sport_name", using: :btree
 
-  create_table "attendees_users", id: false, force: true do |t|
-    t.integer "event_attendee_id", null: false
-    t.integer "user_id",           null: false
-  end
-
-  add_index "attendees_users", ["event_attendee_id", "user_id"], name: "index_attendees_users_on_event_attendee_id_and_user_id", using: :btree
-
   create_table "circle_members", force: true do |t|
     t.integer  "circle_id",      null: false
     t.integer  "user_id",        null: false
@@ -88,13 +81,6 @@ ActiveRecord::Schema.define(version: 20140709020206) do
   add_index "circle_members", ["circle_id"], name: "index_circle_members_on_circle_id", using: :btree
   add_index "circle_members", ["invited_by"], name: "index_circle_members_on_invited_by", using: :btree
   add_index "circle_members", ["user_id"], name: "index_circle_members_on_user_id", using: :btree
-
-  create_table "circle_members_users", id: false, force: true do |t|
-    t.integer "user_id",          null: false
-    t.integer "circle_member_id", null: false
-  end
-
-  add_index "circle_members_users", ["user_id", "circle_member_id"], name: "circle_members_users_index", using: :btree
 
   create_table "circles", force: true do |t|
     t.integer  "institution_id", null: false
@@ -154,14 +140,14 @@ ActiveRecord::Schema.define(version: 20140709020206) do
   add_index "departments", ["name"], name: "index_departments_on_name", using: :btree
 
   create_table "dining_opportunities", force: true do |t|
-    t.string   "type",           null: false
-    t.integer  "institution_id", null: false
+    t.string   "dining_opportunity_type", null: false
+    t.integer  "institution_id",          null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "dining_opportunities", ["dining_opportunity_type"], name: "index_dining_opportunities_on_dining_opportunity_type", using: :btree
   add_index "dining_opportunities", ["institution_id"], name: "index_dining_opportunities_on_institution_id", using: :btree
-  add_index "dining_opportunities", ["type"], name: "index_dining_opportunities_on_type", using: :btree
 
   create_table "dining_opportunities_dining_places", id: false, force: true do |t|
     t.integer "dining_opportunity_id", null: false
@@ -181,20 +167,6 @@ ActiveRecord::Schema.define(version: 20140709020206) do
     t.integer  "institution_id",        null: false
   end
 
-  create_table "dining_periods_dining_places", id: false, force: true do |t|
-    t.integer "dining_period_id", null: false
-    t.integer "dining_place_id",  null: false
-  end
-
-  add_index "dining_periods_dining_places", ["dining_period_id", "dining_place_id"], name: "dining_periods_dining_places_index", using: :btree
-
-  create_table "dining_periods_menu_items", id: false, force: true do |t|
-    t.integer "dining_period_id", null: false
-    t.integer "menu_item_id",     null: false
-  end
-
-  add_index "dining_periods_menu_items", ["dining_period_id", "menu_item_id"], name: "dining_periods_menu_items_index", using: :btree
-
   create_table "dining_places", force: true do |t|
     t.integer  "institution_id", null: false
     t.string   "name",           null: false
@@ -208,13 +180,6 @@ ActiveRecord::Schema.define(version: 20140709020206) do
 
   add_index "dining_places", ["institution_id"], name: "index_dining_places_on_institution_id", using: :btree
   add_index "dining_places", ["name"], name: "index_dining_places_on_name", using: :btree
-
-  create_table "dining_places_menu_items", id: false, force: true do |t|
-    t.integer "dining_place_id", null: false
-    t.integer "menu_item_id",    null: false
-  end
-
-  add_index "dining_places_menu_items", ["dining_place_id", "menu_item_id"], name: "dining_places_menu_items_index", using: :btree
 
   create_table "event_attendees", force: true do |t|
     t.integer  "user_id",        null: false
@@ -244,15 +209,15 @@ ActiveRecord::Schema.define(version: 20140709020206) do
   add_index "event_views", ["user_id"], name: "index_event_views_on_user_id", using: :btree
 
   create_table "events_page_urls", force: true do |t|
-    t.integer  "institution_id", null: false
-    t.string   "url",            null: false
-    t.string   "type"
+    t.integer  "institution_id",       null: false
+    t.string   "url",                  null: false
+    t.string   "events_page_url_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "events_page_urls", ["events_page_url_type"], name: "index_events_page_urls_on_events_page_url_type", using: :btree
   add_index "events_page_urls", ["institution_id"], name: "index_events_page_urls_on_institution_id", using: :btree
-  add_index "events_page_urls", ["type"], name: "index_events_page_urls_on_type", using: :btree
 
   create_table "institutions", force: true do |t|
     t.string   "name",             null: false
@@ -271,13 +236,6 @@ ActiveRecord::Schema.define(version: 20140709020206) do
 
   add_index "institutions", ["configuration_id"], name: "index_institutions_on_configuration_id", using: :btree
   add_index "institutions", ["name"], name: "index_institutions_on_name", using: :btree
-
-  create_table "inviters_users", id: false, force: true do |t|
-    t.integer "event_attendee_id", null: false
-    t.integer "user_id",           null: false
-  end
-
-  add_index "inviters_users", ["event_attendee_id", "user_id"], name: "index_inviters_users_on_event_attendee_id_and_user_id", using: :btree
 
   create_table "locations", force: true do |t|
     t.integer  "institution_id", null: false
@@ -324,15 +282,15 @@ ActiveRecord::Schema.define(version: 20140709020206) do
   add_index "notification_views", ["user_id"], name: "index_notification_views_on_user_id", using: :btree
 
   create_table "push_notifications", force: true do |t|
-    t.integer  "user_id",           null: false
-    t.string   "notification_type", null: false
+    t.integer  "user_id",        null: false
+    t.string   "type",           null: false
     t.string   "response"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "institution_id",    null: false
+    t.integer  "institution_id", null: false
   end
 
-  add_index "push_notifications", ["notification_type"], name: "index_push_notifications_on_notification_type", using: :btree
+  add_index "push_notifications", ["type"], name: "index_push_notifications_on_type", using: :btree
   add_index "push_notifications", ["user_id"], name: "index_push_notifications_on_user_id", using: :btree
 
   create_table "rss_pages", force: true do |t|
