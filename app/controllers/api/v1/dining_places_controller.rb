@@ -13,7 +13,7 @@ module Api
         elsif params[:menu_item_id]
           @dining_places = MenuItem.find(params[:menu_item_id]).dining_places
         else
-          @dining_places = specific_index(DiningPlace, :institution_id)
+          @dining_places = specific_index(DiningPlace, params)
         end
       end
 
@@ -32,7 +32,7 @@ module Api
 
         @dining_period_id = dining_place_create_params[:dining_period_id]
           DiningPeriod.find(@dining_period_id).dining_places << @dining_place
-          
+
         @menu_item_id = dining_place_create_params[:menu_item_id]
           MenuItem.find(@menu_item_id).dining_places << @dining_place
       end

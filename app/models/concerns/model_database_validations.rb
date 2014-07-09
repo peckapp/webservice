@@ -18,16 +18,14 @@ module ModelDatabaseValidations
     return error_messages
   end
 
-  def validate_institution_id
-    validate_attribute(self.institution_id, "institution_id", Fixnum, "Fixnum")
+  def validate_category
   end
 
-  def validate_circle_name
-    validate_attribute(self.circle_name, "circle_name", String, "String")
+  def validate_institution_id
+    validate_attribute(self.institution_id, "institution_id", Fixnum, "Fixnum")
   end
 
   def validate_user_id
     validate_attribute(self.user_id, "user_id", Fixnum, "Fixnum")
   end
-
 end

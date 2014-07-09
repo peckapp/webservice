@@ -8,19 +8,11 @@ module Api
       respond_to :json
 
       def index
-        if params[:athletic_team_id]
-          @athletic_events = specific_index(AthleticEvent, :athletic_team_id)
-        else
-          @athletic_events = specific_index(AthleticEvent, :institution_id)
-        end
+        @athletic_events = specific_index(AthleticEvent, params)
       end
 
       def show
-        if params[:athletic_team_id]
-          @athletic_event = specific_show(AthleticEvent, :athletic_team_id)
-        else
-          @athletic_event = specific_show(AthleticEvent, :institution_id)
-        end
+        @athletic_event = specific_show(AthleticEvent, params)
       end
 
       def create
