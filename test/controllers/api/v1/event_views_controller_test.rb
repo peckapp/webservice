@@ -3,10 +3,10 @@ require 'test_helper'
 class EventViewsControllerTest < ActionController::TestCase
   def setup
     @controller = Api::V1::EventViewsController.new
-    @attributes = []
+    @attributes = [:user_id, :category, :event_viewed, :date_viewed, :institution_id]
     @params_show = {}
-    @params_create = {}
-    @params_update = {}
+    @params_create = {user_id: 2, category: "simple_events", event_viewed: 5}
+    @params_update = {event_viewed: 10}
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end
 

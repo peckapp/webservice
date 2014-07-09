@@ -1,0 +1,15 @@
+
+<% (1..10).each do |n| %>
+institution_<%= n %>:
+  id: <%= n %>
+  name: <%= "institution #{n} " %>
+  street_address: "address"
+  city: "city"
+  state: "state"
+  country: "country"
+  gps_longitude: <%= rand * 100.0 %>
+  gps_latitude: <%= rand * 100.0 %>
+  range: <%= rand * 0.01 %>
+  configuration_id: 1
+  api_key: <%= SecureRandom.hex(8) %>
+<% end %>
