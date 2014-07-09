@@ -16,7 +16,7 @@ module Api
 
       def show
         if params[:user_id]
-          @notification_view = specific_show(NotificiationView, :user_id)
+          @notification_view = specific_show(NotificationView, :user_id)
         else
           @notification_view = NotificationView.find(params[:id])
         end

@@ -31,7 +31,7 @@ module Api
       private
 
         def events_page_url_params
-          params.require(:events_page_url).permit(:institution_id, :url, :type)
+          params.require(:events_page_url).permit(:institution_id, :url, :events_page_url_type)
         end
     end
   end

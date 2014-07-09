@@ -7,7 +7,7 @@
 
 # public simple events from institution 1
 <% 10.times do |n| %>
-user_<%= n %>:
+simple_event_<%= n %>:
   title: "Dope"
   id: <%= n %>
   institution_id: 1
@@ -18,7 +18,7 @@ user_<%= n %>:
 
 # public simple events from institution 2
 <% 10.times do |n| %>
-user_<%= n + 10 %>:
+simple_event_<%= n + 10 %>:
   title: "Dope"
   id: <%= n + 10 %>
   institution_id: 2
@@ -29,7 +29,7 @@ user_<%= n + 10 %>:
 
 # private simple events from institution 1
 <% 10.times do |n| %>
-user_<%= n + 0 %>:
+simple_event_<%= n + 20 %>:
   title: "Dope"
   id: <%= n + 20 %>
   institution_id: 1
@@ -40,7 +40,7 @@ user_<%= n + 0 %>:
 
 # private simple events from institution 1
 <% 10.times do |n| %>
-user_<%= n + 30 %>:
+simple_event_<%= n + 30 %>:
  title: "Dope"
  id: <%= n + 30 %>
  institution_id: 1

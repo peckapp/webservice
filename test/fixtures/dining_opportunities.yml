@@ -1,0 +1,23 @@
+
+dining_opportunity_1:
+  id: 1
+  type: "breakfast"
+  institution_id: 1
+
+
+dining_opportunity_2:
+  id: 2
+  type: "lunch"
+  institution_id: 1
+
+
+dining_opportunity_3:
+  id: 3
+  type: "dinner"
+  institution_id: 1
+
+
+dining_opportunity_4:
+  id: 4
+  type: "brunch"
+  institution_id: 1

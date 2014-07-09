@@ -1,4 +1,5 @@
 class Circle < ActiveRecord::Base
+  include ModelDatabaseValidations
 # verified
   ### circle event creation ###
   has_many :simple_events #
@@ -15,7 +16,6 @@ class Circle < ActiveRecord::Base
   # validates :institution_id, :presence => true, :numericality => true
   # validates :user_id, :presence => true, :numericality => true
   # validates :circle_name, :presence => true
-  before_save :
+  before_save :validate_institution_id, :validate_circle_name, :validate_user_id
 
-  def valid_
 end

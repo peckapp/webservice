@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined.  If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+
+
+<% 10.times do |n| %>
+athletic_team_<%= n %>:
+  id: <%= n + 10 %>
+  institution_id: 1
+  sport_name: "basketball"
+  gender: "female"
+<% end %>
+
+<% 10.times do |n| %>
+athletic_team_<%= n + 10 %>:
+  id: <%= n + 20 %>
+  institution_id: 2
+  sport_name: "baseball"
+  gender: "male"
+<% end %>

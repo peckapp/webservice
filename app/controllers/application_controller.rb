@@ -38,7 +38,6 @@ class ApplicationController < ActionController::Base
     # returns a hash of only the search parameters that apply to the specific model being queried
     def model_search_params(model, params)
       search_params = []
-
       for key in params.keys do
         next unless model.column_names.include?(key)
         search_params << key
