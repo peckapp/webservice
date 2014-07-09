@@ -11,3 +11,16 @@ Institution.create( name: "Demo Institution", street_address: "1234 Main St.", c
 Institution.create( name: "Development", street_address: "123 Main St.", city: "Anytown", state: "NY", country: "USA", gps_longitude: -74.062958, gps_latitude: 40.869911, range: 15.0, configuration_id: 1, api_key: "DEVELOPMENT" )
 
 # May also want to seed the configuration files for the database here
+
+
+DiningOpportunity.create( dining_opportunity_type: "Breakfast", institution_id: 3 )
+DiningOpportunity.create( dining_opportunity_type: "Lunch", institution_id: 3 )
+DiningOpportunity.create( dining_opportunity_type: "Dinner", institution_id: 3 )
+DiningOpportunity.create( dining_opportunity_type: "Brunch", institution_id: 3 )
+DiningOpportunity.create( dining_opportunity_type: "Late Night", institution_id: 3 )
+
+DiningPlace.create(institution_id: 3, name: "Paresky Whitmans Market", range: 0.0002)
+DiningPlace.create(institution_id: 3, name: "Paresky Grab N Go", range: 0.0002)
+DiningPlace.create(institution_id: 3, name: "Faculty House", range: 0.0002)
+
+# MenuItems.create( name: nil, institution_id: nil, details_link: nil, small_price: nil, large_price: nil, combo_price: nil, created_at: nil, updated_at: nil, dining_opportunity_id: nil, dining_place_id: nil, date_available: nil, category: nil, serving_size: nil )
