@@ -1,6 +1,7 @@
 require 'test_helper'
+require 'ultimate_test_helper'
 
-class ClubsControllerTest < ActionController::TestCase
+class ClubsControllerTest < UltimateTestHelper
   def setup
     @controller = Api::V1::ClubsController.new
     @attributes = [:id, :institution_id, :club_name, :description, :user_id, :format]
