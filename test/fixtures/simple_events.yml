@@ -6,7 +6,7 @@
 #
 
 # public simple events from institution 1
-<% 10.times do |n| %>
+<% (1..10).each do |n| %>
 simple_event_<%= n %>:
   title: "Dope"
   id: <%= n %>
@@ -17,10 +17,10 @@ simple_event_<%= n %>:
 <% end %>
 
 # public simple events from institution 2
-<% 10.times do |n| %>
-simple_event_<%= n + 10 %>:
+<% (11..20).each do |n| %>
+simple_event_<%= n %>:
   title: "Dope"
-  id: <%= n + 10 %>
+  id: <%= n %>
   institution_id: 2
   open: true
   start_date: 2007-12-04 00:00:00
@@ -28,10 +28,10 @@ simple_event_<%= n + 10 %>:
 <% end %>
 
 # private simple events from institution 1
-<% 10.times do |n| %>
-simple_event_<%= n + 20 %>:
+<% (21..30).each do |n| %>
+simple_event_<%= n %>:
   title: "Dope"
-  id: <%= n + 20 %>
+  id: <%= n %>
   institution_id: 1
   open: false
   start_date: 2007-12-04 00:00:00
@@ -39,10 +39,10 @@ simple_event_<%= n + 20 %>:
 <% end %>
 
 # private simple events from institution 1
-<% 10.times do |n| %>
-simple_event_<%= n + 30 %>:
+<% (31..40).each do |n| %>
+simple_event_<%= n %>:
  title: "Dope"
- id: <%= n + 30 %>
+ id: <%= n %>
  institution_id: 1
  open: false
  start_date: 2007-12-04 00:00:00
