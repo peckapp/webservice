@@ -1,12 +1,13 @@
-class WilliamsDiningWorker.rb
+class WilliamsDiningWorker
 
   include Sidekiq::Worker
   include Sidetiq::Schedulable
 
-  recurrence { daily.hour_of_day(2) }
+  # recurrence { daily.hour_of_day(2) }
+  recurrence { minutely }
 
   def perform
-    resources = ScrapeResource.where(resource_type: "dining_csv", validated: true)
+    resources = Tasks::ScrapeResource.where(resource_type: "dining_csv", validated: true)
     if resources.blank?
       williams = Institution.where(name: "Williams")
       scrape_csv_page("http://dining.williams.edu/files/daily-menu.csv", williams.id)
@@ -28,6 +29,9 @@ class WilliamsDiningWorker.rb
       mi = MenuItem.new(institution_id: inst_id, details_link: url)
 
       csv.each do |l|
+
+        puts "==> #{l}"
+
         # indicies within csv lines are specific to the williams resources
         mi.name = l[2]
 
@@ -39,7 +43,7 @@ class WilliamsDiningWorker.rb
         place = ModelDuplication.current_or_create_new(DiningPlace, name: l[0], institution_id: inst_id)
         mi.dining_place_id = place.id
 
-        opportunity = ModelDuplication.current_or_save_new(DiningOpportunity, name l[3], institution_id: inst_id)
+        opportunity = ModelDuplication.current_or_save_new(DiningOpportunity, name: l[3], institution_id: inst_id)
         mi.dining_opportunity_id = opportunity.id
       end
 

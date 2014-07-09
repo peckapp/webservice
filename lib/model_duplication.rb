@@ -49,15 +49,15 @@ class ModelDuplication
   end
 
   # returns an object matching specified attributes, or creates one with them if none exist
-  def self.current_or_create_new(class, *attrs)
+  def self.current_or_create_new(model, *attrs)
 
     if object.class.superclass == ActiveRecord::Base
       attrs = attrs.extract_options!
 
-      result = class.where(attrs)
+      result = model.where(attrs)
 
       if result.blank?
-        return class.create(attrs)
+        return model.create(attrs)
       else
         return result
       end
