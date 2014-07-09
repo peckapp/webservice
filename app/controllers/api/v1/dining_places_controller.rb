@@ -8,33 +8,44 @@ module Api
       respond_to :json
 
       def index
-        if params[:dining_period_id]
-          @dining_places = DiningPeriod.find(params[:dining_period_id]).dining_places
-        elsif params[:menu_item_id]
-          @dining_places = MenuItem.find(params[:menu_item_id]).dining_places
+        if params[:dining_opportunity_id] && params[:day_of_week]
+          @dining_places = DiningOpportunity.find(params[:dining_opportunity_id]).dining_places
+
+          # make hash of dining places => service hours
+          @service_hours = {}
+
+          for place in @dining_places
+
+            start_time = DiningPeriod.where({
+              "dining_periods.dining_opportunity_id" => params[:dining_opportunity_id],
+              "dining_periods.day_of_week" => params[:day_of_week],
+              "dining_periods.dining_place_id" => place.id }).start_time
+
+            end_time = DiningPeriod.where({
+              "dining_periods.dining_opportunity_id" => params[:dining_opportunity_id],
+              "dining_periods.day_of_week" => params[:day_of_week],
+              "dining_periods.dining_place_id" => place.id }).end_time
+
+            hours = "#{start_time} - #{end_time}"
+
+            @service_hours[place.id] << hours
+          end
         else
           @dining_places = specific_index(DiningPlace, params)
         end
       end
 
       def show
-        if params[:dining_period_id]
-          @dining_place = DiningPeriod.find(params[:dining_period_id]).dining_places.find(params[:id])
-        elsif params[:menu_item_id]
-          @dining_place = MenuItem.find(params[:menu_item_id]).dining_places.find(params[:id])
-        else
-          @dining_place = specific_show(DiningPlace, :institution_id)
-        end
+        @dining_place = specific_show(DiningPlace, params[:id])
       end
 
       def create
         @dining_place = DiningPlace.create(dining_place_create_params)
 
-        @dining_period_id = dining_place_create_params[:dining_period_id]
-          DiningPeriod.find(@dining_period_id).dining_places << @dining_place
-
-        @menu_item_id = dining_place_create_params[:menu_item_id]
-          MenuItem.find(@menu_item_id).dining_places << @dining_place
+        if dining_place_create_params[:dining_opportunity_id]
+          @dining_opportunity_id = dining_place_create_params[:dining_opportunity_id]
+          DiningOpportunity.find(@dining_opportunity_id).dining_places << @dining_place
+        end
       end
 
       def update
@@ -49,7 +60,7 @@ module Api
       private
 
         def dining_place_create_params
-          params.require(:dining_place).permit(:institution_id, :name, :details_link, :gps_longitude, :gps_latitude, :range, :dining_period_id, :menu_item_id)
+          params.require(:dining_place).permit(:institution_id, :name, :details_link, :gps_longitude, :gps_latitude, :range, :dining_opportunity_id)
         end
 
         def dining_place_update_params

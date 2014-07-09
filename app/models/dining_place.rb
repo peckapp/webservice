@@ -4,11 +4,11 @@ class DiningPlace < ActiveRecord::Base
   belongs_to :institution #
 
   ### host dining place of menu item ###
-  has_and_belongs_to_many :menu_items #
+  has_many :menu_items #
 
   ### host dining place of dining period ###
-  has_and_belongs_to_many :dining_periods, :join_table => :dining_periods_dining_places #
+  has_many :dining_periods #
 
   ### dining opportunities ###
-  has_and_belongs_to_many :dining_opportunities #
+  has_and_belongs_to_many :dining_opportunities, :join_table => :dining_opportunities_dining_places #
 end

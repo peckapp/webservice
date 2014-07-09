@@ -11,22 +11,16 @@ module Api
       end
 
       def show
-        @menu_item = specific_show(MenuItem, params)
+        @menu_item = specific_show(MenuItem, params[:id])
       end
 
       def create
-        @menu_item = MenuItem.create(menu_item_create_params)
-
-        @dining_period_id = menu_item_create_params[:dining_period_id]
-        DiningPeriod.find(@dining_period_id).menu_items << @menu_item
-
-        @dining_place_id = menu_item_create_params[:dining_place_id]
-        DiningPlace.find(@dining_place_id).menu_items << @menu_item
+        @menu_item = MenuItem.create(menu_item_params)
       end
 
       def update
         @menu_item = MenuItem.find(params[:id])
-        @menu_item.update_attributes(menu_item_update_params)
+        @menu_item.update_attributes(menu_item_params)
       end
 
       def destroy
@@ -35,13 +29,10 @@ module Api
 
       private
 
-        def menu_item_create_params
-          params.require(:menu_item).permit(:name, :institution_id, :dining_place_id, :dining_period_id, :details_link, :small_price, :large_price, :combo_price, :dining_opportunity_id, :date_available)
+        def menu_item_params
+          params.require(:menu_item).permit(:name, :institution_id, :details_link, :small_price, :large_price, :combo_price, :dining_opportunity_id, :dining_place_id, :date_available)
         end
 
-        def menu_item_update_params
-          params.require(:menu_item).permit(:name, :institution_id, :details_link, :small_price, :large_price, :combo_price, :dining_opportunity_id, :date_available)
-        end
     end
   end
 end

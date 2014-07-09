@@ -14,8 +14,8 @@ class MenuItem < ActiveRecord::Base
   belongs_to :institution #
 
   ### dining place where item is available ###
-  has_and_belongs_to_many :dining_places #
+  belongs_to :dining_place #
 
-  ### menu item is available during these periods ###
-  has_and_belongs_to_many :dining_periods #
+  ### dining opportunity when item is available ###
+  belongs_to :dining_opportunity #
 end
