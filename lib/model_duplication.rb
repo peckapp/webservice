@@ -47,4 +47,16 @@ class ModelDuplication
 
   end
 
+
+  def self.current_or_create_new(class, *attrs)
+
+    if object.class.superclass == ActiveRecord::Base
+
+
+    else
+      raise "attempted to perform model interaction with inapplicable class"
+    end
+
+  end
+
 end

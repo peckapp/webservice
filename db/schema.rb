@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140708025231) do
+ActiveRecord::Schema.define(version: 20140709020206) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
@@ -304,6 +304,8 @@ ActiveRecord::Schema.define(version: 20140708025231) do
     t.integer  "dining_opportunity_id", null: false
     t.integer  "dining_place_id",       null: false
     t.date     "date_available",        null: false
+    t.string   "category"
+    t.string   "serving_size"
   end
 
   add_index "menu_items", ["institution_id"], name: "index_menu_items_on_institution_id", using: :btree
