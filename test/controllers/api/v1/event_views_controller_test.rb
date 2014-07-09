@@ -19,7 +19,7 @@ class EventViewsControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get_show(@params_show, @controller, @attributes, 10)
+    get_show(@params_show, @controller, @attributes)
   end
 
   test "should post create" do

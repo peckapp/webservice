@@ -3,10 +3,10 @@ require 'test_helper'
 class NotificationViewsControllerTest < ActionController::TestCase
   def setup
     @controller = Api::V1::NotificationViewsController.new
-    @attributes = []
-    @params_show = {}
-    @params_create = {}
-    @params_update = {}
+    @attributes = [:id, :user_id, :activity_log_id, :date_viewed, :viewed, :institution_id, :format]
+    @params_show = {:id => 12, :user_id => 1, :format => :json}
+    @params_create = {:user_id => 2, :activity_log_id => 3, :viewed => false, :institution_id => 1}
+    @params_update = {:viewed => true}
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end
 
@@ -19,7 +19,7 @@ class NotificationViewsControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get_show(@params_show, @controller, @attributes, 10)
+    get_show(@params_show, @controller, @attributes)
   end
 
   test "should post create" do

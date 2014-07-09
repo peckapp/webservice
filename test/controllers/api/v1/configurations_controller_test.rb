@@ -4,7 +4,7 @@ class ConfigurationsControllerTest < ActionController::TestCase
   def setup
     @controller = Api::V1::ConfigurationsController.new
     @attributes = [:id, :config_file_name, :mascot, :institution_id, :format]
-    @params_show = {:mascot => "Red Pig", :format => :json}
+    @params_show = {:id => 1, :mascot => "Red Pig", :format => :json}
     @params_create = {:institution_id => 1, :config_file_name => "configurations/happiness"}
     @params_update = {:mascot => "Purple Cow"}
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
@@ -19,7 +19,7 @@ class ConfigurationsControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get_show(@params_show, @controller, @attributes, 1)
+    get_show(@params_show, @controller, @attributes)
   end
 
   test "should post create" do

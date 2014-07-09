@@ -5,7 +5,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
     @controller = Api::V1::SubscriptionsController.new
     @attributes = [:id, :user_id, :category, :subscribed_to, :format]
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
-    @params_show = {:user_id => 1, :category => "math", :format => :json}
+    @params_show = {:id => 11, :user_id => 1, :category => "math", :format => :json}
     @params_create = {:user_id => 5, :category => "physics"}
     @params_update = {:category => "statistics"}
   end
@@ -19,7 +19,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get_show(@params_show, @controller, @attributes, 11)
+    get_show(@params_show, @controller, @attributes)
   end
 
   test "should post create" do

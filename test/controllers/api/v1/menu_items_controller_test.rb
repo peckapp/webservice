@@ -7,6 +7,7 @@ class MenuItemsControllerTest < ActionController::TestCase
     @params_show = {}
     @params_create = {name: "new menu item", institution_id: 1, dining_opportunity_id: 2, dining_place_id: 6, date_available: DateTime.current}
     @params_update = {name: "updated menu item"}
+
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end
 
@@ -19,7 +20,7 @@ class MenuItemsControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get_show(@params_show, @controller, @attributes, 10)
+    get_show(@params_show, @controller, @attributes)
   end
 
   test "should post create" do
@@ -31,6 +32,6 @@ class MenuItemsControllerTest < ActionController::TestCase
   end
 
   test "should delete destroy" do
-    delete_destroy(@controller, 21)
+    delete_destroy(@controller, 22)
   end
 end

@@ -4,7 +4,7 @@ class DiningOpportunitiesControllerTest < ActionController::TestCase
   def setup
     @controller = Api::V1::DiningOpportunitiesController.new
     @attributes = [:id, :dining_opportunity_type, :institution_id, :format]
-    @params_show = {:dining_opportunity_type => "dinner", :institution_id => 1, :format => :json}
+    @params_show = {:id => 11, :dining_opportunity_type => "dinner", :institution_id => 1, :format => :json}
     @params_create = {:dining_opportunity_type => "lunch", :institution_id => 2}
     @params_update = {:dining_opportunity_type => "breakfast"}
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
@@ -19,7 +19,7 @@ class DiningOpportunitiesControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get_show(@params_show, @controller, @attributes, 11)
+    get_show(@params_show, @controller, @attributes)
   end
 
   test "should post create" do

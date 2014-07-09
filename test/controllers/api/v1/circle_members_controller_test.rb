@@ -4,7 +4,7 @@ class CircleMembersControllerTest < ActionController::TestCase
   def setup
     @controller = Api::V1::CircleMembersController.new
     @attributes = [:id, :institution_id, :circle_id, :user_id, :invited_by, :format]
-    @params_show = {:institution_id => 1, :circle_id => 1, :user_id => 1, :format => :json }
+    @params_show = {:id => 11, :institution_id => 1, :circle_id => 1, :user_id => 1, :format => :json }
     @params_create = {:institution_id => 3, :circle_id => 20, :user_id => 5, :invited_by => 10}
     @params_update = {:circle_id => 21}
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
@@ -19,7 +19,7 @@ class CircleMembersControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get_show(@params_show, @controller, @attributes, 11)
+    get_show(@params_show, @controller, @attributes)
   end
 
   test "should post create" do

@@ -16,9 +16,8 @@ class ActiveSupport::TestCase
       assert_response :success
     end
 
-    def get_show(params_show, controller, attributes, id)
+    def get_show(params_show, controller, attributes)
       @controller = controller
-      get :show, :format => :json, :id => id
       params_show.keys.each do |attribute|
         unless attributes.include? attribute
           assert(false, "Attribute not found in database table.")

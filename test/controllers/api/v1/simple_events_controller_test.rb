@@ -6,7 +6,6 @@ class SimpleEventsControllerControllerTest < ActionController::TestCase
     @attributes = [:id, :title, :event_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :event_url, :open, :image_url, :comment_count, :start_date, :end_date, :deleted, :latitude, :longitude, :format]
     @params_show = {:title => "Summer Observatory", :open => true}
     @params_create = {:title => "Super Dope Event", :institution_id => 3, :user_id => 3, :open => true, :start_date => DateTime.current, :end_date => DateTime.current + 1.hour}
-    @params_update = {:title => "Less Dope Event"}
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end
 
@@ -19,7 +18,7 @@ class SimpleEventsControllerControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get_show(@params_show, @controller, @attributes, 20)
+    get_show(@params_show, @controller, @attributes)
   end
 
   test "should post create" do

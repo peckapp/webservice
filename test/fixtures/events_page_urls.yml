@@ -1,0 +1,29 @@
+<% 10.times do |n| %>
+event_page_url_<%= n + 10 %>:
+  id: <%= n + 10 %>
+  url: "file/path"
+  institution_id: 1
+<% end %>
+
+
+<% 10.times do |n| %>
+event_page_url_<%= n + 20 %>:
+  id: <%= n + 20 %>
+  url: "file/path"
+  institution_id: 1
+<% end %>
+
+<% 10.times do |n| %>
+event_page_url_<%= n + 30 %>:
+  id: <%= n + 30 %>
+  url: "new_file/path"
+  institution_id: 8
+<% end %>
+
+
+<% 10.times do |n| %>
+event_page_url_<%= n + 40 %>:
+ id: <%= n + 40 %>
+ url: "the_file/path"
+ institution_id: 3
+<% end %>

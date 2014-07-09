@@ -1,0 +1,29 @@
+<% 10.times do |n| %>
+dining_place_<%= n + 10 %>:
+  id: <%= n + 10 %>
+  name: "Peru"
+  institution_id: 1
+<% end %>
+
+
+<% 10.times do |n| %>
+dining_place_<%= n + 20 %>:
+  id: <%= n + 20 %>
+  name: "Brazil"
+  institution_id: 1
+<% end %>
+
+<% 10.times do |n| %>
+dining_place_<%= n + 30 %>:
+  id: <%= n + 30 %>
+  name: "Germany"
+  institution_id: 8
+<% end %>
+
+
+<% 10.times do |n| %>
+dining_place_<%= n + 40 %>:
+ id: <%= n + 40 %>
+ name: "Portugal"
+ institution_id: 3
+<% end %>

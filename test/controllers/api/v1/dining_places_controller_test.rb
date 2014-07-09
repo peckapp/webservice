@@ -3,10 +3,10 @@ require 'test_helper'
 class DiningPlacesControllerTest < ActionController::TestCase
   def setup
     @controller = Api::V1::DiningPlacesController.new
-    @attributes = []
-    @params_show = {}
-    @params_create = {}
-    @params_update = {}
+    @attributes = [:id, :institution_id, :name, :details_link, :gps_longitude, :gps_latitude, :range, :format]
+    @params_show = {:id => 11, :institution_id => 1, :name => "Driscoll", :format => :json}
+    @params_create = {:institution_id => 1, :name => "Paresky"}
+    @params_update = {:name => "Mission"}
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end
 
@@ -19,15 +19,15 @@ class DiningPlacesControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get_show(@params_show, @controller, @attributes, 10)
+    get_show(@params_show, @controller, @attributes)
   end
 
   test "should post create" do
-    post_create(@params_create, @controller, :dining_places)
+    post_create(@params_create, @controller, :dining_place)
   end
 
   test "should patch update" do
-    patch_update(@params_update, @controller, 20, :dining_places)
+    patch_update(@params_update, @controller, 20, :dining_place)
   end
 
   test "should delete destroy" do
