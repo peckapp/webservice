@@ -11,18 +11,16 @@ module Api
       end
 
       def show
-        if params[:dining_period_id]
-          @dining_opportunity = DiningPeriod.find(params[:dining_period_id]).dining_opportunities.find(params[:id])
-        else
-          @dining_opportunity = specific_show(DiningOpportunity, :institution_id)
-        end
+        @dining_opportunity = specific_show(DiningOpportunity, :institution_id)
       end
 
       def create
-        # will return error if parameter for dining period id is not provided
         @dining_opportunity = DiningOpportunity.create(dining_opportunity_create_params)
-        @dining_period_id = dining_opportunity_create_params[:dining_period_id]
-          DiningPeriod.find(@dining_period_id).dining_opportunities << @dining_opportunity
+
+        if dining_opportunity_create_params[:dining_place_id]
+          @dining_period_id = dining_opportunity_create_params[:dining_place_id]
+          DiningPlace.find(@dining_place_id).dining_opportunities << @dining_opportunity
+        end
       end
 
       def update
@@ -38,7 +36,7 @@ module Api
       private
 
         def dining_opportunity_create_params
-          params.require(:dining_opportunity).permit(:dining_opportunity_type, :institution_id, :dining_period_id)
+          params.require(:dining_opportunity).permit(:dining_opportunity_type, :institution_id, :dining_place_id)
         end
 
         def dining_opportunity_update_params
