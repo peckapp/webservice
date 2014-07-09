@@ -24,12 +24,22 @@ class ActivityLog < ActiveRecord::Base
   # before save :validate_user_id, :validate_institution_id, :validate_message, :validate_read_status, :validate_category, :validate_type_of_activity
 
   # private
-  def validate_message
-  end
-
-  def validate_read_status
-  end
-
-  def validate_type_of_activity
-  end
+  # def validate_message
+  #   validate_attribute(self.message, Boolean)
+  # end
+  #
+  # def validate_messenger
+  #   validate_attribute(self.messenger, Fixnum)
+  # end
+  #
+  # def validate_read_status
+  #   validate_attribute(self.read_status, Boolean)
+  # end
+  #
+  # def validate_recipient
+  #   validate_attribute(self.receiver, Fixnum)
+  # end
+  #
+  # def validate_type_of_activity
+  # end
 end
