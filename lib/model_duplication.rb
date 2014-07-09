@@ -51,19 +51,20 @@ class ModelDuplication
   # returns an object matching specified attributes, or creates one with them if none exist
   def self.current_or_create_new(model, *attrs)
 
-    if object.class.superclass == ActiveRecord::Base
+    if model.superclass == ActiveRecord::Base
       attrs = attrs.extract_options!
 
-      result = model.where(attrs)
+      result = model.where(attrs).first
 
       if result.blank?
+        puts "attrs: #{attrs}"
         return model.create(attrs)
       else
         return result
       end
 
     else
-      raise "attempted to perform model interaction with inapplicable class"
+      raise "attempted to perform model interaction with inapplicable class: #{model.class}"
     end
   end
 
