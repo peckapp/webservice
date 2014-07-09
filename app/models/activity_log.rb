@@ -1,5 +1,5 @@
 class ActivityLog < ActiveRecord::Base
-
+  include ModelBeforeSaveValidations
   ### Institution ###
   belongs_to :institution
 
@@ -21,7 +21,7 @@ class ActivityLog < ActiveRecord::Base
   # validates :type_of_activity, :presence => true
   # validates :message, :presence => true
   # validates :read_status, :presence => true
-  # before save :validate_messenger, :validate_recipient, :validate_institution_id, :validate_message, :validate_read_status, :validate_category, :validate_type_of_activity
+  # before_save :validate_messenger, :validate_recipient, :validate_institution_id, :validate_message, :validate_read_status, :validate_category, :validate_type_of_activity
   #
   # # private
   # def validate_message

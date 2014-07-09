@@ -13,5 +13,25 @@ class AthleticTeam < ActiveRecord::Base
   # validates :sport_name, :presence => true
   # validates :gender, :presence => true
   # validates :team_link, :format => {:with => URL_REGEX}
-  
+
+  before_save :validate_institution_id,
+
+# private 
+  def validate_sport_name
+    validate_attribute(self.sport_name, "sport", String, "String")
+  end
+
+  def validate_gender
+    validate_attribute(self.gender, "gender", String, "String")
+  end
+
+  def validate_team_link
+    error_messages = []
+    theAttribute = self.team_link
+    theAttribute = theAttribute.sanitize(myAttribute, tags => %w(b i u))
+    unless theAttribute.match URL_REGEX
+      error_messages << "Not a valid URL format"
+    end
+    return error_messages
+  end
 end
