@@ -27,10 +27,10 @@ class EventViewsControllerTest < ActionController::TestCase
   end
 
   test "should patch update" do
-    patch_update(@params_update, @controller, 20, :event_view)
+    patch_update(@params_update, @controller, 6, :event_view)
   end
 
   test "should delete destroy" do
-    delete_destroy(@controller, 21)
+    delete_destroy(@controller, 15)
   end
 end

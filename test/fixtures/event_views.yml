@@ -1,0 +1,20 @@
+
+<% 10.times do |n| %>
+event_view_<%= n %>:
+  id: <%= n %>
+  user_id: <%= n + 10 %>
+  category: "simple_event"
+  event_viewed: <%= n %>
+  date_viewed: <%= DateTime.current %>
+  institution_id: 1
+<% end %>
+
+<% 10.times do |n| %>
+event_view_<%= n + 10 %>:
+  id: <%= n + 10 %>
+  user_id: <%= n + 20 %>
+  category: "athletic_event"
+  event_viewed: <%= n %>
+  date_viewed: <%= DateTime.current %>
+  institution_id: 1
+<% end %>
