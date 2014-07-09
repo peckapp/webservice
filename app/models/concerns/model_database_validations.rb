@@ -19,6 +19,7 @@ module ModelDatabaseValidations
   end
 
   def validate_category
+    validate_attribute(self.category, "category", String, "String")
   end
 
   def validate_institution_id
