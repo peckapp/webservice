@@ -4,4 +4,4 @@ attributes :id, :title, :event_description, :institution_id, :user_id, :departme
 
 node :position do |pos|
    @positions[pos.id]
- end
+end
