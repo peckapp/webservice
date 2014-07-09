@@ -6,39 +6,39 @@
 #
 
 # public users from institution 1
-<% 10.times do |n| %>
+<% (1..10).each do |n| %>
 user_<%= n %>:
   id: <%= n %>
   institution_id: 1
 <% end %>
 
 # public users from institution 2
-<% 10.times do |n| %>
-user_<%= n + 10 %>:
-  id: <%= n + 10 %>
+<% (11..20).each do |n| %>
+user_<%= n %>:
+  id: <%= n %>
   institution_id: 2
 <% end %>
 
 # private users from institution 1
-<% 10.times do |n| %>
-user_<%= n + 20 %>:
-  id: <%= n + 20 %>
+<% (21..30).each do |n| %>
+user_<%= n %>:
+  id: <%= n %>
   institution_id: 1
-  first_name: <%= "first name #{n + 20} "%>
-  last_name: <%= "last name  #{n + 20}"%>
-  username: <%= "user  #{n + 20} " %>
-  blurb: <%= "I'm user  #{n + 20} "%>
+  first_name: <%= "first name #{n} "%>
+  last_name: <%= "last name  #{n}"%>
+  username: <%= "user  #{n} " %>
+  blurb: <%= "I'm user  #{n} "%>
   active: true
 <% end %>
 
 # private users from institution 1
-<% 10.times do |n| %>
-user_<%= n + 30 %>:
- id: <%= n + 30 %>
+<% (31..40).each do |n| %>
+user_<%= n %>:
+ id: <%= n %>
  institution_id: 1
- first_name: <%= "first name ##{n + 30}" %>
- last_name: <%= "last name ##{n + 30}" %>
- username: <%= "user#{n + 30}" %>
- blurb: <%= "I'm user ##{n + 30}" %>
+ first_name: <%= "first name ##{n}" %>
+ last_name: <%= "last name ##{n}" %>
+ username: <%= "user#{n}" %>
+ blurb: <%= "I'm user ##{n}" %>
  active: true
 <% end %>
