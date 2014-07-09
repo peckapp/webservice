@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140708025231) do
+ActiveRecord::Schema.define(version: 20140709020206) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
@@ -163,13 +163,6 @@ ActiveRecord::Schema.define(version: 20140708025231) do
   add_index "dining_opportunities", ["institution_id"], name: "index_dining_opportunities_on_institution_id", using: :btree
   add_index "dining_opportunities", ["type"], name: "index_dining_opportunities_on_type", using: :btree
 
-  create_table "dining_opportunities_dining_periods", id: false, force: true do |t|
-    t.integer "dining_opportunity_id", null: false
-    t.integer "dining_period_id",      null: false
-  end
-
-  add_index "dining_opportunities_dining_periods", ["dining_opportunity_id", "dining_period_id"], name: "dining_opportunities_dining_periods_index", using: :btree
-
   create_table "dining_opportunities_dining_places", id: false, force: true do |t|
     t.integer "dining_opportunity_id", null: false
     t.integer "dining_place_id",       null: false
@@ -236,18 +229,6 @@ ActiveRecord::Schema.define(version: 20140708025231) do
   add_index "event_attendees", ["added_by"], name: "index_event_attendees_on_added_by", using: :btree
   add_index "event_attendees", ["event_attended"], name: "index_event_attendees_on_event_attended", using: :btree
   add_index "event_attendees", ["user_id"], name: "index_event_attendees_on_user_id", using: :btree
-
-  create_table "event_comments", force: true do |t|
-    t.string   "category",     null: false
-    t.integer  "comment_from", null: false
-    t.integer  "user_id",      null: false
-    t.text     "comment",      null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "event_comments", ["comment_from"], name: "index_event_comments_on_comment_from", using: :btree
-  add_index "event_comments", ["user_id"], name: "index_event_comments_on_user_id", using: :btree
 
   create_table "event_views", force: true do |t|
     t.integer  "user_id",        null: false
@@ -323,6 +304,8 @@ ActiveRecord::Schema.define(version: 20140708025231) do
     t.integer  "dining_opportunity_id", null: false
     t.integer  "dining_place_id",       null: false
     t.date     "date_available",        null: false
+    t.string   "category"
+    t.string   "serving_size"
   end
 
   add_index "menu_items", ["institution_id"], name: "index_menu_items_on_institution_id", using: :btree

@@ -1,28 +1,46 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-# This model initially had no columns defined.  If you add columns to the
-# model remove the '{}' from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
+# fixtures missing small price, large price, and combo price
 
-# menu_item device tokens set 1
-<% 10.times do |n| %>
-menu_item_<%= n + 10 %>:
-  id: <%= n + 10 %>
-  name: "chicken"
-  institution_id: 1
-  dining_opportunity_id: 2
+<% (1..10).each do |n| %>
+menu_item_<%= n %>:
+  id: <%= n %>
+  name: breakfast_item_<%= n %>
+  details_link: "https://www.example.com"
+  dining_opportunity_id: 1
   dining_place_id: 1
-  date_available: 2007-12-04
+  institution_id: 1
+  date_available: <%= DateTime.current %>
 <% end %>
 
-# menu_item device tokens set 2
-<% 10.times do |n| %>
-menu_item_<%= n + 20 %>:
-  id: <%= n + 20 %>
-  name: "soybeans"
-  institution_id: 2
-  dining_place_id: 2
-  dining_opportunity_id: 1
-  date_available: 2007-12-04
+<% (11..20).each do |n| %>
+menu_item_<%= n %>:
+  id: <%= n %>
+  name: lunch_item_<%= n %>
+  details_link: "https://www.example.com"
+  dining_opportunity_id: 2
+  dining_place_id: 1
+  institution_id: 1
+  date_available: <%= DateTime.current %>
+<% end %>
+
+<% (21..30).each do |n| %>
+menu_item_<%= n %>:
+  id: <%= n %>
+  name: dinner_item_<%= n %>
+  details_link: "https://www.example.com"
+  dining_opportunity_id: 3
+  dining_place_id: 1
+  institution_id: 1
+  date_available: <%= DateTime.current %>
+<% end %>
+
+<% (31..40).each do |n| %>
+menu_item_<%= n %>:
+  id: <%= n %>
+  name: brunch_item_<%= n %>
+  details_link: "https://www.example.com"
+  dining_opportunity_id: 4
+  dining_place_id: 1
+  institution_id: 1
+  date_available: <%= DateTime.current %>
 <% end %>

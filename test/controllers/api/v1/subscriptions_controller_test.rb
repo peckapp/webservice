@@ -6,7 +6,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
     @attributes = [:id, :user_id, :category, :subscribed_to, :format]
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
     @params_show = {:id => 11, :user_id => 1, :category => "math", :format => :json}
-    @params_create = {:user_id => 5, :category => "physics"}
+    @params_create = {:user_id => 5, :category => "physics", :subscribed_to => 3}
     @params_update = {:category => "statistics"}
   end
 
@@ -23,11 +23,11 @@ class SubscriptionsControllerTest < ActionController::TestCase
   end
 
   test "should post create" do
-    post_create(@params_create, @controller)
+    post_create(@params_create, @controller, :subscription)
   end
 
   test "should patch update" do
-    patch_update(@params_update, @controller, 20)
+    patch_update(@params_update, @controller, 20, :subscription)
   end
 
   test "should delete destroy" do

@@ -3,7 +3,7 @@ class RssScraperWorker
   include Sidekiq::Worker
   include Sidetiq::Schedulable
 
-  recurrence { minutely }
+  recurrence { daily }
 
   def perform
     Tasks::RssScraperController.scrape

@@ -11,8 +11,8 @@ notification_view_<%= n + 10 %>:
   activity_log_id: 1
   institution_id: 2
   user_id: 2
-  viewed: true
-  date_viewed: 2007-12-04 00:00:00
+  date_viewed: <%= DateTime.current %>
+  viewed: <%= [true, false].sample %>
 <% end %>
 
 
@@ -22,17 +22,17 @@ notification_view_<%= n + 20 %>:
   activity_log_id: 2
   institution_id: 1
   user_id: 3
-  viewed: false
-  date_viewed: 2007-12-04 00:00:00
+  date_viewed: <%= DateTime.current %>
+  viewed: <%= [true, false].sample %>
 <% end %>
 
 
 <% 10.times do |n| %>
 notification_view_<%= n + 30 %>:
- id: <%= n + 30 %>
- institution_id: 1
- activity_log_id: 3
- user_id: 1
- viewed: false
- date_viewed: 2007-12-04 00:00:00
+  id: <%= n + 30 %>
+  institution_id: 1
+  activity_log_id: 3
+  user_id: 1
+  date_viewed: <%= DateTime.current %>
+  viewed: <%= [true, false].sample %>
 <% end %>

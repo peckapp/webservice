@@ -28,7 +28,7 @@ class UserDeviceTokensControllerTest < ActionController::TestCase
   end
 
   test "should patch update" do
-    patch_update(@params_update, @controller, 20)
+    patch_update(@params_update, @controller, 20, :user_device_token)
   end
 
   test "should delete destroy" do

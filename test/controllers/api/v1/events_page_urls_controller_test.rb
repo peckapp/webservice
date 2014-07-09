@@ -23,11 +23,11 @@ class EventsPageUrlsControllerTest < ActionController::TestCase
   end
 
   test "should post create" do
-    post_create(@params_create, @controller, :events_page_url)
+    post_create(@params_create, @controller, :event_page_url)
   end
 
   test "should patch update" do
-    patch_update(@params_update, @controller, 20, :events_page_url)
+    patch_update(@params_update, @controller, 20, :event_page_url)
   end
 
   test "should delete destroy" do

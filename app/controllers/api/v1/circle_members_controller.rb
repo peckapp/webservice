@@ -8,13 +8,11 @@ module Api
       # give circle admin power?
       respond_to :json
 
-
       def index
         @circle_members = specific_index(CircleMember, params)
       end
 
       def create
-
         @circle_member = CircleMember.create(circle_member_params)
       end
 
