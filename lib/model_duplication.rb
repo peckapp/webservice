@@ -33,6 +33,7 @@ class ModelDuplication
     end
   end
 
+  # saves only if an instance of the object with matching attributes cannot be found in the database
   def self.non_duplicative_save(object, *attrs)
     begin
       if ! self.model_match_exists(object, attrs[0])
@@ -47,16 +48,23 @@ class ModelDuplication
 
   end
 
-
+  # returns an object matching specified attributes, or creates one with them if none exist
   def self.current_or_create_new(class, *attrs)
 
     if object.class.superclass == ActiveRecord::Base
+      attrs = attrs.extract_options!
 
+      result = class.where(attrs)
+
+      if result.blank?
+        return class.create(attrs)
+      else
+        return result
+      end
 
     else
       raise "attempted to perform model interaction with inapplicable class"
     end
-
   end
 
 end
