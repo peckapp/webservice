@@ -27,7 +27,7 @@ class DiningOpportunity < ActiveRecord::Base
       end
     end
 
-    earliest
+    return date_time_for_week_day(day_of_week, earliest)
 
   end
 
@@ -44,9 +44,23 @@ class DiningOpportunity < ActiveRecord::Base
       end
     end
 
-    latest
+    return date_time_for_week_day(day_of_week, latest)
 
   end
 
+  private
+
+    def date_time_for_week_day(day_of_week, time)
+      day = nearest_week_day(day_of_week)
+      day.change(hour: time.hour, min: time.min)
+      return day
+    end
+
+    def nearest_week_day(day_of_week)
+      cur = DateTime.now.wday
+      # the amount to shift the date forward by
+      shift = cur - day_of_week
+      return DateTime.now - shift.days
+    end
 
 end
