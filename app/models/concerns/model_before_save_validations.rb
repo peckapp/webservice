@@ -1,9 +1,13 @@
-module ModelDatabaseValidations
+module ModelBeforeSaveValidations
   extend ActiveSupport::Concern
 
+  ##### include ActionView::Helpers
+
   # private
+
   def validate_attribute(theAttribute, attribute_string, theType, type_string)
     error_messages = []
+    # theAttribute = theAttribute.sanitize(theAttribute, :tags => %w(b i u))
     # string representation of the attributes and types
     theAttribute_string = attribute_string
     theType_string = type_string
@@ -19,6 +23,11 @@ module ModelDatabaseValidations
   end
 
   def validate_category
+    validate_attribute(self.category, "category", String, "String")
+  end
+
+  def validate_circle_id
+    validate_attribute(self.circle_id, "circle_id", Fixnum, "Fixnum")
   end
 
   def validate_institution_id
