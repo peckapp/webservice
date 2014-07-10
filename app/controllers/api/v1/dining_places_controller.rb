@@ -8,11 +8,12 @@ module Api
       respond_to :json
 
       def index
+
+        # make hash of dining places => service hours
+        @service_hours = {}
+
         if params[:dining_opportunity_id] && params[:day_of_week]
           @dining_places = DiningOpportunity.find(params[:dining_opportunity_id]).dining_places
-
-          # make hash of dining places => service hours
-          @service_hours = {}
 
           for place in @dining_places
 

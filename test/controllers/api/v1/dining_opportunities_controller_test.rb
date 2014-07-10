@@ -33,4 +33,5 @@ class DiningOpportunitiesControllerTest < ActionController::TestCase
   test "should delete destroy" do
     delete_destroy(@controller, 21)
   end
+
 end
