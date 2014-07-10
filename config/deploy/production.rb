@@ -4,9 +4,13 @@
 # is considered to be the first unless any hosts have the primary
 # property set.  Don't declare `role :all`, it's a meta role.
 
-role :app, %w{deploy@example.com}
-role :web, %w{deploy@example.com}
-role :db,  %w{deploy@example.com}
+# Define roles, user and IP address of deployment server
+# role :name, %{[user]@[IP adde.]}
+# thor main server
+role :app, %w{deployer@104.131.249.70}
+role :web, %w{deployer@104.131.249.70}
+# magni database server
+role :db,  %w{deployer@107.170.8.34}, primary: true
 
 
 # Extended Server Syntax
@@ -15,8 +19,9 @@ role :db,  %w{deploy@example.com}
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
-server 'example.com', user: 'deploy', roles: %w{web app}, my_property: :my_value
-
+# Define server(s)
+server '104.131.249.70', user: 'deployer', roles: %w{web app}
+server '107.170.8.34', user: 'deployer', roles: %w{db}
 
 # Custom SSH Options
 # ==================
@@ -26,7 +31,7 @@ server 'example.com', user: 'deploy', roles: %w{web app}, my_property: :my_value
 # Global options
 # --------------
  set :ssh_options, {
-   keys: %w(/home/rlisowski/.ssh/id_rsa),
+   keys: %w(File.join(ENV["HOME"], ".ssh", "peck_secure"))
    forward_agent: false,
    auth_methods: %w(publickey)
  }
