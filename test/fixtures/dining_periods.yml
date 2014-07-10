@@ -1,41 +1,41 @@
-<% 10.times do |n| %>
-dining_period_<%= n + 10 %>:
-  id: <%= n + 10 %>
+<% (1..3).each do |n| %>
+dining_period_<%= n %>:
+  id: <%= n %>
   dining_opportunity_id: 1
   dining_place_id: 2
   institution_id: 1
-  start_time: <%= Time.now %>
-  end_time: <%= Time.now %>
+  start_time: <%= Time.now + n.hours %>
+  end_time: <%= Time.now + n.hours + 2.hours %>
 <% end %>
 
 
-<% 10.times do |n| %>
-dining_period_<%= n + 20 %>:
-  id: <%= n + 20 %>
+<% (4..6).each do |n| %>
+dining_period_<%= n %>:
+  id: <%= n %>
   dining_opportunity_id: 4
   dining_place_id: 1
   institution_id: 1
-  start_time: <%= Time.now %>
-  end_time: <%= Time.now %>
+  start_time: <%= Time.now + n.hours %>
+  end_time: <%= Time.now + n.hours + 2.hours %>
 <% end %>
 
-<% 10.times do |n| %>
-dining_period_<%= n + 30 %>:
-  id: <%= n + 30 %>
-  dining_opportunity_id: 3
+<% (7..9).each do |n| %>
+dining_period_<%= n %>:
+  id: <%= n %>
+  dining_opportunity_id: 2
   dining_place_id: 2
   institution_id: 8
-  start_time: <%= Time.now %>
-  end_time: <%= Time.now %>
+  start_time: <%= Time.now + n.hours %>
+  end_time: <%= Time.now + n.hours + 2.hours %>
 <% end %>
 
 
-<% 10.times do |n| %>
-dining_period_<%= n + 40 %>:
- id: <%= n + 40 %>
- dining_opportunity_id: 2
+<% (10..12).each do |n| %>
+dining_period_<%= n %>:
+ id: <%= n %>
+ dining_opportunity_id: 3
  dining_place_id: 3
  institution_id: 3
- start_time: <%= Time.now %>
- end_time: <%= Time.now %>
+ start_time: <%= Time.now + n.hours %>
+ end_time: <%= Time.now + n.hours + 2.hours %>
 <% end %>

@@ -17,4 +17,5 @@ class DiningOpportunitiesControllerTest < UltimateTestHelper
   def teardown
      ActionController::Parameters.action_on_unpermitted_parameters = false
   end
+
 end

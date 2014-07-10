@@ -8,27 +8,35 @@ module Api
       respond_to :json
 
       def index
-        if params[:dining_opportunity_id] && params[:day_of_week]
-          @dining_places = DiningOpportunity.find(params[:dining_opportunity_id]).dining_places
 
-          # make hash of dining places => service hours
-          @service_hours = {}
+        # make hash of dining places => service hours
+        @service_hours = {}
+
+        if params[:dining_opportunity_id] && params[:day_of_week]
+
+          @dining_places = DiningOpportunity.find(params[:dining_opportunity_id]).dining_places
 
           for place in @dining_places
 
-            start_time = DiningPeriod.where({
+            begin_time = DiningPeriod.where({
               "dining_periods.dining_opportunity_id" => params[:dining_opportunity_id],
               "dining_periods.day_of_week" => params[:day_of_week],
-              "dining_periods.dining_place_id" => place.id }).start_time
+              "dining_periods.dining_place_id" => place.id }).pluck(:start_time)[0]
 
-            end_time = DiningPeriod.where({
+            finish_time = DiningPeriod.where({
               "dining_periods.dining_opportunity_id" => params[:dining_opportunity_id],
               "dining_periods.day_of_week" => params[:day_of_week],
-              "dining_periods.dining_place_id" => place.id }).end_time
+              "dining_periods.dining_place_id" => place.id }).pluck(:end_time)[0]
+
+            if ! begin_time.blank? && ! finish_time.blank?
+              start_time = begin_time.strftime("%I:%M%p")
+              end_time = finish_time.strftime("%I:%M%p")
+            end
 
             hours = "#{start_time} - #{end_time}"
 
-            @service_hours[place.id] << hours
+            @service_hours[place.id] = hours
+            puts "-----> #{@service_hours[place.id]} <-----"
           end
         else
           @dining_places = specific_index(DiningPlace, params)
