@@ -7,7 +7,6 @@ class DiningOpportunityTest < ActiveSupport::TestCase
 
   def setup
     @first_opp = DiningOpportunity.all.first
-    puts @first_opp.dining_opportunity_type
   end
 
   def teardown
