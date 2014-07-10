@@ -16,8 +16,8 @@ module Api
 
           for opp in @dining_opportunities
 
-            begin_time = opp.earliest_start(opp, params[:day_of_week])
-            finish_time = opp.latest_end(opp, params[:day_of_week])
+            begin_time = opp.earliest_start(params[:day_of_week])
+            finish_time = opp.latest_end(params[:day_of_week])
 
             if ! begin_time.blank? && ! finish_time.blank?
               start_time = begin_time.strftime("%I:%M%p")
