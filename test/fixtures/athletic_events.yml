@@ -6,36 +6,36 @@
 #
 
 
-<% 10.times do |n| %>
-athletic_event_<%= n %>:
-  id: <%= n + 10 %>
-  athletic_team_id: <%= n + 10 %>
+<% (1..5).each do |n| %>
+ athletic_event_<%= n %>:
+  id: <%= n %>
+  athletic_team_id: <%= n %>
   institution_id: 1
-  location: "Bronfman"
+  location: <%= "athletic_event_#{n}" %>
 <% end %>
 
 
-<% 10.times do |n| %>
-athletic_event_<%= n + 10 %>:
-  id: <%= n + 20 %>
-  athletic_team_id: <%= n + 20 %>
+<% (6..10).each do |n| %>
+ athletic_event_<%= n %>:
+  id: <%= n %>
+  athletic_team_id: <%= n %>
   institution_id: 2
-  location: "Cole Field"
+  location: <%= "athletic_event_#{n}" %>
 <% end %>
 
-<% 10.times do |n| %>
-athletic_event_<%= n + 20 %>:
-  id: <%= n + 30 %>
-  athletic_team_id: <%= n + 30 %>
+<% (11..15).each do |n| %>
+ athletic_event_<%= n %>:
+  id: <%= n %>
+  athletic_team_id: <%= n %>
   institution_id: 3
-  location: "Lever"
+  location: <%= "athletic_event_#{n}" %>
 <% end %>
 
 
-<% 10.times do |n| %>
-athletic_event_<%= n + 30 %>:
- id: <%= n + 40 %>
- athletic_team_id: <%= n + 40 %>
- institution_id: 4
- location: "Paresky"
+<% (16..20).each do |n| %>
+ athletic_event_<%= n %>:
+  id: <%= n %>
+  athletic_team_id: <%= n %>
+  institution_id: 4
+  location: <%= "athletic_event_#{n}" %>
 <% end %>

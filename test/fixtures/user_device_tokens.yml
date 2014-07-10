@@ -6,17 +6,17 @@
 #
 
 # user_device_token device tokens set 1
-<% 10.times do |n| %>
-user_device_token_<%= n + 10 %>:
-  token: "soybeans"
+<% (1..5).each do |n| %>
+ user_device_token_<%= n %>:
+  token: <%= "token_#{n}" %>
   institution_id: 1
-  id: <%= n + 10 %>
+  id: <%= n %>
 <% end %>
 
 # user_device_token device tokens set 2
-<% 10.times do |n| %>
-user_device_token_<%= n + 20 %>:
-  token: "soybeans"
+<% (6..10).each do |n| %>
+ user_device_token_<%= n %>:
+  token: <%= "token_#{n}" %>
   institution_id: 2
-  id: <%= n + 20 %>
+  id: <%= n %>
 <% end %>

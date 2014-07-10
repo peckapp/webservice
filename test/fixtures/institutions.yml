@@ -5,39 +5,10 @@
 # below each fixture, per the syntax in the comments below
 #
 
-
-institution_one:
-  id: 1
-  name: "Dope"
-  street_address: "dope street"
-  city: "Dopey"
-  state: "DP"
-  country: "USA"
-  gps_longitude: 42.123
-  gps_latitude: 32.541
-  range: 6
-  configuration_id: 1
-  api_key: "678123123"
-
-
-institution_two:
-  id: 2
-  name: "Huh"
-  street_address: "Huh street"
-  city: "HUHH"
-  state: "HU"
-  country: "USA"
-  gps_longitude: 123.812
-  gps_latitude: 789.241
-  range: 2
-  configuration_id: 3
-  api_key: "omg"
-
-
-<% (3..10).each do |n| %>
-institution_<%= n %>:
+<% (1..10).each do |n| %>
+ institution_<%= n %>:
   id: <%= n %>
-  name: <%= "institution #{n} " %>
+  name: <%= "institution_#{n} " %>
   street_address: "address"
   city: "city"
   state: "state"

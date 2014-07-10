@@ -2,7 +2,7 @@
 # fixtures missing small price, large price, and combo price
 
 <% (1..10).each do |n| %>
-menu_item_<%= n %>:
+ menu_item_<%= n %>:
   id: <%= n %>
   name: breakfast_item_<%= n %>
   details_link: "https://www.example.com"
@@ -13,7 +13,7 @@ menu_item_<%= n %>:
 <% end %>
 
 <% (11..20).each do |n| %>
-menu_item_<%= n %>:
+ menu_item_<%= n %>:
   id: <%= n %>
   name: lunch_item_<%= n %>
   details_link: "https://www.example.com"
@@ -24,7 +24,7 @@ menu_item_<%= n %>:
 <% end %>
 
 <% (21..30).each do |n| %>
-menu_item_<%= n %>:
+ menu_item_<%= n %>:
   id: <%= n %>
   name: dinner_item_<%= n %>
   details_link: "https://www.example.com"
@@ -35,7 +35,7 @@ menu_item_<%= n %>:
 <% end %>
 
 <% (31..40).each do |n| %>
-menu_item_<%= n %>:
+ menu_item_<%= n %>:
   id: <%= n %>
   name: brunch_item_<%= n %>
   details_link: "https://www.example.com"

@@ -1,29 +1,29 @@
-<% 10.times do |n| %>
-club_<%= n + 10 %>:
-  id: <%= n + 10 %>
-  club_name: "Mario"
+<% (1..5).each do |n| %>
+ club_<%= n %>:
+  id: <%= n %>
+  club_name: <%= "club_#{n}" %>
   institution_id: 1
 <% end %>
 
 
-<% 10.times do |n| %>
-club_<%= n + 20 %>:
-  id: <%= n + 20 %>
-  club_name: "The Hobbit"
+<% (6..10).each do |n| %>
+ club_<%= n %>:
+  id: <%= n %>
+  club_name: <%= "club_#{n}" %>
   institution_id: 1
 <% end %>
 
-<% 10.times do |n| %>
-club_<%= n + 30 %>:
-  id: <%= n + 30 %>
-  club_name: "Dope Club"
+<% (11..15).each do |n| %>
+ club_<%= n %>:
+  id: <%= n %>
+  club_name: <%= "club_#{n}" %>
   institution_id: 2
 <% end %>
 
 
-<% 10.times do |n| %>
-club_<%= n + 40 %>:
- id: <%= n + 40 %>
- club_name: "Emma Watson Fan Club"
- institution_id: 4
+<% (16..20).each do |n| %>
+ club_<%= n %>:
+  id: <%= n %>
+  club_name: <%= "club_#{n}" %>
+  institution_id: 4
 <% end %>
