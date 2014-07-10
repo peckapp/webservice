@@ -17,7 +17,7 @@ module Api
       end
 
       def show
-        @simple_events = specific_show(SimpleEvent, params)
+        @simple_events = specific_show(SimpleEvent, params[:id])
 
         event.image_url = valid_event_image(event)
       end

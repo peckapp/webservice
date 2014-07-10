@@ -10,7 +10,7 @@ module Api
       end
 
       def show
-        @institution = Institution.find(params[:id])
+        @institution = specific_show(Institution, params[:id])
       end
 
       def create

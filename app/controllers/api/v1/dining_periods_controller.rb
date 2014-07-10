@@ -10,7 +10,7 @@ module Api
       end
 
       def show
-        @dining_period = specific_index(DiningPeriod, params[:id])
+        @dining_period = specific_show(DiningPeriod, params[:id])
       end
 
       def create

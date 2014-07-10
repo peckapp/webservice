@@ -16,11 +16,7 @@ module Api
       end
 
       def show
-        if params[:user_id]
-          @subscription = specific_show(Subscription, :user_id)
-        else
-          @subscription = Subscription.find(params[:id])
-        end
+        @subscription = specific_show(Subscription, params[:id])
       end
 
       def create

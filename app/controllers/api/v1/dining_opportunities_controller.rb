@@ -29,7 +29,7 @@ module Api
       end
 
       def show
-        @dining_opportunity = specific_show(DiningOpportunity, :institution_id)
+        @dining_opportunity = specific_show(DiningOpportunity, params[:id])
       end
 
       def create

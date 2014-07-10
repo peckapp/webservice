@@ -12,7 +12,7 @@ module Api
       end
 
       def show
-        @events_page_url = specific_show(EventsPageUrl, params)
+        @events_page_url = specific_show(EventsPageUrl, params[:id])
       end
 
       def create
