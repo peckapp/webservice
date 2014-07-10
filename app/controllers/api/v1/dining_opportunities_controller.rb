@@ -11,14 +11,19 @@ module Api
         @service_hours = {}
 
         if params[:day_of_week]
+
           for opp in @dining_opportunities
 
-            start_time = earliest_start(opp, params[:day_of_week])
-            end_time = latest_end(opp, params[:day_of_week])
-            hours = "#{start_time} - #{end_time}"
+            begin_time = earliest_start(opp, params[:day_of_week])
+            finish_time = latest_end(opp, params[:day_of_week])
+            puts "#{begin_time} - #{finish_time}"
 
-            @service_hours[opp.id] << hours
-
+            if ! begin_time.blank? && ! finish_time.blank?
+              start_time = begin_time.strftime("%I:%M%p")
+              end_time = finish_time.strftime("%I:%M%p")
+              hours = "#{start_time} - #{end_time}"
+              @service_hours[opp.id] = hours
+            end
           end
         end
 
@@ -83,7 +88,7 @@ module Api
           for t in end_times
             if latest == nil
               latest = t
-            elsif t < latest
+            elsif t > latest
               latest = t
             end
           end
