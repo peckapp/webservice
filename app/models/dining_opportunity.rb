@@ -55,17 +55,16 @@ class DiningOpportunity < ActiveRecord::Base
     def date_time_for_week_day(day_of_week, time)
       if ! day_of_week.blank? && ! time.blank?
         day = nearest_week_day(day_of_week)
-        day.change(hour: time.hour, min: time.min)
-        return day
+        return day.change(hour: time.hour, min: time.min)
       end
     end
 
     def nearest_week_day(day_of_week)
       if ! day_of_week.blank?
-        cur = DateTime.now.wday
+        cur = DateTime.now.noon.wday
         # the amount to shift the date forward by
         shift = cur - day_of_week
-        return DateTime.now - shift.days
+        return DateTime.now.noon - shift.days
       end
     end
 
