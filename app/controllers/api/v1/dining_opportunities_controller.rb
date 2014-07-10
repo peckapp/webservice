@@ -9,6 +9,8 @@ module Api
       def index
         @dining_opportunities = specific_index(DiningOpportunity, params)
         @service_hours = {}
+        @service_start = {}
+        @service_end = {}
 
         if params[:day_of_week]
 
@@ -19,7 +21,9 @@ module Api
 
             if ! begin_time.blank? && ! finish_time.blank?
               start_time = begin_time.strftime("%I:%M%p")
+              @service_start[opp.id] = begin_time
               end_time = finish_time.strftime("%I:%M%p")
+              @service_end[opp.id] = finish_time
               hours = "#{start_time} - #{end_time}"
               @service_hours[opp.id] = hours
             end
