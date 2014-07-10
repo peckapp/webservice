@@ -7,8 +7,8 @@ module Api
       respond_to :json
 
       def index
-        @dining_opportunities = specific_index(DiningOpportunity, params)
-        @service_hours = {}
+        dining_opps = specific_index(DiningOpportunity, params)
+        @dining_opportunities = []
         @service_start = {}
         @service_end = {}
 
@@ -19,18 +19,19 @@ module Api
           week_day = params[:day_of_week].to_i
         end
 
-        for opp in @dining_opportunities
+        for opp in dining_opps
 
           begin_time = opp.earliest_start(week_day)
           finish_time = opp.latest_end(week_day)
 
           if ! begin_time.blank? && ! finish_time.blank?
-            start_time = begin_time.strftime("%I:%M%p")
+            # insert start and end time into the view parameters
             @service_start[opp.id] = begin_time
-            end_time = finish_time.strftime("%I:%M%p")
             @service_end[opp.id] = finish_time
-            hours = "#{start_time} - #{end_time}"
-            @service_hours[opp.id] = hours
+
+            @dining_opportunities << opp
+          else
+            # no periods are associated with this opportunity, do not put it in array for view
           end
         end
 
