@@ -2,9 +2,11 @@ class MenuItem < ActiveRecord::Base
 # verified
 
   ### Validations ###
-  # validates :name, :presence => true :uniqueness => true
-  # validates_presence_of :institution_id
-  # validates_presence_of :dining_place_id
+  # validates :name, :presence => true
+  # validates :institution_id, :presence => true
+  # validates :dining_place_id, :numericality => true, :allow_nil => true
+  #
+
   ###################
 
   ### Callbacks ###

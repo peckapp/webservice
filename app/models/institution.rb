@@ -1,51 +1,57 @@
 class Institution < ActiveRecord::Base
+  include ModelNormalValidations
+  include ModelBeforeSaveValidations
 # verified
 
   ### Validations ###
-  # validates_presence_of :name
-  # validates :street_address, :presence => true, :uniqueness => true
-  # validates_presence_of :city
-  # validates_presence_of :state
-  # validates_presence_of :country
-  # validates_presence_of :gps_longitude
-  # validates_presence_of :gps_latitude
-  # validates_presence_of :range
-  # validates_presence_of :configuration_id
+  # validates :name, :presence => true
+  # validates :street_address, :presence => true
+  # validates :city, :presence => true
+  # validates :state, :presence => true
+  # validates :country, :presence => true, :format => {:with => LETTERS_REGEX}
+  # validates :gps_longitude, :presence => true
+  # validates :gps_latitude, :presence => true
+  # validates :range, :presence => true
+  # validates :configuration_id, :presence => true, :numericality => true, :uniqueness => true
   # validates :api_key, :presence => true, :uniqueness => true
-
-  ###################
+  # validate :correct_institution_types
+  ####################
 
   ### Callbacks ###
-  #################
+  # before_save :sanitize_institution
+  # before_create :sanitize_institution
+  # before_update :sanitize_institution
+  ######################
 
-  ### home to these users ###
+  ### Associations ####
+  # home to these users
   has_many :users #
 
-  ### configuration for peck at this institution ###
+  # configuration for peck at this institution
   has_one :configuration #
 
-  ### departments at this institution ###
+  # departments at this institution
   has_many :departments #
 
-  ### all locations on campus ###
+  # all locations on campus
   has_many :locations #
 
-  ### dining places on campus ###
+  # dining places on campus
   has_many :dining_places #
 
-  ### home institution for this menu item ###
+  # home institution for this menu item
   has_many :menu_items #
 
-  ### home institution for each circle ###
+  # home institution for each circle
   has_many :circles #
 
-  ### home institution of each athletic event ###
+  # home institution of each athletic event
   has_many :athletic_events #
 
-  ### home institution of each athletic team ###
+  # home institution of each athletic team
   has_many :athletic_teams #
 
-  ### home institution of each club ###
+  # home institution of each club
   has_many :clubs #
 
   ### home institution for each dining opportunity ###
@@ -71,5 +77,26 @@ class Institution < ActiveRecord::Base
   has_many :push_notifications
   has_many :subscriptions
   has_many :user_device_tokens
+  #####################################
+
+  ################ methods #####################
+  # def correct_institution_types
+  #   is_correct_type(name, String, "string", :name)
+  #   is_correct_type(street_address, String, "string", :street_address)
+  #   is_correct_type(city, String, "string", :city)
+  #   is_correct_type(state, String, "string", :state)
+  #   is_correct_type(country, String, "string", :country)
+  #   is_correct_type(gps_longitude, Float, "float", :gps_longitude)
+  #   is_correct_type(gps_latitude, Float, "float", :gps_latitude)
+  #   is_correct_type(range, Float, "float", :range)
+  #   is_correct_type(api_key, String, "string", :api_key)
+  # end
+  #
+  # def sanitize_institution
+  #   sanitize_everything(attributes)
+  # end
+
+  # private
+    # attributes = [id, name, street_address, city, state, country, gps_longitude, gps_latitude, range, configuration_id, api_key, created_at, updated_at]
 
 end
