@@ -47,6 +47,7 @@ namespace :deploy do
     on roles(:app), in: :sequence, wait: 5 do
       # Your restart mechanism here, for example:
       # execute :touch, release_path.join('tmp/restart.txt')
+      execute :touch, File.join(current_path, 'tmp', 'restart.txt')
     end
   end
 
@@ -63,14 +64,26 @@ namespace :deploy do
 
 end
 
-namespace :bundle do
-
-  desc "run bundle install and ensure all gem requirements are met"
-  task :install do
+namespace :setup do
+  desc "Symlink shared config files"
+  task :symlink_config_files do
     on roles(:app), in: :sequence, wait: 5 do
-      execute "cd #{current_path} && bundle install  --without=test --no-update-sources"
+      # Your restart mechanism here, for example:
+      execute :ln, "-s #{ deploy_to }/shared/config/database.yml #{ current_path }/config/database.yml"
     end
   end
-
 end
-before "deploy:restart", "bundle:install"
+
+before :rake, :symlink_config_files
+
+# namespace :bundle do
+#
+#   desc "run bundle install and ensure all gem requirements are met"
+#   task :install do
+#     on roles(:app), in: :sequence, wait: 5 do
+#       execute "cd #{current_path} && bundle install  --without=test --no-update-sources"
+#     end
+#   end
+#
+# end
+# before "deploy:restart", "bundle:install"
