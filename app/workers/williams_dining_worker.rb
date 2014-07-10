@@ -29,9 +29,9 @@ class WilliamsDiningWorker
 
     csv = CSV.parse(file)
 
-    mi = MenuItem.new(institution_id: inst_id, details_link: url)
-
     csv.each do |l|
+
+      mi = MenuItem.new(institution_id: inst_id, details_link: url)
 
       puts "==> #{l}"
 
@@ -48,9 +48,10 @@ class WilliamsDiningWorker
 
       opportunity = ModelDuplication.current_or_create_new(DiningOpportunity, type: l[3], institution_id: inst_id)
       mi.dining_opportunity_id = opportunity.id
-    end
 
-    mi.save
+      # saves the new menu_item into the database
+      ModelDuplication.non_duplicative_save(mi)
+    end
 
   end
 
