@@ -6,7 +6,7 @@ class UltimateTestHelper < ActionController::TestCase
 
   test "should_get_index" do
     next unless is_subclass?
-    get :index, :format => :json
+    get :index, @params_index
     assert_response :success
   end
 
