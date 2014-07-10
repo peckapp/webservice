@@ -16,8 +16,8 @@ module Api
 
           for opp in @dining_opportunities
 
-            begin_time = earliest_start(opp, params[:day_of_week])
-            finish_time = latest_end(opp, params[:day_of_week])
+            begin_time = opp.earliest_start(opp, params[:day_of_week])
+            finish_time = opp.latest_end(opp, params[:day_of_week])
 
             if ! begin_time.blank? && ! finish_time.blank?
               start_time = begin_time.strftime("%I:%M%p")
@@ -63,41 +63,6 @@ module Api
 
         def dining_opportunity_update_params
           params.require(:dining_opportunity).permit(:dining_opportunity_type, :institution_id)
-        end
-
-        # methods to sort through earliest/latest times
-        def earliest_start(opportunity_id, day_of_week)
-          start_times = DiningPeriod.where({ "dining_periods.dining_opportunity_id" => opportunity_id, "dining_periods.day_of_week" => day_of_week }).pluck(:start_time)
-
-          earliest = nil
-
-          for t in start_times
-            if earliest == nil
-              earliest = t
-            elsif t < earliest
-              earliest = t
-            end
-          end
-
-          earliest
-
-        end
-
-        def latest_end(opportunity_id, day_of_week)
-          end_times = DiningPeriod.where({ "dining_periods.dining_opportunity_id" => opportunity_id, "dining_periods.day_of_week" => day_of_week }).pluck(:end_time)
-
-          latest = nil
-
-          for t in end_times
-            if latest == nil
-              latest = t
-            elsif t > latest
-              latest = t
-            end
-          end
-
-          latest
-
         end
 
     end

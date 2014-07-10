@@ -11,7 +11,7 @@ node :start_time do |opp|
 end
 
 node :end_time do |opp|
-  @service_start[opp.id]
+  @service_end[opp.id]
 end
 
 node(:event_type) {"dining"}
