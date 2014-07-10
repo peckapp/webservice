@@ -18,10 +18,8 @@ default: &default
 
 development:
   <<: *default
-  database: webservice_development
-  password: peckapp
-  # database: peck_development
-  # password: QKyJ2]BbiQD{6W6=H72)iNRV&
+  database: dev_database
+  password: password
   # osx socket
   socket: /tmp/mysql.sock
   # ubuntu socket
@@ -32,9 +30,8 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: webservice_test
-  password: peckapp
-  # password: QKyJ2]BbiQD{6W6=H72)iNRV&
+  database: test_database
+  password: password
   # osx socket
   socket: /tmp/mysql.sock
 
