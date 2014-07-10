@@ -5,22 +5,29 @@
 # below each fixture, per the syntax in the comments below
 #
 
-# subscriptions from user 1, institution 1
-<% 10.times do |n| %>
-subscription_<%= n %>:
-  id: <%= n + 10 %>
+<% (1..5).each do |n| %>
+ subscription_<%= n %>:
+  id: <%= n %>
   institution_id: 1
-  user_id: 1
-  category: "bros"
-  subscribed_to: 2
+  user_id: <%= n %>
+  category: "sport"
+  subscribed_to: 1
 <% end %>
 
-# subscriptions from user 2, institution 2
-<% 10.times do |n| %>
-subscription_<%= n + 10 %>:
-  id: <%= n + 20 %>
+<% (6..10).each do |n| %>
+ subscription_<%= n %>:
+  id: <%= n %>
   institution_id: 2
-  user_id: 2
-  category: "peanuts"
+  user_id: <%= n - 5 %>
+  category: "department"
+  subscribed_to: 1
+<% end %>
+
+<% (11..15).each do |n| %>
+ subscription_<%= n %>:
+  id: <%= n %>
+  institution_id: 1
+  user_id: <%= n - 10 %>
+  category: "club"
   subscribed_to: 1
 <% end %>

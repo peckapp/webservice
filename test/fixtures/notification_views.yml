@@ -5,9 +5,9 @@
 # below each fixture, per the syntax in the comments below
 #
 
-<% 10.times do |n| %>
-notification_view_<%= n + 10 %>:
-  id: <%= n + 10 %>
+<% (1..5).each do |n| %>
+ notification_view_<%= n %>:
+  id: <%= n %>
   activity_log_id: 1
   institution_id: 2
   user_id: 2
@@ -16,9 +16,9 @@ notification_view_<%= n + 10 %>:
 <% end %>
 
 
-<% 10.times do |n| %>
-notification_view_<%= n + 20 %>:
-  id: <%= n + 20 %>
+<% (6..10).each do |n| %>
+ notification_view_<%= n %>:
+  id: <%= n %>
   activity_log_id: 2
   institution_id: 1
   user_id: 3
@@ -27,9 +27,9 @@ notification_view_<%= n + 20 %>:
 <% end %>
 
 
-<% 10.times do |n| %>
-notification_view_<%= n + 30 %>:
-  id: <%= n + 30 %>
+<% (11..15).each do |n| %>
+ notification_view_<%= n %>:
+  id: <%= n %>
   institution_id: 1
   activity_log_id: 3
   user_id: 1

@@ -6,18 +6,26 @@
 #
 
 
-<% 10.times do |n| %>
-athletic_team_<%= n %>:
-  id: <%= n + 10 %>
+<% (1..5).each do |n| %>
+ athletic_team_<%= n %>:
+  id: <%= n %>
   institution_id: 1
-  sport_name: "basketball"
+  sport_name: <%= "sport_#{n}" %>
   gender: "female"
 <% end %>
 
-<% 10.times do |n| %>
-athletic_team_<%= n + 10 %>:
-  id: <%= n + 20 %>
+<% (6..10).each do |n| %>
+ athletic_team_<%= n %>:
+  id: <%= n %>
   institution_id: 2
-  sport_name: "baseball"
+  sport_name: <%= "sport_#{n}" %>
   gender: "male"
+<% end %>
+
+<% (11..15).each do |n| %>
+ athletic_team_<%= n %>:
+  id: <%= n %>
+  institution_id: 2
+  sport_name: <%= "sport_#{n}" %>
+  gender: "female"
 <% end %>

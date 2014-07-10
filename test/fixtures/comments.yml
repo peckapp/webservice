@@ -1,41 +1,41 @@
-<% 10.times do |n| %>
-comment_<%= n + 10 %>:
-  id: <%= n + 10 %>
+<% (1..5).each do |n| %>
+ comment_<%= n %>:
+  id: <%= n %>
   category: "simple"
   comment_from: 1
-  user_id: 5
-  content: "OHHHHHHHHHHHHHHHHH MYYYYYYYYYYYYYYYYYYYYYYY"
+  user_id: <%= n %>
+  content: <%= "comment_#{n}" %>
   institution_id: 1
 <% end %>
 
 
-<% 10.times do |n| %>
-comment_<%= n + 20 %>:
-  id: <%= n + 20 %>
+<% (6..10).each do |n| %>
+ comment_<%= n %>:
+  id: <%= n %>
   category: "simple"
   comment_from: 2
-  user_id: 2
-  content: "lololololololololololololololololololololololol"
+  user_id: <%= n - 5 %>
+  content: <%= "comment_#{n}" %>
   institution_id: 1
 <% end %>
 
-<% 10.times do |n| %>
-comment_<%= n + 30 %>:
-  id: <%= n + 30 %>
-  category: "simple"
-  comment_from: 5
-  user_id: 1
-  content: "Goooooooooooooooooood Stuffffffffffffff"
-  institution_id: 8
+<% (11..15).each do |n| %>
+ comment_<%= n %>:
+  id: <%= n %>
+  category: "dining"
+  comment_from: 3
+  user_id: <%= n - 10 %>
+  content: <%= "comment_#{n}" %>
+  institution_id: 2
 <% end %>
 
 
-<% 10.times do |n| %>
-comment_<%= n + 40 %>:
- id: <%= n + 40 %>
- category: "athletic"
- comment_from: 1
- user_id: 20
- content: "IIIIIIIIIIIIIDDDDDDDDDDDDDKKKKKKKKKKKKK"
- institution_id: 3
+<% (16..20).each do |n| %>
+ comment_<%= n %>:
+  id: <%= n %>
+  category: "athletic"
+  comment_from: 1
+  user_id: <%= n - 15 %>
+  content: <%= "comment_#{n}" %>
+  institution_id: 3
 <% end %>
