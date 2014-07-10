@@ -89,6 +89,7 @@ class Institution < ActiveRecord::Base
   #   is_correct_type(gps_longitude, Float, "float", :gps_longitude)
   #   is_correct_type(gps_latitude, Float, "float", :gps_latitude)
   #   is_correct_type(range, Float, "float", :range)
+  #   is_correct_type(configuration_id, Fixnum, "fixnum", :configuration_id)
   #   is_correct_type(api_key, String, "string", :api_key)
   # end
   #

@@ -34,6 +34,10 @@ class DiningPeriod < ActiveRecord::Base
   # def correct_dining_period_types
   #   is_correct_type(start_time, Time, "time", :start_time)
   #   is_correct_type(end_time, Time, "time", :end_time)
+  #   is_correct_type(day_of_week, Fixnum, "fixnum", :day_of_week)
+  #   is_correct_type(dining_opportunity_id, Fixnum, "fixnum", :dining_opportunity_id)
+  #   is_correct_type(dining_place_id, Fixnum, "fixnum", :dining_place_id)
+  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
   # end
   #
   # def sanitize_dining_period

@@ -37,6 +37,7 @@ class DiningPlace < ActiveRecord::Base
   #   is_correct_type(gps_longitude, Float, "float", :gps_longitude)
   #   is_correct_type(gps_latitude, Float, "float", :gps_latitude)
   #   is_correct_type(range, Float, "float", :range)
+  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
   # end
   #
   # def sanitize_dining_place

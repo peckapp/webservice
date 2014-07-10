@@ -31,7 +31,11 @@ class EventAttendee < ActiveRecord::Base
 
   ### Methods ###
   # def correct_event_attendee_types
+  #   is_correct_type(user_id, Fixnum, "fixnum", :user_id)
+  #   is_correct_type(added_by, Fixnum, "fixnum", :added_by)
   #   is_correct_type(category, String, "string", :category)
+  #   is_correct_type(event_attended, Fixnum, "fixnum", :event_attended)
+  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
   # end
   #
   # def sanitize_event_attendee

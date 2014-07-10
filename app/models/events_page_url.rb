@@ -4,7 +4,7 @@ class EventsPageUrl < ActiveRecord::Base
 # verified
 
   ### Associations ###
-  # institution where events are taking place 
+  # institution where events are taking place
   belongs_to :institution #
   #####################
 
@@ -22,6 +22,7 @@ class EventsPageUrl < ActiveRecord::Base
 
   ### Methods ###
   # def correct_events_page_url_types
+  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
   #   is_correct_type(url, String, "string", :url)
   #   is_correct_type(events_page_url_type, String, "string", :events_page_url_type)
   # end

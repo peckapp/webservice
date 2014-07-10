@@ -10,7 +10,7 @@ class EventView < ActiveRecord::Base
   # user who viewed the event
   has_many :users #
   ####################
-  
+
   ### Validations ###
   # validates :user_id, :presence => true, :numericality => true
   # validates :category, :presence => true, :format => {:with => LETTERS_REGEX}
@@ -27,8 +27,11 @@ class EventView < ActiveRecord::Base
 
   ### Methods ###
   # def correct_event_view_types
+  #   is_correct_type(user_id, Fixnum, "fixnum", :user_id)
   #   is_correct_type(category, String, "string", :category)
+  #   is_correct_type(event_viewed, Fixnum, "fixnum", :event_viewed)
   #   is_correct_type(date_viewed, DateTime, "datetime", :date_viewed)
+  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
   # end
   #
   # def sanitize_event_view
