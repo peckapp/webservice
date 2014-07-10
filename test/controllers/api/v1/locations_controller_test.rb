@@ -5,6 +5,7 @@ class LocationsControllerTest < UltimateTestHelper
   def setup
     @controller = Api::V1::LocationsController.new
     @attributes = [:id, :institution_id, :name, :gps_longitude, :gps_latitude, :range, :format]
+    @params_index = {:format => :json}
     @params_show = {:id => 1, :name => "Bronfman", :format => :json}
     @params_create = {:institution_id => 1, :name => "Paresky"}
     @params_update = {:name => "Mission"}

@@ -5,6 +5,7 @@ class AthleticTeamsControllerTest < UltimateTestHelper
   def setup
     @controller = Api::V1::AthleticTeamsController.new
     @attributes = [:id, :institution_id, :sport_name, :gender, :head_coach, :team_link, :format]
+    @params_index = {:format => :json}
     @params_show = {:id => 12, :institution_id => 1, :gender => "female", :format => :json}
     @params_create = {:institution_id => 2, :sport_name => "swimming", :gender => "male"}
     @params_update = {:sport_name => "rugby"}

@@ -6,6 +6,7 @@ class UserDeviceTokensControllerTest < UltimateTestHelper
   def setup
     @controller = Api::V1::UserDeviceTokensController.new
     @attributes = [:token, :institution_id, :format, :id]
+    @params_index = {:format => :json}
     @params_show = {:id => 11, :institution_id => 5, :token => "blob", :format => :json}
     @params_create = {:institution_id => 2, :token => "dope_token"}
     @params_update = {:token => "jill"}
