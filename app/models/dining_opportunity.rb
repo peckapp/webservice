@@ -50,6 +50,8 @@ class DiningOpportunity < ActiveRecord::Base
 
   private
 
+    # DiningOpportunities are time-independant, so these methods deliver the proper DateTime for the specified week_day parameter coming from the controller
+
     def date_time_for_week_day(day_of_week, time)
       if ! day_of_week.blank? && ! time.blank?
         day = nearest_week_day(day_of_week)
