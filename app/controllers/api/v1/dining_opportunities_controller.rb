@@ -12,21 +12,25 @@ module Api
         @service_start = {}
         @service_end = {}
 
-        if params[:day_of_week]
+        if params[:day_of_week].blank?
+          # defaults to today's date if no date is specified
+          week_day =  DateTime.now.wday
+        else
+          week_day = params[:day_of_week].to_i
+        end
 
-          for opp in @dining_opportunities
+        for opp in @dining_opportunities
 
-            begin_time = opp.earliest_start(params[:day_of_week])
-            finish_time = opp.latest_end(params[:day_of_week])
+          begin_time = opp.earliest_start(week_day)
+          finish_time = opp.latest_end(week_day)
 
-            if ! begin_time.blank? && ! finish_time.blank?
-              start_time = begin_time.strftime("%I:%M%p")
-              @service_start[opp.id] = begin_time
-              end_time = finish_time.strftime("%I:%M%p")
-              @service_end[opp.id] = finish_time
-              hours = "#{start_time} - #{end_time}"
-              @service_hours[opp.id] = hours
-            end
+          if ! begin_time.blank? && ! finish_time.blank?
+            start_time = begin_time.strftime("%I:%M%p")
+            @service_start[opp.id] = begin_time
+            end_time = finish_time.strftime("%I:%M%p")
+            @service_end[opp.id] = finish_time
+            hours = "#{start_time} - #{end_time}"
+            @service_hours[opp.id] = hours
           end
         end
 
