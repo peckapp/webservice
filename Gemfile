@@ -78,3 +78,13 @@ gem 'hirb', '~> 0.7.2'
 
 # validating dates
 gem 'validates_timeliness', '~> 3.0'
+
+
+
+# development-specific gems
+group :development do
+    gem 'capistrano', '~> 3.2.1'
+    gem 'capistrano-rvm'
+    gem 'capistrano-bundler', '~> 1.1.2'
+    gem 'capistrano-rails', '~> 1.1'
+end

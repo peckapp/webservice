@@ -7,11 +7,11 @@ module Api
       respond_to :json
 
       def index
-          @notification_views = specific_index(NotificationView, params)
+        @notification_views = specific_index(NotificationView, params)
       end
 
       def show
-          @notification_view = specific_show(NotificationView, params)
+        @notification_view = specific_show(NotificationView, params[:id])
       end
 
       def create

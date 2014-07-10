@@ -7,30 +7,38 @@ module Api
       respond_to :json
 
       def index
-        @dining_opportunities = specific_index(DiningOpportunity, params)
-        @service_hours = {}
+        dining_opps = specific_index(DiningOpportunity, params)
+        @dining_opportunities = []
+        @service_start = {}
+        @service_end = {}
 
-        if params[:day_of_week]
+        if params[:day_of_week].blank?
+          # defaults to today's date if no date is specified
+          week_day =  DateTime.now.wday
+        else
+          week_day = params[:day_of_week].to_i
+        end
 
-          for opp in @dining_opportunities
+        for opp in dining_opps
 
-            begin_time = earliest_start(opp, params[:day_of_week])
-            finish_time = latest_end(opp, params[:day_of_week])
-            puts "#{begin_time} - #{finish_time}"
+          begin_time = opp.earliest_start(week_day)
+          finish_time = opp.latest_end(week_day)
 
-            if ! begin_time.blank? && ! finish_time.blank?
-              start_time = begin_time.strftime("%I:%M%p")
-              end_time = finish_time.strftime("%I:%M%p")
-              hours = "#{start_time} - #{end_time}"
-              @service_hours[opp.id] = hours
-            end
+          if ! begin_time.blank? && ! finish_time.blank?
+            # insert start and end time into the view parameters
+            @service_start[opp.id] = begin_time
+            @service_end[opp.id] = finish_time
+
+            @dining_opportunities << opp
+          else
+            # no periods are associated with this opportunity, do not put it in array for view
           end
         end
 
       end
 
       def show
-        @dining_opportunity = specific_show(DiningOpportunity, :institution_id)
+        @dining_opportunity = specific_show(DiningOpportunity, params[:id])
       end
 
       def create
@@ -60,41 +68,6 @@ module Api
 
         def dining_opportunity_update_params
           params.require(:dining_opportunity).permit(:dining_opportunity_type, :institution_id)
-        end
-
-        # methods to sort through earliest/latest times
-        def earliest_start(opportunity_id, day_of_week)
-          start_times = DiningPeriod.where({ "dining_periods.dining_opportunity_id" => opportunity_id, "dining_periods.day_of_week" => day_of_week }).pluck(:start_time)
-
-          earliest = nil
-
-          for t in start_times
-            if earliest == nil
-              earliest = t
-            elsif t < earliest
-              earliest = t
-            end
-          end
-
-          earliest
-
-        end
-
-        def latest_end(opportunity_id, day_of_week)
-          end_times = DiningPeriod.where({ "dining_periods.dining_opportunity_id" => opportunity_id, "dining_periods.day_of_week" => day_of_week }).pluck(:end_time)
-
-          latest = nil
-
-          for t in end_times
-            if latest == nil
-              latest = t
-            elsif t > latest
-              latest = t
-            end
-          end
-
-          latest
-
         end
 
     end

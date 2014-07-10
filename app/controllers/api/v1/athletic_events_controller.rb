@@ -12,7 +12,7 @@ module Api
       end
 
       def show
-        @athletic_event = specific_show(AthleticEvent, params)
+        @athletic_event = specific_show(AthleticEvent, params[:id])
       end
 
       def create

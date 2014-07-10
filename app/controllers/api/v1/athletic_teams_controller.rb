@@ -12,7 +12,7 @@ module Api
     end
 
     def show
-      @athletic_team = specific_show(AthleticTeam, params)
+      @athletic_team = specific_show(AthleticTeam, params[:id])
     end
 
       def create

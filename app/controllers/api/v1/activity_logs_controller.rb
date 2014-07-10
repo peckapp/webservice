@@ -19,13 +19,7 @@ module Api
       end
 
       def show
-        if params[:user_id]
-          @activity_log = ActivityLog.where(:receiver => params[:user_id]).find(params[:id])
-        elsif params[:circle_id]
-          @activity_log = specific_show(ActivityLog, :circle_id)
-        else
-          @activity_log = ActivityLog.find(params[:id])
-        end
+        @activity_log = specific_show(ActivityLog,params[:id])
       end
 
       def create

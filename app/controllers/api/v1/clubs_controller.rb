@@ -13,7 +13,7 @@ module Api
       end
 
       def show
-        @club = specific_show(Club, params)
+        @club = specific_show(Club, params[:id])
       end
 
       def create

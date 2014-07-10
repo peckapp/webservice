@@ -12,7 +12,7 @@ module Api
       end
 
       def show
-        @department = specific_show(Department, params)
+        @department = specific_show(Department,params[:id])
       end
 
       def create

@@ -36,7 +36,6 @@ module Api
             hours = "#{start_time} - #{end_time}"
 
             @service_hours[place.id] = hours
-            puts "-----> #{@service_hours[place.id]} <-----"
           end
         else
           @dining_places = specific_index(DiningPlace, params)
