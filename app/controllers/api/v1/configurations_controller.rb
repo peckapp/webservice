@@ -13,7 +13,7 @@ module Api
       end
 
       def show
-        @configuration = ::Configuration.find(params[:id])
+        @configuration = specific_show(::Configuration,params[:id])
       end
 
       def create

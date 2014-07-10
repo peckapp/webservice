@@ -12,7 +12,7 @@ module Api
       end
 
       def show
-        @user = specific_show(User, params)
+        @user = specific_show(User, params[:id])
       end
 
       def create

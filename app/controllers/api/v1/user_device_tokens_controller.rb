@@ -15,11 +15,7 @@ module Api
       end
 
       def show
-        if params[:user_id]
-          @user_device_token = specific_show(UserDeviceToken, :user_id)
-        else
-          @user_device_token = UserDeviceToken.find(params[:id])
-        end
+        @user_device_token = specific_show(UserDeviceToken, params[:id])
       end
 
       def create

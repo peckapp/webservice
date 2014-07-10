@@ -1,36 +1,20 @@
 require 'test_helper'
+require 'ultimate_test_helper'
 
-class LocationsControllerTest < ActionController::TestCase
+class LocationsControllerTest < UltimateTestHelper
   def setup
     @controller = Api::V1::LocationsController.new
     @attributes = [:id, :institution_id, :name, :gps_longitude, :gps_latitude, :range, :format]
+    @params_index = {:format => :json}
     @params_show = {:id => 1, :name => "Bronfman", :format => :json}
     @params_create = {:institution_id => 1, :name => "Paresky"}
     @params_update = {:name => "Mission"}
+    @model_type = :location
+    @id = 2
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end
 
   def teardown
      ActionController::Parameters.action_on_unpermitted_parameters = false
-  end
-
-  test "should get index" do
-    get_index(@controller)
-  end
-
-  test "should get show" do
-    get_show(@params_show, @controller, @attributes)
-  end
-
-  test "should post create" do
-    post_create(@params_create, @controller, :location)
-  end
-
-  test "should patch update" do
-    patch_update(@params_update, @controller, 3, :location)
-  end
-
-  test "should delete destroy" do
-    delete_destroy(@controller, 2)
   end
 end

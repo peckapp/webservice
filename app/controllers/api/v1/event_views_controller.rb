@@ -12,7 +12,7 @@ module Api
       end
 
       def show
-        @event_view = EventView.find(params[:id])
+        @event_view = specific_show(EventView, params[:id])
       end
 
       def create

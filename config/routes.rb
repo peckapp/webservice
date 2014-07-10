@@ -49,7 +49,7 @@ Rails.application.routes.draw do
 
       # Dining periods for a particular dining opportunity
       resources :dining_opportunities do
-        resources :dining_periods
+        resources :dining_places
       end
 
       # Users for a particular user device token

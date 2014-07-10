@@ -12,7 +12,7 @@ module Api
       end
 
       def show
-        @comment = Comment.find(params[:id])
+        @comment = specific_show(Comment,params[:id])
       end
 
       def create

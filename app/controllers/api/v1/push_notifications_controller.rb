@@ -15,11 +15,7 @@ module Api
       end
 
       def show
-        if params[:user_id]
-          @push_notification = specific_show(PushNotification, :user_id)
-        else
-          @push_notification = PushNotification.find(params[:id])
-        end
+        @push_notification = specific_show(PushNotification, params[:id])
       end
 
       def create

@@ -10,38 +10,5 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
-    def get_index(controller)
-      @controller = controller
-      get :index, :format => :json
-      assert_response :success
-    end
-
-    def get_show(params_show, controller, attributes)
-      @controller = controller
-      params_show.keys.each do |attribute|
-        unless attributes.include? attribute
-          assert(false, "Attribute not found in database table.")
-        end
-      end
-      get :show, params_show
-      assert_response :success
-    end
-
-    def post_create(params_create, controller, type)
-       @controller = controller
-       post :create, type => params_create, :format => :json
-       assert_response :success
-    end
-
-    def patch_update(params_update, controller, id, type)
-      @controller = controller
-      patch :update, :id => id, type => params_update, :format => :json
-      assert_response(:success)
-    end
-
-    def delete_destroy(controller, id)
-      @controller = controller
-      delete :destroy, :format => :json, :id => id
-      assert_response :success
-    end
+  
 end

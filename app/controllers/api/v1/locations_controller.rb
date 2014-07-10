@@ -11,7 +11,7 @@ module Api
       end
 
       def show
-        @location = specific_show(Location, params)
+        @location = specific_show(Location, params[:id])
       end
 
       def create
