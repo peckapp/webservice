@@ -18,4 +18,26 @@ class DiningOpportunitiesControllerTest < UltimateTestHelper
      ActionController::Parameters.action_on_unpermitted_parameters = false
   end
 
+  ###################################
+  ## TESTS SPECIFIC TO DINING OPPS ##
+  ###################################
+
+  test "every dining opportunity for given day has an earliest start and latest end" do
+    (0..6).each { |dow|
+      DiningPeriod.where(:day_of_week => dow).pluck(:dining_opportunity_id).each { |opp_id|
+        early = DiningOpportunity.find(opp_id).earliest_start(dow)
+        late = DiningOpportunity.find(opp_id).latest_end(dow)
+        assert( ! early.blank? , "the following is blank: day # #{dow} for #{DiningOpportunity.find(opp_id).dining_opportunity_type}")
+        assert( ! late.blank? , "the following is blank: day # #{dow} for #{DiningOpportunity.find(opp_id).dining_opportunity_type}")
+        puts "\n"
+        puts "EARLY: #{early}"
+        puts "LATE: #{late}"
+        next if early.blank? || late.blank?
+        assert(early < late, "earliest start must always be before latest end")
+      }
+    }
+
+
+  end
+
 end
