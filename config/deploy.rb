@@ -1,4 +1,4 @@
-# config valid only for Capistrano 3.1
+# config valid only for Capistrano 3.2.1
 lock '3.2.1'
 
 set :application, 'webservice'
@@ -6,9 +6,6 @@ set :repo_url, 'git@github.com:peckapp/webservice.git'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
-
-# Default deploy_to directory is /var/www/my_app
-set :deploy_to, '/home/deployer/apps/webservice'
 
 set :use_sudo, false
 
@@ -51,6 +48,19 @@ namespace :deploy do
     end
   end
 
+  desc "Symlink shared config files"
+  task :symlink_config_files do
+    on roles(:app) do# , in: :sequence, wait: 5 do
+      # links the local database config file
+      execute :ln, "-nfs #{ deploy_to }/shared/config/database.yml #{ release_path }/config/database.yml"
+      # links the local environment variable load file
+      execute :ln, "-nfs #{ deploy_to }/shared/config/environment_variables.yml #{ release_path }/config/environment_variables.yml"
+    end
+  end
+
+  # must be executed here so that files are in place but nothing has required the file yet. see /lib/capistrano/tasks/framework.rake for other tasks
+  after :updating, :symlink_config_files
+
   after :publishing, :restart
 
   after :restart, :clear_cache do
@@ -63,18 +73,6 @@ namespace :deploy do
   end
 
 end
-
-namespace :setup do
-  desc "Symlink shared config files"
-  task :symlink_config_files do
-    on roles(:app), in: :sequence, wait: 5 do
-      # Your restart mechanism here, for example:
-      execute :ln, "-s #{ deploy_to }/shared/config/database.yml #{ current_path }/config/database.yml"
-    end
-  end
-end
-
-before :rake, :symlink_config_files
 
 # namespace :bundle do
 #

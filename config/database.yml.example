@@ -35,6 +35,15 @@ test:
   # osx socket
   socket: /tmp/mysql.sock
 
+
+staging:
+  <<: *default
+  database: webservice_production
+  username: webservice
+  password: <%= ENV['WEBSERVICE_DATABASE_PASSWORD'] %>
+  # ubuntu socket
+  #socket: /var/run/mysqld/mysqld.sock
+
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
 # ever seen by anyone, they now have access to your database.

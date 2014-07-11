@@ -1,4 +1,5 @@
 class Circle < ActiveRecord::Base
+  include ModelNormalValidations
   include ModelBeforeSaveValidations
 # verified
   ### circle event creation ###
@@ -13,12 +14,39 @@ class Circle < ActiveRecord::Base
   ### circle's activity ###
   has_many :activity_logs #
 
+  ### Validations ###
   # validates :institution_id, :presence => true, :numericality => true
   # validates :user_id, :presence => true, :numericality => true
   # validates :circle_name, :presence => true
   # before_save :validate_institution_id, :validate_circle_name, :validate_user_id
+  # validates :image_link, :uniqueness => true
+  # validate :correct_circle_types
+  ###################
 
-# private
+  ### Callbacks ###
+  # before_save :sanitize_circle
+  # before_create :sanitize_circle
+  # before_update :sanitize_circle
+  #################
+
+  # Probably won't use callback
+  # before_save :validate_institution_id, :validate_circle_name, :validate_user_id
+
+  ### Methods ###
+  # def correct_circle_types
+  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
+  #   is_correct_type(user_id, Fixnum, "fixnum", :user_id)
+  #   is_correct_type(circle_name, String, "string", :circle_name)
+  #   is_correct_type(image_link, String, "string", :image_link)
+  # end
+  #
+  # def sanitize_circle
+  #   sanitize_everything(attributes)
+  # end
+
+  # private
+  #   attributes = [id, institution_id, user_id, circle_name, image_link, created_at, update_at]
+  ### Probably won't use below:
   # def validate_circle_name
   #   validate_attribute(self.circle_name, "circle_name", String, "String")
   # end
