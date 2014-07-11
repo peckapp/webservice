@@ -13,17 +13,6 @@ class DiningOpportunityTest < ActiveSupport::TestCase
 
   end
 
-  test "earliest start before latest end for all dining opportunities" do
-    DiningOpportunity.all.each { |opp|
-      (0..6).each { |dow|
-        early = opp.earliest_start(dow)
-        late = opp.latest_end(dow)
-        next if early.blank? || late.blank?
-        assert(early < late, "earliest start must always be before latest end")
-      }
-    }
-  end
-
   test "date time for week day method works properly" do
     (0..6).each { |dow|
       (10..14).each { |hr|

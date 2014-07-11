@@ -30,8 +30,6 @@ module Api
             @service_end[opp.id] = finish_time
 
             @dining_opportunities << opp
-          else
-            # no periods are associated with this opportunity, do not put it in array for view
           end
         end
 
