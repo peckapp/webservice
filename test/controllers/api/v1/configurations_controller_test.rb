@@ -7,7 +7,7 @@ class ConfigurationsControllerTest < UltimateTestHelper
     @attributes = [:id, :config_file_name, :mascot, :format]
     @params_index = {:format => :json}
     @params_show = {:id => 1, :mascot => "Red Pig", :format => :json}
-    @params_create = { :config_file_name => "configurations/happiness"}
+    @params_create = {:config_file_name => "configurations/happiness"}
     @params_update = {:mascot => "Purple Cow"}
     @model_type = :configuration
     @id = 2

@@ -1,5 +1,9 @@
 class RemoveConfigurationInstitutionId < ActiveRecord::Migration
-  def change
+  def up
     remove_column("configurations", "institution_id")
+  end
+
+  def down
+    add_column("configurations", "institution_id")
   end
 end

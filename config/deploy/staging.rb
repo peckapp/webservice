@@ -4,9 +4,14 @@
 # is considered to be the first unless any hosts have the primary
 # property set.  Don't declare `role :all`, it's a meta role.
 
-role :app, %w{deploy@example.com}
-role :web, %w{deploy@example.com}
-role :db,  %w{deploy@example.com}
+role :app, %w{deployer@buri.peckapp.com}
+role :web, %w{deployer@buri.peckapp.com}
+# no code needed on db server at this time
+# role :db,  %w{deployer@magni.peckapp.com}
+
+
+# Default deploy_to directory is /var/www/my_app
+set :deploy_to, '/home/deployer/apps/webservice_staging'
 
 
 # Extended Server Syntax
@@ -15,7 +20,9 @@ role :db,  %w{deploy@example.com}
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
-server 'example.com', user: 'deploy', roles: %w{web app}, my_property: :my_value
+# Define server(s)
+server 'buri.peckapp.com', user: 'deployer', roles: %w{web app}
+# server 'magni.peckapp.com', user: 'deployer', roles: %w{db}
 
 
 # Custom SSH Options
@@ -25,11 +32,12 @@ server 'example.com', user: 'deploy', roles: %w{web app}, my_property: :my_value
 #
 # Global options
 # --------------
-#  set :ssh_options, {
-#    keys: %w(/home/rlisowski/.ssh/id_rsa),
-#    forward_agent: false,
-#    auth_methods: %w(password)
-#  }
+set :ssh_options, {
+  keys: %w(File.join(ENV["HOME"], ".ssh", "peck_secure")),
+  forward_agent: false,
+  user: 'deployer',
+  auth_methods: %w(publickey password)
+}
 #
 # And/or per server (overrides global)
 # ------------------------------------

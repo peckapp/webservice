@@ -18,6 +18,7 @@ class Circle < ActiveRecord::Base
   # validates :institution_id, :presence => true, :numericality => true
   # validates :user_id, :presence => true, :numericality => true
   # validates :circle_name, :presence => true
+  # before_save :validate_institution_id, :validate_circle_name, :validate_user_id
   # validates :image_link, :uniqueness => true
   # validate :correct_circle_types
   ###################
