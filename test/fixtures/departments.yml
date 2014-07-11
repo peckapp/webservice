@@ -1,16 +1,20 @@
-
-department_one:
-  id: 1
-  name: "Chemistry"
+<% (1..5).each do |n| %>
+ department_<%= n %>:
+  id: <%= n %>
+  name: <%= "department_#{n}" %>
   institution_id: 1
+<% end %>
 
-
-department_two:
-  id: 2
-  name: "Biology"
+<% (6..10).each do |n| %>
+ department_<%= n %>:
+  id: <%= n %>
+  name: <%= "department_#{n}" %>
   institution_id: 1
+<% end %>
 
-department_three:
-  id: 3
-  name: "Math"
+<% (11..15).each do |n| %>
+ department_<%= n %>:
+  id: <%= n %>
+  name: <%= "department_#{n}" %>
   institution_id: 1
+<% end %>

@@ -7,21 +7,21 @@
 
 # public users from institution 1
 <% (1..10).each do |n| %>
-user_<%= n %>:
+ user_<%= n %>:
   id: <%= n %>
   institution_id: 1
 <% end %>
 
 # public users from institution 2
 <% (11..20).each do |n| %>
-user_<%= n %>:
+ user_<%= n %>:
   id: <%= n %>
   institution_id: 2
 <% end %>
 
 # private users from institution 1
 <% (21..30).each do |n| %>
-user_<%= n %>:
+ user_<%= n %>:
   id: <%= n %>
   institution_id: 1
   first_name: <%= "first name #{n} "%>
@@ -31,14 +31,14 @@ user_<%= n %>:
   active: true
 <% end %>
 
-# private users from institution 1
+# private users from institution 2
 <% (31..40).each do |n| %>
-user_<%= n %>:
- id: <%= n %>
- institution_id: 1
- first_name: <%= "first name ##{n}" %>
- last_name: <%= "last name ##{n}" %>
- username: <%= "user#{n}" %>
- blurb: <%= "I'm user ##{n}" %>
- active: true
+ user_<%= n %>:
+  id: <%= n %>
+  institution_id: 2
+  first_name: <%= "first name ##{n}" %>
+  last_name: <%= "last name ##{n}" %>
+  username: <%= "user#{n}" %>
+  blurb: <%= "I'm user ##{n}" %>
+  active: true
 <% end %>

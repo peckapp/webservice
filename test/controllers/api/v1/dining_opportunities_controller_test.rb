@@ -6,7 +6,7 @@ class DiningOpportunitiesControllerTest < UltimateTestHelper
     @controller = Api::V1::DiningOpportunitiesController.new
     @attributes = [:id, :dining_opportunity_type, :institution_id, :format]
     @params_index = {:format => :json}
-    @params_show = {:id => 11, :dining_opportunity_type => "dinner", :institution_id => 1, :format => :json}
+    @params_show = {:id => 2, :dining_opportunity_type => "dinner", :institution_id => 1, :format => :json}
     @params_create = {:dining_opportunity_type => "lunch", :institution_id => 2}
     @params_update = {:dining_opportunity_type => "breakfast"}
     @model_type = :dining_opportunity

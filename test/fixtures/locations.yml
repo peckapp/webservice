@@ -1,14 +1,6 @@
-location_one:
-  id: 1
-  name: "Bronfman"
-  institution_id: 2
-
-location_two:
-  id: 2
-  name: "West"
-  institution_id: 2
-
-location_three:
-  id: 3
-  name: "East"
-  institution_id: 3
+<% (1..10).each do |n| %>
+ location_<%= n %>:
+  id: <%= n %>
+  name: <%= "location_#{n}" %>
+  institution_id: 1
+<% end %>

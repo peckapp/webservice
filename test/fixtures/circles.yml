@@ -5,26 +5,26 @@
 # below each fixture, per the syntax in the comments below
 #
 
-<% 10.times do |n| %>
-circle_<%= n + 10 %>:
-  id: <%= n + 10 %>
-  circle_name: "Multiple Girls"
-  user_id: <%= n + 20 %>
+<% (1..5).each do |n| %>
+ circle_<%= n %>:
+  id: <%= n %>
+  circle_name: <%= "circle_#{n}" %>
+  user_id: <%= n %>
+  institution_id: 1
+<% end %>
+
+<% (6..10).each do |n| %>
+ circle_<%= n %>:
+  id: <%= n %>
+  circle_name: <%= "circle_#{n}" %>
+  user_id: <%= n %>
   institution_id: 2
 <% end %>
 
-<% 10.times do |n| %>
-circle_<%= n + 20 %>:
-  id: <%= n + 20 %>
-  circle_name: "Math People"
-  user_id: <%= n + 30 %>
-  institution_id: 3
-<% end %>
-
-<% 10.times do |n| %>
-circle_<%= n + 30 %>:
- id: <%= n + 30 %>
- circle_name: "Counter-Strike Party"
- user_id: <%= n + 40 %>
- institution_id: 4
+<% (11..15).each do |n| %>
+ circle_<%= n %>:
+  id: <%= n %>
+  circle_name: <%= "circle_#{n}" %>
+  user_id: <%= n %>
+  institution_id: 2
 <% end %>

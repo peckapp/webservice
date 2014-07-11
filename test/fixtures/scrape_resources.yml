@@ -2,15 +2,15 @@
 
 
 williams:
-  url: https://events.williams.edu/widget/view?schools=williams&days=31&num=10&types=7391%2C7063%2C5716%2C5718&format=rss
-  institution_id: 3
-  resource_type: MyString
-  scrape_interval: 1
-  validated: false
+ url: https://events.williams.edu/widget/view?schools=williams&days=31&num=10&types=7391%2C7063%2C5716%2C5718&format=rss
+ institution_id: 3
+ resource_type: MyString
+ scrape_interval: 1
+ validated: false
 
 middlebury:
-  url: http://25livepub.collegenet.com/calendars/featured-title-events-calendar-search.rss
-  institution_id: 4
-  resource_type: MyString
-  scrape_interval: 1
-  validated: false
+ url: http://25livepub.collegenet.com/calendars/featured-title-events-calendar-search.rss
+ institution_id: 4
+ resource_type: MyString
+ scrape_interval: 1
+ validated: false

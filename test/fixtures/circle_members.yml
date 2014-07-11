@@ -6,30 +6,30 @@
 #
 
 # circle members from institution 1, circle 1
-<% (1..10).each do |n| %>
-circle_member_<%= n %>:
+<% (1..5).each do |n| %>
+ circle_member_<%= n %>:
   id: <%= n %>
   circle_id: 1
   user_id: <%= n %>
-  invited_by: 2
+  invited_by: 1
   institution_id: 1
   date_added: 2007-12-04 00:00:00
 <% end %>
 
 # circle members from institution 2, circle 2
-<% (11..20).each do |n| %>
-circle_member_<%= n %>:
+<% (6..10).each do |n| %>
+ circle_member_<%= n %>:
   id: <%= n %>
   circle_id: 2
   user_id: <%= n %>
   institution_id: 2
-  invited_by: 1
+  invited_by: 2
   date_added: 2007-12-04 00:00:00
 <% end %>
 
 #  circle members from institution 3, circle 3
-<% (21..30).each do |n| %>
-circle_member_<%= n %>:
+<% (11..15).each do |n| %>
+ circle_member_<%= n %>:
   id: <%= n %>
   circle_id: 3
   user_id: <%= n %>
@@ -38,13 +38,13 @@ circle_member_<%= n %>:
   date_added: 2007-12-04 00:00:00
 <% end %>
 
-# circles from institution 4, circle 4
-<% (31..40).each do |n| %>
-circle_member_<%= n %>:
- id: <%= n %>
- circle_id: 4
- user_id: <%= n %>
- institution_id: 4
- invited_by: 4
- date_added: 2007-12-04 00:00:00
+# circle members from institution 4, circle 4
+<% (16..20).each do |n| %>
+ circle_member_<%= n %>:
+  id: <%= n %>
+  circle_id: 4
+  user_id: <%= n %>
+  institution_id: 4
+  invited_by: 4
+  date_added: 2007-12-04 00:00:00
 <% end %>

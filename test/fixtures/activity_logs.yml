@@ -6,51 +6,39 @@
 #
 
 
-<% 10.times do |n| %>
-activity_log_<%= n %>:
-  id: <%= n + 10 %>
-  sender: <%= n + 10 %>
+<% (1..5).each do |n| %>
+ activity_log_<%= n %>:
+  id: <%= n %>
+  sender: <%= "sender_#{n}" %>
   receiver: 1
   read_status: true
   message: "So fun"
   institution_id: 1
-  type_of_activity: "simple"
-  category: "foo"
+  type_of_activity: "invite"
+  category: "simple"
 <% end %>
 
 
-<% 10.times do |n| %>
-activity_log_<%= n + 10 %>:
-  id: <%= n + 20 %>
-  sender: <%= n + 20 %>
+<% (6..10).each do |n| %>
+ activity_log_<%= n %>:
+  id: <%= n %>
+  sender: <%= "sender_#{n}" %>
   receiver: 2
   read_status: false
   message: "More fun"
   institution_id: 2
-  type_of_activity: "athletic"
-  category: "bill"
+  type_of_activity: "comment"
+  category: "athletic"
 <% end %>
 
-<% 10.times do |n| %>
-activity_log_<%= n + 20 %>:
-  id: <%= n + 30 %>
-  sender: <%= n + 30 %>
+<% (11..15).each do |n| %>
+ activity_log_<%= n %>:
+  id: <%= n %>
+  sender: <%= "sender_#{n}" %>
   receiver: 3
   read_status: true
   message: "Less fun"
   institution_id: 3
-  type_of_activity: "simple"
-  category: "bob"
-<% end %>
-
-<% 10.times do |n| %>
-activity_log_<%= n + 30 %>:
- id: <%= n + 40 %>
- sender: <%= n + 40 %>
- receiver: 4
- message: "Too much fun"
- read_status: false
- institution_id: 4
- type_of_activity: "athletic"
- category: "dog"
+  type_of_activity: "update"
+  category: "dining"
 <% end %>

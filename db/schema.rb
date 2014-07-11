@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140709160338) do
+ActiveRecord::Schema.define(version: 20140710160538) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
@@ -140,7 +140,6 @@ ActiveRecord::Schema.define(version: 20140709160338) do
     t.string   "config_file_name", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "institution_id",   null: false
   end
 
   create_table "departments", force: true do |t|

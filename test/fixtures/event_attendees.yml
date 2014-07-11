@@ -1,41 +1,41 @@
-<% 10.times do |n| %>
-event_attendee_<%= n + 10 %>:
-  id: <%= n + 10 %>
+<% (1..5).each do |n| %>
+ event_attendee_<%= n %>:
+  id: <%= n %>
   user_id: 1
   added_by: 2
   category: "simple"
-  event_attended: 3
+  event_attended: <%= n %>
   institution_id: 1
 <% end %>
 
 
-<% 10.times do |n| %>
-event_attendee_<%= n + 20 %>:
-  id: <%= n + 20 %>
+<% (6..10).each do |n| %>
+ event_attendee_<%= n %>:
+  id: <%= n %>
   user_id: 2
   added_by: 3
   category: "athletic"
-  event_attended: 2
+  event_attended: <%= n - 5 %>
   institution_id: 1
 <% end %>
 
-<% 10.times do |n| %>
-event_attendee_<%= n + 30 %>:
-  id: <%= n + 30 %>
+<% (11..15).each do |n| %>
+ event_attendee_<%= n %>:
+  id: <%= n %>
   user_id: 1
   added_by: 3
   category: "simple"
-  event_attended: 2
+  event_attended: <%= n - 5 %>
   institution_id: 8
 <% end %>
 
 
-<% 10.times do |n| %>
-event_attendee_<%= n + 40 %>:
- id: <%= n + 40 %>
- user_id: 4
- added_by: 2
- category: "athletic"
- event_attended: 1
- institution_id: 3
+<% (15..20).each do |n| %>
+ event_attendee_<%= n %>:
+  id: <%= n %>
+  user_id: 4
+  added_by: 2
+  category: "athletic"
+  event_attended: <%= n - 10 %>
+  institution_id: 3
 <% end %>

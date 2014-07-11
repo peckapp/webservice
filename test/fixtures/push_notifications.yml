@@ -1,33 +1,33 @@
 
-<% (1..10).each do |n| %>
-push_notification_<%= n %>:
+<% (1..5).each do |n| %>
+ push_notification_<%= n %>:
   id: <%= n %>
   user_id: <%= n %>
   institution_id: 1
-  notification_type: "james"
+  notification_type: "update"
 <% end %>
 
-<% (11..12).each do |n| %>
-push_notification_<%= n + 10 %>:
+<% (6..10).each do |n| %>
+ push_notification_<%= n + 10 %>:
   id: <%= n %>
-  user_id: <%= n %>
+  user_id: <%= n - 5 %>
   institution_id: 2
-  notification_type: "bill"
+  notification_type: "invite"
 <% end %>
 
-<% (21..30).each do |n| %>
-push_notification_<%= n %>:
+<% (11..15).each do |n| %>
+ push_notification_<%= n %>:
   id: <%= n %>
-  user_id: <%= n %>
-  notification_type: "bob"
+  user_id: <%= n - 10 %>
+  notification_type: "comment"
   institution_id: 3
 <% end %>
 
 
-<% (31..40).each do |n| %>
-push_notification_<%= n %>:
- id: <%= n %>
- user_id: <%= n %>
- institution_id: 4
- notification_type: "joe"
+<% (16..20).each do |n| %>
+ push_notification_<%= n %>:
+  id: <%= n %>
+  user_id: <%= n - 15 %>
+  institution_id: 4
+  notification_type: "share"
 <% end %>
