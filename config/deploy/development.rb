@@ -33,7 +33,7 @@ server 'thor.peckapp.com', user: 'deploy', roles: %w{web app}
 # Global options
 # --------------
 set :ssh_options, {
-  keys: %w(File.join(ENV["HOME"], ".ssh", "peckvps")),
+  keys: %w(File.join(ENV["HOME"], ".ssh", "peckvps") File.join(ENV["HOME"], ".ssh", "id_rsa")),
   forward_agent: false,
   user: 'deploy',
   auth_methods: %w(publickey password)

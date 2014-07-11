@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  include ModelNormalValidations
+  include ModelBeforeSaveValidations
 # verified
   ########
   # each user has an encrypted secure password
@@ -6,18 +8,23 @@ class User < ActiveRecord::Base
   ########
 
   #### Callbacks #######
-
+  # before_save :sanitize_user
+  # before_create :sanitize_user
+  # before_update :sanitize_user
   ######################
 
   #### Validations ###############
-  # validates_presence_of :institution_id
-  # validates_presence_of :first_name
-  # validates_presence_of :last_name
-  # validates :username, :presence => true, :uniqueness => true
-  # validates :api_key, :presence => true, :uniqueness => true
+  # validates :institution_id, :presence => true, :numericality => true
+  # validates :username, :presence => true, :uniqueness => true, :allow_nil => true, :length => {:maximum => 50}
+  # validates :facebook_link, :uniqueness => true, :allow_nil => true
+  # validates :facebook_token, :uniqueness => true, :allow_nil => true
+  # validates :api_key, :uniqueness => true, :allow_nil => true
+  # validates :authentication_token, :uniqueness => true, :allow_nil => true
+  # validate :correct_user_types
   ###############################
 
-  ### user's home institution ###
+  ################################# Associations ####################################
+  # user's home institution ###
   belongs_to :institution #
   ###############################
 
@@ -62,4 +69,25 @@ class User < ActiveRecord::Base
   has_many :push_notifications #
   #####################
 
+  ######################################################################################
+
+  ### Methods ###
+  # def correct_user_types
+  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
+  #   is_correct_type(first_name, String, "string", :first_name)
+  #   is_correct_type(last_name, String, "string", :last_name)
+  #   is_correct_type(username, String, "string", :username)
+  #   is_correct_type(facebook_link, String, "string", :facebook_link)
+  #   is_correct_type(facebook_token, String, "string", :facebook_token)
+  #   is_correct_type(api_key, String, "string", :api_key)
+  #   is_correct_type(active, Boolean, "boolean", :active)
+  #   is_correct_type(authentication_token, String, "string", :authentication_token)
+  # end
+  #
+  # def sanitize_user
+  #   sanitize_everything(attributes)
+  # end
+  #
+  # private
+  #   attributes = [id, institution_id, first_name, last_name, username, blurb, facebook_link, facebook_token, password_digest, api_key, active, created_at, updated_at, authentication_token]
 end
