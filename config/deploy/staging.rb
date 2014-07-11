@@ -6,8 +6,8 @@
 
 role :app, %w{deployer@buri.peckapp.com}
 role :web, %w{deployer@buri.peckapp.com}
-# no code needed on db server at this time
-# role :db,  %w{deployer@magni.peckapp.com}
+# no code needed on actual db server at this time
+role :db,  %w{deployer@buri.peckapp.com}
 
 
 # Default deploy_to directory is /var/www/my_app
