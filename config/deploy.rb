@@ -51,8 +51,13 @@ namespace :deploy do
   desc "Symlink shared config files"
   task :symlink_config_files do
     on roles(:app) do# , in: :sequence, wait: 5 do
-      # Your restart mechanism here, for example:
+      # links the local database config file
       execute :ln, "-nfs #{ deploy_to }/shared/config/database.yml #{ release_path }/config/database.yml"
+      # links the local environment variable load file
+      env_file = "#{ deploy_to }/shared/config/environment_variables.yml"
+      if File.exists?(env_file)
+        execute :ln, "-nfs #{ env_file } #{ release_path }/config/environment_variables.yml"
+      end
     end
   end
 
