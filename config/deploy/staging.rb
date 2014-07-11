@@ -24,6 +24,10 @@ set :deploy_to, '/home/deployer/apps/webservice_staging'
 server 'buri.peckapp.com', user: 'deployer', roles: %w{web app}
 # server 'magni.peckapp.com', user: 'deployer', roles: %w{db}
 
+# Setup Options
+set :migration_role, 'migrator'
+set :conditionally_migrate, true
+set :assets_roles, [:web, :app]
 
 # Custom SSH Options
 # ==================
