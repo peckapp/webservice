@@ -26,7 +26,7 @@ set :format, :pretty
 set :pty, true
 
 # Default value for :linked_files is []
-# set :linked_files, %w{config/database.yml}
+set :linked_files, %w{config/database.yml config/environment_variables.yml}
 
 # Default value for linked_dirs is []
 # set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
@@ -48,18 +48,18 @@ namespace :deploy do
     end
   end
 
-  desc "Symlink shared config files"
-  task :symlink_config_files do
-    on roles(:app) do# , in: :sequence, wait: 5 do
-      # links the local database config file
-      execute :ln, "-nfs #{ deploy_to }/shared/config/database.yml #{ release_path }/config/database.yml"
-      # links the local environment variable load file
-      execute :ln, "-nfs #{ deploy_to }/shared/config/environment_variables.yml #{ release_path }/config/environment_variables.yml"
-    end
-  end
-
-  # must be executed here so that files are in place but nothing has required the file yet. see /lib/capistrano/tasks/framework.rake for other tasks
-  after :updating, :symlink_config_files
+  # desc "Symlink shared config files"
+  # task :symlink_config_files do
+  #   on roles(:app) do# , in: :sequence, wait: 5 do
+  #     # links the local database config file
+  #     execute :ln, "-nfs #{ deploy_to }/shared/config/database.yml #{ release_path }/config/database.yml"
+  #     # links the local environment variable load file
+  #     execute :ln, "-nfs #{ deploy_to }/shared/config/environment_variables.yml #{ release_path }/config/environment_variables.yml"
+  #   end
+  # end
+  #
+  # # must be executed here so that files are in place but nothing has required the file yet. see /lib/capistrano/tasks/framework.rake for other tasks
+  # after :updating, :symlink_config_files
 
   after :publishing, :restart
 
