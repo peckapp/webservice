@@ -19,7 +19,7 @@ class PageCrawlWorker
 
     elsif uri.scheme.match(/webcal/) || uri.to_s.match(/\.ics$/) # matches webcal schemes and .ics filetypes
       resc = Tasks::ScrapeResource.new(url: url, institution_id: inst_id, type: "webcal")
-      ModelDuplication.non_duplicative_save(resc)
+      resc.non_duplicative_save
 
     else
       # page wasn't rss or webcal, handle other types here if necessary

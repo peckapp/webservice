@@ -42,7 +42,8 @@ class Tasks::RssScraperController < ApplicationController
           event.end_date = event.start_date.advance( hours: 1 )
         end
 
-        result = ModelDuplication.non_duplicative_save(event, title: event.title, start_date: event.start_date, institution_id: event.institution_id)
+        # explicitely specify the sole attributes needed to uniquely identify events. ignores description and other changes for now
+        result = event.non_duplicative_save(title: event.title, start_date: event.start_date, institution_id: event.institution_id)
 
         if result then puts "filled event: #{event.inspect}" else puts "event #{event.inspect} was a duplicate" end
       }

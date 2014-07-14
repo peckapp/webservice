@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ModelDuplicationTest < ActionController::TestCase
+class ActiveRecordExtensionTest < ActionController::TestCase
 
   def setup
 
@@ -14,33 +14,33 @@ class ModelDuplicationTest < ActionController::TestCase
 
   test "prevent save using non duplicative save" do
     event = SimpleEvent.find(1)
-    assert ModelDuplication.non_duplicative_save(event, :title => event[:title], :start_date => event[:start_date])
+    assert event.non_duplicative_save(event, :title => event[:title], :start_date => event[:start_date])
   end
 
   test "allow save using non duplicative save" do
     event = self.random_event
-    assert ModelDuplication.non_duplicative_save(event, :title => event[:title], :start_date => event[:start_date])
+    assert event.non_duplicative_save(event, :title => event[:title], :start_date => event[:start_date])
   end
 
   test "prevent save using non duplicative save without attributes specified" do
     event = SimpleEvent.find(1)
-    assert ModelDuplication.non_duplicative_save(event)
+    assert event.non_duplicative_save(event)
   end
 
   test "allow save using non duplicative save without attributes specified" do
     event = self.random_event
-    assert ModelDuplication.non_duplicative_save(event)
+    assert event.non_duplicative_save(event)
   end
 
   test "current or create new for preexisting object"
     menu_item = MenuItem.find(1)
-    result = ModelDuplication.current_or_create_new(menu_item.attributes)
+    result = MenuItem.current_or_create_new(menu_item.attributes)
     assert_equal(menu_item, result)
   end
 
   test "current or create new for non-existant object"
     menu_item = self.random_menu_item
-    result = ModelDuplication.current_or_create_new(menu_item.attributes)
+    result = MenuItem.current_or_create_new(menu_item.attributes)
     assert_not result.blank?
   end
 
