@@ -16,14 +16,25 @@ DiningOpportunity.create(dining_opportunity_type: "Late Night", institution_id: 
 # May also want to seed the configuration files for the database here
 
 
-DiningOpportunity.create( dining_opportunity_type: "Breakfast", institution_id: 3 )
-DiningOpportunity.create( dining_opportunity_type: "Lunch", institution_id: 3 )
-DiningOpportunity.create( dining_opportunity_type: "Dinner", institution_id: 3 )
-DiningOpportunity.create( dining_opportunity_type: "Brunch", institution_id: 3 )
-DiningOpportunity.create( dining_opportunity_type: "Late Night", institution_id: 3 )
+DiningOpportunity.create( dining_opportunity_type: "Breakfast", institution_id: 1 )
+DiningOpportunity.create( dining_opportunity_type: "Lunch", institution_id: 1 )
+DiningOpportunity.create( dining_opportunity_type: "Dinner", institution_id: 1 )
+DiningOpportunity.create( dining_opportunity_type: "Brunch", institution_id: 1 )
+DiningOpportunity.create( dining_opportunity_type: "Late Night", institution_id: 1 )
 
 DiningPlace.create(institution_id: 3, name: "Paresky Whitmans Market", range: 0.0002)
 DiningPlace.create(institution_id: 3, name: "Paresky Grab N Go", range: 0.0002)
 DiningPlace.create(institution_id: 3, name: "Faculty House", range: 0.0002)
 
 # MenuItems.create( name: nil, institution_id: nil, details_link: nil, small_price: nil, large_price: nil, combo_price: nil, created_at: nil, updated_at: nil, dining_opportunity_id: nil, dining_place_id: nil, date_available: nil, category: nil, serving_size: nil )
+
+
+def seed_app_dining_periods
+  DiningOpportunity.all.each { |opp|
+    DiningPlace.all.each { |dp|
+      (0..6).each { |dow|
+        DiningPeriod.create(start_time: Time.now.change(hour: start_hash[opp.dining_opportunity_type], min: rand(60)), end_time: Time.now.change(hour: start_hash[opp.dining_opportunity_type], min: rand(60)), day_of_week: dow, dining_opportunity_id: opp.id, dining_place_id: dp.id, institution_id: 1)
+      }
+    }
+  }
+end

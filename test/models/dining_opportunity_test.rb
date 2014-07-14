@@ -39,4 +39,21 @@ class DiningOpportunityTest < ActiveSupport::TestCase
     assert(wd2 - today.wday == -1, "yesterday should be one day before today")
   end
 
+  test "earliest start and latest end works properly and all dining periods have each value" do
+    (0..6).each { |dow|
+      DiningPeriod.where(:day_of_week => dow).pluck(:dining_opportunity_id).each { |opp_id|
+        early, late = DiningOpportunity.find(opp_id).earliest_start_latest_end(dow)
+
+        # assert start
+        assert( ! early.blank? , "the following opportunity has no start: day # #{dow} for #{DiningOpportunity.find(opp_id).dining_opportunity_type}")
+
+        # assert end
+        assert( ! late.blank? , "the following opportunity has no end: day # #{dow} for #{DiningOpportunity.find(opp_id).dining_opportunity_type}")
+
+        # assert start is before end
+        assert(early < late, "earliest start must always be before latest end")
+      }
+    }
+  end
+
 end
