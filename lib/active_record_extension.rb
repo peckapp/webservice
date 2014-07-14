@@ -9,42 +9,42 @@ module ActiveRecordExtension
   extend ActiveSupport::Concern
 
   # add instance methods here
+  def model_match_exists(*attrs)
+    # method only applies to subclass models of the rails ActiveRecord::Base class
+    #if self.class == ActiveRecord::Base
+      attrs = attrs.extract_options!
+      if attrs.blank?
+        # use all non-blank fields in object as parameters
+        # puts self.class.instance_methods
+        self.class.columns.each { |c|
 
-  # add your static(class) methods here
-  module ClassMethods
-
-    def model_match_exists(*attrs)
-      # method only applies to subclass models of the rails ActiveRecord::Base class
-      if self.superclass == ActiveRecord::Base
-        attrs = attrs.extract_options!
-        if attrs.blank?
-          # use all non-blank fields in object as parameters
-          self.columns.each { |c|
-
-            val = self.send(:read_attribute, c.name)
-            if ! val.blank? then attrs.merge!(c.name => val) end
-          }
-        end
-        # checks database for the object's existence
-        if self.exists?(attrs)
-          return true
-        else
-          return false
-        end
-      else
-        raise "Attempted to find a model match for type #{self.class} other than an ActiveRecord::Base subclass"
+          val = self.read_attribute(c.name)
+          if ! val.blank? then attrs.merge!(c.name => val) end
+        }
       end
-    end
-
-    # saves only if an instance of the object with matching attributes cannot be found in the database
-    def non_duplicative_save(*attrs)
-      if ! self.model_match_exists(attrs)
-        self.save
+      # checks database for the object's existence
+      if self.class.exists?(attrs)
         return true
       else
         return false
       end
+    # else
+    #   raise "Attempted to find a model match for type #{self.class} other than an ActiveRecord::Base subclass"
+    # end
+  end
+
+  # saves only if an instance of the object with matching attributes cannot be found in the database
+  def non_duplicative_save(*attrs)
+    if ! self.model_match_exists(attrs)
+      self.save
+      return true
+    else
+      return false
     end
+  end
+
+  # add your static(class) methods here
+  module ClassMethods
 
     # returns an object matching specified attributes, or creates one with them if none exist
     def current_or_create_new(*attrs)

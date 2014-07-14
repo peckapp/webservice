@@ -42,7 +42,10 @@ def seed_app_dining_periods
   DiningOpportunity.all.each { |opp|
     DiningPlace.all.each { |dp|
       (0..6).each { |dow|
-        DiningPeriod.create(start_time: Time.now.change(hour: start_hash[opp.dining_opportunity_type], min: rand(60)), end_time: Time.now.change(hour: start_hash[opp.dining_opportunity_type] + 3, min: rand(60)), day_of_week: dow, dining_opportunity_id: opp.id, dining_place_id: dp.id, institution_id: 1)
+        start_hour = start_hash[opp.dining_opportunity_type]
+        if ! start_hour.blank?
+          DiningPeriod.create(start_time: Time.now.change(hour: start_hour, min: rand(60)), end_time: Time.now.change(hour: start_hour + 3, min: rand(60)), day_of_week: dow, dining_opportunity_id: opp.id, dining_place_id: dp.id, institution_id: 1)
+        end
       }
     }
   }

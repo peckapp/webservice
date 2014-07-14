@@ -42,15 +42,17 @@ class WilliamsDiningWorker
 
       mi.serving_size = l[4]
 
+      mi.date_available = Date.current
+
       # find the corresponding keys for the place and opportunity
-      place = ModelDuplication.current_or_create_new(DiningPlace, name: l[0], institution_id: inst_id)
+      place = DiningPlace.current_or_create_new(name: l[0], institution_id: inst_id)
       mi.dining_place_id = place.id
 
-      opportunity = ModelDuplication.current_or_create_new(DiningOpportunity, type: l[3], institution_id: inst_id)
+      opportunity = DiningOpportunity.current_or_create_new(dining_opportunity_type: l[3], institution_id: inst_id)
       mi.dining_opportunity_id = opportunity.id
 
       # saves the new menu_item into the database
-      ModelDuplication.non_duplicative_save(mi)
+      mi.non_duplicative_save
     end
 
   end
