@@ -25,7 +25,7 @@ class DiningOpportunitiesControllerTest < UltimateTestHelper
   test "every dining opportunity for given day has an earliest start and latest end" do
 
     get :index, @params_index
-    puts @response.public_methods
+    
     assert_not_nil(@response[:dining_opportunities], "response must contain the dining_opportunities object")
 
     @response[:dining_opportunities].each { |opp|

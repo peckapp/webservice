@@ -30,6 +30,8 @@ DiningPlace.create(institution_id: 3, name: "Faculty House", range: 0.0002)
 
 
 def seed_app_dining_periods
+  start_hash = {"Breakfast" => 8, "Lunch" => 11, "Dinner" => 16, "Brunch" => 9, "Late Night" => 20}
+
   DiningOpportunity.all.each { |opp|
     DiningPlace.all.each { |dp|
       (0..6).each { |dow|
