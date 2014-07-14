@@ -4,9 +4,9 @@
 # is considered to be the first unless any hosts have the primary
 # property set.  Don't declare `role :all`, it's a meta role.
 
-role :app, %w{deploy@thor.peckapp.com}
-role :web, %w{deploy@thor.peckapp.com}
-role :db,  %w{deploy@thor.peckapp.com}
+# role :app, %w{deploy@thor.peckapp.com}
+# role :web, %w{deploy@thor.peckapp.com}
+# role :db,  %w{deploy@thor.peckapp.com}
 
 
 # Default deploy_to directory is /var/www/my_app

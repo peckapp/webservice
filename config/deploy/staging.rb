@@ -4,13 +4,6 @@
 # is considered to be the first unless any hosts have the primary
 # property set.  Don't declare `role :all`, it's a meta role.
 
-role :app, %w{deployer@buri.peckapp.com}
-role :web, %w{deployer@buri.peckapp.com}
-# no code needed on actual db server at this time
-# role :db,  %w{deployer@magni.peckapp.com}
-role :db,  %w{deployer@buri.peckapp.com}, :primary => true, :migration_role => %w(db)
-
-
 # Default deploy_to directory is /var/www/my_app
 set :deploy_to, '/home/deployer/apps/webservice_staging'
 
@@ -24,10 +17,6 @@ set :deploy_to, '/home/deployer/apps/webservice_staging'
 server 'buri.peckapp.com', user: 'deployer', roles: %w{web app db}
 # server 'magni.peckapp.com', user: 'deployer', roles: %w{db}
 
-# Setup Options
-set :migration_role, 'migrator'
-set :conditionally_migrate, true
-set :assets_roles, [:web, :app]
 
 # Custom SSH Options
 # ==================

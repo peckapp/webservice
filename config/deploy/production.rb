@@ -7,16 +7,8 @@
 # Define roles, user and IP address of deployment server
 # role :name, %{[user]@[IP adde.]}
 
-# main application server
-role :app, %w{deployer@buri.peckapp.com}
-role :web, %w{deployer@buri.peckapp.com}
-# no code needed on db server at this time
-# role :db,  %w{deployer@magni.peckapp.com}, primary: true
-
-
 # Default deploy_to directory is /var/www/my_app
 set :deploy_to, '/home/deployer/apps/webservice_production'
-
 
 # Extended Server Syntax
 # ======================
