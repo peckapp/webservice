@@ -16,6 +16,10 @@ set :branch, "master"
 # uses a more efficient technique for file deployment, fetching only changes from repo
 set :deploy_via, :remote_cache
 
+set :conditionally_migrate, true
+
+set :migration_role, :db # 'migrator' # Defaults to 'db'
+
 # Default value for :format is :pretty
 set :format, :pretty
 
@@ -48,19 +52,6 @@ namespace :deploy do
     end
   end
 
-  # desc "Symlink shared config files"
-  # task :symlink_config_files do
-  #   on roles(:app) do# , in: :sequence, wait: 5 do
-  #     # links the local database config file
-  #     execute :ln, "-nfs #{ deploy_to }/shared/config/database.yml #{ release_path }/config/database.yml"
-  #     # links the local environment variable load file
-  #     execute :ln, "-nfs #{ deploy_to }/shared/config/environment_variables.yml #{ release_path }/config/environment_variables.yml"
-  #   end
-  # end
-  #
-  # # must be executed here so that files are in place but nothing has required the file yet. see /lib/capistrano/tasks/framework.rake for other tasks
-  # after :updating, :symlink_config_files
-
   after :publishing, :restart
 
   after :restart, :clear_cache do
@@ -72,16 +63,13 @@ namespace :deploy do
     end
   end
 
+  after :updated, :migrate
 end
 
-# namespace :bundle do
-#
-#   desc "run bundle install and ensure all gem requirements are met"
-#   task :install do
-#     on roles(:app), in: :sequence, wait: 5 do
-#       execute "cd #{current_path} && bundle install  --without=test --no-update-sources"
-#     end
-#   end
-#
-# end
-# before "deploy:restart", "bundle:install"
+namespace :load do
+  task :defaults do
+    set :conditionally_migrate, fetch(:conditionally_migrate, false)
+    set :migration_role, fetch(:migration_role, :db)
+  end
+
+end

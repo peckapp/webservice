@@ -12,9 +12,9 @@ class Department < ActiveRecord::Base
   ####################
 
   ### Validations ###
-  # validates :name, :presence => true
-  # validates :institution_id, :presence => true, :numericality => true
-  # validate :correct_department_types
+  validates :name, :presence => true
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validate :correct_department_types
   ###################
 
   ### Callbacks ###
@@ -24,10 +24,10 @@ class Department < ActiveRecord::Base
   #################
 
   ### Methods ###
-  # def correct_department_types
-  #   is_correct_type(name, String, "string", :name)
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  # end
+  private
+    def correct_department_types
+      is_correct_type(name, String, "string", :name)
+    end
   #
   # def sanitize_department
   #   sanitize_everything(attributes)

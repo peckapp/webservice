@@ -30,7 +30,7 @@ module Api
       private
 
         def menu_item_params
-          params.require(:menu_item).permit(:name, :institution_id, :details_link, :small_price, :large_price, :combo_price, :dining_opportunity_id, :dining_place_id, :date_available)
+          params.require(:menu_item).permit(:name, :institution_id, :category, :details_link, :small_price, :large_price, :combo_price, :dining_opportunity_id, :dining_place_id, :date_available)
         end
 
     end

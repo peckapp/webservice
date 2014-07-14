@@ -12,11 +12,11 @@ class EventView < ActiveRecord::Base
   ####################
 
   ### Validations ###
-  # validates :user_id, :presence => true, :numericality => true
-  # validates :category, :presence => true, :format => {:with => LETTERS_REGEX}
-  # validates :event_viewed, :presence => true, :numericality => true
-  # validates :institution_id, :presence => true, :numericality => true
-  # validate :correct_event_view_types
+  validates :user_id, :presence => true, :numericality => { :only_integer => true }
+  validates :category, :presence => true, :format => {:with => LETTERS_REGEX}
+  validates :event_viewed, :presence => true, :numericality => { :only_integer => true }
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validate :correct_event_view_types
   ###################
 
   ### Callbacks ###
@@ -26,13 +26,11 @@ class EventView < ActiveRecord::Base
   #################
 
   ### Methods ###
-  # def correct_event_view_types
-  #   is_correct_type(user_id, Fixnum, "fixnum", :user_id)
-  #   is_correct_type(category, String, "string", :category)
-  #   is_correct_type(event_viewed, Fixnum, "fixnum", :event_viewed)
-  #   is_correct_type(date_viewed, DateTime, "datetime", :date_viewed)
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  # end
+  private
+    def correct_event_view_types
+      is_correct_type(category, String, "string", :category)
+      is_correct_type(date_viewed, Time, "datetime", :date_viewed)
+    end
   #
   # def sanitize_event_view
   #   sanitize_everything(attributes)

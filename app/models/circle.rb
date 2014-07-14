@@ -15,12 +15,11 @@ class Circle < ActiveRecord::Base
   has_many :activity_logs #
 
   ### Validations ###
-  # validates :institution_id, :presence => true, :numericality => true
-  # validates :user_id, :presence => true, :numericality => true
-  # validates :circle_name, :presence => true
-  # before_save :validate_institution_id, :validate_circle_name, :validate_user_id
-  # validates :image_link, :uniqueness => true
-  # validate :correct_circle_types
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validates :user_id, :presence => true, :numericality => { :only_integer => true }
+  validates :circle_name, :presence => true
+  validates :image_link, :uniqueness => true, :allow_nil => true
+  validate :correct_circle_types
   ###################
 
   ### Callbacks ###
@@ -33,12 +32,11 @@ class Circle < ActiveRecord::Base
   # before_save :validate_institution_id, :validate_circle_name, :validate_user_id
 
   ### Methods ###
-  # def correct_circle_types
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  #   is_correct_type(user_id, Fixnum, "fixnum", :user_id)
-  #   is_correct_type(circle_name, String, "string", :circle_name)
-  #   is_correct_type(image_link, String, "string", :image_link)
-  # end
+  private
+  def correct_circle_types
+    is_correct_type(circle_name, String, "string", :circle_name)
+    is_correct_type(image_link, String, "string", :image_link)
+  end
   #
   # def sanitize_circle
   #   sanitize_everything(attributes)

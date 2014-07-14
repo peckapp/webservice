@@ -1,3 +1,5 @@
-object :@club
+child :@club do
+  attributes :id, :institution_id, :club_name, :description, :user_id, :created_at, :updated_at
+end
 
-attributes :id, :institution_id, :club_name, :description, :user_id, :created_at, :updated_at
+node(:errors) {@club.errors.full_messages}

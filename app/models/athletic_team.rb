@@ -1,5 +1,3 @@
-require 'uri'
-
 class AthleticTeam < ActiveRecord::Base
   include ModelNormalValidations
   include ModelBeforeSaveValidations
@@ -11,12 +9,12 @@ class AthleticTeam < ActiveRecord::Base
   belongs_to :institution #
 
   ### Validations ###
-  # validates :institution_id, :presence => true, :numericality => true
-  # validates :sport_name, :presence => true
-  # validates :gender, :presence => true, :format => {:with => LETTERS_REGEX}
-  # validates :team_link, :format => {:with => URL_REGEX}, :uniqueness => true
-  # validates :head_coach, :format => {:with => LETTERS_REGEX}
-  # validate :correct_athletic_team_types
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validates :sport_name, :presence => true
+  validates :gender, :presence => true, :format => {:with => LETTERS_REGEX}
+  validates :team_link, :format => {:with => URI::regexp(%w(http https))}, :uniqueness => true, :allow_nil => true
+  validates :head_coach, :format => {:with => LETTERS_REGEX}, :allow_nil => true
+  validate :correct_athletic_team_types
   ##################
 
   ### Callbacks ###
@@ -29,13 +27,13 @@ class AthleticTeam < ActiveRecord::Base
   # before_save :validate_institution_id
 
   ### Methods ###
-  # def correct_athletic_team_types
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  #   is_correct_type(sport_name, String, "string", :sport_name)
-  #   is_correct_type(gender, String, "string", :gender)
-  #   is_correct_type(team_link, String, "string", :team_link)
-  #   is_correct_type(head_coach, String, "string", :head_coach)
-  # end
+  private
+    def correct_athletic_team_types
+      is_correct_type(sport_name, String, "string", :sport_name)
+      is_correct_type(gender, String, "string", :gender)
+      is_correct_type(team_link, String, "string", :team_link)
+      is_correct_type(head_coach, String, "string", :head_coach)
+    end
 
   # def sanitize_athletic_team
   #   sanitize_everything(attributes)

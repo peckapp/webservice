@@ -19,9 +19,12 @@ class DiningPlace < ActiveRecord::Base
   ####################
 
   ### Validations ###
-  # validates :institution_id, :presence => true, :numericality => true
-  # validates :name, :presence => true
-  # validate :correct_dining_place_types
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validates :name, :presence => true
+  validates :gps_longitude, :numericality => true, :allow_nil => true
+  validates :gps_latitude, :numericality => true, :allow_nil => true
+  validates :range, :numericality => true, :allow_nil => true
+  validate :correct_dining_place_types
   ###################
 
   ### Callbacks ###
@@ -31,14 +34,11 @@ class DiningPlace < ActiveRecord::Base
   #################
 
   ### Methods ###
-  # def correct_dining_place_types
-  #   is_correct_type(name, String, "string", :name)
-  #   is_correct_type(details_link, String, "string", :details_link)
-  #   is_correct_type(gps_longitude, Float, "float", :gps_longitude)
-  #   is_correct_type(gps_latitude, Float, "float", :gps_latitude)
-  #   is_correct_type(range, Float, "float", :range)
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  # end
+  private
+    def correct_dining_place_types
+      is_correct_type(name, String, "string", :name)
+      is_correct_type(details_link, String, "string", :details_link)
+    end
   #
   # def sanitize_dining_place
   #     sanitize_everything(attributes)

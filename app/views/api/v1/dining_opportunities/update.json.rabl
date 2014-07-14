@@ -1,3 +1,5 @@
-object :@dining_opportunity
+child :@dining_opportunity do
+  attributes :id, :dining_opportunity_type, :institution_id, :created_at, :updated_at
+end
 
-attributes :id, :dining_opportunity_type, :institution_id, :created_at, :updated_at
+node(:errors) {@dining_opportunity.errors.full_messages}

@@ -17,16 +17,15 @@ class ActivityLog < ActiveRecord::Base
   has_one :notification_view #
 
   ### Validations ###
-  # validates :sender, :presence => true, :numericality => true
-  # validates :receiver, :presence => true, :numericality => true
-  # validates :category, :presence => true, :format => { :with => LETTERS_REGEX }
-  # validates :from_event, :numericality => true, :allow_nil => true
-  # validates :circle_id, :numericality => true, :allow_nil => true
-  # validates :type_of_activity, :presence => true, :format => { :with => LETTERS_REGEX }
-  # validates :message, :presence => true
-  # validates :read_status, :presence => true
-  # validates :institution_id, :presence => true, :numericality => true
-  # validate :correct_activity_log_types
+  validates :sender, :presence => true, :numericality => { :only_integer => true }
+  validates :receiver, :presence => true, :numericality => { :only_integer => true }
+  validates :category, :presence => true, :format => { :with => LETTERS_REGEX }
+  validates :from_event, :numericality => { :only_integer => true }, :allow_nil => true
+  validates :circle_id, :numericality => { :only_integer => true }, :allow_nil => true
+  validates :type_of_activity, :presence => true, :format => { :with => LETTERS_REGEX }
+  validates :message, :presence => true
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validate :correct_activity_log_types
   ###################
 
   ### Callbacks ###
@@ -39,17 +38,12 @@ class ActivityLog < ActiveRecord::Base
   # before_save :validate_messenger, :validate_recipient, :validate_institution_id, :validate_message, :validate_read_status, :validate_category, :validate_type_of_activity
 
   ### Methods ###
-  # def correct_activity_log_types
-  #   is_correct_type(sender, Fixnum, "fixnum", :sender)
-  #   is_correct_type(receiver, Fixnum, "fixnum", :receiver)
-  #   is_correct_type(category, String, "string", :category)
-  #   is_correct_type(from_event, Fixnum, "fixnum", :from_event)
-  #   is_correct_type(circle_id, Fixnum, "fixnum", :circle_id)
-  #   is_correct_type(type_of_activity, String, "string", :type_of_activity)
-  #   is_correct_type(message, String, "string", :message)
-  #   is_correct_type(read_status, Boolean, "boolean", :read_status)
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  # end
+  private
+    def correct_activity_log_types
+      is_correct_type(category, String, "string", :category)
+      is_correct_type(type_of_activity, String, "string", :type_of_activity)
+      is_correct_type(message, String, "string", :message)
+    end
   #
   # def sanitize_activity_log
   #   sanitize_everything(attributes)

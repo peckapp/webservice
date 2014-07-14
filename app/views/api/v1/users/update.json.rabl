@@ -1,3 +1,5 @@
-object :@user
+child :@user do
+  attributes :id, :institution_id, :first_name, :last_name, :username, :blurb, :facebook_link, :active, :created_at, :updated_at
+end
 
-attributes :id, :institution_id, :first_name, :last_name, :username, :blurb, :facebook_link, :active, :created_at, :updated_at
+node(:errors) {@user.errors.full_messages}

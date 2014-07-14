@@ -9,13 +9,13 @@ class AthleticEvent < ActiveRecord::Base
   belongs_to :athletic_team #
 
   ### Validations ###
-  # validates :institution_id, :presence => true, :numericality => true
-  # validates :athletic_team_id, :presence => true, :numericality => true
-  # validates :location, :presence => true
-  # validates :team_score, :numericality => true, :allow_nil => true
-  # validates :opponent_score, :numericality => true, :allow_nil => true
-  # validates :home_or_away, :format => {:with => LETTERS_REGEX}
-  # validate :correct_athletic_event_types
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validates :athletic_team_id, :presence => true, :numericality => { :only_integer => true }
+  validates :location, :presence => true
+  validates :team_score, :numericality => true, :allow_nil => true
+  validates :opponent_score, :numericality => true, :allow_nil => true
+  validates :home_or_away, :format => {:with => LETTERS_REGEX}, :allow_nil => true
+  validate :correct_athletic_event_types
   ###################
 
   ### Callbacks ###
@@ -30,20 +30,14 @@ class AthleticEvent < ActiveRecord::Base
 
 
   ### Methods ###
-  #
-  #
-  #
-  # def correct_athletic_event_types
-  #   is_correct_type(institution_id, Fixnum, "Fixnum", :institution_id)
-  #   is_correct_type(athletic_team_id, Fixnum, "Fixnum", :athletic_team_id)
-  #   is_correct_type(opponent, String, "string", :opponent)
-  #   is_correct_type(team_score, Float, "float", :team_score)
-  #   is_correct_type(opponent_score, Float, "float", :opponent_score)
-  #   is_correct_type(home_or_away, String, "string", :home_or_away)
-  #   is_correct_type(location, String, "string", :location)
-  #   is_correct_type(result, String, "string", :result)
-  #   is_correct_type(date_and_time, DateTime, "datetime", :date_and_time)
-  # end
+  private
+  def correct_athletic_event_types
+    is_correct_type(opponent, String, "string", :opponent)
+    is_correct_type(home_or_away, String, "string", :home_or_away)
+    is_correct_type(location, String, "string", :location)
+    is_correct_type(result, String, "string", :result)
+    is_correct_type(date_and_time, DateTime, "datetime", :date_and_time)
+  end
 
   # def sanitize_athletic_event
   #   sanitize_everything(attributes)

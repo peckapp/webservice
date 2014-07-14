@@ -21,11 +21,11 @@ class CircleMember < ActiveRecord::Base
   ####################
 
   ### Validations ###
-#   validates :circle_id, :presence => true, :numericality => true
-#   validates :user_id, :presence => true, :numericality => true
-#   validates :invited_by, :presence => true, :numericality => true
-#   validates :institution_id, :presence => true, :numericality => true
-#   validate :correct_circle_member_types
+  validates :circle_id, :presence => true, :numericality => { :only_integer => true }
+  validates :user_id, :presence => true, :numericality => { :only_integer => true }
+  validates :invited_by, :presence => true, :numericality => { :only_integer => true }
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validate :correct_circle_member_types
  #####################
 
  ### Callbacks ###
@@ -39,13 +39,10 @@ class CircleMember < ActiveRecord::Base
 #   before_save :validate_circle_id, :validate_user_id, :validate_invited_by, :validate_institution_id
 
   ### Methods ###
-  # def correct_circle_member_types
-  #   is_correct_type(circle_id, Fixnum, "fixnum", :circle_id)
-  #   is_correct_type(user_id, Fixnum, "fixnum", :user_id)
-  #   is_correct_type(invited_by, Fixnum, "fixnum", :invited_by)
-  #   is_correct_type(date_added, DateTime, "datetime", :date_added)
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  # end
+  private
+    def correct_circle_member_types
+      is_correct_type(date_added, Time, "datetime", :date_added)
+    end
 #   def sanitize_circle_member
 #     sanitize_everything(attributes)
 #   end

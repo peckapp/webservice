@@ -4,9 +4,12 @@ class Location < ActiveRecord::Base
 # verified
 
   ### Validations ###
-  # validates :institution_id, :presence => true, :numericality => true
-  # validates :name, :presence => true
-  # validate :correct_location_types
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validates :name, :presence => true
+  validates :gps_longitude, :numericality => true, :allow_nil => true
+  validates :gps_latitude, :numericality => true, :allow_nil => true
+  validates :range, :numericality => true, :allow_nil => true
+  validate :correct_location_types
   ###################
 
   ### Callbacks ###
@@ -21,13 +24,10 @@ class Location < ActiveRecord::Base
   ####################
 
   ### Methods ###
-  # def correct_location_types
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  #   is_correct_type(name, String, "string", :name)
-  #   is_correct_type(gps_longitude, Float, "float", :gps_longitude)
-  #   is_correct_type(gps_latitude, Float, "float", :gps_latitude)
-  #   is_correct_type(range, Float, "float", :range)
-  # end
+  private
+    def correct_location_types
+      is_correct_type(name, String, "string", :name)
+    end
   #
   # def sanitize_location
   #   sanitize_everything(attributes)

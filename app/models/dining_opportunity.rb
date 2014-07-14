@@ -18,9 +18,9 @@ class DiningOpportunity < ActiveRecord::Base
   ####################
 
   ### Validations ###
-  # validates :dining_opportunity_type, :presence => true
-  # validates :institution_id, :presence => true, :numericality => true
-  # validate :correct_dining_opportunity_types
+  validates :dining_opportunity_type, :presence => true
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validate :correct_dining_opportunity_types
   ###################
 
   ### Callbacks ###
@@ -42,6 +42,20 @@ class DiningOpportunity < ActiveRecord::Base
   # private
   #   attributes = [id, dining_opportunity_type, institution_id, created_at, updated_at]
 
+  def earliest_start_latest_end(day_of_week)
+    early = earliest_start(day_of_week)
+    late = latest_end(day_of_week)
+
+    if ! early.blank? && ! late.blank?
+      puts "early.hour: #{early.hour} late.hour: #{late.hour}"
+      if early.hour > late.hour
+        puts "changing day by one"
+        late = late + 1.days
+      end
+    end
+
+    return [early,late]
+  end
 
   # methods to sort through earliest/latest times
   def earliest_start(day_of_week)
@@ -97,4 +111,17 @@ class DiningOpportunity < ActiveRecord::Base
         return DateTime.now.noon - shift.days
       end
     end
+
+    private
+      def correct_dining_opportunity_types
+        is_correct_type(dining_opportunity_type, String, "string", :dining_opportunity_type)
+      end
+    #
+    # def sanitize_dining_opportunity
+    #   sanitize_everything(attributes)
+    # end
+    #
+    # private
+    #   attributes = [id, dining_opportunity_type, institution_id, created_at, updated_at]
+
 end

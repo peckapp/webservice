@@ -12,12 +12,12 @@ class Comment < ActiveRecord::Base
   ###################
 
   ### Validations ###
-  # validates :category, :presence => true, :format => {:with => LETTERS_REGEX}
-  # validates :comment_from, :presence => true, :numericality => true
-  # validates :content, :presence => true
-  # validates :user_id, :presence => true, :numericality => true
-  # validates :institution_id, :presence => true, :numericality => true
-  # validate :correct_comment_types
+  validates :category, :presence => true, :format => {:with => LETTERS_REGEX}
+  validates :comment_from, :presence => true, :numericality => { :only_integer => true }
+  validates :content, :presence => true
+  validates :user_id, :presence => true, :numericality => { :only_integer => true }
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validate :correct_comment_types
   ###################
 
   ### Callbacks ###
@@ -27,12 +27,10 @@ class Comment < ActiveRecord::Base
   #################
 
   ### Methods ###
-  # def correct_comment_types
-  #   is_correct_type(category, String, "string", :category)
-  #   is_correct_type(comment_from, Fixnum, "fixnum", :comment_from)
-  #   is_correct_type(user_id, Fixnum, "fixnum", :user_id)
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  # end
+  private
+    def correct_comment_types
+      is_correct_type(category, String, "string", :category)
+    end
 
   # def sanitize_comment
   #   sanitize_everything(attributes)
