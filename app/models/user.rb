@@ -5,11 +5,8 @@ class User < ActiveRecord::Base
   ########
   # each user has an encrypted secure password
   # attr_reader :password
-  attr_reader :password, :password_confirmation
+  
   has_secure_password
-  validates_presence_of :password, :on => :super_create
-  validates_presence_of :password_confirmation, :on => :super_create
-  validates_confirmation_of :password, :on => :super_create
   ########
 
   #### Callbacks #######
