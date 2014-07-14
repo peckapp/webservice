@@ -26,7 +26,7 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 
 # Use ActiveModel has_secure_password
-gem 'bcrypt-ruby', '~> 3.1.5'
+gem 'bcrypt', '~> 3.1.7'
 
 # Use unicorn as the app server
 # gem 'unicorn'
@@ -66,9 +66,6 @@ gem 'rabl-rails'
 ### UTILITIES
 # Bloom Filter for crawlers to keep track of which pages have been traversed
 gem 'bloomfilter-rb', '~> 2.1.1'
-
-# devise
-gem 'devise', '~> 3.2.4'
 
 # primitive gui display of database models
 gem 'hirb', '~> 0.7.2'
