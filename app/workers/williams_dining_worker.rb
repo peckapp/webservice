@@ -12,7 +12,7 @@ class WilliamsDiningWorker
     resources = Tasks::ScrapeResource.where(resource_type: "dining_csv", validated: true)
     if resources.blank?
       #williams = Institution.where(name: "Williams")
-      scrape_csv_page("http://dining.williams.edu/files/daily-menu.csv", 1)
+      scrape_csv_page("http://dining.williams.edu/files/daily-menu.csv", 3)
     else
       resources.each do |r|
         scrape_csv_page(r.url, r.institution_id)
