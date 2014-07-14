@@ -46,10 +46,12 @@ class DiningOpportunity < ActiveRecord::Base
     early = earliest_start(day_of_week)
     late = latest_end(day_of_week)
 
-    puts "early.hour: #{early.hour} late.hour: #{late.hour}"
-    if early.hour > late.hour
-      puts "changing day by one"
-      late = late + 1.days
+    if ! early.blank? && ! late.blank?
+      puts "early.hour: #{early.hour} late.hour: #{late.hour}"
+      if early.hour > late.hour
+        puts "changing day by one"
+        late = late + 1.days
+      end
     end
 
     return [early,late]
