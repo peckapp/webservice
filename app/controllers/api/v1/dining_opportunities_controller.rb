@@ -21,8 +21,7 @@ module Api
 
         for opp in dining_opps
 
-          begin_time = opp.earliest_start(week_day)
-          finish_time = opp.latest_end(week_day)
+          begin_time, finish_time = opp.earliest_start_latest_end(week_day)
 
           if ! begin_time.blank? && ! finish_time.blank?
             # insert start and end time into the view parameters
@@ -30,8 +29,6 @@ module Api
             @service_end[opp.id] = finish_time
 
             @dining_opportunities << opp
-          else
-            # no periods are associated with this opportunity, do not put it in array for view
           end
         end
 

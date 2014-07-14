@@ -4,10 +4,9 @@
 # is considered to be the first unless any hosts have the primary
 # property set.  Don't declare `role :all`, it's a meta role.
 
-role :app, %w{deploy@thor.peckapp.com}
-role :web, %w{deploy@thor.peckapp.com}
-# no code needed on db server at this time
-# role :db,  %w{deployer@magni.peckapp.com}
+# role :app, %w{deploy@thor.peckapp.com}
+# role :web, %w{deploy@thor.peckapp.com}
+# role :db,  %w{deploy@thor.peckapp.com}
 
 
 # Default deploy_to directory is /var/www/my_app
@@ -21,7 +20,7 @@ set :deploy_to, '/var/www/webservice_development'
 # used to set extended properties on the server.
 
 # Define server(s)
-server 'thor.peckapp.com', user: 'deploy', roles: %w{web app}
+server 'thor.peckapp.com', user: 'deploy', roles: %w{web app db}
 # server 'magni.peckapp.com', user: 'deployer', roles: %w{db}
 
 
@@ -33,7 +32,7 @@ server 'thor.peckapp.com', user: 'deploy', roles: %w{web app}
 # Global options
 # --------------
 set :ssh_options, {
-  keys: %w(File.join(ENV["HOME"], ".ssh", "peckvps")),
+  keys: %w(File.join(ENV["HOME"], ".ssh", "peckvps") File.join(ENV["HOME"], ".ssh", "id_rsa")),
   forward_agent: false,
   user: 'deploy',
   auth_methods: %w(publickey password)
