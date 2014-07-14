@@ -5,8 +5,8 @@ class WilliamsDiningWorker
   include Sidekiq::Worker
   include Sidetiq::Schedulable
 
-  # recurrence { daily.hour_of_day(2) }
-  recurrence { minutely }
+  recurrence { daily.hour_of_day(2) }
+  # recurrence { minutely }
 
   def perform
     resources = Tasks::ScrapeResource.where(resource_type: "dining_csv", validated: true)
