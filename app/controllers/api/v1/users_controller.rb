@@ -26,7 +26,10 @@ module Api
 
       def super_create
         @user = User.find(params[:id])
-        @user.update_attributes(user_signup_params) 
+        @user.update_attributes(user_signup_params)
+        puts @user.password
+        puts @user.password_confirmation
+        puts @user.password_digest
       end
 
       def update

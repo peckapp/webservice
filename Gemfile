@@ -67,9 +67,6 @@ gem 'rabl-rails'
 # Bloom Filter for crawlers to keep track of which pages have been traversed
 gem 'bloomfilter-rb', '~> 2.1.1'
 
-# devise
-gem 'devise', '~> 3.2.4'
-
 # primitive gui display of database models
 gem 'hirb', '~> 0.7.2'
 

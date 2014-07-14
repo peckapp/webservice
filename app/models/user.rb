@@ -5,7 +5,6 @@ class User < ActiveRecord::Base
   ########
   # each user has an encrypted secure password
   # attr_reader :password
-  
   has_secure_password
   ########
 
@@ -87,10 +86,6 @@ class User < ActiveRecord::Base
       is_correct_type(facebook_token, String, "string", :facebook_token)
       is_correct_type(api_key, String, "string", :api_key)
       is_correct_type(authentication_token, String, "string", :authentication_token)
-    end
-
-    def confirm_password
-
     end
   #
   # def sanitize_user
