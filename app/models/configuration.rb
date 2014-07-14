@@ -9,8 +9,8 @@ class Configuration < ActiveRecord::Base
   ####################
 
   ### Validations ###
-  # validates :config_file_name, :presence => true, :uniqueness => true
-  # validate :correct_configuration_types
+  validates :config_file_name, :presence => true, :uniqueness => true
+  validate :correct_configuration_types
   ###################
 
   ### Callbacks ###
@@ -20,11 +20,11 @@ class Configuration < ActiveRecord::Base
   #################
 
   ### Methods ###
-  #
-  # def correct_configuration_types
-  #     is_correct_type(mascot, String, "string", :mascot)
-  #     is_correct_type(config_file_name, String, "string", :config_file_name)
-  # end
+  private
+    def correct_configuration_types
+        is_correct_type(mascot, String, "string", :mascot)
+        is_correct_type(config_file_name, String, "string", :config_file_name)
+    end
   #
   # def sanitize_configuration
   #   sanitize_everything(attributes)

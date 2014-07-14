@@ -15,12 +15,12 @@ class EventAttendee < ActiveRecord::Base
   ####################
 
   ### Validations ###
-  # validates :user_id, :presence => true, :numericality => true
-  # validates :added_by, :presence => true, :numericality => true
-  # validates :category, :presence => true, :format => {:with => LETTERS_REGEX}
-  # validates :event_attended, :presence => true, :numericality => true
-  # validates :institution_id, :presence => true, :numericality => true
-  # validate :correct_event_attendee_types
+  validates :user_id, :presence => true, :numericality => { :only_integer => true }
+  validates :added_by, :presence => true, :numericality => { :only_integer => true }
+  validates :category, :presence => true, :format => {:with => LETTERS_REGEX}
+  validates :event_attended, :presence => true, :numericality => { :only_integer => true }
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validate :correct_event_attendee_types
   ###################
 
   ### Callbacks ###
@@ -30,13 +30,10 @@ class EventAttendee < ActiveRecord::Base
   #################
 
   ### Methods ###
-  # def correct_event_attendee_types
-  #   is_correct_type(user_id, Fixnum, "fixnum", :user_id)
-  #   is_correct_type(added_by, Fixnum, "fixnum", :added_by)
-  #   is_correct_type(category, String, "string", :category)
-  #   is_correct_type(event_attended, Fixnum, "fixnum", :event_attended)
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  # end
+  private
+    def correct_event_attendee_types
+      is_correct_type(category, String, "string", :category)
+    end
   #
   # def sanitize_event_attendee
   #   sanitize_everything(attributes)

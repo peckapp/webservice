@@ -12,10 +12,10 @@ class Club < ActiveRecord::Base
   has_one :admin, :class_name => "User", :foreign_key => "user_id" #
 
   ### Validations ###
-  # validate :institution_id, :presence => true, :numericality => true
-  # validate :club_name, :presence => true
-  # validate :user_id, :numericality => true, :allow_nil => true
-  # validate :correct_club_types
+  validate :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validate :club_name, :presence => true
+  validate :user_id, :numericality => { :only_integer => true }, :allow_nil => true
+  validate :correct_club_types
   ###################
 
 
@@ -26,11 +26,10 @@ class Club < ActiveRecord::Base
   ################
 
   ### Methods ###
-  # def correct_club_types
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  #   is_correct_type(club_name, String, "string", :club_name)
-  #   is_correct_type(user_id, Fixnum, "fixnum", :user_id)
-  # end
+  private
+    def correct_club_types
+      is_correct_type(club_name, String, "string", :club_name)
+    end
   #
   # def sanitize_club
   #   sanitize_everything(attributes)

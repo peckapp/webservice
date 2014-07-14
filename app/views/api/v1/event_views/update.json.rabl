@@ -1,3 +1,5 @@
-object :@event_view
+child :@event_view do
+  attributes :id, :institution_id, :user_id, :category, :event_viewed, :date_viewed, :created_at, :updated_at
+end
 
-attributes :id, :institution_id, :user_id, :category, :event_viewed, :date_viewed, :created_at, :updated_at
+node(:errors) {@event_view.errors.full_messages}

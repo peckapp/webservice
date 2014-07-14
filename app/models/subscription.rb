@@ -4,11 +4,11 @@ class Subscription < ActiveRecord::Base
 # verified
 
   ### Validations ###
-  # validates :user_id, :presence => true, :numericality => true
-  # validates :category, :presence => true
-  # validates :subscribe_to, :presence => true, :numericality => true
-  # validates :institution_id, :presence => true, :numericality => true
-  # validate :correct_subscription_types
+  validates :user_id, :presence => true, :numericality => { :only_integer => true }
+  validates :category, :presence => true
+  validates :subscribed_to, :presence => true, :numericality => { :only_integer => true }
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validate :correct_subscription_types
   ###################
 
   ### Callbacks ###
@@ -26,12 +26,10 @@ class Subscription < ActiveRecord::Base
   ### subscriptions of an institution ###
   belongs_to :institution
 
-  # def correct_subscription_types
-  #   is_correct_type(user_id, Fixnum, "fixnum", :user_id)
-  #   is_correct_type(category, String, "string", :category)
-  #   is_correct_type(subscribed_to, Fixnum, "fixnum", :subscribed_to)
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  # end
+  private
+    def correct_subscription_types
+      is_correct_type(category, String, "string", :category)
+    end
   #
   # def sanitize_subscription
   #   sanitize_everything(attributes)

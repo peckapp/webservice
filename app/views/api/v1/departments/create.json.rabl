@@ -1,3 +1,5 @@
-object :@department
+child :@department do
+  attributes :id, :name, :institution_id, :created_at, :updated_at
+end
 
-attributes :id, :name, :institution_id, :created_at, :updated_at
+node(:errors) {@department.errors.full_messages}

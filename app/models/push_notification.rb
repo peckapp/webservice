@@ -3,10 +3,10 @@ class PushNotification < ActiveRecord::Base
   include ModelBeforeSaveValidations
 # verified
   ### Validations ###
-  # validatess :user_id, :presence => true, :numericality => true
-  # validates :notification_type, :presence => true
-  # validates :institution_id, :presence => true, :numericality => true
-  # validate :correct_push_notification_types
+  validates :user_id, :presence => true, :numericality => { :only_integer => true }
+  validates :notification_type, :presence => true
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validate :correct_push_notification_types
   ###################
 
   ### Callbacks ###
@@ -24,12 +24,11 @@ class PushNotification < ActiveRecord::Base
   #####################
 
   ### Methods ###
-  # def correct_push_notification_types
-  #   is_correct_type(user_id, Fixnum, "fixnum", :user_id)
-  #   is_correct_type(notification_type, String, "string", :notification_type)
-  #   is_correct_type(response, String, "string", :response)
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  # end
+  private
+    def correct_push_notification_types
+      is_correct_type(notification_type, String, "string", :notification_type)
+      is_correct_type(response, String, "string", :response)
+    end
   #
   # def sanitize_push_notification
   #   sanitize_everything(attributes)

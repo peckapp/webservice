@@ -4,12 +4,13 @@ class MenuItem < ActiveRecord::Base
 # verified
 
   ### Validations ###
-  # validates :name, :presence => true
-  # validates :institution_id, :presence => true, :numericality => true
-  # validates :dining_opportunity_id, :presence => true, :numericality => true
-  # validates :dining_place_id, :numericality => true, :allow_nil => true
-  # validates :date_available, :presence => true
-  # validate :correct_menu_item_types
+  validates :name, :presence => true
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validates :details_link, :format => {:with => URI::regexp(%w(http https))}, :allow_nil => true
+  validates :dining_opportunity_id, :presence => true, :numericality => { :only_integer => true }
+  validates :dining_place_id, :numericality => { :only_integer => true }, :allow_nil => true
+  validates :date_available, :presence => true
+  validate :correct_menu_item_types
   ###################
 
   ### Callbacks ###
@@ -28,19 +29,17 @@ class MenuItem < ActiveRecord::Base
   belongs_to :dining_opportunity #
 
   ### Methods ###
-  # def correct_menu_item_types
-  #   is_correct_type(name, String, "string", :name)
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  #   is_correct_type(details_link, String, "string", :details_link)
-  #   is_correct_type(small_price, String, "string", :small_price)
-  #   is_correct_type(large_price, String, "string", :large_price)
-  #   is_correct_type(combo_price, String, "string", :combo_price)
-  #   is_correct_type(dining_opportunity_id, Fixnum, "fixnum", :dining_opportunity_id)
-  #   is_correct_type(dining_place_id, Fixnum, "fixnum", :dining_place_id)
-  #   is_correct_type(date_available, Date, "date", :date_available)
-  #   is_correct_type(category, String, "string", :category)
-  #   is_correct_type(serving_size, String, "string", :serving_size)
-  # end
+  private
+    def correct_menu_item_types
+      is_correct_type(name, String, "string", :name)
+      is_correct_type(details_link, String, "string", :details_link)
+      is_correct_type(small_price, String, "string", :small_price)
+      is_correct_type(large_price, String, "string", :large_price)
+      is_correct_type(combo_price, String, "string", :combo_price)
+      is_correct_type(date_available, Date, "date", :date_available)
+      is_correct_type(category, String, "string", :category)
+      is_correct_type(serving_size, String, "string", :serving_size)
+    end
   #
   # def sanitize_menu_item
   #   sanitize_everything(attributes)

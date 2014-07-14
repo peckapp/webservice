@@ -1,3 +1,5 @@
-object :@institution
+child :@institution do
+  attributes :id, :name, :street_address, :city, :state, :country, :gps_longitude, :gps_latitude, :range, :configuration_id, :api_key, :created_at, :updated_at
+end
 
-attributes :id, :name, :street_address, :city, :state, :country, :gps_longitude, :gps_latitude, :range, :configuration_id, :api_key, :created_at, :updated_at
+node(:errors) {@institution.errors.full_messages}

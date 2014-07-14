@@ -16,6 +16,6 @@
   gps_longitude: <%= rand * 100.0 %>
   gps_latitude: <%= rand * 100.0 %>
   range: <%= rand * 0.01 %>
-  configuration_id: 1
+  configuration_id: <%= n %>
   api_key: <%= SecureRandom.hex(8) %>
 <% end %>

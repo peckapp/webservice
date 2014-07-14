@@ -9,9 +9,9 @@ class EventsPageUrl < ActiveRecord::Base
   #####################
 
   ### Validations ###
-  # validates :institution_id, :presence => true, :numericality => true
-  # validates :url, :presence => true, :format => {:with => URL_REGEX}
-  # validate :correct_events_page_url_types
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validates :url, :presence => true
+  validate :correct_events_page_url_types
   #####################
 
   ### Callbacks ###
@@ -21,11 +21,11 @@ class EventsPageUrl < ActiveRecord::Base
   #################
 
   ### Methods ###
-  # def correct_events_page_url_types
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  #   is_correct_type(url, String, "string", :url)
-  #   is_correct_type(events_page_url_type, String, "string", :events_page_url_type)
-  # end
+  private
+    def correct_events_page_url_types
+      is_correct_type(url, String, "string", :url)
+      is_correct_type(events_page_url_type, String, "string", :events_page_url_type)
+    end
   #
   # def sanitize_events_page_url
   #   sanitize_everything(attributes)

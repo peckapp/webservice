@@ -1,3 +1,5 @@
-object :@notification_view
+child :@notification_view do
+  attributes :id, :institution_id, :user_id, :activity_log_id, :date_viewed, :viewed, :created_at, :updated_at
+end
 
-attributes :id, :institution_id, :user_id, :activity_log_id, :date_viewed, :viewed, :created_at, :updated_at
+node(:errors) {@notification_view.errors.full_messages}

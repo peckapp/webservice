@@ -1,3 +1,5 @@
-object :@circle_member
+child :@circle_member do
+  attributes :id, :institution_id, :circle_id, :user_id, :invited_by, :date_added, :created_at, :updated_at
+end
 
-attributes :id, :institution_id, :circle_id, :user_id, :invited_by, :date_added, :created_at, :updated_at
+node(:errors) {@circle_member.errors.full_messages}

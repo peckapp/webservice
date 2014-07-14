@@ -15,13 +15,13 @@ class DiningPeriod < ActiveRecord::Base
   ####################
 
   ### Validations ###
-  # validates :start_time, :presence => true
-  # validates :end_time, :presence => true
-  # validates :day_of_week, :numericality => true, :allow_nil => true
-  # validates :dining_opportunity_id, :numericality => true, :allow_nil => true
-  # validates :dining_place_id, :numericality => true, :allow_nil => true
-  # validates :institution_id, :presence => true, :numericality => true
-  # validate :correct_dining_period_types
+  validates :start_time, :presence => true
+  validates :end_time, :presence => true
+  validates :day_of_week, :numericality => { :only_integer => true }, :allow_nil => true
+  validates :dining_opportunity_id, :numericality => { :only_integer => true }, :allow_nil => true
+  validates :dining_place_id, :numericality => { :only_integer => true }, :allow_nil => true
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validate :correct_dining_period_types
   ###################
 
   ### Callbacks ###
@@ -31,14 +31,11 @@ class DiningPeriod < ActiveRecord::Base
   #################
 
   ### Methods ###
-  # def correct_dining_period_types
-  #   is_correct_type(start_time, Time, "time", :start_time)
-  #   is_correct_type(end_time, Time, "time", :end_time)
-  #   is_correct_type(day_of_week, Fixnum, "fixnum", :day_of_week)
-  #   is_correct_type(dining_opportunity_id, Fixnum, "fixnum", :dining_opportunity_id)
-  #   is_correct_type(dining_place_id, Fixnum, "fixnum", :dining_place_id)
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  # end
+  private
+    def correct_dining_period_types
+      is_correct_type(start_time, Time, "time", :start_time)
+      is_correct_type(end_time, Time, "time", :end_time)
+    end
   #
   # def sanitize_dining_period
   #   sanitize_everything(attributes)

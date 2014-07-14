@@ -4,11 +4,10 @@ class NotificationView < ActiveRecord::Base
 # verified
 
   ### Validations ###
-  # validates :user_id, :presence => true, :numericality => true
-  # validates :activity_log_id, :presence => true, :numericality => true
-  # validates :viewed, :presence => true
-  # validates :institution_id, :presence => true, :numericality => true
-  # validate :correct_notification_view_types
+  validates :user_id, :presence => true, :numericality => { :only_integer => true }
+  validates :activity_log_id, :presence => true, :numericality => { :only_integer => true }
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validate :correct_notification_view_types
 
   ###################
 
@@ -30,13 +29,10 @@ class NotificationView < ActiveRecord::Base
   ####################
 
   ### Methods ###
-  # def correct_notification_view_types
-  #   is_correct_type(user_id, Fixnum, "fixnum", :user_id)
-  #   is_correct_type(activity_log_id, Fixnum, "fixnum", :activity_log_id)
-  #   is_correct_type(date_viewed, DateTime, "datetime", :date_viewed)
-  #   is_correct_type(viewed, Boolean, "boolean", :viewed)
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  # end
+  private
+    def correct_notification_view_types
+      is_correct_type(date_viewed, Time, "datetime", :date_viewed)
+    end
 
   # def sanitize_notification_view
   #   sanitize_everything(attributes)

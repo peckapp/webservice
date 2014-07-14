@@ -4,18 +4,19 @@ class SimpleEvent < ActiveRecord::Base
 # all verified
 
   ### Validations ###
-  # validates :title, :presence => true, :length => {:maximum => 80}
-  # validates :institution_id, :presence => true, :numericality => true
-  # validates :user_id, :numericality => true, :allow_nil => true
-  # validates :department_id, :numericality => true, :allow_nil => true
-  # validates :club_id, :numericality => true, :allow_nil => true
-  # validates :circle_id, :numericality => true, :allow_nil => true
-  # validates :event_url, :format => {:with => URL_REGEX}
-  # validates :start_date, :presence => true
-  # validates :end_date, :presence => true
-  # validates :latitude, :numericality => true, :allow_nil => true
-  # validates :longitude, :numericality => true, :allow_nil => true
-  # validate :correct_simple_event_types
+  validates :title, :presence => true, :length => {:maximum => 80}
+  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validates :user_id, :numericality => { :only_integer => true }, :allow_nil => true
+  validates :department_id, :numericality => { :only_integer => true }, :allow_nil => true
+  validates :club_id, :numericality => { :only_integer => true }, :allow_nil => true
+  validates :circle_id, :numericality => { :only_integer => true }, :allow_nil => true
+  validates :comment_count, :numericality => { :only_integer => true }, :allow_nil => true
+  validates :event_url, :format => {:with => URI::regexp(%w(http https))}, :allow_nil => true
+  validates :start_date, :presence => true
+  validates :end_date, :presence => true
+  validates :latitude, :numericality => true, :allow_nil => true
+  validates :longitude, :numericality => true, :allow_nil => true
+  validate :correct_simple_event_types
   ####################
 
   ### Associations ###
@@ -43,23 +44,14 @@ class SimpleEvent < ActiveRecord::Base
   #scope :explore, lambda {select("*")}
 
   ### Methods ###
-  # def correct_simple_event_types
-  #   is_correct_type(title, String, "string", :title)
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  #   is_correct_type(user_id, Fixnum, "fixnum", :user_id)
-  #   is_correct_type(department_id, Fixnum, "fixnum", :department_id)
-  #   is_correct_type(club_id, Fixnum, "fixnum", :club_id)
-  #   is_correct_type(circle_id, Fixnum, "fixnum", :circle_id)
-  #   is_correct_type(event_url, String, "string", :event_url)
-  #   is_correct_type(open, Boolean, "boolean", :open)
-  #   is_correct_type(image_url, String, "string", :image_url)
-  #   is_correct_type(comment_count, Fixnum, "fixnum", :comment_count)
-  #   is_correct_type(start_date, DateTime, "datetime", :start_date)
-  #   is_correct_type(end_date, DateTime, "datetime", :end_date)
-  #   is_correct_type(deleted, Boolean, "boolean", :deleted)
-  #   is_correct_type(latitude, Float, "float", :latitude)
-  #   is_correct_type(longitude, Float, "float", :longitude)
-  # end
+  private
+    def correct_simple_event_types
+      is_correct_type(title, String, "string", :title)
+      is_correct_type(event_url, String, "string", :event_url)
+      is_correct_type(image_url, String, "string", :image_url)
+      is_correct_type(start_date, Time, "datetime", :start_date)
+      is_correct_type(end_date, Time, "datetime", :end_date)
+    end
   #
   # def sanitize_simple_event
   #   sanitize_everything(attributes)
