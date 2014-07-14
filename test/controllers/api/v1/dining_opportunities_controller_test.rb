@@ -25,13 +25,21 @@ class DiningOpportunitiesControllerTest < UltimateTestHelper
   test "every dining opportunity for given day has an earliest start and latest end" do
 
     get :index, @params_index
-    
-    assert_not_nil(@response[:dining_opportunities], "response must contain the dining_opportunities object")
 
-    @response[:dining_opportunities].each { |opp|
-      DiningPeriod.where(:day_of_week => opp.day_of_week).pluck(:dining_opportunity_id).each { |opp_id|
-        early = opp.start_time
-        late = opp.end_time
+    assert_response :success
+
+    assert_not_nil assigns(:dining_opportunities), "response must contain the dining_opportunities object"
+
+    # assert_not_nil(@response[:dining_opportunities], "response must contain the dining_opportunities object")
+
+    early_late = []
+
+    (0..6).each { |dow|
+      DiningPeriod.where(:day_of_week => dow).pluck(:dining_opportunity_id).each { |opp_id|
+
+        early_late = DiningOpportunity.find(opp_id).earliest_start_latest_end(dow)
+        early = early_late[0]
+        late = early_late[1]
 
         # assert start
         assert( ! early.blank? , "the following opportunity has no start: day # #{dow} for #{DiningOpportunity.find(opp_id).dining_opportunity_type}")
