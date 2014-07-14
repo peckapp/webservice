@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   # each user has an encrypted secure password
   # attr_reader :password
   has_secure_password
+  validates :password_confirmation, :presence => true, if: lambda { |m| m.password.present? }
   ########
 
   #### Callbacks #######
