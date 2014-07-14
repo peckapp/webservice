@@ -42,6 +42,18 @@ class DiningOpportunity < ActiveRecord::Base
   # private
   #   attributes = [id, dining_opportunity_type, institution_id, created_at, updated_at]
 
+  def earliest_start_latest_end(day_of_week)
+    early = earliest_start(day_of_week)
+    late = latest_end(day_of_week)
+
+    puts "early.hour: #{early.hour} late.hour: #{late.hour}"
+    if early.hour > late.hour
+      puts "changing day by one"
+      late = late + 1.days
+    end
+
+    return [early,late]
+  end
 
   # methods to sort through earliest/latest times
   def earliest_start(day_of_week)

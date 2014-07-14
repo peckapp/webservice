@@ -25,7 +25,7 @@ set :deploy_to, '/home/deployer/apps/webservice_production'
 # used to set extended properties on the server.
 
 # Define server(s)
-server 'buri.peckapp.com', user: 'deployer', roles: %w{web app}
+server 'buri.peckapp.com', user: 'deployer', roles: %w{web app db}
 # server 'magni.peckapp.com', user: 'deployer', roles: %w{db}
 
 # Custom SSH Options

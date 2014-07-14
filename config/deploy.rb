@@ -16,6 +16,10 @@ set :branch, "master"
 # uses a more efficient technique for file deployment, fetching only changes from repo
 set :deploy_via, :remote_cache
 
+set :conditionally_migrate, true
+
+set :migration_role, %w(db) # 'migrator' # Defaults to 'db'
+
 # Default value for :format is :pretty
 set :format, :pretty
 
@@ -61,7 +65,7 @@ namespace :deploy do
 
   desc 'Runs rake db:migrate if migrations are set'
   task :migrate => [:set_rails_env] do
-    puts "on primary fetch(:migration_role) ==> #{on primary fetch(:migration_role)}"
+    puts "on primary  (#{on primary } fetch(:migration_role) ==> #{on primary fetch(:migration_role)}"
     on primary fetch(:migration_role) do
       puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
       conditionally_migrate = fetch(:conditionally_migrate)

@@ -7,12 +7,12 @@
 role :app, %w{deployer@buri.peckapp.com}
 role :web, %w{deployer@buri.peckapp.com}
 # no code needed on actual db server at this time
-role :db,  %w{deployer@buri.peckapp.com}
+# role :db,  %w{deployer@magni.peckapp.com}
+role :db,  %w{deployer@buri.peckapp.com}, :primary => true, :migration_role => %w(db)
 
 
 # Default deploy_to directory is /var/www/my_app
 set :deploy_to, '/home/deployer/apps/webservice_staging'
-
 
 # Extended Server Syntax
 # ======================
@@ -21,7 +21,7 @@ set :deploy_to, '/home/deployer/apps/webservice_staging'
 # used to set extended properties on the server.
 
 # Define server(s)
-server 'buri.peckapp.com', user: 'deployer', roles: %w{web app}
+server 'buri.peckapp.com', user: 'deployer', roles: %w{web app db}
 # server 'magni.peckapp.com', user: 'deployer', roles: %w{db}
 
 # Setup Options
