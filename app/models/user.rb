@@ -4,7 +4,12 @@ class User < ActiveRecord::Base
 # verified
   ########
   # each user has an encrypted secure password
-  # has_secure_password
+  # attr_reader :password
+  attr_reader :password, :password_confirmation
+  has_secure_password
+  validates_presence_of :password, :on => :super_create
+  validates_presence_of :password_confirmation, :on => :super_create
+  validates_confirmation_of :password, :on => :super_create
   ########
 
   #### Callbacks #######
@@ -13,14 +18,18 @@ class User < ActiveRecord::Base
   # before_update :sanitize_user
   ######################
 
+  EMAIL_REGEX =/\A[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}\Z/
+
   #### Validations ###############
   validates :institution_id, :presence => true, :numericality => { :only_integer => true }
-  validates :username, :presence => true, :uniqueness => true, :allow_nil => true, :length => {:maximum => 50}
   validates :facebook_link, :uniqueness => true, :allow_nil => true
   validates :facebook_token, :uniqueness => true, :allow_nil => true
   validates :api_key, :uniqueness => true, :allow_nil => true
   validates :authentication_token, :uniqueness => true, :allow_nil => true
   validate :correct_user_types
+
+  validates :email, :uniqueness => true, :presence => true, :length => {:maximum => 50}, :format => {:with => EMAIL_REGEX}, :on => :super_create
+
   ###############################
 
   ################################# Associations ####################################
@@ -76,11 +85,15 @@ class User < ActiveRecord::Base
     def correct_user_types
       is_correct_type(first_name, String, "string", :first_name)
       is_correct_type(last_name, String, "string", :last_name)
-      is_correct_type(username, String, "string", :username)
+      is_correct_type(email, String, "string", :username)
       is_correct_type(facebook_link, String, "string", :facebook_link)
       is_correct_type(facebook_token, String, "string", :facebook_token)
       is_correct_type(api_key, String, "string", :api_key)
       is_correct_type(authentication_token, String, "string", :authentication_token)
+    end
+
+    def confirm_password
+
     end
   #
   # def sanitize_user
