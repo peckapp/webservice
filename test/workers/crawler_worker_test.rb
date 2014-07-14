@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ModelDuplicationTest < ActionController::TestCase
+class CrawlWorkerTest < ActionController::TestCase
 
   def setup
 
