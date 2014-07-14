@@ -1,10 +1,10 @@
 class User < ActiveRecord::Base
   include ModelNormalValidations
   include ModelBeforeSaveValidations
-# verified
+  # verified
   ########
   # each user has an encrypted secure password
-  # has_secure_password
+  has_secure_password
   ########
 
   #### Callbacks #######

@@ -27,12 +27,14 @@ class DiningOpportunitiesControllerTest < UltimateTestHelper
       DiningPeriod.where(:day_of_week => dow).pluck(:dining_opportunity_id).each { |opp_id|
         early = DiningOpportunity.find(opp_id).earliest_start(dow)
         late = DiningOpportunity.find(opp_id).latest_end(dow)
-        assert( ! early.blank? , "the following is blank: day # #{dow} for #{DiningOpportunity.find(opp_id).dining_opportunity_type}")
-        assert( ! late.blank? , "the following is blank: day # #{dow} for #{DiningOpportunity.find(opp_id).dining_opportunity_type}")
-        puts "\n"
-        puts "EARLY: #{early}"
-        puts "LATE: #{late}"
-        next if early.blank? || late.blank?
+
+        # assert start
+        assert( ! early.blank? , "the following opportunity has no start: day # #{dow} for #{DiningOpportunity.find(opp_id).dining_opportunity_type}")
+
+        # assert end
+        assert( ! late.blank? , "the following opportunity has no end: day # #{dow} for #{DiningOpportunity.find(opp_id).dining_opportunity_type}")
+
+        # assert start is before end
         assert(early < late, "earliest start must always be before latest end")
       }
     }
