@@ -42,53 +42,52 @@ class DiningOpportunity < ActiveRecord::Base
     early = earliest_start(day_of_week)
     late = latest_end(day_of_week)
 
-    puts "early.hour: #{early.hour} late.hour: #{late.hour}"
-    if early.hour > late.hour
-      puts "changing day by one"
-      late = late + 1.days
+    if ! early.blank? && ! late.blank?
+      if early.hour > late.hour
+        late = late + 1.days
+      end
     end
-
     return [early,late]
-  end
-
-  # methods to sort through earliest/latest times
-  def earliest_start(day_of_week)
-    start_times = DiningPeriod.where({ "dining_periods.dining_opportunity_id" => self.id, "dining_periods.day_of_week" => day_of_week }).pluck(:start_time)
-
-    earliest = nil
-
-    for t in start_times
-      if earliest == nil
-        earliest = t
-      elsif t < earliest
-        earliest = t
-      end
-    end
-
-    return date_time_for_week_day(day_of_week, earliest)
-
-  end
-
-  def latest_end(day_of_week)
-    end_times = DiningPeriod.where({ "dining_periods.dining_opportunity_id" => self.id, "dining_periods.day_of_week" => day_of_week }).pluck(:end_time)
-
-    latest = nil
-
-    for t in end_times
-      if latest == nil
-        latest = t
-      elsif t > latest
-        latest = t
-      end
-    end
-
-    return date_time_for_week_day(day_of_week, latest)
-
   end
 
   private
 
-    # DiningOpportunities are time-independant, so these methods deliver the proper DateTime for the specified week_day parameter coming from the controller
+    # methods to sort through earliest/latest times
+    def earliest_start(day_of_week)
+      start_times = DiningPeriod.where({ "dining_periods.dining_opportunity_id" => self.id, "dining_periods.day_of_week" => day_of_week }).pluck(:start_time)
+
+      earliest = nil
+
+      for t in start_times
+        if earliest == nil
+          earliest = t
+        elsif t < earliest
+          earliest = t
+        end
+      end
+
+      return date_time_for_week_day(day_of_week, earliest)
+
+    end
+
+    def latest_end(day_of_week)
+      end_times = DiningPeriod.where({ "dining_periods.dining_opportunity_id" => self.id, "dining_periods.day_of_week" => day_of_week }).pluck(:end_time)
+
+      latest = nil
+
+      for t in end_times
+        if latest == nil
+          latest = t
+        elsif t > latest
+          latest = t
+        end
+      end
+
+      return date_time_for_week_day(day_of_week, latest)
+
+    end
+
+    # DiningOpportunities are time-independent, so these methods deliver the proper DateTime for the specified week_day parameter coming from the controller
 
     def date_time_for_week_day(day_of_week, time)
       if ! day_of_week.blank? && ! time.blank?
@@ -106,10 +105,10 @@ class DiningOpportunity < ActiveRecord::Base
       end
     end
 
-    private
-      def correct_dining_opportunity_types
-        is_correct_type(dining_opportunity_type, String, "string", :dining_opportunity_type)
-      end
+
+    def correct_dining_opportunity_types
+      is_correct_type(dining_opportunity_type, String, "string", :dining_opportunity_type)
+    end
     #
     # def sanitize_dining_opportunity
     #   sanitize_everything(attributes)
