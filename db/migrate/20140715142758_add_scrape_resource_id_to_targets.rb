@@ -1,8 +1,8 @@
 class AddScrapeResourceIdToTargets < ActiveRecord::Migration
-  sri = "scrape_resource_id"
+
   def change
-    add_column "menu_items",sri,:integer
-    add_column "simple_events", sri, :integer
-    add_column "athletic_events", sri, :integer
+    add_column "menu_items", "scrape_resource_id",:integer
+    add_column "simple_events", "scrape_resource_id", :integer
+    add_column "athletic_events", "scrape_resource_id", :integer
   end
 end

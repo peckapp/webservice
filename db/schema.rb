@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140710160538) do
+ActiveRecord::Schema.define(version: 20140715161348) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
@@ -34,18 +34,19 @@ ActiveRecord::Schema.define(version: 20140710160538) do
   add_index "activity_logs", ["type_of_activity"], name: "index_activity_logs_on_type_of_activity", using: :btree
 
   create_table "athletic_events", force: true do |t|
-    t.integer  "institution_id",   null: false
-    t.integer  "athletic_team_id", null: false
+    t.integer  "institution_id",     null: false
+    t.integer  "athletic_team_id",   null: false
     t.string   "opponent"
     t.float    "team_score"
     t.float    "opponent_score"
     t.string   "home_or_away"
-    t.string   "location",         null: false
+    t.string   "location",           null: false
     t.string   "result"
     t.text     "note"
     t.datetime "date_and_time"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "scrape_resource_id"
   end
 
   add_index "athletic_events", ["athletic_team_id"], name: "index_athletic_events_on_athletic_team_id", using: :btree
@@ -138,6 +139,14 @@ ActiveRecord::Schema.define(version: 20140710160538) do
   create_table "configurations", force: true do |t|
     t.string   "mascot"
     t.string   "config_file_name", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "data_resources", force: true do |t|
+    t.string   "info"
+    t.string   "column_name",      null: false
+    t.integer  "resource_type_id", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -284,6 +293,7 @@ ActiveRecord::Schema.define(version: 20140710160538) do
     t.date     "date_available",        null: false
     t.string   "category"
     t.string   "serving_size"
+    t.integer  "scrape_resource_id"
   end
 
   add_index "menu_items", ["institution_id"], name: "index_menu_items_on_institution_id", using: :btree
@@ -313,6 +323,14 @@ ActiveRecord::Schema.define(version: 20140710160538) do
   add_index "push_notifications", ["notification_type"], name: "index_push_notifications_on_notification_type", using: :btree
   add_index "push_notifications", ["user_id"], name: "index_push_notifications_on_user_id", using: :btree
 
+  create_table "resource_types", force: true do |t|
+    t.string   "info"
+    t.string   "resource_name", null: false
+    t.string   "model_name",    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "rss_pages", force: true do |t|
     t.integer  "institution_id",                  null: false
     t.string   "url",                             null: false
@@ -323,34 +341,47 @@ ActiveRecord::Schema.define(version: 20140710160538) do
   end
 
   create_table "scrape_resources", force: true do |t|
-    t.string   "url",                             null: false
-    t.integer  "institution_id",                  null: false
-    t.string   "resource_type",                   null: false
-    t.integer  "scrape_interval", default: 1440
-    t.boolean  "validated",       default: false
+    t.string   "url",                                    null: false
+    t.integer  "institution_id",                         null: false
+    t.integer  "scrape_interval",        default: 1440
+    t.boolean  "validated",              default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "resource_type_id"
+    t.integer  "pagination_selector_id"
+  end
+
+  create_table "selectors", force: true do |t|
+    t.string   "info"
+    t.string   "selector",                           null: false
+    t.boolean  "top_level",          default: false
+    t.integer  "parent_selector_id"
+    t.integer  "data_resource_id",                   null: false
+    t.integer  "scrape_resource_id",                 null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "simple_events", force: true do |t|
-    t.string   "title",             limit: 100,                 null: false
+    t.string   "title",              limit: 100,                 null: false
     t.text     "event_description"
-    t.integer  "institution_id",                                null: false
+    t.integer  "institution_id",                                 null: false
     t.integer  "user_id"
     t.integer  "department_id"
     t.integer  "club_id"
     t.integer  "circle_id"
     t.string   "event_url"
-    t.boolean  "open",                          default: false
+    t.boolean  "open",                           default: false
     t.string   "image_url"
     t.integer  "comment_count"
-    t.datetime "start_date",                                    null: false
-    t.datetime "end_date",                                      null: false
-    t.boolean  "deleted",                       default: false
+    t.datetime "start_date",                                     null: false
+    t.datetime "end_date",                                       null: false
+    t.boolean  "deleted",                        default: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.float    "latitude"
     t.float    "longitude"
+    t.integer  "scrape_resource_id"
   end
 
   add_index "simple_events", ["circle_id"], name: "index_simple_events_on_circle_id", using: :btree
