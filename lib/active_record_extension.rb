@@ -2,7 +2,8 @@
 # by either using a specified hash of the interested parameters and their values in the current object
 # that can be sent to the database as a query
 
-# A variety of methods are included to prevent duplicate entries in the database during scraping
+# A variety of methods are included to prevent duplicate entries in the database during scraping,
+# allowing jobs with side effects to remain idempotent
 
 module ActiveRecordExtension
 
