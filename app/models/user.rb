@@ -7,10 +7,14 @@ class User < ActiveRecord::Base
   attr_accessor :enable_strict_validation
   has_secure_password :validations => false
 
-  validate :password_is_not_blank, :if => :enable_strict_validation
+  # validate :password_is_not_blank, :if => :enable_strict_validation
   validates :password, :presence => true, :if => :enable_strict_validation
   validates :password_confirmation, :presence => true, if: lambda { |m| m.password.present? }
-  # validates_confirmation_of :password, if: ->{ password.present? }
+  validates_confirmation_of :password, if: ->{ password.present? }
+  validates :first_name, :presence => true, :if => :enable_strict_validation
+  validates :last_name, :presence => true, :if => :enable_strict_validation
+  validates :email, :uniqueness => true, :presence => true, :length => {:maximum => 50}, :format => {:with => EMAIL_REGEX}, :if => :enable_strict_validation
+  # validates :authentication_token, :presence => true, :uniqueness => true, :if => :enable_strict_validation
   ########
 
   #### Callbacks #######
@@ -26,10 +30,7 @@ class User < ActiveRecord::Base
   validates :facebook_link, :uniqueness => true, :allow_nil => true
   validates :facebook_token, :uniqueness => true, :allow_nil => true
   validates :api_key, :uniqueness => true, :allow_nil => true
-  validates :authentication_token, :uniqueness => true, :allow_nil => true
   validate :correct_user_types
-
-  validates :email, :uniqueness => true, :presence => true, :length => {:maximum => 50}, :format => {:with => EMAIL_REGEX}, :on => :super_create
 
   ###############################
 
@@ -92,11 +93,11 @@ class User < ActiveRecord::Base
       is_correct_type(api_key, String, "string", :api_key)
       is_correct_type(authentication_token, String, "string", :authentication_token)
     end
-
-    def password_is_not_blank
-      errors.add(:password, "must not be blank") unless password_digest.present?
-      # && self.enable_strict_validation
-    end
+    #
+    # def password_is_not_blank
+    #   errors.add(:password, "must not be blank") unless password_digest.present?
+    #   # && self.enable_strict_validation
+    # end
 
   #
   # def sanitize_user

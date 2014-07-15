@@ -26,12 +26,12 @@ module Api
 
       def super_create
         @user = User.find(params[:id])
+        @user.enable_strict_validation = true
         @user.update_attributes(user_signup_params)
       end
 
       def update
         @user = User.find(params[:id])
-        @user.enable_strict_validation = true
         @user.update_attributes(user_update_params)
       end
 
@@ -47,7 +47,7 @@ module Api
         end
 
         def user_signup_params
-          params.require(:user).permit(:first_name, :last_name, :email)
+          params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation)
         end
 
         def user_update_params
