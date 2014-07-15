@@ -19,4 +19,11 @@ class UsersControllerTest < UltimateTestHelper
   def teardown
      ActionController::Parameters.action_on_unpermitted_parameters = false
   end
+
+  test "anonymous user creation" do
+    post :create, :user => @params_create, :format => :json
+    user = assigns(:user)
+    assert_not_nil user.id
+    assert_not_nil user.api_key
+  end
 end

@@ -4,9 +4,13 @@ class User < ActiveRecord::Base
   # verified
   ########
   # each user has an encrypted secure password
-  # attr_reader :password
-  has_secure_password
+  attr_accessor :enable_strict_validation
+  has_secure_password :validations => false
+
+  validate :password_is_not_blank, :if => :enable_strict_validation
+  validates :password, :presence => true, :if => :enable_strict_validation
   validates :password_confirmation, :presence => true, if: lambda { |m| m.password.present? }
+  # validates_confirmation_of :password, if: ->{ password.present? }
   ########
 
   #### Callbacks #######
@@ -88,6 +92,12 @@ class User < ActiveRecord::Base
       is_correct_type(api_key, String, "string", :api_key)
       is_correct_type(authentication_token, String, "string", :authentication_token)
     end
+
+    def password_is_not_blank
+      errors.add(:password, "must not be blank") unless password_digest.present?
+      # && self.enable_strict_validation
+    end
+
   #
   # def sanitize_user
   #   sanitize_everything(attributes)
