@@ -30,10 +30,6 @@ class DiningOpportunity < ActiveRecord::Base
   #################
 
   ### Methods ###
-  # def correct_dining_opportunity_types
-  #   is_correct_type(dining_opportunity_type, String, "string", :dining_opportunity_type)
-  #   is_correct_type(institution_id, Fixnum, "fixnum", :institution_id)
-  # end
   #
   # def sanitize_dining_opportunity
   #   sanitize_everything(attributes)
