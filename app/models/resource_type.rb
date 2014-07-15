@@ -5,7 +5,11 @@ class ResourceType < ActiveRecord::Base
   ### Each ScrapeResource has a specificed resource type that relates it to a specific model
   has_many :scrape_resources
 
-  ### Each DataResource has 
-  # has_many :data_resources
+  ### Each DataResource has a specified resoutce type from which it infers the model that it relates to
+  has_many :data_resources
+
+  def model
+    Model = Util.class_from_string(model_name)
+  end
 
 end
