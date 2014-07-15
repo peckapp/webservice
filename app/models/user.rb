@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   EMAIL_REGEX =/\A[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}\Z/
   # validate :password_is_not_blank, :if => :enable_strict_validation
   validates :password, :presence => true, :if => :enable_strict_validation
-  # validates :password_confirmation, :presence => true, if: lambda { |m| m.password.present? }
+  validates :password_confirmation, :presence => true, if: lambda { |m| m.password.present? }
   validates_confirmation_of :password, if: ->{ password.present? }
   validates :first_name, :presence => true, :if => :enable_strict_validation
   validates :last_name, :presence => true, :if => :enable_strict_validation
@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   ########
 
   #### Callbacks #######
+  before_save :encrypt_password
   # before_save :sanitize_user
   # before_create :sanitize_user
   # before_update :sanitize_user

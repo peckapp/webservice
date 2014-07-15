@@ -17,10 +17,10 @@ class ApplicationController < ActionController::Base
   #   end
   # end
   def confirm_logged_in
-    if session[:user_id]
-      true
+    unless session[:user_id]
+      return false
     else
-      false
+      return true
     end
   end
 
