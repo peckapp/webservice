@@ -1,6 +1,7 @@
 
 # enables the sidekiq job interface to be displayed
 require 'sidekiq/web'
+require 'sidetiq/web'
 # simplifies the versioning constraints for API interactions
 require 'api_constraints'
 
