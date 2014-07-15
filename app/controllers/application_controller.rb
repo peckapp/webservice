@@ -25,6 +25,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def restrict_access
+    authenticate_or_request_with_http_token do |token, options|
+      User.exists?(api_key: token)
+    end
+  end
+
   def specific_index(model, params_hash)
 
     search_params = model_search_params(model,params_hash)

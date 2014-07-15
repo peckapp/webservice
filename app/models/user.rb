@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
 
   #### Callbacks #######
   before_save :encrypt_password
+  before_create :generate_api_key
   # before_save :sanitize_user
   # before_create :sanitize_user
   # before_update :sanitize_user
@@ -109,6 +110,12 @@ class User < ActiveRecord::Base
       is_correct_type(facebook_token, String, "string", :facebook_token)
       is_correct_type(api_key, String, "string", :api_key)
       is_correct_type(authentication_token, String, "string", :authentication_token)
+    end
+
+    def generate_api_key
+      begin
+        self.api_key = SecureRandom.hex(25)
+      end while self.class.exists?(api_key: api_key)
     end
     #
     # def password_is_not_blank
