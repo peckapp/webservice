@@ -5,4 +5,8 @@ class ScrapeResource < ActiveRecord::Base
   ### each selector has a ScrapeResource from which it originated
   has_many :selectors
 
+  def paginated?
+    pagination_selector_id.blank?
+  end
+
 end

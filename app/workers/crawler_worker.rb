@@ -66,7 +66,10 @@ class CrawlerWorker
             end
           end
 
+
+          ### Sends off the task asynchronously to another worker ###
           PageCrawlWorker.perform_async(new_page.uri.to_s, inst_id)
+
 
           # sleep time to keep the crawl interval unpredictable and prevent lockout from certain sites
           sleep(1 + rand)
@@ -79,7 +82,7 @@ class CrawlerWorker
 
 
     ### utility methods for the crawler
-
+    
     def acceptable_link_format?(link)
       begin
         if link.to_s.match(/#/) || link.uri.to_s.empty? then return false end # handles anchor links within the page

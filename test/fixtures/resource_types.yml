@@ -1,9 +1,20 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  string: 
-  integer: 
 
-two:
-  string: 
-  integer: 
+simple_event_resource:
+  id: 1
+  info: "useful information on simple events"
+  resource_name: "simple event resource"
+  model_name: "SimpleEvent"
+
+athletic_event_resource:
+  id: 1
+  info: "useful information on simple events"
+  resource_name: "simple event resource"
+  model_name: "SimpleEvent"
+
+menu_item_resource:
+  id: 1
+  info: "useful information on simple events"
+  resource_name: "simple event resource"
+  model_name: "SimpleEvent"
