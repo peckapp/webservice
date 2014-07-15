@@ -91,6 +91,14 @@ To create a local database configuration file, execute the command `cp config/da
 
 Set up a local mysql databases and a user for the development and test environments and modify the settings specified in the new `config/database.yml` to reflect these local databases.
 
+### Redis
+To have launchd start redis at login:
+    ln -sfv /usr/local/opt/redis/*.plist ~/Library/LaunchAgents
+Then to load redis now:
+    launchctl load ~/Library/LaunchAgents/homebrew.mxcl.redis.plist
+Or, if you don't want/need launchctl, you can just run:
+    redis-server /usr/local/etc/redis.conf
+
 ## Standard rails README
 
 This README would normally document whatever steps are necessary to get the
