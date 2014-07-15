@@ -51,6 +51,10 @@ gem 'mechanize'
 # Restclient for gathering pages
 gem 'rest-client'
 
+# watir-webdriver as a selinium wrapper: http://watirwebdriver.com
+gem 'watir-webdriver'
+
+### Job Scheduling
 # Sidekiq for running background jobs in seperate threads - https://github.com/mperham/sidekiq
 gem 'sidekiq'
 # sidetiq for scheduling those bacground jobs - https://github.com/tobiassvn/sidetiq
@@ -85,4 +89,6 @@ group :development do
     gem 'capistrano-bundler', '~> 1.1.2'
     # rails-related operations: https://github.com/capistrano/rails
     gem 'capistrano-rails', '~> 1.1'
+    # sidekiq task-management: https://github.com/seuros/capistrano-sidekiq
+    gem 'capistrano-sidekiq'
 end
