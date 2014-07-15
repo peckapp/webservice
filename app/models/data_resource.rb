@@ -1,0 +1,16 @@
+class DataResource < ActiveRecord::Base
+
+
+  belongs_to :resource_type
+
+  ### each selector has a DataResource that defines for which column that data applies in the given model
+  has_many :selectors
+
+  # model can be nil if it doesn't exist
+  def model
+    resource_type = Resource.find(resource_type_id)
+    return resource_type.model
+  end
+
+
+end
