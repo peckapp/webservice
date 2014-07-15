@@ -16,6 +16,14 @@ class ApplicationController < ActionController::Base
   #     helpers.sanitize(param)
   #   end
   # end
+  def confirm_logged_in
+    unless session[:user_id]
+      return false
+    else
+      return true
+    end
+  end
+
   def specific_index(model, params_hash)
 
     search_params = model_search_params(model,params_hash)
