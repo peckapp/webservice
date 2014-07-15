@@ -18,6 +18,7 @@ class ApplicationController < ActionController::Base
   # end
   def confirm_logged_in
     unless session[:user_id]
+      render :file => "public/401.html", :status => :unauthorized
       return false
     else
       return true
