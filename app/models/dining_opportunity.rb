@@ -66,7 +66,7 @@ class DiningOpportunity < ActiveRecord::Base
         end
       end
 
-      return date_time_for_week_day(day_of_week, earliest)
+      return Util.date_time_for_week_day(day_of_week, earliest)
 
     end
 
@@ -83,26 +83,8 @@ class DiningOpportunity < ActiveRecord::Base
         end
       end
 
-      return date_time_for_week_day(day_of_week, latest)
+      return Util.date_time_for_week_day(day_of_week, latest)
 
-    end
-
-    # DiningOpportunities are time-independent, so these methods deliver the proper DateTime for the specified week_day parameter coming from the controller
-
-    def date_time_for_week_day(day_of_week, time)
-      if ! day_of_week.blank? && ! time.blank?
-        day = nearest_week_day(day_of_week)
-        return day.change(hour: time.hour, min: time.min)
-      end
-    end
-
-    def nearest_week_day(day_of_week)
-      if ! day_of_week.blank?
-        cur = DateTime.now.noon.wday
-        # the amount to shift the date forward by
-        shift = cur - day_of_week
-        return DateTime.now.noon - shift.days
-      end
     end
 
 

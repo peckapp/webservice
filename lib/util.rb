@@ -12,4 +12,22 @@ class Util
     end
   end
 
+  # These methods deliver the proper DateTime for the specified week_day parameter coming from the controller
+
+  def self.date_time_for_week_day(day_of_week, time)
+    if ! day_of_week.blank? && ! time.blank?
+      day = nearest_week_day(day_of_week)
+      return day.change(hour: time.hour, min: time.min)
+    end
+  end
+
+  def self.nearest_week_day(day_of_week)
+    if ! day_of_week.blank?
+      cur = DateTime.now.noon.wday
+      # the amount to shift the date forward by
+      shift = cur - day_of_week
+      return DateTime.now.noon - shift.days
+    end
+  end
+
 end

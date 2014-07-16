@@ -7,8 +7,8 @@ module Api
 
       def index
         @dining_periods = specific_index(DiningPeriod, params)
-        @service_start = {}
-        @service_end = {}
+        @period_start = {}
+        @period_end = {}
 
         if params[:day_of_week].blank?
           # defaults to today's date if no date is specified
@@ -21,8 +21,8 @@ module Api
 
         for per in @dining_periods
           # insert start and end time into the view parameters
-          @service_start[per.id] = per.start_time
-          @service_end[per.id] = per.end_time
+          @period_start[per.id] = per.start_time
+          @period_end[per.id] = per.end_time
         end
 
       end
