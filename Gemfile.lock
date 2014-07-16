@@ -67,12 +67,6 @@ GEM
     colorize (0.7.3)
     connection_pool (2.0.0)
     curb (0.8.5)
-    devise (3.2.4)
-      bcrypt (~> 3.0)
-      orm_adapter (~> 0.1)
-      railties (>= 3.2.6, < 5)
-      thread_safe (~> 0.1)
-      warden (~> 1.2.3)
     domain_name (0.5.19)
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
@@ -123,7 +117,6 @@ GEM
     nokogiri (1.6.2.1)
       mini_portile (= 0.6.0)
     ntlm-http (0.1.1)
-    orm_adapter (0.5.0)
     paperclip (4.2.0)
       activemodel (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -164,7 +157,7 @@ GEM
     redis (3.1.0)
     redis-namespace (1.5.0)
       redis (~> 3.0, >= 3.0.4)
-    rest-client (1.7.1)
+    rest-client (1.7.2)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
     ruby-graphviz (1.0.9)
@@ -237,10 +230,6 @@ GEM
     unf_ext (0.0.6)
     validates_timeliness (3.0.14)
       timeliness (~> 0.3.6)
-    warden (1.2.3)
-      rack (>= 1.0)
-    watir-webdriver (0.6.10)
-      selenium-webdriver (>= 2.18.0)
     webrobots (0.1.1)
     websocket (1.0.7)
 
@@ -256,7 +245,6 @@ DEPENDENCIES
   capistrano-rvm
   capistrano-sidekiq
   coffee-rails (~> 4.0.0)
-  devise (~> 3.2.4)
   feedjira
   hirb (~> 0.7.2)
   jbuilder (~> 2.0)

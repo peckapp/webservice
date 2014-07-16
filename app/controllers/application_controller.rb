@@ -16,6 +16,26 @@ class ApplicationController < ActionController::Base
   #     helpers.sanitize(param)
   #   end
   # end
+  def confirm_logged_in
+    unless session[:user_id]
+      render :file => "public/401.html", :status => :unauthorized
+      return false
+    else
+      return true
+    end
+  end
+
+  # def confirm_correct_school(strong_params)
+  #   user = User.find(session[:user_id])
+  #   strong_params[:institution_id] = user.institution_id
+  # end
+
+  def restrict_access
+    authenticate_or_request_with_http_token do |token, options|
+      User.exists?(api_key: token)
+    end
+  end
+
   def specific_index(model, params_hash)
 
     search_params = model_search_params(model,params_hash)
