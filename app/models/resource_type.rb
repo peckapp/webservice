@@ -9,7 +9,7 @@ class ResourceType < ActiveRecord::Base
   has_many :data_resources
 
   def model
-    Model = Util.class_from_string(model_name)
+    Util.class_from_string(model_name)
   end
 
 end

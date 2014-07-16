@@ -14,4 +14,12 @@ class Selector < ActiveRecord::Base
     return DataResource.find(data_resource_id).model
   end
 
+  def children
+    Selector.find(parent_selector_id: parent_selector_id)
+  end
+
+  def column_name
+    Data_Resource.find(data_resource_id).column_name
+  end
+
 end

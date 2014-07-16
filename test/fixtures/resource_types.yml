@@ -1,6 +1,5 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-
 simple_event_resource:
   id: 1
   info: "useful information on simple events"

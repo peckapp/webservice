@@ -1,16 +1,17 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-
+# rss event resource
 williams:
- url: https://events.williams.edu/widget/view?schools=williams&days=31&num=10&types=7391%2C7063%2C5716%2C5718&format=rss
+ url: https://events.williams.edu/widget/view?schools=williams&days=90&num=100&format=rss
  institution_id: 3
- resource_type_id: MyString
+ resource_type_id: 1
  scrape_interval: 1
  validated: false
 
+# rss event resource
 middlebury:
  url: http://25livepub.collegenet.com/calendars/featured-title-events-calendar-search.rss
  institution_id: 4
- resource_type_id: MyString
+ resource_type_id: 1
  scrape_interval: 1
  validated: false
