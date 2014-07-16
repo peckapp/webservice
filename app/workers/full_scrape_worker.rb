@@ -9,26 +9,32 @@ class FullScrapeWorker
 
   def perform(*attrs)
     attrs = attrs.extract_options!
-    resources = ScrapeResources.where(attrs)
+    puts "attrs: #{attrs}"
+    resources = ScrapeResource.where(attrs)
 
     # iterate over all resources
     resources.each do |resource|
 
-      raw = RestClient.get(resource.url)
+      puts "resource: #{resource.inspect}"
+
+      raw = RestClient::Request.execute(url: resource.url, method: :get, verify_ssl: false) # no dangerous security concern present here, possible data spoofing though
 
       html = Nokogiri::HTML(raw)
-
-
 
       # iterate over pages for that resource
       # need to find a way to explicate pagination movement. may or may not need selenium, different url possibilities, form submissions, etc. may all be possible
       # for now just look at immediate url for the scrape resource
       (0..0).each do |n| # placeholder page traversal
 
+        puts "in page traversal loop"
+
         # down the road, extract html and send it off for parsing while continuing with pagination crawl
 
         top_selectors = Selector.where(id: resource.id, top_level: true)
+        puts "found #{top_selectors.count} top selectors"
         top_selectors.each do |ts|
+
+          puts "ts: #{ts.inspect}"
 
           # an array of all the top-level items for a given tag. these are nokogiri nodes
           html_items = html.css(ts.selector)
@@ -37,18 +43,25 @@ class FullScrapeWorker
 
             new_model = ts.model.new
 
-            # resursively traverse all children for a given selector
+            # traverse all children for a given selector
             ts.children.each do |cs|
 
-              content_item = html_item.css(cs.selector).first.text.squish # assumes there is only one element, could iterate instead but then where does that information go?s
+              puts "cs: #{cs.inspect}"
 
-              new_model.assign_attributes(cs.column_name => content_item)
+              content_item = html_item.css(cs.selector).first
 
+              if ! content_item.blank?
+                content = content_item.text.squish # assumes there is only one element, could iterate instead but then where does that information go?s
+                puts "CONTENT: #{content}"
+                new_model.assign_attributes(cs.column_name => content)
+              else
+                puts "NO CONTENT FOUND"
+              end
             end
 
             # validate new model
 
-            puts "new_model =>\n#{new_model}"
+            puts "new_model --->#{new_model.inspect}"
             # new_model.non_duplicative_save
 
           end # end items iteration

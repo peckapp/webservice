@@ -1,5 +1,15 @@
 class Selector < ActiveRecord::Base
 
+  validates_associated :scrape_resources
+  validates_associated :data_resources
+  # validates that parent_selector_id must be nil for top level opbjects
+  validate do |selector|
+    if top_level && ! parent_selector_id.blank?
+      selector.errors[:base] << "top_level selectors must have nil parent_selector_id's"
+    end
+  end
+
+
   has_many :scrape_resources
 
   ### Each Data Resource indicates which column the object is associated with, or if it is a top-level model
@@ -11,11 +21,15 @@ class Selector < ActiveRecord::Base
 
   # inferred model for this selector
   def model
-    return DataResource.find(data_resource_id).model
+    DataResource.find(data_resource_id).model
+  end
+
+  def parent
+    Selector.find(parent_selector_id)
   end
 
   def children
-    Selector.find(parent_selector_id: parent_selector_id)
+    Selector.where(parent_selector_id: id)
   end
 
   def column_name

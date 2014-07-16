@@ -1,10 +1,26 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-a_selector:
-  id: 1
+<% (1..5).each do |n| %>
+
+parent_selector<%= "#{n}" %>:
+  id: <%= n %>
   info: selector info
   selector: item
-  top_level: false
+  top_level: true
   parent_selector_id:
   data_resource_id: 1
   scrape_resource_id: 1
+
+<% (1..5).each do |k| %>
+
+child_selector<%= "#{n * k + 5}" %>:
+  id: <%= n * k + 5 %>
+  info: selector info
+  selector: title
+  top_level: false
+  parent_selector_id: <%= n %>
+  data_resource_id: 1
+  scrape_resource_id: 1
+
+<% end %>
+<% end %>
