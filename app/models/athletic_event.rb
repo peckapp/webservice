@@ -28,6 +28,8 @@ class AthleticEvent < ActiveRecord::Base
   # before_save :validate_institution_id, :validate_athletic_team_id, :validate_location
   ###
 
+  ### scrape resource from which this was gathered ###
+  belongs_to :scrape_resource #
 
   ### Methods ###
   private

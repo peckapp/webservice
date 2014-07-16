@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+simple_event_resource:
+  id: 1
+  info: "useful information on simple events"
+  resource_name: "simple event resource"
+  model_name: "SimpleEvent"
+
+athletic_event_resource:
+  id: 2
+  info: "useful information on athletic events"
+  resource_name: "athletic event resource"
+  model_name: "AthleticEvent"
+
+menu_item_resource:
+  id: 3
+  info: "useful information on menu items"
+  resource_name: "menu item resource"
+  model_name: "MenuItem"

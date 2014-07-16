@@ -37,10 +37,16 @@ There will be a few primary tasks that the API will handle:
 
 ### Config Files
 - Nginx
- - /opt/nginx/conf/nginx.conf
- - /opt/nginx/conf/available-sites/*
+ - `/opt/nginx/conf/nginx.conf`
+ - `/opt/nginx/conf/available-sites/*`
 - Kibana
- - /usr/share/nginx/kibana3/config.js
+ - `/usr/share/nginx/kibana3/config.js`
+- Logstash server
+ - input: `/etc/logstash/conf.d/01-lumberjack-input.conf`
+ - filter: `/etc/logstash/conf.d/10-syslog.conf`
+ - output: `/etc/logstash/conf.d/30-lumberjack-output.conf`
+- Logstash forwarders
+ - `/etc/sysconfig/logstash-forwarder`
 
 ## Production Environment
 

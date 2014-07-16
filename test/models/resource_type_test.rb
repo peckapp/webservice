@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Tasks::ScrapeResourcesTest < ActiveSupport::TestCase
+class ResourceTypeTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

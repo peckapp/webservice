@@ -9,7 +9,8 @@ class WilliamsDiningWorker
   # recurrence { minutely }
 
   def perform
-    resources = Tasks::ScrapeResource.where(resource_type: "dining_csv", validated: true)
+    williams_id = Institution.where(name: "Williams").id
+    resources = Tasks::ScrapeResource.where(resource_type: "dining_csv", validated: true, institution_id: williams_id)
     if resources.blank?
       #williams = Institution.where(name: "Williams")
       scrape_csv_page("http://dining.williams.edu/files/daily-menu.csv", 3)

@@ -50,3 +50,20 @@ def seed_app_dining_periods
     }
   }
 end
+
+def seed_rss_scraping
+  ResourceType.create info: "Simple Events", resource_name: "simple_event", model_name: "SimpleEvent"
+  ResourceType.create info: "Athletic Events", resource_name: "athletic_event", model_name: "AthleticEvent"
+  ResourceType.create info: "Menu Items", resource_name: "menu_item", model_name: "MenuItem"
+
+  ScrapeResource.create url: "https://events.williams.edu/widget/view?schools=williams&days=90&num=100&format=rss", institution_id: 2, validated: true, resource_type_id: 1
+
+  DataResource.create info: "rss feed simple event title", column_name: "title", resource_type_id: 1
+  DataResource.create info: "rss feed simple event description", column_name: "event_description", resource_type_id: 1
+  DataResource.create info: "rss feed simple event url", column_name: "event_url", resource_type_id: 1
+
+  Selector.create info: "simple event rss title selector", selector: "item", top_level: true, parent_selector_id: nil, data_resource_id: 1, scrape_resource_id: 1
+  Selector.create info: "rss events title selector", selector: "title", top_level: false, parent_selector_id: 1, data_resource_id: 1, scrape_resource_id: 1
+  Selector.create info: "rss events description selector", selector: "description", top_level: false, parent_selector_id: 1, data_resource_id: 2, scrape_resource_id: 1
+  Selector.create info: "simple event rss url selector", selector: "link", top_level: false, parent_selector_id: 1, data_resource_id: 3, scrape_resource_id: 1
+end

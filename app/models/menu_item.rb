@@ -28,6 +28,9 @@ class MenuItem < ActiveRecord::Base
   ### dining opportunity when item is available ###
   belongs_to :dining_opportunity #
 
+  ### scrape resource from which this was gathered ###
+  belongs_to :scrape_resource #
+
   ### Methods ###
   private
     def correct_menu_item_types

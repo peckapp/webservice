@@ -36,6 +36,9 @@ class SimpleEvent < ActiveRecord::Base
   ### event's home institution ###
   belongs_to :institution #
 
+  ### scrape resource from which this was gathered ###
+  belongs_to :scrape_resource #
+  
   #####################
 
   ### Scopes ###

@@ -1,0 +1,7 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+data_resource_one:
+  id: 1
+  info: data resource event title info
+  column_name: title
+  resource_type_id: 1
