@@ -13,7 +13,8 @@ class RssScraperWorker
 
   def scrape
     puts "in scrape method"
-    resources = Tasks::ScrapeResource.where(resource_type: "rss_events", validated: true)
+    
+    resources = ScrapeResource.where(resource_type: "rss_events", validated: true)
     resources.each { |page|
       parse_and_store(page.url, page.institution_id)
     }
