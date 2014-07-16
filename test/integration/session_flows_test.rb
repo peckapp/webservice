@@ -4,7 +4,7 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
 
   test "login and browse" do
       https!
-      patch "/api/users/2/super_create", :user => {:first_name => "John", :last_name => "Doe", :email => "jdoe@williams.edu", :password => "test", :password_confirmation => "test"}, :format => :json
+      patch "/api/users/2/super_create", :user => {:first_name => "John", :last_name => "Doe", :email => "jdoe@williams.edu", :password => "testpassword", :password_confirmation => "testpassword"}, :format => :json
       user = assigns(:user)
       assert_response :success
       assert_not_nil user
@@ -25,7 +25,7 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
     def login(user)
       open_session do |sess|
         sess.https!
-        sess.post "api/sessions", email: "jdoe@williams.edu", password: "test", :format => :json
+        sess.post "api/sessions", email: "jdoe@williams.edu", password: "testpassword", :format => :json
         assert_not_nil session[:user_id]
       end
     end
