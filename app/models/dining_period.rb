@@ -31,7 +31,18 @@ class DiningPeriod < ActiveRecord::Base
   #################
 
   ### Methods ###
+
+  # returns the start_time for the current week for this period
+  def cur_week_start_time
+    Util.date_time_for_week_day(day_of_week, start_time)
+  end
+
+  def cur_week_end_time
+    Util.date_time_for_week_day(day_of_week, end_time)
+  end
+
   private
+
     def correct_dining_period_types
       is_correct_type(start_time, Time, "time", :start_time)
       is_correct_type(end_time, Time, "time", :end_time)
