@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140715161348) do
+ActiveRecord::Schema.define(version: 20140716035109) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
@@ -327,15 +327,6 @@ ActiveRecord::Schema.define(version: 20140715161348) do
     t.string   "info"
     t.string   "resource_name", null: false
     t.string   "model_name",    null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "rss_pages", force: true do |t|
-    t.integer  "institution_id",                  null: false
-    t.string   "url",                             null: false
-    t.integer  "scrape_interval", default: 1440
-    t.boolean  "paginated",       default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

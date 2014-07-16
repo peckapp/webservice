@@ -1,12 +1,14 @@
+# deprecated class in favor of workers. just here for a bit longer as reference until new system work for rss
+
 class Tasks::RssScraperController < ApplicationController
 
   require 'date'
 
   def self.scrape
     puts "in scrape method"
-    Tasks::RssPage.all.each { |page|
-      parse_and_store(page.url, page.institution_id)
-    }
+    # Tasks::RssPage.all.each { |page|
+    #   parse_and_store(page.url, page.institution_id)
+    # }
   end
 
   private

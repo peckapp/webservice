@@ -19,7 +19,7 @@ class FullScrapeWorker
 
       raw = RestClient::Request.execute(url: resource.url, method: :get, verify_ssl: false) # no dangerous security concern present here, possible data spoofing though
 
-      html = Nokogiri::HTML(raw)
+      html = Nokogiri::HTML(raw.squish)
 
       # iterate over pages for that resource
       # need to find a way to explicate pagination movement. may or may not need selenium, different url possibilities, form submissions, etc. may all be possible
@@ -49,7 +49,10 @@ class FullScrapeWorker
               content_item = html_item.css(cs.selector).first
 
               if ! content_item.blank?
-                content = content_item.text.squish # assumes there is only one element, could iterate instead but then where does that information go?s
+                content = content_item.text.squish # assumes there is only one element, could iterate instead but then where does that information go?
+                if content.blank?
+                  content = next_non_blank(content_item).text.squish
+                end
                 puts "CONTENT: #{content}"
                 new_model.assign_attributes(cs.column_name => content)
               else
@@ -70,5 +73,12 @@ class FullScrapeWorker
 
 
   end # end perform
+
+  def next_non_blank(elem)
+    until ! elem.text.blank? do
+      elem = elem.next
+    end
+    elem
+  end
 
 end
