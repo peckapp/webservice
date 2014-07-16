@@ -1,1 +1,1 @@
-node(:response) {"#{@user.email} has succesfully logged in"}
+node(:response) {"#{@user.email} has successfully logged in"}
