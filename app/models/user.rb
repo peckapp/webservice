@@ -85,7 +85,7 @@ class User < ActiveRecord::Base
 
   ### Methods ###
   def self.authenticate(email, password)
-   user = self.where(:email => email)
+   user = self.where(:email => email).first
 
    if user && user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
      user

@@ -11,6 +11,7 @@ class UsersControllerTest < UltimateTestHelper
     @params_show = {:id => 10, :institution_id => 1, :format => :json}
     @params_create = {:institution_id => 5}
     @params_update = {:first_name => "John", :active => false}
+    @params_super_create = {:first_name => "John", :last_name => "Doe", :email => "jdoe@williams.edu", :password => "test", :password_confirmation => "test"}
     @model_type = :user
     @id = 11
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
@@ -25,5 +26,17 @@ class UsersControllerTest < UltimateTestHelper
     user = assigns(:user)
     assert_not_nil user.id
     assert_not_nil user.api_key
+  end
+
+  test "should patch super create" do
+    patch :super_create, :id => @id, @model_type => @params_super_create, :format => :json
+    assert_response :success
+  end
+
+  test "should not patch super create" do
+    patch :super_create, :id => @id, @model_type => {:first_name => "Andy", :last_name => "Smith", :email => "asmith@amherst.edu", :password => "hi", :password_confirmation => "nope"}, :format => :json
+    user = assigns(:user)
+    assert_nil user.password_salt
+    assert_nil user.password_hash
   end
 end
