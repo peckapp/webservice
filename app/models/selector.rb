@@ -33,7 +33,7 @@ class Selector < ActiveRecord::Base
   end
 
   def column_name
-    Data_Resource.find(data_resource_id).column_name
+    DataResource.find(data_resource_id).column_name
   end
 
 end

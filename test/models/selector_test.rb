@@ -28,9 +28,16 @@ class SelectorTest < ActiveSupport::TestCase
 
       children.each do |child|
         assert_not_nil(child, "child should not be null for this test")
-        # assert_not_nil ( child.parent_selector_id, "each child must have a parent_selector_id" )
+        assert_not_nil child.parent_selector_id, "each child must have a parent_selector_id"
         assert_equal( parent, child.parent, "a parent's child's parent must equal the original parent at all times" )
       end
+    end
+  end
+
+  test "model returns a valid object" do
+    Selector.all.each do |selector|
+      assert_not_nil selector.model, "model for selector should not be nil"
+      assert_equal(selector.model.superclass, ActiveRecord::Base, "model returned by selector must be a subclass of ActiveRecord::Base" )
     end
   end
 

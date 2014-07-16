@@ -26,8 +26,6 @@ class FullScrapeWorker
       # for now just look at immediate url for the scrape resource
       (0..0).each do |n| # placeholder page traversal
 
-        puts "in page traversal loop"
-
         # down the road, extract html and send it off for parsing while continuing with pagination crawl
 
         top_selectors = Selector.where(id: resource.id, top_level: true)
@@ -61,7 +59,7 @@ class FullScrapeWorker
 
             # validate new model
 
-            puts "new_model --->#{new_model.inspect}"
+            puts "new_model ---> #{new_model.inspect}"
             # new_model.non_duplicative_save
 
           end # end items iteration
