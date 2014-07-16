@@ -11,23 +11,19 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
 
       authenticated_user = login(user)
 
-      authenticated_user.browses_site
+      create_circle
+  end
 
-    end
+  private
 
-    private
-
-    module CustomDsl
-      def browses_site
+    def create_circle
         post "api/circles", :circle => {:institution_id => 3, :user_id => 59, :circle_name => "CIRCLE"}, :format => :json
         assert_response :success
         assert assigns(:circle)
-      end
     end
 
     def login(user)
       open_session do |sess|
-        sess.extend(CustomDsl)
         sess.https!
         sess.post "api/sessions", email: "jdoe@williams.edu", password: "test", :format => :json
         assert_not_nil session[:user_id]
