@@ -25,15 +25,22 @@ There will be a few primary tasks that the API will handle:
 - **Push Notifications** messages sent to either google or apple in response to a change in system state that necessitates notifying users. Includes messages, event updates, circle additions, and more.
 
 ## Monitoring Points
-- Our custom API: thor.peckapp.com:3500/api/
+- Our custom API: buri.peckapp.com:3500/api/
  - nothing here as of yet... could display some public status information
 - PHPMyAdmin: magni.peckapp.com/sqladmin
  - authenticate with appropriate mySQL database information
-- Sideqik task monitoring: thor.peckapp.com:3500/tasks
+- Sidekiq task monitoring: buri.peckapp.com:3500/tasks
  - will be setting up nginx http authentication for access to this site
-- Kibana Log Monitoring: kibana.thor.peckapp.com
- - currently only on new thor server without DNS connection
+- Kibana Log Monitoring: buri.peckapp.com:9222
+ - currently only on new buri server without DNS connection
  - will be setting up nginx http authentication for access to this site
+
+### Config Files
+- Nginx
+ - /opt/nginx/conf/nginx.conf
+ - /opt/nginx/conf/available-sites/*
+- Kibana
+ - /usr/share/nginx/kibana3/config.js
 
 ## Production Environment
 
