@@ -12,6 +12,7 @@ module Api
       end
 
       def destroy
+        @user = User.find(session[:user_id])
         session[:user_id] = nil
         session[:institution_id] = nil
       end
