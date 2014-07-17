@@ -61,21 +61,4 @@ class UltimateTestHelper < ActionController::TestCase
     def is_subclass?
       self.class.superclass == UltimateTestHelper
     end
-
-    def login(user)
-      open_session do |sess|
-        sess.https!
-        sess.post "api/sessions", email: "theMan@williams.edu", password: "testingpass", :format => :json
-        assert_not_nil session[:user_id], "the session does not exist"
-      end
-    end
-
-    # def super_create_user
-    #   #super create user
-    #   patch :super_create, :user => {:first_name => "Ju", :last_name => "Dr", :email => "theMan@williams.edu", :password => "testingpass", :password_confirmation => "testingpass"}, :format => :json
-    #   user = assigns(:user)
-    #   assert_response :success, "no response from database"
-    #   assert_not_nil user, "user was not super created properly"
-    #   return user
-    # end
 end

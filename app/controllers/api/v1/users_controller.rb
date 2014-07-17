@@ -8,7 +8,7 @@ module Api
       respond_to :json
 
       def index
-        @users = User.where("users.first_name IS NOT NULL")
+        @users = specific_index(User, params)
       end
 
       def show
