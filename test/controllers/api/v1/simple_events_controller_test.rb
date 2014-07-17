@@ -15,6 +15,6 @@ class SimpleEventsControllerControllerTest < UltimateTestHelper
   end
 
   def teardown
-     ActionController::Parameters.action_on_unpermitted_parameters = false
+    ActionController::Parameters.action_on_unpermitted_parameters = false
   end
 end
