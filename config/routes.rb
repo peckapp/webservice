@@ -82,10 +82,9 @@ Rails.application.routes.draw do
     end
   end
 
-  # scraping capabilities and other automated tasks
-  namespace :tasks do
-    get 'rss_scraper/scrape'
-  end
+  # api status and version information
+  get 'apistatus', to: 'api_status#index', via: [:get] 
+  get 'api', to: redirect('apistatus')
 
   mount Sidekiq::Web, at: '/tasks'
 
