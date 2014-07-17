@@ -1,7 +1,6 @@
 class ApplicationController < ActionController::Base
 
   #
-<<<<<<< HEAD
   # def sanitize_stuff(params_hash)
   #   params_hash.each do |param|
   #     helpers.sanitize(param)
