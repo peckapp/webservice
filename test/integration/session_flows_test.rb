@@ -39,7 +39,7 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
 
     def super_create_user
       #super create user
-      patch "/api/users/1/super_create", :user => {:first_name => "J", :last_name => "D", :email => "jdoe@williams.edu", :password => "test", :password_confirmation => "test"}, :format => :json
+      patch "/api/users/1/super_create", :user => {:first_name => "J", :last_name => "D", :email => "jdoe@williams.edu", :password => "testing", :password_confirmation => "testing"}, :format => :json
       user = assigns(:user)
       assert_response :success, "no response from database"
       assert_not_nil user, "user was not super created properly"
@@ -55,12 +55,17 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
       assert_nil user.password_hash, "pw hash should be nil with wrong pw confirmation"
     end
 
+    def create_circle
+      post "api/circles", :circle => {:institution_id => 3, :user_id => 59, :circle_name => "CIRCLE"}, :format => :json
+      assert_response :success
+      assert assigns(:circle)
+    end
+
     def login(user)
       open_session do |sess|
-        sess.https!
-        sess.post "api/sessions", email: "jdoe@williams.edu", password: "test", :format => :json
-        assert_not_nil session[:user_id], "the session does not exist"
-      end
+      sess.https!
+      sess.post "api/sessions", email: "jdoe@williams.edu", password: "testing", :format => :json
+      assert_not_nil session[:user_id], "the session does not exist"
     end
 
     def create_circle
@@ -76,4 +81,5 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
       assert_response :success, "no response from database"
       assert_not_nil event.id, "simple event was not created properly"
     end
+  end
 end
