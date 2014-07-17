@@ -1,32 +1,24 @@
 class User < ActiveRecord::Base
   include ModelNormalValidations
   include ModelBeforeSaveValidations
-  # verified
-  ########
+
   # each user has an encrypted secure password
   attr_accessor :enable_strict_validation, :password
 
   EMAIL_REGEX =/\A[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}\Z/
-  # validate :password_is_not_blank, :if => :enable_strict_validation
+
+  ###############################
+  ##                           ##
+  ##        VALIDATIONS        ##
+  ##                           ##
+  ###############################
+
   validates :password, :presence => true, :length => {:minimum => 5}, :if => :enable_strict_validation
   validates :password_confirmation, :presence => true, if: lambda { |m| m.password.present? }
   validates_confirmation_of :password, if: ->{ password.present? }
   validates :first_name, :presence => true, :if => :enable_strict_validation
   validates :last_name, :presence => true, :if => :enable_strict_validation
   validates :email, :uniqueness => true, :presence => true, :length => {:maximum => 50}, :format => {:with => EMAIL_REGEX}, :if => :enable_strict_validation
-  # validates :authentication_token, :presence => true, :uniqueness => true, :if => :enable_strict_validation
-  ########
-
-  #### Callbacks #######
-  before_save :encrypt_password
-  before_create :generate_api_key
-  # before_save :sanitize_user
-  # before_create :sanitize_user
-  # before_update :sanitize_user
-  ######################
-
-
-  #### Validations ###############
   validates :institution_id, :presence => true, :numericality => { :only_integer => true }
   validates :facebook_link, :uniqueness => true, :allow_nil => true
   validates :facebook_token, :uniqueness => true, :allow_nil => true
@@ -34,8 +26,20 @@ class User < ActiveRecord::Base
   validate :correct_user_types
 
   ###############################
+  ##                           ##
+  ##         CALLBACKS         ##
+  ##                           ##
+  ###############################
 
-  ################################# Associations ####################################
+  before_save :encrypt_password
+  before_create :generate_api_key
+
+  ###############################
+  ##                           ##
+  ##       ASSOCIATIONS        ##
+  ##                           ##
+  ###############################
+
   # user's home institution ###
   belongs_to :institution #
   ###############################
@@ -81,9 +85,12 @@ class User < ActiveRecord::Base
   has_many :push_notifications #
   #####################
 
-  ######################################################################################
+  ###############################
+  ##                           ##
+  ##      HELPER METHODS       ##
+  ##                           ##
+  ###############################
 
-  ### Methods ###
   def self.authenticate(email, password)
     user = self.where(:email => email).first
 
@@ -115,17 +122,4 @@ class User < ActiveRecord::Base
         self.api_key = SecureRandom.hex(25)
       end while self.class.exists?(api_key: api_key)
     end
-    #
-    # def password_is_not_blank
-    #   errors.add(:password, "must not be blank") unless password_digest.present?
-    #   # && self.enable_strict_validation
-    # end
-
-  #
-  # def sanitize_user
-  #   sanitize_everything(attributes)
-  # end
-  #
-  # private
-  #   attributes = [id, institution_id, first_name, last_name, username, blurb, facebook_link, facebook_token, password_digest, api_key, active, created_at, updated_at, authentication_token]
 end

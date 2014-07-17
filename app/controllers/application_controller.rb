@@ -1,21 +1,6 @@
 class ApplicationController < ActionController::Base
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
-  # protect_from_forgery with: :exception
-  # def helpers
-  #   Helper.instance
-  # end
-  #
-  # class Helper
-  #   include ActionView::Helpers::TextHelper
-  #   include ActionView::Helpers::SanitizeHelper
-  # end
-  #
-  # def sanitize_stuff(params_hash)
-  #   params_hash.each do |param|
-  #     helpers.sanitize(param)
-  #   end
-  # end
+
+  # 
   def confirm_logged_in
     unless session[:user_id]
       render :file => "public/401.html", :status => :unauthorized
@@ -24,11 +9,6 @@ class ApplicationController < ActionController::Base
       return true
     end
   end
-
-  # def confirm_correct_school(strong_params)
-  #   user = User.find(session[:user_id])
-  #   strong_params[:institution_id] = user.institution_id
-  # end
 
   def restrict_access
     authenticate_or_request_with_http_token do |token, options|
