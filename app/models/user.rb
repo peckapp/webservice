@@ -85,14 +85,14 @@ class User < ActiveRecord::Base
 
   ### Methods ###
   def self.authenticate(email, password)
-   user = self.where(:email => email).first
+    user = self.where(:email => email).first
 
-   if user && user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
-     user
-   else
-     errors.add(:password, "is invalid for provided email")
-   end
- end
+    if user && user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
+      user
+    else
+      errors.add(:password, "is invalid for provided email")
+    end
+  end
 
  def encrypt_password
    if password.present?

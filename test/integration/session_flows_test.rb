@@ -2,35 +2,78 @@ require 'test_helper'
 
 class SessionFlowsTest < ActionDispatch::IntegrationTest
 
-  test "login and browse" do
-      https!
-      patch "/api/users/2/super_create", :user => {:first_name => "John", :last_name => "Doe", :email => "jdoe@williams.edu", :password => "test", :password_confirmation => "test"}, :format => :json
+  ##########################################
+  ##                                      ##
+  ##       Session integration tests      ##
+  ##                                      ##
+  ##########################################
+
+  test "super create, login, create stuff" do
+    https!
+
+    # super create user
+    user = super_create_user
+
+    # attempt to super create w/ wrong password
+    super_create_fail
+
+    # authenticate user
+    login(user)
+
+    # create a circle
+    create_circle
+
+    # create an event
+    create_simple_event
+
+  end
+
+  ##########################################
+  ##                                      ##
+  ##            End of testing            ##
+  ##        Start of helper methods       ##
+  ##                                      ##
+  ##########################################
+
+  private
+
+    def super_create_user
+      #super create user
+      patch "/api/users/1/super_create", :user => {:first_name => "J", :last_name => "D", :email => "jdoe@williams.edu", :password => "test", :password_confirmation => "test"}, :format => :json
       user = assigns(:user)
-      assert_response :success
-      assert_not_nil user
-
-      authenticated_user = login(user)
-
-      authenticated_user.browses_site
-
+      assert_response :success, "no response from database"
+      assert_not_nil user, "user was not super created properly"
+      return user
     end
 
-    private
-
-    module CustomDsl
-      def browses_site
-        post "api/circles", :circle => {:institution_id => 3, :user_id => 59, :circle_name => "CIRCLE"}, :format => :json
-        assert_response :success
-        assert assigns(:circle)
-      end
+    def super_create_fail
+      #super create user
+      patch "/api/users/2/super_create", :user => {:first_name => "John", :last_name => "Doe", :email => "jdoe1@williams.edu", :password => "anothertest", :password_confirmation => "wrongpassword"}, :format => :json
+      user = assigns(:user)
+      assert_response :success, "no response from database"
+      assert_nil user.password_salt, "pw salt should be nil with wrong pw confirmation"
+      assert_nil user.password_hash, "pw hash should be nil with wrong pw confirmation"
     end
 
     def login(user)
       open_session do |sess|
-        sess.extend(CustomDsl)
         sess.https!
         sess.post "api/sessions", email: "jdoe@williams.edu", password: "test", :format => :json
-        assert_not_nil session[:user_id]
+        assert_not_nil session[:user_id], "the session does not exist"
       end
+    end
+
+    def create_circle
+      post "api/circles", :circle => {:institution_id => 3, :user_id => 59, :circle_name => "CIRCLE"}, :format => :json
+      circle = assigns(:circle)
+      assert_response :success, "no response from database"
+      assert_not_nil circle.id, "circle was not created properly"
+    end
+
+    def create_simple_event
+      post "api/simple_events", :simple_event => {:title => "Super Duper Dope Event", :institution_id => 1, :user_id => 3, :open => true, :start_date => DateTime.current, :end_date => DateTime.current + 1.hour}, :format => :json
+      event = assigns(:simple_event)
+      assert_response :success, "no response from database"
+      assert_not_nil event.id, "simple event was not created properly"
     end
 end
