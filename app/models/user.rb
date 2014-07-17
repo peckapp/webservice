@@ -84,6 +84,7 @@ class User < ActiveRecord::Base
   ######################################################################################
 
   ### Methods ###
+
   def self.authenticate(email, password)
     user = self.where(:email => email).first
 
@@ -115,6 +116,7 @@ class User < ActiveRecord::Base
         self.api_key = SecureRandom.hex(25)
       end while self.class.exists?(api_key: api_key)
     end
+
     #
     # def password_is_not_blank
     #   errors.add(:password, "must not be blank") unless password_digest.present?
