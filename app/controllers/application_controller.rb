@@ -16,27 +16,19 @@ class ApplicationController < ActionController::Base
   #     helpers.sanitize(param)
   #   end
   # end
+
+  # allows all classes to inherit
+  before_action :confirm_minimal_access
+
+
   def confirm_logged_in
-    unless session[:authentication_token]
+    unless session[:authentication_token] || session[:authentication_token] == params[:authentication_token]
       render :file => "public/401.html", :status => :unauthorized
       return false
     else
       return true
     end
   end
-
-  def confirm_authentication_token
-    if confirm_logged_in
-      user = User.find(session[:user_id])
-      unless params[:authentication_token] == user.authentication_token
-        render :file => "public/401.html", :status => :unauthorized
-        return false
-      end
-    end
-    return true
-  end
-
-
 
   # def confirm_correct_school(strong_params)
   #   user = User.find(session[:user_id])
@@ -44,12 +36,27 @@ class ApplicationController < ActionController::Base
   # end
 
   def confirm_minimal_access
-    unless params[:api_key] && session[:user_id]
-      render :file => "public/401.html", :status => :unauthorized
-      return false
-    else
+    # check validity of existing session
+    if session[:user_id] == params[:user_id] && session[:api_key] == params[:api_key]
       return true
+    else
+      # otherwise attempts to create session for that user
+      user = User.find(params[:user_id])
+      unless user.blank?
+        # checks validity of api_key
+        if user.api_key == params[:api_key]
+
+          # create session for existing user
+          session[:user_id] = user.id
+          session[:api_key] = user.api_key
+          return true
+        else
+          # Invalid api key
+          logger.warn "Attempted to confirm minimal access for user id: [#{user.id}] with invalid api key: [#{user.api_key}]"
+        end
+      end
     end
+    return false
   end
 
   # def restrict_access

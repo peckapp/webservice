@@ -15,24 +15,6 @@ module Api
         end
       end
 
-      # set after you press the button confirming which institution to view while not logged in.
-      def set_public
-        session[:institution_id] = params[:institution_id]
-
-        
-        unless session[:user_id]
-          session[:user_id] = params[:user_id]
-        end
-        # unless session[:user_id] || User.where(:api_key => params[:api_key]).first
-        #   session[:api_key] = params[:api_key]
-        # end
-      end
-
-      # after you scroll in the institution selection screen
-      def switch_institution
-        session[:institution_id] = nil
-      end
-
       def destroy
         @user = User.find(session[:user_id])
         session[:user_id] = nil

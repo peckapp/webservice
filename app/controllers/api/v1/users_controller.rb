@@ -18,6 +18,8 @@ module Api
 
       def create
         @user = User.create(user_create_params)
+        session[:user_id] = @user.id
+        session[:api_key] = @user.api_key
       end
 
       def super_create
