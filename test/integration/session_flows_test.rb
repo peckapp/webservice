@@ -63,9 +63,10 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
 
     def login(user)
       open_session do |sess|
-      sess.https!
-      sess.post "api/sessions", email: "jdoe@williams.edu", password: "testing", :format => :json
-      assert_not_nil session[:user_id], "the session does not exist"
+        sess.https!
+        sess.post "api/sessions", email: "jdoe@williams.edu", password: "testing", :format => :json
+        assert_not_nil session[:user_id], "the session does not exist"
+      end
     end
 
     def create_circle
@@ -81,5 +82,4 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
       assert_response :success, "no response from database"
       assert_not_nil event.id, "simple event was not created properly"
     end
-  end
 end
