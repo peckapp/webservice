@@ -1,11 +1,32 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
+#
+# def seed_all
+#   create_misc
+#   create_institutions
+#   create_williams_dining_opps
+#   create_williams_dining_places
+#   create_dining_opps
+#   seed_app_dining_periods
+#   seed_williams_rss_scraping
+# end
+
+def create_misc
+  (1..10).each do |n|
+    Circle.create institution_id: 1, user_id: 1, circle_name: "Circle #{n}"
+  end
+
+  (1.50).each do |n|
+    User.create institution_id: (rand(3) + 1), first_name: "name#{n}", last_name: "last#{n}", email: "test@example.edu"
+  end
+end
 
 
 # basic internal institutions for the development database
 def create_institutions
-  Institution.create( name: "Demo Institution", street_address: "1234 Main St.", city: "Williamstown", state: "MA", country: "USA", gps_longitude: -73.202887, gps_latitude: 42.710570, range: 10.0, configuration_id: 1, api_key: "DEMO01267" )
-  Institution.create( name: "Development", street_address: "123 Main St.", city: "Anytown", state: "NY", country: "USA", gps_longitude: -74.062958, gps_latitude: 40.869911, range: 15.0, configuration_id: 1, api_key: "DEVELOPMENT" )
+  Institution.create( name: "Demo Institution", street_address: "1234 Main St.", city: "Williamstown", state: "MA", country: "USA", gps_longitude: -73.202887, gps_latitude: 42.710570, range: 0.002, configuration_id: 1, api_key: "DEMO01267" )
+  Institution.create( name: "Development", street_address: "123 Main St.", city: "Anytown", state: "NY", country: "USA", gps_longitude: -74.062958, gps_latitude: 40.869911, range: 0.005, configuration_id: 2, api_key: "DEVELOPMENT" )
+  Institution.create( name: "Williams", street_address: "880 Main St.", city: "Williamstown", state: "MA", country: "USA", gps_longitude: -73.202887, gps_latitude: 42.710570, range: 0.001, configuration_id: 3, api_key: "WILLIAMS" )
 end
 
 # insert dining opportunities for Williams College
@@ -51,12 +72,12 @@ def seed_app_dining_periods
   }
 end
 
-def seed_rss_scraping
+def seed_williams_rss_scraping
   ResourceType.create info: "Simple Events", resource_name: "simple_event", model_name: "SimpleEvent"
   ResourceType.create info: "Athletic Events", resource_name: "athletic_event", model_name: "AthleticEvent"
   ResourceType.create info: "Menu Items", resource_name: "menu_item", model_name: "MenuItem"
 
-  ScrapeResource.create url: "https://events.williams.edu/widget/view?schools=williams&days=90&num=100&format=rss", institution_id: 2, validated: true, resource_type_id: 1
+  ScrapeResource.create url: "https://events.williams.edu/widget/view?schools=williams&days=90&num=100&format=rss", institution_id: 3, validated: true, resource_type_id: 1
 
   DataResource.create info: "rss feed simple event title", column_name: "title", resource_type_id: 1
   DataResource.create info: "rss feed simple event description", column_name: "event_description", resource_type_id: 1
