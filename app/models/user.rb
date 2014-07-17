@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   # each user has an encrypted secure password
   attr_accessor :enable_strict_validation, :password
 
-  EMAIL_REGEX =/\A[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}\Z/
+  EMAIL_REGEX =/\A[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}\Z/
   # validate :password_is_not_blank, :if => :enable_strict_validation
   validates :password, :presence => true, :length => {:minimum => 5}, :if => :enable_strict_validation
   validates :password_confirmation, :presence => true, if: lambda { |m| m.password.present? }
