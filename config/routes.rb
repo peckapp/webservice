@@ -92,8 +92,7 @@ Rails.application.routes.draw do
   end
 
   # api status and version information
-  get 'apistatus', to: 'api_status#index', via: [:get]
-  get 'api', to: redirect('apistatus')
+  get 'api', to: 'api#index', via: [:get]
 
   mount Sidekiq::Web, at: '/tasks'
 
