@@ -95,7 +95,6 @@ gem 'hirb', '~> 0.7.2'
 gem 'validates_timeliness', '~> 3.0'
 
 
-
 ### Development-specific gems
 group :development do
     # Capistrano for deployment to server: https://github.com/capistrano/capistrano
