@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   #   end
   # end
   def confirm_logged_in
-    unless session[:user_id]
+    unless session[:user_id] && params[:authentication_token] == session[:authentication_token]
       render :file => "public/401.html", :status => :unauthorized
       return false
     else
@@ -30,11 +30,20 @@ class ApplicationController < ActionController::Base
   #   strong_params[:institution_id] = user.institution_id
   # end
 
-  def restrict_access
-    authenticate_or_request_with_http_token do |token, options|
-      User.exists?(api_key: token)
+  def confirm_minimal_access
+    unless session[:api_key]
+      render :file => "public/401.html", :status => :unauthorized
+      return false
+    else
+      return true
     end
   end
+
+  # def restrict_access
+  #   authenticate_or_request_with_http_token do |token, options|
+  #     User.exists?(api_key: token)
+  #   end
+  # end
 
   def specific_index(model, params_hash)
 

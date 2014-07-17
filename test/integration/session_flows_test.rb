@@ -55,12 +55,6 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
       assert_nil user.password_hash, "pw hash should be nil with wrong pw confirmation"
     end
 
-    def create_circle
-      post "api/circles", :circle => {:institution_id => 3, :user_id => 59, :circle_name => "CIRCLE"}, :format => :json
-      assert_response :success
-      assert assigns(:circle)
-    end
-
     def login(user)
       open_session do |sess|
       sess.https!
