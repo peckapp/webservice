@@ -1,9 +1,13 @@
 class Institution < ActiveRecord::Base
   include ModelNormalValidations
   include ModelBeforeSaveValidations
-# verified
 
-  ### Validations ###
+  ###############################
+  ##                           ##
+  ##        VALIDATIONS        ##
+  ##                           ##
+  ###############################
+
   validates :name, :presence => true
   validates :street_address, :presence => true
   validates :city, :presence => true
@@ -15,15 +19,13 @@ class Institution < ActiveRecord::Base
   validates :configuration_id, :presence => true, :numericality => { :only_integer => true }, :uniqueness => true
   validates :api_key, :presence => true, :uniqueness => true
   validate :correct_institution_types
-  ####################
 
-  ### Callbacks ###
-  # before_save :sanitize_institution
-  # before_create :sanitize_institution
-  # before_update :sanitize_institution
-  ######################
+  ###############################
+  ##                           ##
+  ##        ASSOCIATIONS       ##
+  ##                           ##
+  ###############################
 
-  ### Associations ####
   # home to these users
   has_many :users #
 
@@ -74,9 +76,13 @@ class Institution < ActiveRecord::Base
   has_many :push_notifications
   has_many :subscriptions
   has_many :user_device_tokens
-  #####################################
 
-  ################ methods #####################
+  ###############################
+  ##                           ##
+  ##      HELPER METHODS       ##
+  ##                           ##
+  ###############################
+
   private
     def correct_institution_types
       is_correct_type(name, String, "string", :name)
@@ -86,12 +92,4 @@ class Institution < ActiveRecord::Base
       is_correct_type(country, String, "string", :country)
       is_correct_type(api_key, String, "string", :api_key)
     end
-  #
-  # def sanitize_institution
-  #   sanitize_everything(attributes)
-  # end
-
-  # private
-    # attributes = [id, name, street_address, city, state, country, gps_longitude, gps_latitude, range, configuration_id, api_key, created_at, updated_at]
-
 end

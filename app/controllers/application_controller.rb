@@ -1,16 +1,7 @@
 class ApplicationController < ActionController::Base
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
-  # protect_from_forgery with: :exception
-  # def helpers
-  #   Helper.instance
-  # end
+
   #
-  # class Helper
-  #   include ActionView::Helpers::TextHelper
-  #   include ActionView::Helpers::SanitizeHelper
-  # end
-  #
+<<<<<<< HEAD
   # def sanitize_stuff(params_hash)
   #   params_hash.each do |param|
   #     helpers.sanitize(param)
@@ -19,7 +10,6 @@ class ApplicationController < ActionController::Base
 
   # allows all classes to inherit
   before_action :confirm_minimal_access
-
 
   def confirm_logged_in
     unless session[:authentication_token] || session[:authentication_token] == params[:authentication_token]
@@ -30,10 +20,17 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # def confirm_correct_school(strong_params)
-  #   user = User.find(session[:user_id])
-  #   strong_params[:institution_id] = user.institution_id
-  # end
+
+  def confirm_authentication_token
+    if confirm_logged_in
+      user = User.find(session[:user_id])
+      unless params[:authentication_token] == user.authentication_token
+        render :file => "public/401.html", :status => :unauthorized
+        return false
+      end
+    end
+    return true
+  end
 
   def confirm_minimal_access
     # check validity of existing session
