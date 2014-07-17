@@ -42,7 +42,7 @@ module Api
 
         # return a default image url if it is null
         def valid_event_image(event)
-          if event.image_url = "null"
+          if event.image_url.blank? || event.image_url = "null"
             "/images/event.png"
           else
             event.image_url

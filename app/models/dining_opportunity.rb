@@ -38,6 +38,14 @@ class DiningOpportunity < ActiveRecord::Base
   # private
   #   attributes = [id, dining_opportunity_type, institution_id, created_at, updated_at]
 
+
+
+  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  # These methods perform an excessive number of database queries. May want to eventually
+  # store the opportunity start and end times in the database and update them with a sidetiq job
+  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
   def earliest_start_latest_end(day_of_week)
     early = earliest_start(day_of_week)
     late = latest_end(day_of_week)
