@@ -91,6 +91,11 @@ class User < ActiveRecord::Base
   ##                           ##
   ###############################
 
+<<<<<<< HEAD
+=======
+  ### Methods ###
+
+>>>>>>> 7765f999f4621836c1afc11d402ddf38d3eec368
   def self.authenticate(email, password)
     user = self.where(:email => email).first
 
@@ -122,4 +127,21 @@ class User < ActiveRecord::Base
         self.api_key = SecureRandom.hex(25)
       end while self.class.exists?(api_key: api_key)
     end
+<<<<<<< HEAD
+=======
+
+    #
+    # def password_is_not_blank
+    #   errors.add(:password, "must not be blank") unless password_digest.present?
+    #   # && self.enable_strict_validation
+    # end
+
+  #
+  # def sanitize_user
+  #   sanitize_everything(attributes)
+  # end
+  #
+  # private
+  #   attributes = [id, institution_id, first_name, last_name, username, blurb, facebook_link, facebook_token, password_digest, api_key, active, created_at, updated_at, authentication_token]
+>>>>>>> 7765f999f4621836c1afc11d402ddf38d3eec368
 end

@@ -36,6 +36,14 @@ class DiningOpportunity < ActiveRecord::Base
   ##                           ##
   ###############################
 
+
+
+  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  # These methods perform an excessive number of database queries. May want to eventually
+  # store the opportunity start and end times in the database and update them with a sidetiq job
+  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
   def earliest_start_latest_end(day_of_week)
     early = earliest_start(day_of_week)
     late = latest_end(day_of_week)

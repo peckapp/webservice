@@ -50,17 +50,19 @@ There will be a few primary tasks that the API will handle:
 
 ## Production Environment
 
-While this application will be built in development environments on the Mac OSX laptops of the developers, the production environment will be Ubuntu 12.04 running the Nginx web server. (CentOS is another more stable server linux distribution that is an optino as well. It is less feature-rich however.)
+While this application will be built in development environments on the Mac OSX laptops of the developers, the production environment will be CentOS 6.5 running the Nginx web server, with a secondary server running the mySQL database.
 
-There are many options for the structure of the backend system, several of which are described in the Digital Ocean documentation linked to in the wiki pages.
+There are many additional options for the structure of the backend system, several of which are described in the Digital Ocean documentation linked to in the wiki pages.
 
 ### Recurring Deployment
 Deployment of the rails application will be automated using [Capistrano](http://capistranorb.com) to update the server with the latest code. There will be three environments setup withing the Capistrano files that can be used to deploy the application.
 
 #### Deploying Code
 - setting up ssh keys on the server
- -
-- to deploy code: `cap development deploy`
+ - have Aaron place your key in the `authorized_keys` file of the deployment user.
+- to deploy code:
+ - ensure necessary keys are in the ssh agent with `ssh-add /path/to/key`
+ - `cap development deploy`
 - other options from [capistrano-rails](https://github.com/capistrano/rails)
  - running migrations `cap development deploy:migrate`
  - pre-complie assets `cap development deploy:compile_assets`
