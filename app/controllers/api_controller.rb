@@ -1,5 +1,5 @@
 # a controller to display status infromation on the api
-class ApiStatusController < ActionController::Base
+class ApiController < ActionController::Base
 
   def index
 
