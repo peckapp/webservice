@@ -1,6 +1,9 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or current_or_create_newd alongside the db with db:setup).
-#
+
+require 'active_record/fixtures'
+# uses fixtures to seed the database
+# Fixtures.create_fixtures("#{Rails.root}/test/fixtures", "fixture_name")
 
 
 def current_or_create_new_misc

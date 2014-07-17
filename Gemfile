@@ -34,6 +34,7 @@ gem 'bcrypt', '~> 3.1.7'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+
 ### Administrative Capabilities
 # Active Admin for highly customizable interfaces
 gem 'activeadmin', github: 'gregbell/active_admin'
@@ -43,7 +44,12 @@ gem 'devise'
 
 ### FILE MANAGEMENT
 # Paperclip for handling larger files, mostly user-uploaded images: https://github.com/thoughtbot/paperclip
-gem "paperclip", "~> 4.1"
+gem 'paperclip', '~> 4.2.0'
+
+
+### DATABASE INTERACTIONS
+# ransack for more powerful database queries. This branch supports only rails 4.1 https://github.com/activerecord-hackery/ransack/tree/rails-4.1
+gem "ransack", github: "activerecord-hackery/ransack", branch: "rails-4.1"
 
 
 ### SCRAPING
@@ -90,7 +96,7 @@ gem 'validates_timeliness', '~> 3.0'
 
 
 
-# development-specific gems
+### Development-specific gems
 group :development do
     # Capistrano for deployment to server: https://github.com/capistrano/capistrano
     gem 'capistrano', '~> 3.2.1'
