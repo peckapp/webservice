@@ -4,9 +4,9 @@ require 'ultimate_test_helper'
 class DiningOpportunitiesControllerTest < UltimateTestHelper
   def setup
     @controller = Api::V1::DiningOpportunitiesController.new
-    @attributes = [:id, :dining_opportunity_type, :institution_id, :format]
-    @params_index = {:format => :json}
-    @params_show = {:id => 2, :dining_opportunity_type => "dinner", :institution_id => 1, :format => :json}
+    @attributes = [:id, :dining_opportunity_type, :institution_id, :format, :authentication]
+    @params_index = {:format => :json, :authentication => session_create}
+    @params_show = {:id => 2, :dining_opportunity_type => "dinner", :institution_id => 1, :format => :json, :authentication => session_create}
     @params_create = {:dining_opportunity_type => "lunch", :institution_id => 2}
     @params_update = {:dining_opportunity_type => "breakfast"}
     @model_type = :dining_opportunity

@@ -23,11 +23,22 @@ module Api
       end
 
       def super_create
+        # params in the user block
+        uparams = params[:user]
+
+        # params for super creating, making mass assignment unecessary.
+        sign_up_params = user_signup_params
+
         @user = User.find(params[:id])
+
+        # makes it necessary for to have a password and password confirmation.
         @user.enable_strict_validation = true
-        user_signup_params[:password] = params[:password]
-        user_signup_params[:password_confirmation] = params[:password_confirmation]
-        @user.update_attributes(user_signup_params)
+
+        # assigns the password and password_confirmation from the values in the user block of params.
+        sign_up_params[:password] = uparams[:password]
+        sign_up_params[:password_confirmation] = uparams[:password_confirmation]
+
+        @user.update_attributes(sign_up_params)
       end
 
       def update

@@ -14,17 +14,21 @@ class UltimateTestHelper < ActionController::TestCase
     # the_user = User.authenticate("bobbyboucher@williams.edu", "testingpass")
 
     # start session (provide session variable :user_id when making requests)
+
+    puts "\n@auth --------> #{@auth}"
+  end
+
+  def session_create
     session[:institution_id] = 1
     session[:user_id] = 3
-    session[:api_key] = 1111111111111111111111111
+    session[:api_key] = User.find(3).api_key
 
     puts "\nSESSION: #{session}"
 
     @auth = {}
 
     request.session.each { |key, value| @auth[key] = value }
-
-    puts "\n@auth --------> #{@auth}"
+    return @auth
   end
 
   test "should_get_index" do

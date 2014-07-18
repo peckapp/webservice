@@ -14,12 +14,21 @@ module Api
       end
 
       def destroy
-        @user = User.find(params[:id])
+        # should we add these checks?
+        # params[:id] will be the one sent in the path like api/v1/sessions/:id
+        # @user = User.find(params[:id])
+        #
+        # # make sure the session matches with the user's id
+        # if @user
+        #   if session[:user_id] = @user.id
+        #     session[:user_id] = nil
+        #     session[:authentication_token] = nil
+        #     @user.authentication_token = nil
+        #   end
+        # end
         session[:user_id] = nil
-        # session[:authentication_token] = nil
         session[:authentication_token] = nil
         @user.authentication_token = nil
-        # params[:authentication_token] = nil
       end
     end
   end

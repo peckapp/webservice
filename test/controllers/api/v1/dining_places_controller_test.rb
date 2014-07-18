@@ -4,9 +4,9 @@ require 'ultimate_test_helper'
 class DiningPlacesControllerTest < UltimateTestHelper
   def setup
     @controller = Api::V1::DiningPlacesController.new
-    @attributes = [:id, :institution_id, :name, :details_link, :gps_longitude, :gps_latitude, :range, :format]
-    @params_index = {:format => :json}
-    @params_show = {:id => 11, :institution_id => 1, :name => "Driscoll", :format => :json}
+    @attributes = [:id, :institution_id, :name, :details_link, :gps_longitude, :gps_latitude, :range, :format, :authentication]
+    @params_index = {:format => :json, :authentication => session_create}
+    @params_show = {:id => 11, :institution_id => 1, :name => "Driscoll", :format => :json, :authentication => session_create}
     @params_create = {:institution_id => 1, :name => "Paresky"}
     @params_update = {:name => "Mission"}
     @model_type = :dining_place
