@@ -1,9 +1,4 @@
 class ApplicationController < ActionController::Base
-  #
-  # def initialize
-  #   super
-  #   @auth = params[:authentication]
-  # end
 
   # allows all classes to inherit
   before_action :confirm_minimal_access
@@ -33,7 +28,7 @@ class ApplicationController < ActionController::Base
 
     if auth_params_exist
       # check validity of existing session
-      if session[:user_id] == auth[:user_id] && session[:api_key] == auth[:api_key]
+      if session[:user_id] == auth[:user_id] && session[:api_key] == auth[:api_key] 
         return true
       else
         # otherwise attempts to create session for that user

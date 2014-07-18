@@ -5,8 +5,8 @@ class ActivityLogsControllerTest < UltimateTestHelper
   def setup
     @controller = Api::V1::ActivityLogsController.new
     @attributes = [:id, :institution_id, :sender, :receiver, :category, :from_event, :circle_id, :type_of_activity, :message, :read_status, :format]
-    @params_index = {:format => :json}
-    @params_show = {:id => 5, :format => :json}
+    @params_index = {:format => :json, :authentication => @auth}
+    @params_show = {:id => 5, :format => :json, :authentication => @auth }
     @params_create = {:institution_id => 3, :sender => 15, :receiver => 2, :category => "idk", :type_of_activity => "athletic", :message => "FUN FUN FUN", :read_status => false}
     @params_update = {:message => "HEYYYYYYYYYYYYYYY"}
     @model_type = :activity_log

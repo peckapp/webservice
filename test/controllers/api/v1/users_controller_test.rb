@@ -9,7 +9,7 @@ class UsersControllerTest < UltimateTestHelper
     @attributes = [:id, :institution_id, :first_name, :last_name, :username, :blurb, :facebook_link, :active, :format]
     @params_index = {:format => :json}
     @params_show = {:id => 10, :institution_id => 1, :format => :json}
-    @params_create = {:institution_id => 5}
+    @params_create = {:institution_id => 1}
     @params_update = {:first_name => "John", :active => false}
     @params_super_create = {:first_name => "John", :last_name => "Doe", :email => "jdoe@williams.edu", :password => "testagain", :password_confirmation => "testagain"}
     @model_type = :user

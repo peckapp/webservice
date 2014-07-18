@@ -2,23 +2,29 @@ require 'test_helper'
 
 class UltimateTestHelper < ActionController::TestCase
   def setup
+
     # setup a session for functional testing
-    @controller = Api::V1::UsersController.new
+
+    puts "\nGOT HERE ----> 1"
 
     # create a private user
-    patch :super_create, :id => 3, :user => {:first_name => "Ju", :last_name => "Dr", :email => "bobbyboucher@williams.edu", :password => "testingpass", :password_confirmation => "testingpass"}, :format => :json
-    user = assigns(:user)
-    assert_response :success, "no response from database"
-    assert_not_nil user, "user was not super created properly"
+    # patch :super_create, :id => 3, :user => {:first_name => "Ju", :last_name => "Dr", :email => "bobbyboucher@williams.edu", :password => "testingpass", :password_confirmation => "testingpass"},
 
     # authenticate user for new session
-    the_user = User.authenticate("bobbyboucher@williams.edu", "testingpass")
+    # the_user = User.authenticate("bobbyboucher@williams.edu", "testingpass")
 
     # start session (provide session variable :user_id when making requests)
-    session[:institution_id] = User.find(3).institution_id
-    if the_user
-      session[:user_id] = the_user.id
-    end
+    session[:institution_id] = 1
+    session[:user_id] = 3
+    session[:api_key] = 1111111111111111111111111
+
+    puts "\nSESSION: #{session}"
+
+    @auth = {}
+
+    request.session.each { |key, value| @auth[key] = value }
+
+    puts "\n@auth --------> #{@auth}"
   end
 
   test "should_get_index" do
