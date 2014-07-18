@@ -11,11 +11,11 @@ class ApplicationController < ActionController::Base
   before_action :confirm_minimal_access
 
   def confirm_logged_in
-    unless session[:authentication_token] || session[:authentication_token] == params[:authentication_token]
+    if session[:authentication_token] && session[:authentication_token] == params[:authentication_token]
+      return true
+    else
       render :file => "public/401.html", :status => :unauthorized
       return false
-    else
-      return true
     end
   end
 
