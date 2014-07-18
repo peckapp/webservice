@@ -9,14 +9,9 @@ class ApplicationController < ActionController::Base
   before_action :confirm_minimal_access
 
   def confirm_logged_in
-    return false unless auth_params_exist
-
     if session[:authentication_token] && session[:authentication_token] == params[:authentication_token]
-      puts "THIS IS YOUR SESSION: #{session.id} AT LOCATION 1"
-      puts "YOU ARE LOGGED IN"
       return true
     else
-      puts "YOU ARE NOT LOGGED IN"
       render :file => "public/401.html", :status => :unauthorized
       return false
     end
@@ -35,13 +30,10 @@ class ApplicationController < ActionController::Base
   end
 
   def confirm_minimal_access
-    puts "WE HERE"
-    
+
     if auth_params_exist
       # check validity of existing session
       if session[:user_id] == params[:user_id] && session[:api_key] == params[:api_key]
-        puts "THIS IS YOUR SESSION: #{session.id} AT LOCATION 2"
-        puts "YOU HAVE MINIMAL ACCESS"
         return true
       else
         # otherwise attempts to create session for that user
@@ -53,8 +45,6 @@ class ApplicationController < ActionController::Base
             # create session for existing user
             session[:user_id] = user.id
             session[:api_key] = user.api_key
-            puts "THIS IS YOUR SESSION: #{session.id} AT LOCATION 3"
-            puts "YOU HAVE MINIMAL ACCESS"
             return true
           else
             # Invalid api key
@@ -62,7 +52,6 @@ class ApplicationController < ActionController::Base
           end
         end
       end
-      puts "YOU DONT HAVE SHIT"
       return false
     else
       render :file => "public/401.html", :status => :unauthorized
