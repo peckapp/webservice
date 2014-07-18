@@ -45,11 +45,11 @@ module Api
         end
 
         def user_signup_params
-          params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation)
+          params.require(:user).permit(:first_name, :last_name, :email)
         end
 
         def user_update_params
-          params.require(:user).permit(:first_name, :last_name, :blurb, :password, :facebook_link, :active)
+          params.require(:user).permit(:first_name, :last_name, :blurb, :facebook_link, :active)
         end
     end
   end

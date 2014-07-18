@@ -1,21 +1,24 @@
 class ApplicationController < ActionController::Base
-
   #
-  # def sanitize_stuff(params_hash)
-  #   params_hash.each do |param|
-  #     helpers.sanitize(param)
-  #   end
+  # def initialize
+  #   super
+  #   @auth = params[:authentication]
   # end
 
   # allows all classes to inherit
   before_action :confirm_minimal_access
 
   def confirm_logged_in
-    unless session[:authentication_token] || session[:authentication_token] == params[:authentication_token]
+    return false unless auth_params_exist
+
+    if session[:authentication_token] && session[:authentication_token] == params[:authentication_token]
+      puts "THIS IS YOUR SESSION: #{session.id} AT LOCATION 1"
+      puts "YOU ARE LOGGED IN"
+      return true
+    else
+      puts "YOU ARE NOT LOGGED IN"
       render :file => "public/401.html", :status => :unauthorized
       return false
-    else
-      return true
     end
   end
 
@@ -32,34 +35,39 @@ class ApplicationController < ActionController::Base
   end
 
   def confirm_minimal_access
-    # check validity of existing session
-    if session[:user_id] == params[:user_id] && session[:api_key] == params[:api_key]
-      return true
-    else
-      # otherwise attempts to create session for that user
-      user = User.find(params[:user_id])
-      unless user.blank?
-        # checks validity of api_key
-        if user.api_key == params[:api_key]
+    puts "WE HERE"
+    
+    if auth_params_exist
+      # check validity of existing session
+      if session[:user_id] == params[:user_id] && session[:api_key] == params[:api_key]
+        puts "THIS IS YOUR SESSION: #{session.id} AT LOCATION 2"
+        puts "YOU HAVE MINIMAL ACCESS"
+        return true
+      else
+        # otherwise attempts to create session for that user
+        user = User.find(params[:user_id])
+        unless user.blank?
+          # checks validity of api_key
+          if user.api_key == params[:api_key]
 
-          # create session for existing user
-          session[:user_id] = user.id
-          session[:api_key] = user.api_key
-          return true
-        else
-          # Invalid api key
-          logger.warn "Attempted to confirm minimal access for user id: [#{user.id}] with invalid api key: [#{user.api_key}]"
+            # create session for existing user
+            session[:user_id] = user.id
+            session[:api_key] = user.api_key
+            puts "THIS IS YOUR SESSION: #{session.id} AT LOCATION 3"
+            puts "YOU HAVE MINIMAL ACCESS"
+            return true
+          else
+            # Invalid api key
+            logger.warn "Attempted to confirm minimal access for user id: [#{user.id}] with invalid api key: [#{user.api_key}]"
+          end
         end
       end
+      puts "YOU DONT HAVE SHIT"
+      return false
+    else
+      render :file => "public/401.html", :status => :unauthorized
     end
-    return false
   end
-
-  # def restrict_access
-  #   authenticate_or_request_with_http_token do |token, options|
-  #     User.exists?(api_key: token)
-  #   end
-  # end
 
   def specific_index(model, params_hash)
 
@@ -88,6 +96,25 @@ class ApplicationController < ActionController::Base
 
   private
 
+    def auth
+      if params[:authentication].blank?
+        {}
+      else
+        params[:authentication]
+      end
+
+    end
+
+    # check existence of auth params
+    def auth_params_exist
+
+      if auth[:user_id].blank? || auth[:institution_id].blank? || auth[:api_key].blank?
+        return false
+      else
+        return true
+      end
+    end
+
     def allowed_model_instances(model, auth_params)
       # basic authentication check
       model.where(institution_id: auth_params[:institution_id])
@@ -102,5 +129,4 @@ class ApplicationController < ActionController::Base
       end
       search_params
     end
-
 end
