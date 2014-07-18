@@ -33,14 +33,14 @@ class ApplicationController < ActionController::Base
 
     if auth_params_exist
       # check validity of existing session
-      if session[:user_id] == params[:user_id] && session[:api_key] == params[:api_key]
+      if session[:user_id] == auth[:user_id] && session[:api_key] == auth[:api_key]
         return true
       else
         # otherwise attempts to create session for that user
-        user = User.find(params[:user_id])
+        user = User.find(auth[:user_id])
         unless user.blank?
           # checks validity of api_key
-          if user.api_key == params[:api_key]
+          if user.api_key == auth[:api_key]
 
             # create session for existing user
             session[:user_id] = user.id
@@ -91,7 +91,6 @@ class ApplicationController < ActionController::Base
       else
         params[:authentication]
       end
-
     end
 
     # check existence of auth params
