@@ -7,8 +7,8 @@ class EventsPageUrlsControllerTest < UltimateTestHelper
     @attributes = [:id, :institution_id, :url, :type, :format, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 8, :format => :json, :authentication => session_create}
-    @params_create = {:institution_id => 2, :url => "file/path"}
-    @params_update = {:url => "another_file/path"}
+    @params_create = {:institution_id => 2, :url => "file/path", :authentication => session_create}
+    @params_update = {:url => "another_file/path", :authentication => session_create}
     @model_type = :events_page_url
     @id = 8
     ActionController::Parameters.action_on_unpermitted_parameters = :raise

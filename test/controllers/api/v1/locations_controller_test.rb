@@ -7,8 +7,8 @@ class LocationsControllerTest < UltimateTestHelper
     @attributes = [:id, :institution_id, :name, :gps_longitude, :gps_latitude, :range, :format, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 1, :name => "Bronfman", :format => :json, :authentication => session_create}
-    @params_create = {:institution_id => 1, :name => "Paresky"}
-    @params_update = {:name => "Mission"}
+    @params_create = {:institution_id => 1, :name => "Paresky", :authentication => session_create}
+    @params_update = {:name => "Mission", :authentication => session_create}
     @model_type = :location
     @id = 2
     ActionController::Parameters.action_on_unpermitted_parameters = :raise

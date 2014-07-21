@@ -8,8 +8,8 @@ class EventViewsControllerTest < UltimateTestHelper
     @attributes = [:id, :user_id, :category, :event_viewed, :date_viewed, :institution_id, :format, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 1, :user_id => 2, :institution_id => 3, :format => :json, :authentication => session_create}
-    @params_create = {institution_id: 11, user_id: 2, category: "simple", event_viewed: 5}
-    @params_update = {event_viewed: 10}
+    @params_create = {institution_id: 11, user_id: 2, category: "simple", event_viewed: 5, :authentication => session_create}
+    @params_update = {event_viewed: 10, :authentication => session_create}
     @model_type = :event_view
     @id = 15
     ActionController::Parameters.action_on_unpermitted_parameters = :raise

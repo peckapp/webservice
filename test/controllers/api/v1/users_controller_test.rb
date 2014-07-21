@@ -9,9 +9,9 @@ class UsersControllerTest < UltimateTestHelper
     @attributes = [:id, :institution_id, :first_name, :last_name, :username, :blurb, :facebook_link, :active, :format, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 10, :institution_id => 1, :format => :json, :authentication => session_create}
-    @params_create = {:institution_id => 1}
-    @params_update = {:first_name => "John", :active => false}
-    @params_super_create = {:first_name => "John", :last_name => "Doe", :email => "jdoe@williams.edu", :password => "testagain", :password_confirmation => "testagain"}
+    @params_create = {:institution_id => 1, :authentication => session_create}
+    @params_update = {:first_name => "John", :active => false, :authentication => session_create}
+    @params_super_create = {:first_name => "John", :last_name => "Doe", :email => "jdoe@williams.edu", :password => "testagain", :password_confirmation => "testagain", :authentication => session_create}
     @model_type = :user
     @id = 11
     ActionController::Parameters.action_on_unpermitted_parameters = :raise

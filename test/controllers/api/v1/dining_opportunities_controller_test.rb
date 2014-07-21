@@ -7,8 +7,8 @@ class DiningOpportunitiesControllerTest < UltimateTestHelper
     @attributes = [:id, :dining_opportunity_type, :institution_id, :format, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 2, :dining_opportunity_type => "dinner", :institution_id => 1, :format => :json, :authentication => session_create}
-    @params_create = {:dining_opportunity_type => "lunch", :institution_id => 2}
-    @params_update = {:dining_opportunity_type => "breakfast"}
+    @params_create = {:dining_opportunity_type => "lunch", :institution_id => 2, :authentication => session_create}
+    @params_update = {:dining_opportunity_type => "breakfast", :authentication => session_create}
     @model_type = :dining_opportunity
     @id = 2
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
