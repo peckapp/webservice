@@ -43,6 +43,7 @@ module Api
 
         if @user
           session[:authentication_token] = SecureRandom.hex(20)
+          @user.authentication_token = session[:authentication_token]
         end
       end
 

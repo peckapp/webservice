@@ -4,6 +4,9 @@
 # is considered to be the first unless any hosts have the primary
 # property set.  Don't declare `role :all`, it's a meta role.
 
+# Define roles, user and IP address of deployment server
+# role :name, %{[user]@[IP adde.]}
+
 # Default deploy_to directory is /var/www/my_app
 set :deploy_to, '/home/deployer/apps/webservice_staging'
 
@@ -16,7 +19,6 @@ set :deploy_to, '/home/deployer/apps/webservice_staging'
 # Define server(s)
 server 'buri.peckapp.com', user: 'deployer', roles: %w{web app db}
 # server 'magni.peckapp.com', user: 'deployer', roles: %w{db}
-
 
 # Custom SSH Options
 # ==================

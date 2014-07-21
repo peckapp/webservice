@@ -52,8 +52,8 @@ module Api
           circle_mems = @circle.circle_members
 
           circle_mems.each do |mem|
-            puts "MEMBER ID: #{mem.id}"
-            @member_ids << mem.id
+            puts "MEMBER ID: #{mem.user_id}"
+            @member_ids << mem.user_id
           end
         else
           @member_ids = nil
