@@ -4,6 +4,7 @@ module Api
 
       # before_action :confirm_admin
       # :except => [:index, :show]
+      before_action :confirm_minimal_access, :except => :create
 
       respond_to :json
 
