@@ -3,7 +3,7 @@ require 'ultimate_test_helper'
 
 class CommentsControllerTest < UltimateTestHelper
   def setup
-    @controller = Api::V1::CommentsController.new
+    @the_controller = Api::V1::CommentsController.new
     @attributes = [:id, :category, :comment_from, :user_id, :content, :institution_id, :format, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 11, :category => "athletic", :comment_from => 2, :format => :json, :authentication => session_create}

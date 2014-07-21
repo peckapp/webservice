@@ -3,7 +3,7 @@ require 'ultimate_test_helper'
 
 class ActivityLogsControllerTest < UltimateTestHelper
   def setup
-    @controller = Api::V1::ActivityLogsController.new
+    @the_controller = Api::V1::ActivityLogsController.new
     @attributes = [:id, :institution_id, :sender, :receiver, :category, :from_event, :circle_id, :type_of_activity, :message, :read_status, :format, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 5, :format => :json, :authentication => session_create}

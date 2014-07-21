@@ -3,7 +3,7 @@ require 'ultimate_test_helper'
 
 class CircleMembersControllerTest < UltimateTestHelper
   def setup
-    @controller = Api::V1::CircleMembersController.new
+    @the_controller = Api::V1::CircleMembersController.new
     @attributes = [:id, :institution_id, :circle_id, :user_id, :invited_by, :format, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 11, :institution_id => 1, :circle_id => 1, :user_id => 1, :format => :json, :authentication => session_create}

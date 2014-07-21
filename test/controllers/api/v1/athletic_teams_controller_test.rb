@@ -3,7 +3,7 @@ require 'ultimate_test_helper'
 
 class AthleticTeamsControllerTest < UltimateTestHelper
   def setup
-    @controller = Api::V1::AthleticTeamsController.new
+    @the_controller = Api::V1::AthleticTeamsController.new
     @attributes = [:id, :institution_id, :sport_name, :gender, :head_coach, :team_link, :format, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 12, :institution_id => 1, :gender => "female", :format => :json, :authentication => session_create}

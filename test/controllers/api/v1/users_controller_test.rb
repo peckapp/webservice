@@ -36,7 +36,7 @@ class UsersControllerTest < UltimateTestHelper
   test "should not patch super create" do
     patch :super_create, :id => @id, @model_type => {:first_name => "Andy", :last_name => "Smith", :email => "asmith@amherst.edu", :password => "holymama", :password_confirmation => "nope"}, :format => :json
     user = assigns(:user)
-    assert_nil user.password_salt
-    assert_nil user.password_hash
+    assert user.password_salt.blank?
+    assert user.password_hash.blank?
   end
 end
