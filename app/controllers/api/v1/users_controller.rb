@@ -40,6 +40,8 @@ module Api
         sign_up_params[:password_confirmation] = uparams[:password_confirmation]
 
         @user.update_attributes(sign_up_params)
+
+        session[:authentication_token] = SecureRandom.hex(20)
       end
 
       def update
