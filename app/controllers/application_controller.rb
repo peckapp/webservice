@@ -5,9 +5,12 @@ class ApplicationController < ActionController::Base
 
   def confirm_logged_in
     user = User.find(session[:user_id])
-    if set_authentication_token && auth[:authentication_token] == user.authentication_token
-      return true
+    if auth[:authentication_token]
+      puts "ApplicationController 1: #{auth[:authentication_token]}"
+      puts "ApplicationController 2: #{user.authentication_token}"
+      return false unless auth[:authentication_token] == user.authentication_token
     else
+      puts "Why am I here?"
       render :file => "public/401.html", :status => :unauthorized
       return false
     end
@@ -78,7 +81,7 @@ class ApplicationController < ActionController::Base
     model.find(id)
   end
 
-  private
+  protected
 
     def auth
       if params[:authentication].blank?
@@ -90,22 +93,22 @@ class ApplicationController < ActionController::Base
 
     def set_authentication_token
       # if session has authentication_token (set when logged in)
-      if session[:authentication_token]
+      # if session[:authentication_token]
 
         # as longs as the authentication parameter is not nil, keep that as the auth token.
-        if auth[:authentication_token]
-          return auth[:authentication_token]
-
-          # otherwise, assign the authentication token to be the same as the session one
-        else
-          auth[:authentication_token] = session[:authentication_token]
-        end
-
-        # if there is no session with the authentication token, authentication token should be nil.
-      else
-        auth[:authentication_token] = nil
-      end
-      return auth[:authentication_token]
+    #     if auth[:authentication_token]
+    #       return auth[:authentication_token]
+    #
+    #       # otherwise, assign the authentication token to be the same as the session one
+    #     else
+    #       auth[:authentication_token] = session[:authentication_token]
+    #     end
+    #
+    #     # if there is no session with the authentication token, authentication token should be nil.
+    #   else
+    #     auth[:authentication_token] = nil
+    #   end
+    #   return auth[:authentication_token]
     end
 
     # check existence of auth params

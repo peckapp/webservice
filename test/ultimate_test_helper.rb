@@ -10,6 +10,7 @@ class UltimateTestHelper < ActionController::TestCase
     @auth = {}
 
     request.session.each { |key, value| @auth[key] = value }
+    @auth[:authentication_token] = nil
     return @auth
   end
 
@@ -18,10 +19,13 @@ class UltimateTestHelper < ActionController::TestCase
     @controller = Api::V1::UsersController.new
 
     patch :super_create, :id => 3, :user => {:first_name => "Ju", :last_name => "Dr", :email => "bobbyboucher@williams.edu", :password => "testingpass", :password_confirmation => "testingpass"}, :authentication => session_create, :format => :json
+    user = assigns(:user)
 
-    @controller = Api::V1::SessionsController.new
-
-    post :create, :email => "bobbyboucher@williams.edu", :password => "testingpass", :authentication => session_create, :format => :json
+    auth_pro = @auth
+    auth_pro[:authentication_token] = user.authentication_token
+    # @controller = Api::V1::SessionsController.new
+    #
+    # post :create, :email => "bobbyboucher@williams.edu", :password => "testingpass", :authentication => session_create, :format => :json
 
   end
 
