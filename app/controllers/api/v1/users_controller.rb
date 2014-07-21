@@ -52,12 +52,6 @@ module Api
       end
 
       private
-
-        def user_create_params
-          # not allowed for mass assignment are: authentication_token, password_digest, created_at, updated_at
-          # params.require(:user).permit(:institution_id)
-        end
-
         def user_signup_params
           params.require(:user).permit(:first_name, :last_name, :email, :blurb, :password, :password_confirmation)
         end
