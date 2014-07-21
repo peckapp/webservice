@@ -9,8 +9,7 @@ module Api
       respond_to :json
 
       def index
-        req_users = specific_index(User, params)
-        @users = req_users.where("users.first_name IS NOT NULL")
+        @users = specific_index(User, params).where("users.first_name IS NOT NULL")
       end
 
       def show
@@ -42,8 +41,8 @@ module Api
         @user.update_attributes(sign_up_params)
 
         if @user
-          session[:authentication_token] = SecureRandom.hex(20)
-          @user.authentication_token = session[:authentication_token]
+          @user.authentication_token = SecureRandom.hex(20)
+          @user.save
         end
       end
 
