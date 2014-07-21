@@ -1,6 +1,7 @@
 module Api
   module V1
     class CirclesController < ApplicationController #Api::BaseController
+
       before_action :confirm_logged_in, :only => [:create, :update, :destroy]
 
       # give circle admin power?
@@ -16,7 +17,6 @@ module Api
         for c in @circles
           @member_ids[c.id] = CircleMember.where("circle_id" => c.id).pluck(:user_id)
         end
-
       end
 
       def show
@@ -28,6 +28,7 @@ module Api
 
       def create
         @circle = Circle.create(circle_params)
+        @member_ids = circle_params[:circle_members]
       end
 
       def update
@@ -42,7 +43,7 @@ module Api
       private
 
         def circle_params
-          params.require(:circle).permit(:institution_id, :user_id, :circle_name, :image_link)
+          params.require(:circle).permit(:institution_id, :user_id, :circle_name, :image_link, :circle_members)
         end
     end
   end

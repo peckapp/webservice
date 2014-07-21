@@ -12,9 +12,9 @@ module ModelNormalValidations
         errors.add(symbol, "must be a #{type_string_format}") unless parameter.is_a? type
 
         # testing. remove later
-        errors.full_messages.each do |msg|
-          puts msg
-        end
+        # errors.full_messages.each do |msg|
+        #   puts msg
+        # end
       end
     end
 

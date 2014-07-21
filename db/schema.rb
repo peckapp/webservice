@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140716035109) do
+ActiveRecord::Schema.define(version: 20140721154726) do
 
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
@@ -388,7 +388,7 @@ ActiveRecord::Schema.define(version: 20140716035109) do
   add_index "user_device_tokens_users", ["user_device_token_id", "user_id"], name: "user_device_tokens_users_index", using: :btree
 
   create_table "users", force: true do |t|
-    t.integer  "institution_id",                       null: false
+    t.integer  "institution_id"
     t.string   "first_name"
     t.string   "last_name"
     t.string   "email"

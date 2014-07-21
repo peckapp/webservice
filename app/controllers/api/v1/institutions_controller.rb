@@ -6,7 +6,7 @@ module Api
       respond_to :json
 
       def index
-        @institutions = Institution.all
+        @institutions = specific_index(Institution, params)
       end
 
       def show
