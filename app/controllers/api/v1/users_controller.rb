@@ -18,7 +18,7 @@ module Api
       end
 
       def create
-        @user = User.create(user_create_params)
+        @user = User.create
         session[:user_id] = @user.id
         session[:api_key] = @user.api_key
       end
@@ -55,7 +55,7 @@ module Api
 
         def user_create_params
           # not allowed for mass assignment are: authentication_token, password_digest, created_at, updated_at
-          params.require(:user).permit(:institution_id)
+          # params.require(:user).permit(:institution_id)
         end
 
         def user_signup_params
