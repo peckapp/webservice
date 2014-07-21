@@ -3,7 +3,7 @@ require 'ultimate_test_helper'
 
 class DepartmentsControllerTest < UltimateTestHelper
   def setup
-    @controller = Api::V1::DepartmentsController.new
+    @the_controller = Api::V1::DepartmentsController.new
     @attributes = [:id, :name, :institution_id, :format, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 3, :name => "Math", :format => :json, :authentication => session_create}

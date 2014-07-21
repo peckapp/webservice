@@ -48,7 +48,7 @@ class UltimateTestHelper < ActionController::TestCase
      next unless is_subclass?
      super_create
      @controller = @the_controller
-     post :create, {@model_type => @params_create, :format => :json}
+     post :create, {@model_type => @params_create, :authentication => session_create, :format => :json}
      assert_response :success
   end
 
@@ -56,7 +56,7 @@ class UltimateTestHelper < ActionController::TestCase
     next unless is_subclass?
     super_create
     @controller = @the_controller
-    patch :update, {:id => @id, @model_type => @params_update, :format => :json}
+    patch :update, {:id => @id, @model_type => @params_update, :authentication => session_create, :format => :json}
     assert_response(:success)
   end
 

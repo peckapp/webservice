@@ -3,7 +3,7 @@ require 'ultimate_test_helper'
 
 class DiningOpportunitiesControllerTest < UltimateTestHelper
   def setup
-    @controller = Api::V1::DiningOpportunitiesController.new
+    @the_controller = Api::V1::DiningOpportunitiesController.new
     @attributes = [:id, :dining_opportunity_type, :institution_id, :format, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 2, :dining_opportunity_type => "dinner", :institution_id => 1, :format => :json, :authentication => session_create}
@@ -23,6 +23,8 @@ class DiningOpportunitiesControllerTest < UltimateTestHelper
   ###################################
 
   test "every dining opportunity for given day has an earliest start and latest end" do
+
+    @controller = @the_controller
 
     get :index, @params_index
 

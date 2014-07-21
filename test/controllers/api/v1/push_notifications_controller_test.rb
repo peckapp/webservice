@@ -4,7 +4,7 @@ require 'ultimate_test_helper'
 class PushNotificationsControllerTest < UltimateTestHelper
 
   def setup
-    @controller = Api::V1::PushNotificationsController.new
+    @the_controller = Api::V1::PushNotificationsController.new
     @attributes = [:id, :institution_id, :user_id, :notification_type, :response, :format, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 12, :institution_id => 3, :notification_type => "bob", :format => :json, :authentication => session_create}

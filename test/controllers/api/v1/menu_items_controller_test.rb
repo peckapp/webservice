@@ -3,7 +3,7 @@ require 'ultimate_test_helper'
 
 class MenuItemsControllerTest < UltimateTestHelper
   def setup
-    @controller = Api::V1::MenuItemsController.new
+    @the_controller = Api::V1::MenuItemsController.new
     @attributes = [:id, :name, :institution_id, :details_link, :small_price, :large_price, :combo_price, :dining_opportunity_id, :dining_place_id, :dining_place_id, :date_available, :format, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 12, :format => :json, :authentication => session_create}

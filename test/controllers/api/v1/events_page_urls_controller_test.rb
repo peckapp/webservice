@@ -3,7 +3,7 @@ require 'ultimate_test_helper'
 
 class EventsPageUrlsControllerTest < UltimateTestHelper
   def setup
-    @controller = Api::V1::EventsPageUrlsController.new
+    @the_controller = Api::V1::EventsPageUrlsController.new
     @attributes = [:id, :institution_id, :url, :type, :format, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 8, :format => :json, :authentication => session_create}

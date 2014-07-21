@@ -3,7 +3,7 @@ require 'ultimate_test_helper'
 
 class DiningPeriodsControllerTest < UltimateTestHelper
   def setup
-    @controller = Api::V1::DiningPeriodsController.new
+    @the_controller = Api::V1::DiningPeriodsController.new
     @attributes = [:id, :start_time, :end_time, :day_of_week, :dining_opportunity_id, :dining_place_id, :institution_id, :format, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 2, :dining_place_id => 1, :format => :json, :authentication => session_create}
