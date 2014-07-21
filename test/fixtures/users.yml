@@ -10,6 +10,7 @@
  user_<%= n %>:
   id: <%= n %>
   institution_id: 1
+  api_key: <%= SecureRandom.hex(25) %>
 <% end %>
 
 # public users from institution 2
@@ -17,4 +18,5 @@
  user_<%= n %>:
   id: <%= n %>
   institution_id: 2
+  api_key: <%= SecureRandom.hex(25) %>
 <% end %>

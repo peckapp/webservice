@@ -3,10 +3,10 @@ require 'ultimate_test_helper'
 
 class LocationsControllerTest < UltimateTestHelper
   def setup
-    @controller = Api::V1::LocationsController.new
-    @attributes = [:id, :institution_id, :name, :gps_longitude, :gps_latitude, :range, :format]
-    @params_index = {:format => :json}
-    @params_show = {:id => 1, :name => "Bronfman", :format => :json}
+    @the_controller = Api::V1::LocationsController.new
+    @attributes = [:id, :institution_id, :name, :gps_longitude, :gps_latitude, :range, :format, :authentication]
+    @params_index = {:format => :json, :authentication => session_create}
+    @params_show = {:id => 1, :name => "Bronfman", :format => :json, :authentication => session_create}
     @params_create = {:institution_id => 1, :name => "Paresky"}
     @params_update = {:name => "Mission"}
     @model_type = :location
