@@ -110,7 +110,7 @@ class ApplicationController < ActionController::Base
     # check existence of auth params
     def auth_params_exist
 
-      if auth[:user_id].blank? || auth[:institution_id].blank? || auth[:api_key].blank?
+      if auth[:user_id].blank? || auth[:api_key].blank?
         return false
       else
         return true
