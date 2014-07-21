@@ -41,7 +41,9 @@ module Api
 
         @user.update_attributes(sign_up_params)
 
-        session[:authentication_token] = SecureRandom.hex(20)
+        if @user
+          session[:authentication_token] = SecureRandom.hex(20)
+        end
       end
 
       def update
@@ -55,7 +57,7 @@ module Api
 
       private
         def user_signup_params
-          params.require(:user).permit(:first_name, :last_name, :email, :blurb, :password, :password_confirmation)
+          params.require(:user).permit(:first_name, :last_name, :email, :blurb)
         end
 
         def user_update_params
