@@ -1,8 +1,7 @@
 require 'test_helper'
 
 class UltimateTestHelper < ActionController::TestCase
-
-  def session_create
+  def session_create(auth_token = nil)
     session[:institution_id] = 1
     session[:user_id] = 3
     session[:api_key] = User.find(3).api_key
@@ -10,7 +9,7 @@ class UltimateTestHelper < ActionController::TestCase
     @auth = {}
 
     request.session.each { |key, value| @auth[key] = value }
-    @auth[:authentication_token] = nil
+    @auth[:authentication_token] = auth_token
     return @auth
   end
 
@@ -20,13 +19,10 @@ class UltimateTestHelper < ActionController::TestCase
 
     patch :super_create, :id => 3, :user => {:first_name => "Ju", :last_name => "Dr", :email => "bobbyboucher@williams.edu", :password => "testingpass", :password_confirmation => "testingpass"}, :authentication => session_create, :format => :json
     user = assigns(:user)
+    auth_token = user.authentication_token
+    puts "My auth_token: #{auth_token}"
 
-    auth_pro = @auth
-    auth_pro[:authentication_token] = user.authentication_token
-    # @controller = Api::V1::SessionsController.new
-    #
-    # post :create, :email => "bobbyboucher@williams.edu", :password => "testingpass", :authentication => session_create, :format => :json
-
+    return session_create(auth_token)
   end
 
   test "should_get_index" do
@@ -52,7 +48,7 @@ class UltimateTestHelper < ActionController::TestCase
      next unless is_subclass?
      super_create
      @controller = @the_controller
-     post :create, {@model_type => @params_create, :authentication => session_create, :format => :json}
+     post :create, {@model_type => @params_create, :authentication => super_create, :format => :json}
      assert_response :success
   end
 
@@ -60,7 +56,7 @@ class UltimateTestHelper < ActionController::TestCase
     next unless is_subclass?
     super_create
     @controller = @the_controller
-    patch :update, {:id => @id, @model_type => @params_update, :authentication => session_create, :format => :json}
+    patch :update, {:id => @id, @model_type => @params_update, :authentication => super_create, :format => :json}
     assert_response(:success)
   end
 
@@ -68,7 +64,7 @@ class UltimateTestHelper < ActionController::TestCase
     next unless is_subclass?
     super_create
     @controller = @the_controller
-    delete :destroy, {:format => :json, :id => @id, :authentication => session_create}
+    delete :destroy, {:format => :json, :id => @id, :authentication => super_create}
     assert_response :success
   end
 
