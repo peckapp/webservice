@@ -52,7 +52,6 @@ module Api
       end
 
       private
-      
         def user_signup_params
           params.require(:user).permit(:first_name, :last_name, :email, :blurb, :password, :password_confirmation)
         end
