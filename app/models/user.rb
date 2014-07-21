@@ -44,8 +44,8 @@ class User < ActiveRecord::Base
   ###############################
 
   #### CIRCLES ###
-  has_many :circles, :through => :circle_members #
   has_many :circle_members #
+  has_many :circles, :through => :circle_members #
   ################
 
   ### EVENTS ###
