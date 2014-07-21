@@ -12,6 +12,7 @@ class Circle < ActiveRecord::Base
   has_many :simple_events #
 
   ### circle members ###
+  has_many :circle_members
   has_many :users, :through => :circle_members #
 
   ### circle's home institution ###

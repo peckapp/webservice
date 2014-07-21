@@ -27,12 +27,12 @@ server 'buri.peckapp.com', user: 'deployer', roles: %w{web app db}
 #
 # Global options
 # --------------
- set :ssh_options, {
-   keys: %w(File.join(ENV["HOME"], ".ssh", "peck_secure")),
-   forward_agent: false,
-   user: 'deployer',
-   auth_methods: %w(publickey password)
- }
+set :ssh_options, {
+  keys: %w(File.join(ENV["HOME"], ".ssh", "peck_secure")),
+  forward_agent: false,
+  user: 'deployer',
+  auth_methods: %w(publickey password)
+}
 #
 # And/or per server (overrides global)
 # ------------------------------------
