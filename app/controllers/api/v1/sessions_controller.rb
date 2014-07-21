@@ -8,8 +8,9 @@ module Api
         if @user
 
           # authentication token randomly generated each time signed in
-          session[:authentication_token] = SecureRandom.hex(20)
+          # session[:authentication_token] = SecureRandom.hex(20)
           # @user.authentication_token = session[:authentication_token]
+          @user.authentication_token = SecureRandom.hex(20)
         end
       end
 
@@ -27,8 +28,8 @@ module Api
         #   end
         # end
         session[:user_id] = nil
-        session[:authentication_token] = nil
-        # @user.authentication_token = nil
+        # session[:authentication_token] = nil
+        @user.authentication_token = nil
       end
     end
   end

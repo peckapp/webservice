@@ -42,8 +42,9 @@ module Api
         @user.update_attributes(sign_up_params)
 
         if @user
-          session[:authentication_token] = SecureRandom.hex(20)
           @user.authentication_token = session[:authentication_token]
+          # session[:authentication_token] = SecureRandom.hex(20)
+          # @user.authentication_token = session[:authentication_token]
         end
       end
 
