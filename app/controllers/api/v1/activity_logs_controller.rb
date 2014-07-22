@@ -9,13 +9,7 @@ module Api
       respond_to :json
 
       def index
-        if params[:user_id]
-          @activity_logs = ActivityLog.where(:receiver => params[:user_id])
-        elsif params[:circle_id]
-          @activity_logs = specific_index(ActivityLog, :circle_id)
-        else
-          @activity_logs = ActivityLog.all
-        end
+        @activity_logs = specific_index(ActivityLog, params)
       end
 
       def show

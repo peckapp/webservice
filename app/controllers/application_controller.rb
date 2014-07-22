@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
     if ! search_params.blank?
       for p in search_params do
         if params[p]
-          result = result.where(p => params[p])
+          result = result.where(p => params[p]).where(:institution_id => auth[:institution_id])
         end
       end
     end

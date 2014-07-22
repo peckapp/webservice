@@ -8,7 +8,7 @@ module Api
       respond_to :json
 
       def index
-        @event_views = EventView.all
+        @event_views = specific_index(EventView, params)
       end
 
       def show
