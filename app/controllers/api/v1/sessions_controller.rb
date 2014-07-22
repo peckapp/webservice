@@ -10,7 +10,8 @@ module Api
           # authentication token randomly generated each time signed in
           # session[:authentication_token] = SecureRandom.hex(20)
           # @user.authentication_token = session[:authentication_token]
-          @user.authentication_token = SecureRandom.hex(20)
+          @user.authentication_token = SecureRandom.hex(30)
+          @user.save
           auth[:authentication_token] = @user.authentication_token
         end
       end
@@ -28,10 +29,10 @@ module Api
         #     @user.authentication_token = nil
         #   end
         # end
-        session[:user_id] = nil
-        # session[:authentication_token] = nil
+        # session[:user_id] = nil
         auth[:authentication_token] = nil
         @user.authentication_token = nil
+        @user.save
       end
     end
   end

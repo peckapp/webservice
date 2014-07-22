@@ -4,13 +4,21 @@ class ApplicationController < ActionController::Base
   before_action :confirm_minimal_access
 
   def confirm_logged_in
+
+    # user is found by session id
     user = User.find(session[:user_id])
+
+    # the auth token must be present
     if auth[:authentication_token]
-      puts "ApplicationController 1: #{auth[:authentication_token]}"
-      puts "ApplicationController 2: #{user.authentication_token}"
-      return false unless auth[:authentication_token] == user.authentication_token
+
+      # return true only if the auth token matches with the database token
+      if auth[:authentication_token] == user.authentication_token
+        return true
+      else
+        render :file => "public/401.html", :status => :unauthorized
+        return false
+      end
     else
-      puts "Why am I here?"
       render :file => "public/401.html", :status => :unauthorized
       return false
     end

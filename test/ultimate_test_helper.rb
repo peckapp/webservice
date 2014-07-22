@@ -46,7 +46,7 @@ class UltimateTestHelper < ActionController::TestCase
 
   test "should_post_create" do
      next unless is_subclass?
-     super_create
+     # super_create
      @controller = @the_controller
      post :create, {@model_type => @params_create, :authentication => super_create, :format => :json}
      assert_response :success
@@ -54,7 +54,6 @@ class UltimateTestHelper < ActionController::TestCase
 
   test "should_patch_update" do
     next unless is_subclass?
-    super_create
     @controller = @the_controller
     patch :update, {:id => @id, @model_type => @params_update, :authentication => super_create, :format => :json}
     assert_response(:success)
@@ -62,14 +61,13 @@ class UltimateTestHelper < ActionController::TestCase
 
   test "should_delete_destroy" do
     next unless is_subclass?
-    super_create
+    # super_create
     @controller = @the_controller
     delete :destroy, {:format => :json, :id => @id, :authentication => super_create}
     assert_response :success
   end
 
   private
-
     def is_subclass?
       self.class.superclass == UltimateTestHelper
     end
