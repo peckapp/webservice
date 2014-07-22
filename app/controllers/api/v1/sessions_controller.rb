@@ -35,6 +35,7 @@ module Api
         #   @user.authentication_token = SecureRandom.hex(20)
         #   @user.save
         # end
+        # session[:user_id] = nil
         @user.authentication_token = nil
         @user.save
       end

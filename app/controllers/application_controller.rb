@@ -16,17 +16,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # def confirm_authentication_token
-  #   if confirm_logged_in
-  #     user = User.find(session[:user_id])
-  #     unless auth[:authentication_token] == user.authentication_token
-  #       render :file => "public/401.html", :status => :unauthorized
-  #       return false
-  #     end
-  #   end
-  #   return true
-  # end
-
   def confirm_minimal_access
 
     if auth_params_exist
@@ -90,27 +79,6 @@ class ApplicationController < ActionController::Base
         params[:authentication]
       end
     end
-
-    # def set_authentication_token
-    #   # if session has authentication_token (set when logged in)
-    #   user = User.find(session[:user_id])
-    #   if user.authentication_token
-    #
-    #     # as longs as the authentication token parameter is not nil, keep that as the auth token.
-    #     if auth[:authentication_token]
-    #       return auth[:authentication_token]
-    #
-    #       # otherwise, assign the authentication token to be the same as the session one
-    #     else
-    #       auth[:authentication_token] = user.authentication_token
-    #     end
-    #
-    #     # if there is no session with the authentication token, authentication token should be nil.
-    #   else
-    #     auth[:authentication_token] = nil
-    #   end
-    #   return auth[:authentication_token]
-    # end
 
     # check existence of auth params
     def auth_params_exist
