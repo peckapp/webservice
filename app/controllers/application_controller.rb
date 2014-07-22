@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   before_action :confirm_minimal_access
 
   def confirm_logged_in
-
     if set_authentication_token && auth[:authentication_token] == User.find(session[:user_id]).authentication_token
       return true
     else
@@ -13,16 +12,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def confirm_authentication_token
-    if confirm_logged_in
-      user = User.find(session[:user_id])
-      unless auth[:authentication_token] == user.authentication_token
-        render :file => "public/401.html", :status => :unauthorized
-        return false
-      end
-    end
-    return true
-  end
+  # def confirm_authentication_token
+  #   if confirm_logged_in
+  #     user = User.find(session[:user_id])
+  #     unless auth[:authentication_token] == user.authentication_token
+  #       render :file => "public/401.html", :status => :unauthorized
+  #       return false
+  #     end
+  #   end
+  #   return true
+  # end
 
   def confirm_minimal_access
 
