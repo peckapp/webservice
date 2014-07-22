@@ -5,5 +5,5 @@ attributes :id, :title, :event_description, :institution_id, :user_id, :departme
 node(:event_type) {"simple"}
 
 node :image do |simple_event|
-  simple_event.image.url
+  simple_event.image.url(:thumb)
 end
