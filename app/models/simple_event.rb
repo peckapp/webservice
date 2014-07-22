@@ -57,7 +57,6 @@ class SimpleEvent < ActiveRecord::Base
     def correct_simple_event_types
       is_correct_type(title, String, "string", :title)
       is_correct_type(event_url, String, "string", :event_url)
-      is_correct_type(image_url, String, "string", :image_url)
       is_correct_type(start_date, Time, "datetime", :start_date)
       is_correct_type(end_date, Time, "datetime", :end_date)
     end
