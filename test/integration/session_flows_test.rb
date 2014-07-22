@@ -75,7 +75,7 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
     end
 
     def create_simple_event
-      post "api/simple_events", :simple_event => {:title => "Super Duper Dope Event", :institution_id => 1, :user_id => 3, :open => true, :start_date => DateTime.current, :end_date => DateTime.current + 1.hour}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key, :authentication_token => User.find(1).authentication_token}, :format => :json
+      post "api/simple_events", :simple_event => {:title => "Super Duper Dope Event", :institution_id => 1, :user_id => 3, :public => true, :start_date => DateTime.current, :end_date => DateTime.current + 1.hour}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key, :authentication_token => User.find(1).authentication_token}, :format => :json
       event = assigns(:simple_event)
       assert_response :success, "no response from database"
       assert_not_nil event.id, "simple event was not created properly"
