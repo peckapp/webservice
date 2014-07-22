@@ -38,8 +38,7 @@ gem 'bcrypt', '~> 3.1.7'
 ### Administrative Capabilities
 # Active Admin for highly customizable interfaces
 gem 'activeadmin', github: 'gregbell/active_admin'
-# devise for user authentication
-gem 'devise'
+
 
 
 ### FILE MANAGEMENT
@@ -93,6 +92,8 @@ gem 'hirb', '~> 0.7.2'
 
 # validating dates
 gem 'validates_timeliness', '~> 3.0'
+
+gem 'devise', '~> 3.2.4'
 
 
 ### Development-specific gems
