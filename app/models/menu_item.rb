@@ -1,9 +1,13 @@
 class MenuItem < ActiveRecord::Base
   include ModelNormalValidations
   include ModelBeforeSaveValidations
-# verified
 
-  ### Validations ###
+  ###############################
+  ##                           ##
+  ##         VALIDATIONS       ##
+  ##                           ##
+  ###############################
+
   validates :name, :presence => true
   validates :institution_id, :presence => true, :numericality => { :only_integer => true }
   validates :details_link, :format => {:with => URI::regexp(%w(http https))}, :allow_nil => true
@@ -11,13 +15,12 @@ class MenuItem < ActiveRecord::Base
   validates :dining_place_id, :numericality => { :only_integer => true }, :allow_nil => true
   validates :date_available, :presence => true
   validate :correct_menu_item_types
-  ###################
 
-  ### Callbacks ###
-  # before_save :sanitize_menu_item
-  # before_create :sanitize_menu_item
-  # before_update :sanitize_menu_item
-  #################
+  ###############################
+  ##                           ##
+  ##        ASSOCIATIONS       ##
+  ##                           ##
+  ###############################
 
   ### institution where item is available ###
   belongs_to :institution #
@@ -31,8 +34,14 @@ class MenuItem < ActiveRecord::Base
   ### scrape resource from which this was gathered ###
   belongs_to :scrape_resource #
 
-  ### Methods ###
+  ###############################
+  ##                           ##
+  ##      PRIVATE METHODS      ##
+  ##                           ##
+  ###############################
+
   private
+
     def correct_menu_item_types
       is_correct_type(name, String, "string", :name)
       is_correct_type(details_link, String, "string", :details_link)
@@ -43,11 +52,5 @@ class MenuItem < ActiveRecord::Base
       is_correct_type(category, String, "string", :category)
       is_correct_type(serving_size, String, "string", :serving_size)
     end
-  #
-  # def sanitize_menu_item
-  #   sanitize_everything(attributes)
-  # end
-  #
-  # private
-  #   attributes = [id, name, institution_id, details_link, small_price, large_price, combo_price, created_at, updated_at, dining_opportunity_id, dining_place_id, date_available, category, serving_size]
+
 end

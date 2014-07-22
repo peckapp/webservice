@@ -21,9 +21,9 @@ class UltimateTestHelper < ActionController::TestCase
     user = assigns(:user)
     auth_token = user.authentication_token
 
-    @controller = Api::V1::SessionsController.new
+    @controller = Api::V1::AccessController.new
 
-    post :create, :email => "bobbyboucher@williams.edu", :password => "testingpass", :authentication => session_create, :format => :json
+    post :create, :user => {:email => "bobbyboucher@williams.edu", :password => "testingpass"}, :authentication => session_create, :format => :json
 
     return assigns(:user)
   end
