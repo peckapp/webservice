@@ -16,8 +16,8 @@ ActiveAdmin.register_page "Dashboard" do
       column do
         panel "Recent SimpleEvents" do
           ul do
-            SimpleEvent.sorted.take(5).map do |post|
-              li link_to(post.title, admin_post_path(post))
+            SimpleEvent.sorted.take(5).map do |event|
+              li link_to(event.title, admin_simple_event_path(event))
             end
           end
         end
