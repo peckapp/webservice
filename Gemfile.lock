@@ -308,7 +308,7 @@ DEPENDENCIES
   capistrano-rvm
   capistrano-sidekiq
   coffee-rails (~> 4.0.0)
-  devise
+  devise (~> 3.2.4)
   feedjira
   hirb (~> 0.7.2)
   jbuilder (~> 2.0)
