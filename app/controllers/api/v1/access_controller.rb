@@ -13,6 +13,8 @@ module Api
           @user.authentication_token = SecureRandom.hex(30)
           @user.save
           auth[:authentication_token] = @user.authentication_token
+        else
+          head :bad_request
         end
       end
 
