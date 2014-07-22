@@ -15,7 +15,8 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
     user = super_create_user
 
     # attempt to super create w/ wrong password
-    # super_create_fail
+    super_create_fail
+
     # authenticate user
     login(user)
 
@@ -46,14 +47,14 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
       return user
     end
 
-    # def super_create_fail
-    #   #super create user
-    #   patch "/api/users/2/super_create", :user => {:first_name => "John", :last_name => "Doe", :email => "jdoe1@williams.edu", :password => "anothertest", :password_confirmation => "wrongpassword"}, :format => :json
-    #   user = assigns(:user)
-    #   assert_response :success, "no response from database"
-    #   assert_nil user.password_salt, "pw salt should be nil with wrong pw confirmation"
-    #   assert_nil user.password_hash, "pw hash should be nil with wrong pw confirmation"
-    # end
+    def super_create_fail
+      #super create user
+      patch "/api/users/2/super_create", :user => {:first_name => "John", :last_name => "Doe", :email => "jdoe1@williams.edu", :password => "anothertest", :password_confirmation => "wrongpassword"}, :authentication => {:user_id => 2, :institution_id => 1, :api_key => User.find(1).api_key },:format => :json
+      user = assigns(:user)
+      assert_response :success, "no response from database"
+      assert_nil user.password_salt, "pw salt should be nil with wrong pw confirmation"
+      assert_nil user.password_hash, "pw hash should be nil with wrong pw confirmation"
+    end
 
     def login(user)
       open_session do |sess|
