@@ -38,11 +38,14 @@ module Api
         sign_up_params[:password] = uparams[:password]
         sign_up_params[:password_confirmation] = uparams[:password_confirmation]
 
+        # sign_up_params[:authentication_token] = SecureRandom.hex(30)
+
         @user.update_attributes(sign_up_params)
 
         if @user
           @user.authentication_token = SecureRandom.hex(30)
           @user.save
+          auth[:authentication_token] = @user.authentication_token
         end
       end
 

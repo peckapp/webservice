@@ -1,8 +1,7 @@
 require 'test_helper'
 
 class UltimateTestHelper < ActionController::TestCase
-
-  def session_create
+  def session_create(auth_token = nil)
     session[:institution_id] = 1
     session[:user_id] = 3
     session[:api_key] = User.find(3).api_key
@@ -10,6 +9,7 @@ class UltimateTestHelper < ActionController::TestCase
     @auth = {}
 
     request.session.each { |key, value| @auth[key] = value }
+    @auth[:authentication_token] = auth_token
     return @auth
   end
 
@@ -18,6 +18,8 @@ class UltimateTestHelper < ActionController::TestCase
     @controller = Api::V1::UsersController.new
 
     patch :super_create, :id => 3, :user => {:first_name => "Ju", :last_name => "Dr", :email => "bobbyboucher@williams.edu", :password => "testingpass", :password_confirmation => "testingpass"}, :authentication => session_create, :format => :json
+    user = assigns(:user)
+    auth_token = user.authentication_token
 
     @controller = Api::V1::SessionsController.new
 
@@ -66,7 +68,6 @@ class UltimateTestHelper < ActionController::TestCase
 
     @controller = @the_controller
     patch :update, {:id => @id, @model_type => @params_update, :authentication => auth_params, :format => :json}
-    assert_response(:success)
   end
 
   test "should_delete_destroy" do
@@ -82,7 +83,6 @@ class UltimateTestHelper < ActionController::TestCase
   end
 
   private
-
     def is_subclass?
       self.class.superclass == UltimateTestHelper
     end

@@ -16,7 +16,6 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
 
     # attempt to super create w/ wrong password
     # super_create_fail
-
     # authenticate user
     login(user)
 
@@ -43,6 +42,7 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
       user = assigns(:user)
       assert_response :success, "no response from database"
       assert_not_nil user, "user was not super created properly"
+      assert_not_nil user.authentication_token
       return user
     end
 
