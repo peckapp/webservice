@@ -363,6 +363,15 @@ ActiveRecord::Schema.define(version: 20140722163544) do
     t.datetime "updated_at"
   end
 
+  create_table "rss_pages", force: true do |t|
+    t.integer  "institution_id",                  null: false
+    t.string   "url",                             null: false
+    t.integer  "scrape_interval", default: 1440
+    t.boolean  "paginated",       default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "scrape_resources", force: true do |t|
     t.string   "url",                                    null: false
     t.integer  "institution_id",                         null: false
