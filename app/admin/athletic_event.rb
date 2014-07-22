@@ -1,4 +1,4 @@
-ActiveAdmin.register ResourceType do
+ActiveAdmin.register AthleticEvent do
 
 
   # See permitted parameters documentation:
@@ -15,6 +15,6 @@ ActiveAdmin.register ResourceType do
   # end
 
   # Adds this into a dropdown in the top menu bar
-  menu :parent => "Scraping"
+  menu :parent => "Content"
 
 end
