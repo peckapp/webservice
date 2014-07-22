@@ -4,7 +4,7 @@ module Api
 
       # When you sign in, you get an authentication token.
       def create
-        @user = User.authenticate(authentication_params)
+        @user = User.authenticate(authentication_params[:email], authentication_params[:password])
         if @user
 
           # authentication token randomly generated each time signed in
