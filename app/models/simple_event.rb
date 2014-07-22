@@ -22,6 +22,11 @@ class SimpleEvent < ActiveRecord::Base
   validates :longitude, :numericality => true, :allow_nil => true
   validate :correct_simple_event_types
 
+  ### Event Photo Attachments ###
+  has_attached_file :image, :styles => { :medium => "300x300>", :thumb => "100x100>" }, :default_url => "/images/:style/missing.png"
+  validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
+  validates_with AttachmentSizeValidator, :attributes => :image, :less_than => 2.megabytes
+  
   ###############################
   ##                           ##
   ##        ASSOCIATIONS       ##
@@ -45,6 +50,11 @@ class SimpleEvent < ActiveRecord::Base
 
   ### scrape resource from which this was gathered ###
   belongs_to :scrape_resource #
+<<<<<<< HEAD
+=======
+
+  #####################
+>>>>>>> d15afbda1125be3f28172640bc9dc6be357d9cf0
 
   ###############################
   ##                           ##
@@ -62,11 +72,10 @@ class SimpleEvent < ActiveRecord::Base
   ###############################
 
   private
-  
+
     def correct_simple_event_types
       is_correct_type(title, String, "string", :title)
       is_correct_type(event_url, String, "string", :event_url)
-      is_correct_type(image_url, String, "string", :image_url)
       is_correct_type(start_date, Time, "datetime", :start_date)
       is_correct_type(end_date, Time, "datetime", :end_date)
     end

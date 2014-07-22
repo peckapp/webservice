@@ -127,6 +127,13 @@ Then to load redis now:
 Or, if you don't want/need launchctl, you can just run:
     redis-server /usr/local/etc/redis.conf
 
+### ImageMagick
+This command line utility must be installed to paperclip to be able to manipulate image attachments to the models
+
+CentOS: `yum install ImageMagick`
+
+MacOSX Homebrew: `brew install imagemagick`
+
 ## Standard rails README
 
 This README would normally document whatever steps are necessary to get the
