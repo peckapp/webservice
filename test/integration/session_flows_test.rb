@@ -16,15 +16,14 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
 
     # attempt to super create w/ wrong password
     # super_create_fail
-
     # authenticate user
     login(user)
 
     # create a circle
-    create_circle(user)
+    create_circle
 
     # create an event
-    create_simple_event(user)
+    create_simple_event
 
   end
 
@@ -43,6 +42,7 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
       user = assigns(:user)
       assert_response :success, "no response from database"
       assert_not_nil user, "user was not super created properly"
+      assert_not_nil user.authentication_token
       return user
     end
 
@@ -63,15 +63,15 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
       end
     end
 
-    def create_circle(user)
-      post "api/circles", :circle => {:institution_id => 3, :user_id => 59, :circle_name => "CIRCLE", :circle_members => [1,2,3,4]}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key, :authentication_token => user.authentication_token}, :format => :json
+    def create_circle
+      post "api/circles", :circle => {:institution_id => 3, :user_id => 59, :circle_name => "CIRCLE", :circle_members => [1,2,3,4]}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key}, :format => :json
       circle = assigns(:circle)
       assert_response :success, "no response from database"
       assert_not_nil circle.id, "circle was not created properly"
     end
 
-    def create_simple_event(user)
-      post "api/simple_events", :simple_event => {:title => "Super Duper Dope Event", :institution_id => 1, :user_id => 3, :open => true, :start_date => DateTime.current, :end_date => DateTime.current + 1.hour}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key, :authentication_token => user.authentication_token }, :format => :json
+    def create_simple_event
+      post "api/simple_events", :simple_event => {:title => "Super Duper Dope Event", :institution_id => 1, :user_id => 3, :open => true, :start_date => DateTime.current, :end_date => DateTime.current + 1.hour}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key }, :format => :json
       event = assigns(:simple_event)
       assert_response :success, "no response from database"
       assert_not_nil event.id, "simple event was not created properly"

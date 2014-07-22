@@ -4,20 +4,12 @@ class ApplicationController < ActionController::Base
   before_action :confirm_minimal_access
 
   def confirm_logged_in
-
     # user is found by session id
     user = User.find(session[:user_id])
 
     # the auth token must be present
-    if auth[:authentication_token]
-
-      # return true only if the auth token matches with the database token
-      if auth[:authentication_token] == user.authentication_token
-        return true
-      else
-        render :file => "public/401.html", :status => :unauthorized
-        return false
-      end
+    if auth[:authentication_token] && auth[:authentication_token] == user.authentication_token
+      return true
     else
       render :file => "public/401.html", :status => :unauthorized
       return false
@@ -39,7 +31,7 @@ class ApplicationController < ActionController::Base
 
     if auth_params_exist
       # check validity of existing session
-      if session[:user_id] == auth[:user_id] && session[:api_key] == auth[:api_key]
+      if session[:user_id] && session[:api_key] && session[:user_id] == auth[:user_id] && session[:api_key] == auth[:api_key]
         return true
       else
         # otherwise attempts to create session for that user
@@ -99,17 +91,18 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    def set_authentication_token
-      # if session has authentication_token (set when logged in)
-      # if session[:authentication_token]
-
-        # as longs as the authentication parameter is not nil, keep that as the auth token.
+    # def set_authentication_token
+    #   # if session has authentication_token (set when logged in)
+    #   user = User.find(session[:user_id])
+    #   if user.authentication_token
+    #
+    #     # as longs as the authentication token parameter is not nil, keep that as the auth token.
     #     if auth[:authentication_token]
     #       return auth[:authentication_token]
     #
     #       # otherwise, assign the authentication token to be the same as the session one
     #     else
-    #       auth[:authentication_token] = session[:authentication_token]
+    #       auth[:authentication_token] = user.authentication_token
     #     end
     #
     #     # if there is no session with the authentication token, authentication token should be nil.
@@ -117,7 +110,7 @@ class ApplicationController < ActionController::Base
     #     auth[:authentication_token] = nil
     #   end
     #   return auth[:authentication_token]
-    end
+    # end
 
     # check existence of auth params
     def auth_params_exist
