@@ -1,9 +1,13 @@
 class DiningOpportunity < ActiveRecord::Base
   include ModelNormalValidations
   include ModelBeforeSaveValidations
-# verified
 
-  ### Associations ###
+  ###############################
+  ##                           ##
+  ##       ASSOCIATIONS        ##
+  ##                           ##
+  ###############################
+
   # home institution for this dining opportunity #
   belongs_to :institution #
 
@@ -15,28 +19,22 @@ class DiningOpportunity < ActiveRecord::Base
 
   # available menu items #
   has_many :menu_items #
-  ####################
 
-  ### Validations ###
+  ###############################
+  ##                           ##
+  ##        VALIDATIONS        ##
+  ##                           ##
+  ###############################
+
   validates :dining_opportunity_type, :presence => true
   validates :institution_id, :presence => true, :numericality => { :only_integer => true }
   validate :correct_dining_opportunity_types
-  ###################
 
-  ### Callbacks ###
-  # before_save :sanitize_dining_opportunity
-  # before_create :sanitize_dining_opportunity
-  # before_update :sanitize_dining_opportunity
-  #################
-
-  ### Methods ###
-  #
-  # def sanitize_dining_opportunity
-  #   sanitize_everything(attributes)
-  # end
-  #
-  # private
-  #   attributes = [id, dining_opportunity_type, institution_id, created_at, updated_at]
+  ###############################
+  ##                           ##
+  ##      HELPER METHODS       ##
+  ##                           ##
+  ###############################
 
 
 
@@ -99,12 +97,4 @@ class DiningOpportunity < ActiveRecord::Base
     def correct_dining_opportunity_types
       is_correct_type(dining_opportunity_type, String, "string", :dining_opportunity_type)
     end
-    #
-    # def sanitize_dining_opportunity
-    #   sanitize_everything(attributes)
-    # end
-    #
-    # private
-    #   attributes = [id, dining_opportunity_type, institution_id, created_at, updated_at]
-
-end
+  end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140717031640) do
+ActiveRecord::Schema.define(version: 20140721154726) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -442,7 +442,7 @@ ActiveRecord::Schema.define(version: 20140717031640) do
   add_index "user_device_tokens_users", ["user_device_token_id", "user_id"], name: "user_device_tokens_users_index", using: :btree
 
   create_table "users", force: true do |t|
-    t.integer  "institution_id",                       null: false
+    t.integer  "institution_id"
     t.string   "first_name"
     t.string   "last_name"
     t.string   "email"

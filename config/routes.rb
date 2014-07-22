@@ -19,7 +19,16 @@ Rails.application.routes.draw do
 
       resources :simple_events, :activity_logs, :athletic_events, :athletic_teams, :clubs, :configurations, :departments, :dining_opportunities, :dining_periods, :dining_places,:event_attendees, :comments, :event_views, :events_page_urls, :institutions, :locations, :menu_items, :notification_views, :push_notifications, :simple_events, :subscriptions, :user_device_tokens, :explore
 
-      resources :sessions, :only => [:create, :destroy]
+      resources :sessions, :only => [:create, :destroy] do
+        collection do
+          post :set_public
+        end
+
+        collection do
+          delete :switch_institution
+        end
+      end
+
 
       resources :users do
         member do

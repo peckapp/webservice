@@ -3,10 +3,10 @@ require 'ultimate_test_helper'
 
 class EventsPageUrlsControllerTest < UltimateTestHelper
   def setup
-    @controller = Api::V1::EventsPageUrlsController.new
-    @attributes = [:id, :institution_id, :url, :type, :format]
-    @params_index = {:format => :json}
-    @params_show = {:id => 8, :format => :json}
+    @the_controller = Api::V1::EventsPageUrlsController.new
+    @attributes = [:id, :institution_id, :url, :type, :format, :authentication]
+    @params_index = {:format => :json, :authentication => session_create}
+    @params_show = {:id => 8, :format => :json, :authentication => session_create}
     @params_create = {:institution_id => 2, :url => "file/path"}
     @params_update = {:url => "another_file/path"}
     @model_type = :events_page_url

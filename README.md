@@ -34,6 +34,7 @@ There will be a few primary tasks that the API will handle:
 - Kibana Log Monitoring: buri.peckapp.com:9222
  - currently only on new buri server without DNS connection
  - will be setting up nginx http authentication for access to this site
+- `fail2ban` is used in tandem with [badIPs.com](www.badips.com) to keep track of malicious hosts. our specific information can be seen using our key.
 
 ### Config Files
 - Nginx
@@ -41,12 +42,24 @@ There will be a few primary tasks that the API will handle:
  - `/opt/nginx/conf/available-sites/*`
 - Kibana
  - `/usr/share/nginx/kibana3/config.js`
+- Elasticsearch
+ - `/etc/elasticsearch/elasticsearch.yml`
 - Logstash server
  - input: `/etc/logstash/conf.d/01-lumberjack-input.conf`
- - filter: `/etc/logstash/conf.d/10-syslog.conf`
+ - filter: `/etc/logstash/conf.d/*.conf`
+ - patterns `/opt/nginx/logstash/patterns/*`
  - output: `/etc/logstash/conf.d/30-lumberjack-output.conf`
 - Logstash forwarders
+ - `/etc/logstash-forwarder`
  - `/etc/sysconfig/logstash-forwarder`
+
+### Service restarts
+- Nginx
+ - `service nginx restart`
+- Kibana/ElasticSearch/Logstash
+ - `service elasticsearch restart`
+ - `service logstash restart`
+ - `service logstash-forwarder restart`
 
 ## Production Environment
 

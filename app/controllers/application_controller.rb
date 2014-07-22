@@ -1,38 +1,55 @@
 class ApplicationController < ActionController::Base
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
-  # protect_from_forgery with: :exception
-  # def helpers
-  #   Helper.instance
-  # end
-  #
-  # class Helper
-  #   include ActionView::Helpers::TextHelper
-  #   include ActionView::Helpers::SanitizeHelper
-  # end
-  #
-  # def sanitize_stuff(params_hash)
-  #   params_hash.each do |param|
-  #     helpers.sanitize(param)
-  #   end
-  # end
+
+  # allows all classes to inherit
+  before_action :confirm_minimal_access
+
   def confirm_logged_in
-    unless session[:user_id]
+    user = User.find(session[:user_id])
+    if set_authentication_token && auth[:authentication_token] == user.authentication_token
+      return true
+    else
       render :file => "public/401.html", :status => :unauthorized
       return false
-    else
-      return true
     end
   end
 
-  # def confirm_correct_school(strong_params)
-  #   user = User.find(session[:user_id])
-  #   strong_params[:institution_id] = user.institution_id
+  # def confirm_authentication_token
+  #   if confirm_logged_in
+  #     user = User.find(session[:user_id])
+  #     unless auth[:authentication_token] == user.authentication_token
+  #       render :file => "public/401.html", :status => :unauthorized
+  #       return false
+  #     end
+  #   end
+  #   return true
   # end
 
-  def restrict_access
-    authenticate_or_request_with_http_token do |token, options|
-      User.exists?(api_key: token)
+  def confirm_minimal_access
+
+    if auth_params_exist
+      # check validity of existing session
+      if session[:user_id] == auth[:user_id] && session[:api_key] == auth[:api_key]
+        return true
+      else
+        # otherwise attempts to create session for that user
+        user = User.find(auth[:user_id])
+        unless user.blank?
+          # checks validity of api_key
+          if user.api_key == auth[:api_key]
+
+            # create session for existing user
+            session[:user_id] = user.id
+            session[:api_key] = user.api_key
+            return true
+          else
+            # Invalid api key
+            logger.warn "Attempted to confirm minimal access for user id: [#{user.id}] with invalid api key: [#{user.api_key}]"
+          end
+        end
+      end
+      return false
+    else
+      render :file => "public/401.html", :status => :unauthorized
     end
   end
 
@@ -63,6 +80,44 @@ class ApplicationController < ActionController::Base
 
   private
 
+    def auth
+      if params[:authentication].blank?
+        {}
+      else
+        params[:authentication]
+      end
+    end
+
+    def set_authentication_token
+      # if session has authentication_token (set when logged in)
+      if session[:authentication_token]
+
+        # as longs as the authentication parameter is not nil, keep that as the auth token.
+        if auth[:authentication_token]
+          return auth[:authentication_token]
+
+          # otherwise, assign the authentication token to be the same as the session one
+        else
+          auth[:authentication_token] = session[:authentication_token]
+        end
+
+        # if there is no session with the authentication token, authentication token should be nil.
+      else
+        auth[:authentication_token] = nil
+      end
+      return auth[:authentication_token]
+    end
+
+    # check existence of auth params
+    def auth_params_exist
+
+      if auth[:user_id].blank? || auth[:api_key].blank?
+        return false
+      else
+        return true
+      end
+    end
+
     def allowed_model_instances(model, auth_params)
       # basic authentication check
       model.where(institution_id: auth_params[:institution_id])
@@ -77,5 +132,4 @@ class ApplicationController < ActionController::Base
       end
       search_params
     end
-
 end

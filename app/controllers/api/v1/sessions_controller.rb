@@ -2,19 +2,34 @@ module Api
   module V1
     class SessionsController < ApplicationController
 
+      # When you sign in, you get an authentication token.
       def create
         @user = User.authenticate(params[:email], params[:password])
-
-        session[:institution_id] = params[:institution_id]
         if @user
-          session[:user_id] = @user.id
+
+          # authentication token randomly generated each time signed in
+          # session[:authentication_token] = SecureRandom.hex(20)
+          # @user.authentication_token = session[:authentication_token]
+          @user.authentication_token = SecureRandom.hex(20)
         end
       end
 
       def destroy
-        @user = User.find(session[:user_id])
+        # should we add these checks?
+        # params[:id] will be the one sent in the path like api/v1/sessions/:id
+        # @user = User.find(params[:id])
+        #
+        # # make sure the session matches with the user's id
+        # if @user
+        #   if session[:user_id] = @user.id
+        #     session[:user_id] = nil
+        #     session[:authentication_token] = nil
+        #     @user.authentication_token = nil
+        #   end
+        # end
         session[:user_id] = nil
-        session[:institution_id] = nil
+        # session[:authentication_token] = nil
+        @user.authentication_token = nil
       end
     end
   end
