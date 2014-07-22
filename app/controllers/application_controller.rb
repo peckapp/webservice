@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   before_action :confirm_minimal_access
 
   def confirm_logged_in
-    puts "\n------> #{auth[:authentication_token]} <--------"
+    
     if auth[:authentication_token] && auth[:authentication_token] == User.find(session[:user_id]).authentication_token
       return true
     else
