@@ -13,6 +13,21 @@
 
 ActiveRecord::Schema.define(version: 20140721154726) do
 
+  create_table "active_admin_comments", force: true do |t|
+    t.string   "namespace"
+    t.text     "body"
+    t.string   "resource_id",   null: false
+    t.string   "resource_type", null: false
+    t.integer  "author_id"
+    t.string   "author_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id", using: :btree
+  add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
+  add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
+
   create_table "activity_logs", force: true do |t|
     t.integer  "sender",           null: false
     t.integer  "receiver",         null: false
@@ -32,6 +47,24 @@ ActiveRecord::Schema.define(version: 20140721154726) do
   add_index "activity_logs", ["receiver"], name: "index_activity_logs_on_receiver", using: :btree
   add_index "activity_logs", ["sender"], name: "index_activity_logs_on_sender", using: :btree
   add_index "activity_logs", ["type_of_activity"], name: "index_activity_logs_on_type_of_activity", using: :btree
+
+  create_table "admin_users", force: true do |t|
+    t.string   "email",                  default: "", null: false
+    t.string   "encrypted_password",     default: "", null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          default: 0,  null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
+  add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
 
   create_table "athletic_events", force: true do |t|
     t.integer  "institution_id",     null: false
@@ -69,6 +102,13 @@ ActiveRecord::Schema.define(version: 20140721154726) do
   add_index "athletic_teams", ["institution_id"], name: "index_athletic_teams_on_institution_id", using: :btree
   add_index "athletic_teams", ["sport_name"], name: "index_athletic_teams_on_sport_name", using: :btree
 
+  create_table "attendees_users", id: false, force: true do |t|
+    t.integer "event_attendee_id", null: false
+    t.integer "user_id",           null: false
+  end
+
+  add_index "attendees_users", ["event_attendee_id", "user_id"], name: "index_attendees_users_on_event_attendee_id_and_user_id", using: :btree
+
   create_table "circle_members", force: true do |t|
     t.integer  "circle_id",      null: false
     t.integer  "user_id",        null: false
@@ -82,6 +122,13 @@ ActiveRecord::Schema.define(version: 20140721154726) do
   add_index "circle_members", ["circle_id"], name: "index_circle_members_on_circle_id", using: :btree
   add_index "circle_members", ["invited_by"], name: "index_circle_members_on_invited_by", using: :btree
   add_index "circle_members", ["user_id"], name: "index_circle_members_on_user_id", using: :btree
+
+  create_table "circle_members_users", id: false, force: true do |t|
+    t.integer "user_id",          null: false
+    t.integer "circle_member_id", null: false
+  end
+
+  add_index "circle_members_users", ["user_id", "circle_member_id"], name: "circle_members_users_index", using: :btree
 
   create_table "circles", force: true do |t|
     t.integer  "institution_id", null: false
@@ -244,6 +291,13 @@ ActiveRecord::Schema.define(version: 20140721154726) do
 
   add_index "institutions", ["configuration_id"], name: "index_institutions_on_configuration_id", using: :btree
   add_index "institutions", ["name"], name: "index_institutions_on_name", using: :btree
+
+  create_table "inviters_users", id: false, force: true do |t|
+    t.integer "event_attendee_id", null: false
+    t.integer "user_id",           null: false
+  end
+
+  add_index "inviters_users", ["event_attendee_id", "user_id"], name: "index_inviters_users_on_event_attendee_id_and_user_id", using: :btree
 
   create_table "locations", force: true do |t|
     t.integer  "institution_id", null: false
