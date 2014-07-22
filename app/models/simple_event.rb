@@ -26,7 +26,7 @@ class SimpleEvent < ActiveRecord::Base
   has_attached_file :image, :styles => { :medium => "300x300>", :thumb => "100x100>" }, :default_url => "/images/:style/missing.png"
   validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
   validates_with AttachmentSizeValidator, :attributes => :image, :less_than => 2.megabytes
-  
+
   ###############################
   ##                           ##
   ##        ASSOCIATIONS       ##
@@ -50,11 +50,6 @@ class SimpleEvent < ActiveRecord::Base
 
   ### scrape resource from which this was gathered ###
   belongs_to :scrape_resource #
-<<<<<<< HEAD
-=======
-
-  #####################
->>>>>>> d15afbda1125be3f28172640bc9dc6be357d9cf0
 
   ###############################
   ##                           ##
