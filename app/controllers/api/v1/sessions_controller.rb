@@ -5,10 +5,10 @@ module Api
       # When you sign in, you get an authentication token.
       def create
         @user = User.authenticate(params[:email], params[:password])
-        # if @user
-        #   @user.authentication_token = SecureRandom.hex(20)
-        #   @user.save
-        # end
+        if @user
+          @user.authentication_token = SecureRandom.hex(20)
+          @user.save
+        end
       end
 
       def destroy
