@@ -1,5 +1,8 @@
 ActiveAdmin.setup do |config|
 
+  # skips the default filter in the applocation controller because ActiveAdmin uses its own authentication
+  config.skip_before_filter :confirm_minimal_access
+
   # == Site Title
   #
   # Set the title that is displayed on the main layout
