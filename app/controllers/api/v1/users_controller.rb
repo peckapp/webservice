@@ -21,16 +21,17 @@ module Api
       end
 
       def change_password
-        @old_pass_match = true
+
         new_pass_params = password_update_params
 
         @user = User.authenticate(User.find(session[:user_id]).email, params[:user][:password])
 
         if @user
+          @user.old_pass_match = true
           @user.update_attributes(new_pass_params)
         else
           @user = User.find(session[:user_id])
-          @old_pass_match = false
+          @user.old_pass_match = false
         end
       end
 

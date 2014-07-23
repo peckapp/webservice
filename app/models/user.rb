@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   include ModelBeforeSaveValidations
 
   # each user has an encrypted secure password
-  attr_accessor :enable_strict_validation, :password
+  attr_accessor :enable_strict_validation, :password, :old_pass_match
 
   EMAIL_REGEX =/\A[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}\Z/
 
