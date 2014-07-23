@@ -2,8 +2,6 @@ module Api
   module V1
     class UsersController < ApplicationController #Api::BaseController
 
-      # before_action :confirm_admin
-      # :except => [:index, :show]
       before_action :confirm_minimal_access, :except => :create
 
       respond_to :json
