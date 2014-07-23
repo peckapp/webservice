@@ -13,9 +13,12 @@ class CrawlerWorker
   # use is for efficiency, not accuracy, so occasional race conditions won't matter
   @@bf = nil
 
-  def perform(resource_id)
-    resource = Tasks::ScrapeResource.find(resource_id)
-    crawl_loop(resource.url, resource.institution_id)
+  def perform
+    CrawlSeed.all.each do |seed|
+      if seed.active
+        crawl_loop(seed.url, seed.institution_id)
+      end
+    end
   end
 
   private
@@ -82,7 +85,7 @@ class CrawlerWorker
 
 
     ### utility methods for the crawler
-    
+
     def acceptable_link_format?(link)
       begin
         if link.to_s.match(/#/) || link.uri.to_s.empty? then return false end # handles anchor links within the page

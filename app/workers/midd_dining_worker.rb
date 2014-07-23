@@ -10,16 +10,19 @@ class MiddleburyDiningWorker
   DATE_FORMAT = "%A, %B %-d, %Y"
 
   def perform
-    midd_id = Institution.where(name: 'Middlebury').id
-    resources = Tasks::ScrapeResource.where(resource_type: "dining", validated: true, institution_id: midd_id)
-    if resources.blank?
-      resources << Tasks::ScrapeResource.current_or_create_new(url: MIDD_MENUS, institution_id: midd_id)
-    else
-      resources.each do |r|
-        b = Watir::Browser.new
-        b.goto MIDD_MENUS
-        puts 'entering loop'
-        self.menu_loop(b)
+    midd = Institution.where(name: 'Middlebury').first
+    resource_type = ResourceType.where(resource_name: "dining").first
+    unless midd.blank? || resource_type.blank?
+      resources = ScrapeResource.where(resource_type_id: resource_type.id, validated: true, institution_id: midd.id)
+      if resources.blank?
+        resources << ScrapeResource.current_or_create_new(url: MIDD_MENUS, institution_id: midd.id)
+      else
+        resources.each do |r|
+          b = Watir::Browser.new
+          b.goto MIDD_MENUS
+          puts 'entering loop'
+          self.menu_loop(b)
+        end
       end
     end
   end

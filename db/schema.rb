@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140723145421) do
+ActiveRecord::Schema.define(version: 20140723195355) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -171,6 +171,16 @@ ActiveRecord::Schema.define(version: 20140723145421) do
   create_table "configurations", force: true do |t|
     t.string   "mascot"
     t.string   "config_file_name", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "crawl_seeds", force: true do |t|
+    t.string   "info"
+    t.string   "url"
+    t.string   "regex"
+    t.boolean  "active"
+    t.integer  "institution_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
