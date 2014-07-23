@@ -1,3 +1,6 @@
+# an experiemental first class using database information to scrape structured data off of websites
+# correctly handles rss feeds in any format, but untested elsewhere
+
 class NestedScrapeWorker
 
   include Sidekiq::Worker

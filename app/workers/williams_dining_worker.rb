@@ -1,3 +1,6 @@
+# scraped the williams daily dining menus from the CSV file provided by OIT
+# a more robust version should be written that appropriately handles the actual interface using sleinium
+
 require 'csv'
 
 class WilliamsDiningWorker

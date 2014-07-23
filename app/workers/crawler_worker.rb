@@ -4,9 +4,7 @@ class CrawlerWorker
 
   include Sidekiq::Worker
   include Sidetiq::Schedulable
-
-  QUEUE_NAME = "general_crawl"
-
+  
   recurrence { daily }
 
   # bloom filter as a persistent class variable
