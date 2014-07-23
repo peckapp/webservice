@@ -1,6 +1,17 @@
 require 'test_helper'
 
 class UltimateTestHelper < ActionController::TestCase
+  include Devise::TestHelpers
+  include Warden::Test::Helpers
+  Warden.test_mode!
+  def setup
+
+  end
+  
+  def teardown
+    Warden.test_reset!
+  end
+
   def session_create(auth_token = nil)
     session[:institution_id] = 1
     session[:user_id] = 3

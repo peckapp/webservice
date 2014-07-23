@@ -15,7 +15,6 @@ module Api
       end
 
       def create
-        @subscription = Subscription.create(subscription_params)
       end
 
       def update
@@ -29,9 +28,9 @@ module Api
 
       private
 
-        def subscription_params
+        def subscription_params(parameters)
 
-          params.require(:subscription).permit(:institution_id, :user_id, :category, :subscribed_to)
+          parameters.permit(:institution_id, :user_id, :category, :subscribed_to)
 
         end
     end
