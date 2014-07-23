@@ -90,7 +90,9 @@ Rails.application.routes.draw do
   # api status and version information
   get 'api', to: 'api#index', via: [:get]
 
-  mount Sidekiq::Web, at: '/tasks'
+  authenticate :admin_user do
+    mount Sidekiq::Web, at: '/tasks'
+  end
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
