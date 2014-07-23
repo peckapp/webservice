@@ -10,8 +10,8 @@
 
 
 # Default deploy_to directory is /var/www/my_app
-set :deploy_to, '/var/www/webservice_development'
-
+# set :deploy_to, '/var/www/webservice_development'
+set :deploy_to, '/home/deployer/apps/webservice_development'
 
 # Extended Server Syntax
 # ======================
@@ -20,8 +20,8 @@ set :deploy_to, '/var/www/webservice_development'
 # used to set extended properties on the server.
 
 # Define server(s)
-server 'thor.peckapp.com', user: 'deploy', roles: %w{web app db}
-# server 'magni.peckapp.com', user: 'deployer', roles: %w{db}
+# server 'thor.peckapp.com', user: 'deploy', roles: %w{web app db}
+server 'loki.peckapp.com', user: 'deployer', roles: %w{web app db}
 
 
 # Custom SSH Options
@@ -34,7 +34,7 @@ server 'thor.peckapp.com', user: 'deploy', roles: %w{web app db}
 set :ssh_options, {
   keys: %w(File.join(ENV["HOME"], ".ssh", "peckvps") File.join(ENV["HOME"], ".ssh", "id_rsa")),
   forward_agent: false,
-  user: 'deploy',
+  user: 'deployer',
   auth_methods: %w(publickey password)
 }
 #

@@ -30,7 +30,6 @@ class Circle < ActiveRecord::Base
   validates :institution_id, :presence => true, :numericality => { :only_integer => true }
   validates :user_id, :presence => true, :numericality => { :only_integer => true }
   validates :circle_name, :presence => true
-  # validates :image_link, :uniqueness => true, :allow_nil => true
   validate :correct_circle_types
 
   ###############################
@@ -42,6 +41,5 @@ class Circle < ActiveRecord::Base
   private
   def correct_circle_types
     is_correct_type(circle_name, String, "string", :circle_name)
-    # is_correct_type(image_link, String, "string", :image_link)
   end
 end

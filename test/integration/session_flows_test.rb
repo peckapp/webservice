@@ -26,6 +26,9 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
     # create an event
     create_simple_event
 
+    # change a user's password
+    change_user_password
+
   end
 
   ##########################################
@@ -76,5 +79,12 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
       event = assigns(:simple_event)
       assert_response :success, "no response from database"
       assert_not_nil event.id, "simple event was not created properly"
+    end
+
+    def change_user_password
+
+      patch "api/users/1/change_password", :user => {:password => "testingabcd", :new_password => {:password => "testing2", :password_confirmation => "testing2"}}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key }, :format => :json
+      assert_response :success, "we've got a problem with changing passwords"
+
     end
 end

@@ -21,11 +21,11 @@ Rails.application.routes.draw do
 
       resources :simple_events, :activity_logs, :athletic_events, :athletic_teams, :clubs, :configurations, :departments, :dining_opportunities, :dining_periods, :dining_places,:event_attendees, :comments, :event_views, :events_page_urls, :institutions, :locations, :menu_items, :notification_views, :push_notifications, :simple_events, :subscriptions, :user_device_tokens, :explore
 
-      resources :access, :only => [:create, :destroy] 
+      resources :access, :only => [:create, :destroy]
 
       resources :users do
         member do
-          patch :super_create
+          patch :super_create, :change_password
         end
       end
 
@@ -90,7 +90,9 @@ Rails.application.routes.draw do
   # api status and version information
   get 'api', to: 'api#index', via: [:get]
 
-  mount Sidekiq::Web, at: '/tasks'
+  authenticate :admin_user do
+    mount Sidekiq::Web, at: '/tasks'
+  end
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
