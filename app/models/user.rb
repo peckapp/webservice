@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
   validate :correct_user_types
 
   # image validations
-  has_attached_file :image, :styles => { :medium => "300x300>", :thumb => "100x100>" }, :default_url => "/images/:style/missing.png"
+  has_attached_file :image, :default_url => "/images/:style/missing.png" # :styles => { :medium => "300x300>", :thumb => "100x100>" }, 
   validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
   # validates_with AttachmentSizeValidator, :attributes => :image #, :less_than => 20.megabytes
 
