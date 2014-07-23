@@ -67,7 +67,7 @@ While this application will be built in development environments on the Mac OSX 
 
 There are many additional options for the structure of the backend system, several of which are described in the Digital Ocean documentation linked to in the wiki pages.
 
-### Recurring Deployment
+### Production Deployment
 Deployment of the rails application will be automated using [Capistrano](http://capistranorb.com) to update the server with the latest code. There will be three environments setup withing the Capistrano files that can be used to deploy the application.
 
 #### Deploying Code
@@ -89,6 +89,27 @@ The production server is deployed to using similar syntax to the development ser
  - The staging environment allows code to be pushed and tested in an environment similar to testing, but without affecting the current production deployment of the code that users are interacting with. It is a final stage of checks before deploying to production.
 - Production
  - The production environment is where the live application code exists that the mobile applications will be interacting with.
+
+ #### Server Configurations
+- step through setup at: https://www.digitalocean.com/community/tutorials/how-to-deploy-rails-apps-using-passenger-with-nginx-on-centos-6-5
+- install fail2ban: https://www.digitalocean.com/community/tutorials/how-to-protect-ssh-with-fail2ban-on-centos-6
+- for local development install mysql
+ - `yum install mysql-server mysql-devel`
+ - `chkconfig mysqld on`
+ - `mysql_secure_installation`
+ - configure mysql users and database permissions: https://www.digitalocean.com/community/tutorials/how-to-create-a-new-user-and-grant-permissions-in-mysql
+- install redis for sidekiq
+ - `yum install redis`
+ - `chkconfig redis on`
+- install ImageMagick for paperclip gem image manipulation
+ - `yum install ImageMagick`
+- verify startup configuration
+ - `chkconfig --list`
+- configure users appropriately
+ - `addgroup deployers`
+ - `useradd deployer`
+ - `usermod -a -G deployers deployer`
+ - use `visudo` to edit the sudoers file if necessary
 
 ### System setup
 
@@ -112,6 +133,7 @@ Other future options include replication of the database in a master-slave relat
 - ruby version 2.1.2
 - `rvm` ruby version manager tool
 - `mysql` installation
+ - `brew install mysql`
 
 **IMPORTANT** DO NOT use the `rbenv` ruby versioning tool with this project. All developers must be using the `rvm` tool found at the [RVM official website](https://rvm.io) where you can get information on the install process. Before attempting to work in the app, make sure that all remnants of `rbenv` has been removed from you shell configuration files, including `.bash_profile`, `.bashrc`, `.profile`, and any others that your shell may load on startup.
 
@@ -120,12 +142,14 @@ To create a local database configuration file, execute the command `cp config/da
 Set up a local mysql databases and a user for the development and test environments and modify the settings specified in the new `config/database.yml` to reflect these local databases.
 
 ### Redis
+On MacOSX:
+
 To have launchd start redis at login:
-    ln -sfv /usr/local/opt/redis/*.plist ~/Library/LaunchAgents
+    `ln -sfv /usr/local/opt/redis/*.plist ~/Library/LaunchAgents`
 Then to load redis now:
-    launchctl load ~/Library/LaunchAgents/homebrew.mxcl.redis.plist
+    `launchctl load ~/Library/LaunchAgents/homebrew.mxcl.redis.plist`
 Or, if you don't want/need launchctl, you can just run:
-    redis-server /usr/local/etc/redis.conf
+    `redis-server /usr/local/etc/redis.conf`
 
 ### ImageMagick
 This command line utility must be installed to paperclip to be able to manipulate image attachments to the models
