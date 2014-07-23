@@ -5,17 +5,18 @@ class CrawlerWorker
   include Sidekiq::Worker
   include Sidetiq::Schedulable
 
-  QUEUE_NAME = "general_crawl"
-
   recurrence { daily }
 
   # bloom filter as a persistent class variable
   # use is for efficiency, not accuracy, so occasional race conditions won't matter
   @@bf = nil
 
-  def perform(resource_id)
-    resource = Tasks::ScrapeResource.find(resource_id)
-    crawl_loop(resource.url, resource.institution_id)
+  def perform
+    CrawlSeed.all.each do |seed|
+      if seed.active
+        crawl_loop(seed.url, seed.institution_id)
+      end
+    end
   end
 
   private
@@ -29,7 +30,7 @@ class CrawlerWorker
       # queue to store the links for this crawl
       crawl_queue = Array.new
 
-      # bloom filter to prevent repeated page crawls, instantiated if currently nil
+      # bloom filter to prevent repeated page crawls, instantiated only if currently nil
       k = (0.7 * bf_bits).ceil
       @@bf = BloomFilter::Native.new(size: page_quantity, hashes: k, seed: 1) if @@bf.blank?
 
@@ -68,7 +69,7 @@ class CrawlerWorker
 
 
           ### Sends off the task asynchronously to another worker ###
-          PageCrawlWorker.perform_async(new_page.uri.to_s, inst_id)
+          PageCrawlAnalyzer.perform_async(new_page.uri.to_s, inst_id)
 
 
           # sleep time to keep the crawl interval unpredictable and prevent lockout from certain sites
@@ -82,7 +83,7 @@ class CrawlerWorker
 
 
     ### utility methods for the crawler
-    
+
     def acceptable_link_format?(link)
       begin
         if link.to_s.match(/#/) || link.uri.to_s.empty? then return false end # handles anchor links within the page

@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   include ModelBeforeSaveValidations
 
   # each user has an encrypted secure password
-  attr_accessor :enable_strict_validation, :password, :old_pass_match
+  attr_accessor :enable_strict_validation, :password, :old_pass_match, :image
 
   EMAIL_REGEX =/\A[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}\Z/
 
@@ -25,9 +25,10 @@ class User < ActiveRecord::Base
   validate :correct_user_types
 
   # image validations
-  has_attached_file :image, :default_url => "/images/:style/missing.png" # :styles => { :medium => "300x300>", :thumb => "100x100>" },
+  has_attached_file :image, :url => "/images/users/:style/:basename.:extension", :path => ":rails_root/public/images/users/:style/:basename.:extension", :default_url => "/images/missing.png" # :styles => { :medium => "300x300>", :thumb => "100x100>" },
+  # validates_attachment :image, :content_type => { :content_type => "image/jpeg"}
   validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
-  # validates_with AttachmentSizeValidator, :attributes => :image #, :less_than => 20.megabytes
+  validates_with AttachmentSizeValidator, :attributes => :image, :less_than => 5.megabytes
 
   ###############################
   ##                           ##
@@ -72,7 +73,7 @@ class User < ActiveRecord::Base
   #####################
 
   ### devices on which peck is used ###
-  has_and_belongs_to_many :user_device_tokens #
+  has_and_belongs_to_many :user_device_tokens
   #####################################
 
   ### user viewed a specific event ###
@@ -96,10 +97,12 @@ class User < ActiveRecord::Base
   ###############################
 
   def self.authenticate(email, password)
-    user = self.where(:email => email).first
+    unless email.blank? || password.blank?
+      user = self.where(:email => email).first
 
-    if user && user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
-      user
+      if user && user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
+        user
+      end
     end
   end
 

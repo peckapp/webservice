@@ -21,12 +21,14 @@ module Api
       end
 
       def change_password
-
+        # password and password confirmation
         new_pass_params = password_update_params
 
+        # authenticate based on the password provided in the old password field
         @user = User.authenticate(User.find(session[:user_id]).email, params[:user][:password])
 
         if @user
+          # old_pass_match used as boolean for correct JSON response
           @user.old_pass_match = true
           @user.update_attributes(new_pass_params)
         else
@@ -40,23 +42,24 @@ module Api
         # params in the user block
         uparams = params[:user]
 
-        # params for super creating, making mass assignment unecessary.
+        # params for super creating with mass assignment.
         sign_up_params = user_signup_params
 
         @user = User.find(params[:id])
 
-        # makes it necessary for to have a password and password confirmation.
-        @user.enable_strict_validation = true
-
-        # assigns the password and password_confirmation from the values in the user block of params.
-        sign_up_params[:password] = uparams[:password]
-        sign_up_params[:password_confirmation] = uparams[:password_confirmation]
-
-        # sign_up_params[:authentication_token] = SecureRandom.hex(30)
-
-        @user.update_attributes(sign_up_params)
-
         if @user
+          # makes it necessary for to have a password and password confirmation.
+          @user.enable_strict_validation = true
+
+          # assigns the password and password_confirmation from the values in the user block of params.
+          sign_up_params[:password] = uparams[:password]
+          sign_up_params[:password_confirmation] = uparams[:password_confirmation]
+
+          # gets the image from the params
+          sign_up_params[:image] = params[:image]
+
+          @user.update_attributes(sign_up_params)
+
           @user.authentication_token = SecureRandom.hex(30)
           @user.save
           auth[:authentication_token] = @user.authentication_token
@@ -65,7 +68,11 @@ module Api
 
       def update
         @user = User.find(params[:id])
-        @user.update_attributes(user_update_params)
+        update_params = user_update_params
+
+        # gets the image from the params
+        update_params[:image] = params[:image]
+        @user.update_attributes(update_params)
       end
 
       def destroy
@@ -74,11 +81,11 @@ module Api
 
       private
         def user_signup_params
-          params.require(:user).permit(:first_name, :last_name, :email, :blurb, :password, :password_confirmation, :image)
+          params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :blurb)
         end
 
         def user_update_params
-          params.require(:user).permit(:first_name, :last_name, :blurb, :facebook_link, :active, :image)
+          params.require(:user).permit(:first_name, :last_name, :blurb, :facebook_link, :active)
         end
 
         def password_update_params

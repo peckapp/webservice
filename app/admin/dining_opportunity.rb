@@ -1,4 +1,4 @@
-ActiveAdmin.register AthleticEvent do
+ActiveAdmin.register DiningOpportunity do
 
 
   # See permitted parameters documentation:
@@ -15,11 +15,10 @@ ActiveAdmin.register AthleticEvent do
   # end
 
   # Adds this into a dropdown in the top menu bar
-  menu :parent => "Content"
+  menu :parent => "Dining"
 
-  #### THESE SHOULD NOT HAVE TO BE HERE ####
-  # need to figure out root cause of errors and solve them
-  remove_filter :home_or_away
-  remove_filter :date_and_time
+  # active admin seems to have broken filter generations for simple joins
+  remove_filter :diningopportunities_dining_places
+  filter :dining_opportunities_dining_places
 
 end

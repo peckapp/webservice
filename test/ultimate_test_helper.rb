@@ -29,14 +29,14 @@ class UltimateTestHelper < ActionController::TestCase
   end
 
   test "should_get_index" do
-    next unless is_subclass?
+    next unless is_subclass? && is_controller?
     @controller = @the_controller
     get :index, @params_index
     assert_response :success
   end
 
   test "should_get_show" do
-    next unless is_subclass?
+    next unless is_subclass? && is_controller?
     @controller = @the_controller
     @params_show.keys.each do |attribute|
       unless @attributes.include? attribute
@@ -48,7 +48,7 @@ class UltimateTestHelper < ActionController::TestCase
   end
 
   test "should_post_create" do
-    next unless is_subclass?
+    next unless is_subclass? && is_controller?
     the_user = super_create_user
 
     auth_params = session_create
@@ -60,7 +60,7 @@ class UltimateTestHelper < ActionController::TestCase
   end
 
   test "should_patch_update" do
-    next unless is_subclass?
+    next unless is_subclass? && is_controller?
     the_user = super_create_user
 
     auth_params = session_create
@@ -71,7 +71,7 @@ class UltimateTestHelper < ActionController::TestCase
   end
 
   test "should_delete_destroy" do
-    next unless is_subclass?
+    next unless is_subclass? && is_controller?
     the_user = super_create_user
 
     auth_params = session_create
@@ -85,5 +85,9 @@ class UltimateTestHelper < ActionController::TestCase
   private
     def is_subclass?
       self.class.superclass == UltimateTestHelper
+    end
+
+    def is_controller?
+      defined? @the_controller
     end
 end

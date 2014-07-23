@@ -1,4 +1,4 @@
-ActiveAdmin.register AthleticEvent do
+ActiveAdmin.register CrawlSeed do
 
 
   # See permitted parameters documentation:
@@ -15,11 +15,7 @@ ActiveAdmin.register AthleticEvent do
   # end
 
   # Adds this into a dropdown in the top menu bar
-  menu :parent => "Content"
+  menu :parent => "Scraping"
 
-  #### THESE SHOULD NOT HAVE TO BE HERE ####
-  # need to figure out root cause of errors and solve them
-  remove_filter :home_or_away
-  remove_filter :date_and_time
 
 end
