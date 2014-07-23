@@ -1,4 +1,7 @@
-class FullScrapeWorker
+# an experiemental first class using database information to scrape structured data off of websites
+# correctly handles rss feeds in any format, but untested elsewhere
+
+class NestedScrapeWorker
 
   include Sidekiq::Worker
   include Sidetiq::Schedulable
@@ -46,10 +49,11 @@ class FullScrapeWorker
 
               puts "cs: #{cs.inspect}"
 
+              # assumes there is only one element – could iterate instead but then where would that information go?
               content_item = html_item.css(cs.selector).first
 
               if ! content_item.blank?
-                content = content_item.text.squish # assumes there is only one element, could iterate instead but then where does that information go?
+                content = content_item.text.squish
                 if content.blank?
                   content = next_non_blank(content_item).text.squish
                 end
@@ -60,10 +64,7 @@ class FullScrapeWorker
               end
             end
 
-            # validate new model
-
-            puts "new_model ---> #{new_model.inspect}"
-            # new_model.non_duplicative_save
+            validate_and_save(new_model)
 
           end # end items iteration
 
@@ -73,6 +74,16 @@ class FullScrapeWorker
 
 
   end # end perform
+
+  def validate_and_save(model)
+    #validate new model
+
+    # check for partial matches that could indicate a change in the displayed content
+
+    puts "new_model ---> #{new_model.inspect}"
+    new_model.non_duplicative_save
+
+  end
 
   def next_non_blank(elem)
     until ! elem.text.blank? do
