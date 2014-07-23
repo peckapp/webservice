@@ -42,23 +42,21 @@ module Api
         # params in the user block
         uparams = params[:user]
 
-        # params for super creating, making mass assignment unecessary.
+        # params for super creating with mass assignment.
         sign_up_params = user_signup_params
 
         @user = User.find(params[:id])
 
-        # makes it necessary for to have a password and password confirmation.
-        @user.enable_strict_validation = true
-
-        # assigns the password and password_confirmation from the values in the user block of params.
-        sign_up_params[:password] = uparams[:password]
-        sign_up_params[:password_confirmation] = uparams[:password_confirmation]
-
-        # sign_up_params[:authentication_token] = SecureRandom.hex(30)
-
-        @user.update_attributes(sign_up_params)
-
         if @user
+          # makes it necessary for to have a password and password confirmation.
+          @user.enable_strict_validation = true
+
+          # assigns the password and password_confirmation from the values in the user block of params.
+          sign_up_params[:password] = uparams[:password]
+          sign_up_params[:password_confirmation] = uparams[:password_confirmation]
+
+          @user.update_attributes(sign_up_params)
+
           @user.authentication_token = SecureRandom.hex(30)
           @user.save
           auth[:authentication_token] = @user.authentication_token
@@ -76,7 +74,7 @@ module Api
 
       private
         def user_signup_params
-          params.require(:user).permit(:first_name, :last_name, :email, :blurb, :password, :password_confirmation, :image)
+          params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :blurb, :image)
         end
 
         def user_update_params
