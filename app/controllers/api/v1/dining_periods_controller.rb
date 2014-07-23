@@ -2,8 +2,7 @@ module Api
   module V1
     class DiningPeriodsController < ApplicationController #Api::BaseController
 
-      # before_action :confirm_admin
-      # :except => [:index, :show]
+      # before_action => :confirm_admin, :only => [:create, :update, :destroy]
 
       def index
         @dining_periods = specific_index(DiningPeriod, params)

@@ -2,8 +2,7 @@ module Api
   module V1
     class CommentsController < ApplicationController #Api::BaseController
 
-      # before_action :confirm_logged_in
-      # :except => [:index, :show]
+      before_action :confirm_logged_in, :only => [:create, :update, :destroy]
 
       respond_to :json
 

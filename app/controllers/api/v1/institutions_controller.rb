@@ -2,7 +2,7 @@ module Api
   module V1
     class InstitutionsController < ApplicationController #Api::BaseController
 
-      # :before_action
+      # before_action :confirm_admin, :only => [:create, :update, :destroy]
       respond_to :json
 
       def index
