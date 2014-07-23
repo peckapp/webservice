@@ -4,7 +4,7 @@
 
 # currently, it handles the simple cases of storing urls as ScrapingResources for rss feeds and webcal services
 
-class PageCrawlWorker
+class PageCrawlAnalyzer
 
   include Sidekiq::Worker
 

@@ -71,7 +71,7 @@ class CrawlerWorker
 
 
           ### Sends off the task asynchronously to another worker ###
-          PageCrawlWorker.perform_async(new_page.uri.to_s, inst_id)
+          PageCrawlAnalyzer.perform_async(new_page.uri.to_s, inst_id)
 
 
           # sleep time to keep the crawl interval unpredictable and prevent lockout from certain sites

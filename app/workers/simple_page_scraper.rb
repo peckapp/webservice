@@ -1,4 +1,4 @@
-class SiblingScrapeWorker
+class SimplePageScraper
 
   include Sidekiq::Worker
   include Sidetiq::Schedulable
