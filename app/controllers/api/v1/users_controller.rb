@@ -21,12 +21,14 @@ module Api
       end
 
       def change_password
-
+        # password and password confirmation
         new_pass_params = password_update_params
 
+        # authenticate based on the password provided in the old password field
         @user = User.authenticate(User.find(session[:user_id]).email, params[:user][:password])
 
         if @user
+          # old_pass_match used as boolean for correct JSON response
           @user.old_pass_match = true
           @user.update_attributes(new_pass_params)
         else
