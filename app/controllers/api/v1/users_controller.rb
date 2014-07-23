@@ -21,12 +21,14 @@ module Api
       end
 
       def change_password
-
+        # password and password confirmation
         new_pass_params = password_update_params
 
+        # authenticate based on the password provided in the old password field
         @user = User.authenticate(User.find(session[:user_id]).email, params[:user][:password])
 
         if @user
+          # old_pass_match used as boolean for correct JSON response
           @user.old_pass_match = true
           @user.update_attributes(new_pass_params)
         else
@@ -53,6 +55,9 @@ module Api
           sign_up_params[:password] = uparams[:password]
           sign_up_params[:password_confirmation] = uparams[:password_confirmation]
 
+          # gets the image from the params
+          sign_up_params[:image] = params[:image]
+
           @user.update_attributes(sign_up_params)
 
           @user.authentication_token = SecureRandom.hex(30)
@@ -63,9 +68,11 @@ module Api
 
       def update
         @user = User.find(params[:id])
-        uparams = user_update_params
-        uparams[:image] = params[:image]
-        @user.update_attributes(uparams)
+        update_params = user_update_params
+
+        # gets the image from the params
+        update_params[:image] = params[:image]
+        @user.update_attributes(update_params)
       end
 
       def destroy
