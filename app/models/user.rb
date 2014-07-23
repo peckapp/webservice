@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
   validate :correct_user_types
 
   # image validations
-  has_attached_file :image, :url => "/images/simple_events/:id/:style/:basename.:extension", :public => ":rails_root/public/images/simple_events/:id/:style/:basename.:extension", :default_url => "/images/:style/missing.png" # :styles => { :medium => "300x300>", :thumb => "100x100>" }, 
+  has_attached_file :image, :url => "/images/simple_events/:id/:style/:basename.:extension", :public => ":rails_root/public/images/simple_events/:id/:style/:basename.:extension", :default_url => "/images/:style/missing.png" # :styles => { :medium => "300x300>", :thumb => "100x100>" },
   validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
   # validates_with AttachmentSizeValidator, :attributes => :image #, :less_than => 20.megabytes
 
@@ -72,7 +72,7 @@ class User < ActiveRecord::Base
   #####################
 
   ### devices on which peck is used ###
-  has_and_belongs_to_many :user_device_tokens #
+  has_and_belongs_to_many :user_device_tokens
   #####################################
 
   ### user viewed a specific event ###

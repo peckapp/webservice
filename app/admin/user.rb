@@ -17,4 +17,7 @@ ActiveAdmin.register User do
   # Adds this into a dropdown in the top menu bar
   menu :parent => "Accounts"
 
+  remove_filter :users_user_device_tokens
+  filter :user_device_tokens_users
+
 end

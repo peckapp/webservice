@@ -17,4 +17,9 @@ ActiveAdmin.register AthleticEvent do
   # Adds this into a dropdown in the top menu bar
   menu :parent => "Content"
 
+  #### THESE SHOULD NOT HAVE TO BE HERE ####
+  # need to figure out root cause of errors and solve them
+  remove_filter :home_or_away
+  remove_filter :date_and_time
+
 end
