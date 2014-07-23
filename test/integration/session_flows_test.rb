@@ -83,8 +83,9 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
 
     def change_user_password
 
-      patch "api/users/1/change_password", :user => {:password => "testingabcd", :new_password => {:password => "testing2", :password_confirmation => "testing2"}}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key }, :format => :json
+      patch "api/users/1/change_password", :user => {:password => "testingabc", :new_password => {:password => "testing2", :password_confirmation => "testing2"}}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key }, :format => :json
       assert_response :success, "we've got a problem with changing passwords"
+      assert_not_nil assigns(:user)
 
     end
 end
