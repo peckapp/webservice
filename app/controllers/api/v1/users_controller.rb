@@ -24,16 +24,14 @@ module Api
 
         new_pass_params = password_update_params
 
-        # puts "NEW_PASS_PARAMS -------> #{new_pass_params}"
-        # puts "PARAMS[:PASSWORD] ----------> #{params[:user][:password]}"
-        # puts "USER EMAIL -------> #{User.find(session[:user_id]).email}"
-
         @user = User.authenticate(User.find(session[:user_id]).email, params[:user][:password])
 
-        # puts "------> #{@user} <-------"
-
         if @user
+          @user.old_pass_match = true
           @user.update_attributes(new_pass_params)
+        else
+          @user = User.find(session[:user_id])
+          @user.old_pass_match = false
         end
       end
 

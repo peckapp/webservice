@@ -29,6 +29,9 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
     # change a user's password
     change_user_password
 
+    # fail to change a user's password
+    change_user_password_fail
+
   end
 
   ##########################################
@@ -82,9 +85,14 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
     end
 
     def change_user_password
-
       patch "api/users/1/change_password", :user => {:password => "testingabcd", :new_password => {:password => "testing2", :password_confirmation => "testing2"}}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key }, :format => :json
       assert_response :success, "we've got a problem with changing passwords"
+      assert assigns(:user).old_pass_match
+    end
 
+    def change_user_password_fail
+      patch "api/users/1/change_password", :user => {:password => "wrongpassword", :new_password => {:password => "testingstuff", :password_confirmation => "testingstuff"}}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key }, :format => :json
+      assert_response :success, "we've got a problem with failing to change passwords"
+      assert_not assigns(:user).old_pass_match
     end
 end

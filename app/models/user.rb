@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   include ModelBeforeSaveValidations
 
   # each user has an encrypted secure password
-  attr_accessor :enable_strict_validation, :password
+  attr_accessor :enable_strict_validation, :password, :old_pass_match
 
   EMAIL_REGEX =/\A[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}\Z/
 
@@ -25,9 +25,9 @@ class User < ActiveRecord::Base
   validate :correct_user_types
 
   # image validations
-  has_attached_file :image, :styles => { :medium => "300x300>", :thumb => "100x100>" }, :default_url => "/images/:style/missing.png"
+  has_attached_file :image, :url => "/images/simple_events/:id/:style/:basename.:extension", :public => ":rails_root/public/images/simple_events/:id/:style/:basename.:extension", :default_url => "/images/:style/missing.png" # :styles => { :medium => "300x300>", :thumb => "100x100>" }, 
   validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
-  validates_with AttachmentSizeValidator, :attributes => :image, :less_than => 2.megabytes
+  # validates_with AttachmentSizeValidator, :attributes => :image #, :less_than => 20.megabytes
 
   ###############################
   ##                           ##
