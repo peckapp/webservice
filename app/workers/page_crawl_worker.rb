@@ -14,11 +14,11 @@ class PageCrawlWorker
 
     if uri.to_s.match(/rss/)
       # input url into database with type 'rss'
-      resc = Tasks::ScrapeResource.new(url: url, institution_id: inst_id, type: "rss")
+      resc = ScrapeResource.new(url: url, institution_id: inst_id, info: "rss")
       resc.non_duplicative_save
 
     elsif uri.scheme.match(/webcal/) || uri.to_s.match(/\.ics$/) # matches webcal schemes and .ics filetypes
-      resc = Tasks::ScrapeResource.new(url: url, institution_id: inst_id, type: "webcal")
+      resc = ScrapeResource.new(url: url, institution_id: inst_id, info: "webcal")
       resc.non_duplicative_save
 
     else

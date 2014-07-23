@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140723195355) do
+ActiveRecord::Schema.define(version: 20140723200754) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -382,6 +382,7 @@ ActiveRecord::Schema.define(version: 20140723195355) do
     t.datetime "updated_at"
     t.integer  "resource_type_id"
     t.integer  "pagination_selector_id"
+    t.string   "info"
   end
 
   create_table "selectors", force: true do |t|
