@@ -4,7 +4,7 @@ class CrawlerWorker
 
   include Sidekiq::Worker
   include Sidetiq::Schedulable
-  
+
   recurrence { daily }
 
   # bloom filter as a persistent class variable
@@ -30,7 +30,7 @@ class CrawlerWorker
       # queue to store the links for this crawl
       crawl_queue = Array.new
 
-      # bloom filter to prevent repeated page crawls, instantiated if currently nil
+      # bloom filter to prevent repeated page crawls, instantiated only if currently nil
       k = (0.7 * bf_bits).ceil
       @@bf = BloomFilter::Native.new(size: page_quantity, hashes: k, seed: 1) if @@bf.blank?
 

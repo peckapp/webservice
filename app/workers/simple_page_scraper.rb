@@ -18,57 +18,58 @@ class SimplePageScraper
 
     html = Nokogiri::HTML(raw.squish)
 
+    # down the road, extract html and send it off for parsing while continuing with pagination crawl
 
-      # down the road, extract html and send it off for parsing while continuing with pagination crawl
+    top_selectors = Selector.where(id: resource.id, top_level: true)
+    puts "found #{top_selectors.count} top selectors"
+    top_selectors.each do |ts|
 
-      top_selectors = Selector.where(id: resource.id, top_level: true)
-      puts "found #{top_selectors.count} top selectors"
-      top_selectors.each do |ts|
+      puts "top selector: #{ts.selector}"
 
-        puts "ts: #{ts.inspect}"
+      # an array of all the top-level items for a given tag. these are nokogiri nodes
+      html_items = html.css(ts.selector)
 
-        # an array of all the top-level items for a given tag. these are nokogiri nodes
-        html_items = html.css(ts.selector)
+      html_items.each do |html_item| # iterates over Nokogiri nodeset for given css selector
 
-        html_items.each do |html_item| # iterates over Nokogiri nodeset for given css selector
+        puts "\ncreating new model"
+        new_model = ts.model.new
 
-          new_model = ts.model.new
+        # traverse all children for a given selector
+        ts.children.each do |cs|
 
-          # traverse all children for a given selector
-          ts.children.each do |cs|
+          puts "child selector: #{cs.selector}"
 
-            puts "cs: #{cs.inspect}"
+          # assumes there is only one element – could iterate instead but then where would that information go?
+          content_item = html_item.css(cs.selector).first
 
-            # assumes there is only one element – could iterate instead but then where would that information go?
-            content_item = html_item.css(cs.selector).first
-
-            if ! content_item.blank?
-              content = content_item.text.squish
-              if content.blank?
-                content = next_non_blank(content_item).text.squish
-              end
-              puts "CONTENT: #{content}"
-              new_model.assign_attributes(cs.column_name => content)
-            else
-              puts "NO CONTENT FOUND"
+          if ! content_item.blank?
+            content = content_item.text.squish
+            if content.blank?
+              content = next_non_blank(content_item).text.squish
             end
+            puts " ==> CONTENT: #{content}"
+            new_model.assign_attributes(cs.column_name => content)
+          else
+            puts " ==> NO CONTENT FOUND"
           end
+        end
 
-          validate_and_save(new_model)
+        validate_and_save(new_model)
 
-        end # end items iteration
+      end # end items iteration
 
-      end # end selector iteration
+    end # end selector iteration
 
   end # end perform
 
   def validate_and_save(model)
-    #validate new model
+
+    # validate new model
 
     # check for partial matches that could indicate a change in the displayed content
 
-    puts "new_model ---> #{new_model.inspect}"
-    new_model.non_duplicative_save
+    puts "new_model ---> #{model.inspect}"
+    model.non_duplicative_save
 
   end
 

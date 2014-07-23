@@ -16,6 +16,7 @@ class ScraperWorker
     resources.each do |resource|
       next unless resource.validated
 
+      puts "handling validated resource: #{resource.inspect}"
 
       # iterate over pages for that resource
       # need to find a way to explicate pagination movement.
