@@ -4,4 +4,4 @@ attributes :id, :title, :event_description, :institution_id, :user_id, :departme
 
 node(:event_type) {"simple"}
 
-node(:image) {@simple_event.image.url(:medium)}
+node(:image) {@simple_event.image.url}
