@@ -63,7 +63,9 @@ module Api
 
       def update
         @user = User.find(params[:id])
-        @user.update_attributes(user_update_params)
+        uparams = user_update_params
+        uparams[:image] = params[:image]
+        @user.update_attributes(uparams)
       end
 
       def destroy
@@ -72,11 +74,11 @@ module Api
 
       private
         def user_signup_params
-          params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :blurb, :image)
+          params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :blurb)
         end
 
         def user_update_params
-          params.require(:user).permit(:first_name, :last_name, :blurb, :facebook_link, :active, :image)
+          params.require(:user).permit(:first_name, :last_name, :blurb, :facebook_link, :active)
         end
 
         def password_update_params

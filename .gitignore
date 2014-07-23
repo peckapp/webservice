@@ -26,6 +26,7 @@ perms.sh
 capybara-*.html
 .rspec
 /public/system
+/public/images
 /coverage/
 /spec/tmp
 **.orig
