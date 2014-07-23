@@ -15,7 +15,9 @@ module Api
       end
 
       def create
-        @simple_event = SimpleEvent.create(simple_event_params)
+        event_params = simple_event_params
+        event_params[:image] = params[:image]
+        @simple_event = SimpleEvent.create(event_params)
       end
 
       def update
@@ -30,7 +32,7 @@ module Api
       private
 
         def simple_event_params
-          params.require(:simple_event).permit(:title, :event_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :event_url, :public, :comment_count, :start_date, :end_date, :image)
+          params.require(:simple_event).permit(:title, :event_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :event_url, :public, :comment_count, :start_date, :end_date)
         end
 
     end
