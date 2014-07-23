@@ -11,7 +11,7 @@ simple_event_<%= n %>:
   title: "Dope"
   id: <%= n %>
   institution_id: 1
-  open: true
+  public: true
   start_date: 2007-12-04 00:00:00
   end_date: 2007-12-04 00:00:00
 <% end %>
@@ -22,7 +22,7 @@ simple_event_<%= n %>:
   title: "Dope"
   id: <%= n %>
   institution_id: 2
-  open: true
+  public: true
   start_date: 2007-12-04 00:00:00
   end_date: 2007-12-04 00:00:00
 <% end %>
@@ -33,7 +33,7 @@ simple_event_<%= n %>:
   title: "Dope"
   id: <%= n %>
   institution_id: 1
-  open: false
+  public: false
   start_date: 2007-12-04 00:00:00
   end_date: 2007-12-04 00:00:00
 <% end %>
@@ -44,7 +44,7 @@ simple_event_<%= n %>:
  title: "Dope"
  id: <%= n %>
  institution_id: 1
- open: false
+ public: false
  start_date: 2007-12-04 00:00:00
  end_date: 2007-12-04 00:00:00
 <% end %>

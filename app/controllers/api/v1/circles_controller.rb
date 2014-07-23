@@ -73,7 +73,7 @@ module Api
       private
 
         def circle_params
-          params.require(:circle).permit(:institution_id, :user_id, :circle_name, :image_link)
+          params.require(:circle).permit(:institution_id, :user_id, :circle_name)
         end
     end
   end

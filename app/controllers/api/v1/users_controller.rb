@@ -22,7 +22,25 @@ module Api
         session[:api_key] = @user.api_key
       end
 
+      def change_password
+
+        new_pass_params = password_update_params
+
+        # puts "NEW_PASS_PARAMS -------> #{new_pass_params}"
+        # puts "PARAMS[:PASSWORD] ----------> #{params[:user][:password]}"
+        # puts "USER EMAIL -------> #{User.find(session[:user_id]).email}"
+
+        @user = User.authenticate(User.find(session[:user_id]).email, params[:user][:password])
+
+        # puts "------> #{@user} <-------"
+
+        if @user
+          @user.update_attributes(new_pass_params)
+        end
+      end
+
       def super_create
+
         # params in the user block
         uparams = params[:user]
 
@@ -60,11 +78,15 @@ module Api
 
       private
         def user_signup_params
-          params.require(:user).permit(:first_name, :last_name, :email, :blurb, :password, :password_confirmation)
+          params.require(:user).permit(:first_name, :last_name, :email, :blurb, :password, :password_confirmation, :image)
         end
 
         def user_update_params
-          params.require(:user).permit(:first_name, :last_name, :blurb, :facebook_link, :active)
+          params.require(:user).permit(:first_name, :last_name, :blurb, :facebook_link, :active, :image)
+        end
+
+        def password_update_params
+          params.require(:user).require(:new_password).permit(:password, :password_confirmation)
         end
     end
   end

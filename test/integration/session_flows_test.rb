@@ -15,7 +15,8 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
     user = super_create_user
 
     # attempt to super create w/ wrong password
-    # super_create_fail
+    super_create_fail
+
     # authenticate user
     login(user)
 
@@ -24,6 +25,9 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
 
     # create an event
     create_simple_event
+
+    # change a user's password
+    change_user_password
 
   end
 
@@ -46,14 +50,14 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
       return user
     end
 
-    # def super_create_fail
-    #   #super create user
-    #   patch "/api/users/2/super_create", :user => {:first_name => "John", :last_name => "Doe", :email => "jdoe1@williams.edu", :password => "anothertest", :password_confirmation => "wrongpassword"}, :format => :json
-    #   user = assigns(:user)
-    #   assert_response :success, "no response from database"
-    #   assert_nil user.password_salt, "pw salt should be nil with wrong pw confirmation"
-    #   assert_nil user.password_hash, "pw hash should be nil with wrong pw confirmation"
-    # end
+    def super_create_fail
+      #super create user
+      patch "/api/users/2/super_create", :user => {:first_name => "John", :last_name => "Doe", :email => "jdoe1@williams.edu", :password => "anothertest", :password_confirmation => "wrongpassword"}, :authentication => {:user_id => 2, :institution_id => 1, :api_key => User.find(1).api_key },:format => :json
+      user = assigns(:user)
+      assert_response :success, "no response from database"
+      assert_nil user.password_salt, "pw salt should be nil with wrong pw confirmation"
+      assert_nil user.password_hash, "pw hash should be nil with wrong pw confirmation"
+    end
 
     def login(user)
       open_session do |sess|
@@ -71,9 +75,16 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
     end
 
     def create_simple_event
-      post "api/simple_events", :simple_event => {:title => "Super Duper Dope Event", :institution_id => 1, :user_id => 3, :open => true, :start_date => DateTime.current, :end_date => DateTime.current + 1.hour}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key, :authentication_token => User.find(1).authentication_token}, :format => :json
+      post "api/simple_events", :simple_event => {:title => "Super Duper Dope Event", :institution_id => 1, :user_id => 3, :public => true, :start_date => DateTime.current, :end_date => DateTime.current + 1.hour}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key, :authentication_token => User.find(1).authentication_token}, :format => :json
       event = assigns(:simple_event)
       assert_response :success, "no response from database"
       assert_not_nil event.id, "simple event was not created properly"
+    end
+
+    def change_user_password
+
+      patch "api/users/1/change_password", :user => {:password => "testingabcd", :new_password => {:password => "testing2", :password_confirmation => "testing2"}}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key }, :format => :json
+      assert_response :success, "we've got a problem with changing passwords"
+
     end
 end
