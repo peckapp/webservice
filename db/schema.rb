@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140722191917) do
+ActiveRecord::Schema.define(version: 20140723145421) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -363,15 +363,6 @@ ActiveRecord::Schema.define(version: 20140722191917) do
     t.datetime "updated_at"
   end
 
-  create_table "rss_pages", force: true do |t|
-    t.integer  "institution_id",                  null: false
-    t.string   "url",                             null: false
-    t.integer  "scrape_interval", default: 1440
-    t.boolean  "paginated",       default: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "scrape_resources", force: true do |t|
     t.string   "url",                                    null: false
     t.integer  "institution_id",                         null: false
@@ -435,6 +426,8 @@ ActiveRecord::Schema.define(version: 20140722191917) do
     t.integer  "institution_id", null: false
   end
 
+  add_index "subscriptions", ["category"], name: "index_subscriptions_on_category", using: :btree
+  add_index "subscriptions", ["institution_id"], name: "index_subscriptions_on_institution_id", using: :btree
   add_index "subscriptions", ["subscribed_to"], name: "index_subscriptions_on_subscribed_to", using: :btree
   add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
 
