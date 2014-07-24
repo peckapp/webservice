@@ -179,6 +179,7 @@ GEM
     polyamorous (1.0.0)
       activerecord (>= 3.0)
     polyglot (0.3.5)
+    posix-spawn (0.3.8)
     rabl-rails (0.3.4)
       activesupport (>= 3.1)
       railties (>= 3.1)
@@ -317,6 +318,7 @@ DEPENDENCIES
   mysql2
   nokogiri
   paperclip (~> 4.2.0)
+  posix-spawn
   rabl-rails
   rails (= 4.1.0)
   rails-erd
