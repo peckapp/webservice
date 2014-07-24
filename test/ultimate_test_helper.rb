@@ -1,6 +1,17 @@
 require 'test_helper'
 
 class UltimateTestHelper < ActionController::TestCase
+  include Devise::TestHelpers
+  include Warden::Test::Helpers
+  Warden.test_mode!
+  def setup
+
+  end
+
+  def teardown
+    Warden.test_reset!
+  end
+
   def session_create(auth_token = nil)
     session[:institution_id] = 1
     session[:user_id] = 3
@@ -92,9 +103,15 @@ class UltimateTestHelper < ActionController::TestCase
     auth_params[:authentication_token] = the_user.authentication_token
 
     @controller = @the_controller
-    delete :destroy, {:format => :json, :id => @id, :authentication => auth_params}
-    assert_response :success
-    assert_nil @model.find_by_id(@id)
+
+    if is_subscriptions_controller?
+      # need to fix this
+      delete "api/subscriptions/3?subscriptions=[1,2,3,4]", :format => :json, :authentication => auth_params
+      assert_response :success
+    else
+      delete :destroy, {:format => :json, :id => @id, :authentication => auth_params}
+      assert_response :success
+    end
   end
 
   private

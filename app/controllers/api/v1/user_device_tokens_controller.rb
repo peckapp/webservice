@@ -2,8 +2,9 @@ module Api
   module V1
     class UserDeviceTokensController < ApplicationController #Api::BaseController
 
+      # before_action :authenticate_admin_user!
       # before_action => :confirm_admin, :only => [:create, :update, :destroy]
-      
+
       respond_to :json
 
       def index
