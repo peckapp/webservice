@@ -32,6 +32,8 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
     # fail to change a user's password
     change_user_password_fail
 
+    delete_subscriptions
+
   end
 
   ##########################################
@@ -94,5 +96,10 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
       patch "api/users/1/change_password", :user => {:password => "wrongpassword", :new_password => {:password => "testingstuff", :password_confirmation => "testingstuff"}}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key }, :format => :json
       assert_response :success, "we've got a problem with failing to change passwords"
       assert_not assigns(:user).old_pass_match
+    end
+
+    def delete_subscriptions
+      delete "api/subscriptions/1?subscriptions=[1,2,3,4]", :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key }, :format => :json
+      assert_response :success, "problem deleting subscriptions"
     end
 end

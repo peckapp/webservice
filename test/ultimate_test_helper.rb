@@ -7,7 +7,7 @@ class UltimateTestHelper < ActionController::TestCase
   def setup
 
   end
-  
+
   def teardown
     Warden.test_reset!
   end
@@ -89,13 +89,24 @@ class UltimateTestHelper < ActionController::TestCase
     auth_params[:authentication_token] = the_user.authentication_token
 
     @controller = @the_controller
-    delete :destroy, {:format => :json, :id => @id, :authentication => auth_params}
-    assert_response :success
+
+    if is_subscriptions_controller?
+      # need to fix this
+      delete "api/subscriptions/3?subscriptions=[1,2,3,4]", :format => :json, :authentication => auth_params
+      assert_response :success
+    else
+      delete :destroy, {:format => :json, :id => @id, :authentication => auth_params}
+      assert_response :success
+    end
   end
 
   private
     def is_subclass?
       self.class.superclass == UltimateTestHelper
+    end
+
+    def is_subscriptions_controller?
+      self.class == SubscriptionsControllerTest
     end
 
     def is_controller?
