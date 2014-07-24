@@ -13,18 +13,38 @@ class PeckCLI
   PECK_PORT = 3500
 
   def initialize
-    create_users
+    @user = create_user
     @auth_params = { api_key: @user.api_key }
   end
 
   def create_user
     response_str = RestClient.post(self.paramsURL('/api/users',{}),nil)
     response = JSON.parse(response_str)
-    user = User.new response["user"]
+    return User.new(response["user"])
   end
 
+
+
   def self.verify_response(response)
-    # test for 200 OK, handle others appropriately
+    case response.code
+    when (200..299)
+      puts "sucessful response with code #{response.code}"
+      return true
+    when (300..399)
+      puts "sucessful change with code #{response.code}"
+      return true
+    when 401
+      puts "response unauthorized with 401"
+    when 404
+      puts "response not found with 404"
+    when 500
+      puts "response indicates internal server error with 500"
+    when 502
+      puts "response indicates Bad Gateway with 502"
+    else
+      puts "non specified response code #{response.code}"
+    end
+    false
   end
 
   # creates a uri with the specified path and params
@@ -36,13 +56,6 @@ class PeckCLI
 end
 
 class User
-  def initialize(hash)
-    hash.each do |key, val|
-      instance_variable_set(key,val)
-    end
-    # more concise syntax, pretty neat
-    # hash.each &method(:instance_variable_set)
-  end
 
   attr_accessor :first_name
   attr_accessor :last_name
@@ -52,6 +65,21 @@ class User
   attr_accessor :user_id
   attr_accessor :api_key
   attr_accessor :authentication_token
+
+  def initialize(hash)
+    hash.each do |key, val|
+      instance_variable_set("@#{key}",val)
+    end
+    # more concise syntax, pretty neat
+    # hash.each &method(:instance_variable_set)
+  end
+
+  def to_s
+    "first_name: #{@first_name}, last_name: #{@last_name},"\
+    "email: #{@email}, password: #{@password},"\
+    "institution_id: #{@institution_id}, user_id: #{@user_id},"\
+    "api_key: #{@api_key}, authentication_token: #{@authentication_token}"
+  end
 end
 
 # Only run the following code when this file is the main file being run
