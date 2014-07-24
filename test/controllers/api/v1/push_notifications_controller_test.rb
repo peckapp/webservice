@@ -11,6 +11,7 @@ class PushNotificationsControllerTest < UltimateTestHelper
     @params_create = {:institution_id => 1, user_id: 1, :notification_type => "james"}
     @params_update = {:user_id => 5}
     @model_type = :push_notification
+    @model = PushNotification
     @id = 11
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

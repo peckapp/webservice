@@ -11,6 +11,7 @@ class UserDeviceTokensControllerTest < UltimateTestHelper
     @params_create = {:institution_id => 2, :token => "dope_token"}
     @params_update = {:token => "jill"}
     @model_type = :user_device_token
+    @model = UserDeviceToken
     @id = 5
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

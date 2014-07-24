@@ -10,6 +10,7 @@ class AthleticEventsControllerTest < UltimateTestHelper
     @params_create = {:institution_id => 3, :athletic_team_id => 1, :location => "Cole Field"}
     @params_update = {:location => "Bronfman"}
     @model_type = :athletic_event
+    @model = AthleticEvent
     @id = 11
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

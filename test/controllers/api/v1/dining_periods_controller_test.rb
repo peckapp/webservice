@@ -10,6 +10,7 @@ class DiningPeriodsControllerTest < UltimateTestHelper
     @params_create = {:institution_id => 1, :dining_place_id => 2, :dining_opportunity_id => 3, :start_time => Time.now, :end_time => Time.now}
     @params_update = {:institution_id => 2}
     @model_type = :dining_period
+    @model = DiningPeriod
     @id = 11
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

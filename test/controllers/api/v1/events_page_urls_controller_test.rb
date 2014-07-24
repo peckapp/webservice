@@ -10,6 +10,7 @@ class EventsPageUrlsControllerTest < UltimateTestHelper
     @params_create = {:institution_id => 2, :url => "file/path"}
     @params_update = {:url => "another_file/path"}
     @model_type = :events_page_url
+    @model = EventsPageUrl
     @id = 8
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

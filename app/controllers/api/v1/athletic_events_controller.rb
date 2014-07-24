@@ -2,7 +2,7 @@ module Api
   module V1
     class AthleticEventsController < ApplicationController #Api::BaseController
 
-      # before_action => :confirm_admin, :only => [:create, :update, :destroy]
+      before_action :confirm_logged_in, :only => [:create, :update, :destroy]
 
       respond_to :json
 

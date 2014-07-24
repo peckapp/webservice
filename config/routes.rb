@@ -90,7 +90,7 @@ Rails.application.routes.draw do
   # api status and version information
   get 'api', to: 'api#index', via: [:get]
 
-  authenticate :admin_user do
+  authenticated :admin_user do
     mount Sidekiq::Web, at: '/tasks'
   end
 

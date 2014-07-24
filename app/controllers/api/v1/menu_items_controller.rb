@@ -2,8 +2,9 @@ module Api
   module V1
     class MenuItemsController < ApplicationController #Api::BaseController
 
+      # before_action :authenticate_admin_user!, :only => [:create, :update, :destroy]
       # before_action => :confirm_admin, :only => [:create, :update, :destroy]
-      
+
       respond_to :json
 
       def index

@@ -29,7 +29,32 @@ module Api
       end
 
       def destroy
-        @subscription = Subscription.find(params[:id]).destroy
+        # makes sure the id in the delete request matches the user id.
+        if params[:id] == auth[:user_id]
+          @subscriptions = []
+
+          # query parameter with the ids of all the necessarily deleted subscriptions
+          subscription_id_string = params[:subscriptions]
+
+          # converts the query parameter string into an array. Query parameter gets sent like this "[1,2,3]"
+          all_ids = subscription_id_string[subscription_id_string.index("[") + 1, subscription_id_string.index("]") - 1].split(",")
+
+          # for each id in the array of ids, find the Subscription with that id, add it to the array of deleted subscriptions
+          # for the view, and then destroy the subscription
+          all_ids.each do |id|
+            this_subscription = Subscription.find(id)
+            @subscriptions << this_subscription
+            this_subscription.destroy
+          end
+
+          # params[:subscriptions].each do |id|
+          #   this_subscription = Subscription.find(id)
+          #   @subscriptions << this_subscription
+          #   this_subscription.destroy
+        else
+          # if parameter for the id does not match the user id, then do not destroy subscriptions! Instead send an unauthorized.
+          head :unauthorized
+        end
       end
 
       private
@@ -37,6 +62,7 @@ module Api
         def subscription_update_params
           params.require(:subscription).permit(:institution_id, :user_id, :category, :subscribed_to)
         end
+
 
         def subscription_create_params(parameters)
           parameters.permit(:institution_id, :user_id, :category, :subscribed_to)
