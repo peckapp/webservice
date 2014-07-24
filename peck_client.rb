@@ -5,27 +5,45 @@
 
 require 'restclient'
 require 'json'
+require 'commander' # command line interface
 require 'active_support/core_ext/hash'
 
-class PeckCLI
+class PeckClient
 
   PECK_URL = 'loki.peckapp.com'
   PECK_PORT = 3500
 
   def initialize
     @user = create_user
+    puts "Creates Peck Client with user: #{@user}"
     @auth_params = { api_key: @user.api_key }
+
+
+  end
+
+  def run_all_queries
+    # runs all the possible tests in this class
   end
 
   def create_user
-    response_str = RestClient.post(self.paramsURL('/api/users',{}),nil)
+    response_str = RestClient.post(paramsURL('/api/users',{}),nil)
+    verify_response(response_str)
     response = JSON.parse(response_str)
     return User.new(response["user"])
   end
 
+  def auth_block
+    return {user_id: @user.id, api_key: @user.api_key, institution_id: @user.institution_id, authentication_token: @user.authentication_token}
+  end
 
+  def destroy_user
+    response_str = RestClient.delete(paramsURL("/api/users/#{@user.id}",{authentication: auth_block}))
+    verify_response(response_str)
+    response = JSON.parse(response_str)
+    puts response
+  end
 
-  def self.verify_response(response)
+  def verify_response(response)
     case response.code
     when (200..299)
       puts "sucessful response with code #{response.code}"
@@ -48,9 +66,10 @@ class PeckCLI
   end
 
   # creates a uri with the specified path and params
-  def self.paramsURL(path, params_hash)
+  def paramsURL(path, params_hash)
     query_str = params_hash.to_query
-    URI::HTTP.build({host: PECK_URL, port: PECK_PORT, path: path, query: query_str})
+    uri_http = URI::HTTP.build({host: PECK_URL, port: PECK_PORT, path: path, query: query_str})
+    return uri_http.to_s
   end
 
 end
@@ -62,7 +81,7 @@ class User
   attr_accessor :email
   attr_accessor :password
   attr_accessor :institution_id
-  attr_accessor :user_id
+  attr_accessor :id
   attr_accessor :api_key
   attr_accessor :authentication_token
 
@@ -77,7 +96,7 @@ class User
   def to_s
     "first_name: #{@first_name}, last_name: #{@last_name},"\
     "email: #{@email}, password: #{@password},"\
-    "institution_id: #{@institution_id}, user_id: #{@user_id},"\
+    "institution_id: #{@institution_id}, id: #{@id},"\
     "api_key: #{@api_key}, authentication_token: #{@authentication_token}"
   end
 end
@@ -89,8 +108,15 @@ if __FILE__==$0
   # of the list of locations to look in when using require
   $:.unshift File.expand_path("../../", __FILE__)
 
-  cli = PeckCLI.new
+  cli = PeckClient.new
 
+  # command loop
+  begin
 
+  rescue InterruptException
+    puts "cleaning up and exiting Peck Client interface"
+  end
+
+  cli.destroy_user
 
 end
