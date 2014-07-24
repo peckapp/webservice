@@ -56,6 +56,7 @@ class UltimateTestHelper < ActionController::TestCase
     end
     get :show, @params_show
     assert_response :success
+    assert_not_nil @model.find(@id)
   end
 
   test "should_post_create" do
@@ -66,8 +67,18 @@ class UltimateTestHelper < ActionController::TestCase
     auth_params[:authentication_token] = the_user.authentication_token
 
     @controller = @the_controller
-    post :create, {@model_type => @params_create, :authentication => auth_params, :format => :json}
-    assert_response :success
+
+    if is_subscriptions_controller?
+      post :create, {:subscriptions => @params_create, :authentication => auth_params, :format => :json}
+      assert_response :success
+      assigns(:subscriptions).each do |sub|
+        assert_not_nil sub
+      end
+    else
+      post :create, {@model_type => @params_create, :authentication => auth_params, :format => :json}
+      assert_response :success
+      assert_not_nil assigns(@model_type)
+    end
   end
 
   test "should_patch_update" do
@@ -79,6 +90,9 @@ class UltimateTestHelper < ActionController::TestCase
 
     @controller = @the_controller
     patch :update, {:id => @id, @model_type => @params_update, :authentication => auth_params, :format => :json}
+
+    assert_response :success
+    assert_not_nil assigns(@model_type)
   end
 
   test "should_delete_destroy" do

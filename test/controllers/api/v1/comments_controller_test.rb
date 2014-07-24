@@ -10,6 +10,7 @@ class CommentsControllerTest < UltimateTestHelper
     @params_create = {:category => "simple", :comment_from => 1, :user_id => 1, :content => "fun fun fun fun fun fun", :institution_id => 71}
     @params_update = {:category => "athletic"}
     @model_type = :comment
+    @model = Comment
     @id = 11
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

@@ -10,6 +10,7 @@ class DiningOpportunitiesControllerTest < UltimateTestHelper
     @params_create = {:dining_opportunity_type => "lunch", :institution_id => 2}
     @params_update = {:dining_opportunity_type => "breakfast"}
     @model_type = :dining_opportunity
+    @model = DiningOpportunity
     @id = 2
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

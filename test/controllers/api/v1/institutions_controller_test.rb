@@ -10,6 +10,7 @@ class InstitutionsControllerTest < UltimateTestHelper
     @params_create = {:name => "Some Institution", :street_address => "institution_street", :city => "Boston", :state => "MA", :country => "USA", gps_longitude: (rand * 100.0), gps_latitude: (rand * 100.0), range: (rand * 0.01), :configuration_id => 21, :api_key => SecureRandom.hex(8)}
     @params_update = {:name => "Sample Institution"}
     @model_type = :institution
+    @model = Institution
     @id = 1
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

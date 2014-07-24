@@ -10,6 +10,7 @@ class ConfigurationsControllerTest < UltimateTestHelper
     @params_create = {:config_file_name => "configurations/happiness"}
     @params_update = {:mascot => "Purple Cow"}
     @model_type = :configuration
+    @model = Configuration
     @id = 2
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

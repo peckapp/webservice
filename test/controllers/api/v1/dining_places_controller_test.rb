@@ -10,6 +10,7 @@ class DiningPlacesControllerTest < UltimateTestHelper
     @params_create = {:institution_id => 1, :name => "Paresky"}
     @params_update = {:name => "Mission"}
     @model_type = :dining_place
+    @model = DiningPlace
     @id = 11
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end
