@@ -20,23 +20,6 @@ module Api
         session[:api_key] = @user.api_key
       end
 
-      def change_password
-        # password and password confirmation
-        new_pass_params = password_update_params
-
-        # authenticate based on the password provided in the old password field
-        @user = User.authenticate(User.find(session[:user_id]).email, params[:user][:password])
-
-        if @user
-          # old_pass_match used as boolean for correct JSON response
-          @user.old_pass_match = true
-          @user.update_attributes(new_pass_params)
-        else
-          @user = User.find(session[:user_id])
-          @user.old_pass_match = false
-        end
-      end
-
       def super_create
 
         # params in the user block
@@ -73,6 +56,23 @@ module Api
         # gets the image from the params
         update_params[:image] = params[:image]
         @user.update_attributes(update_params)
+      end
+
+      def change_password
+        # password and password confirmation
+        new_pass_params = password_update_params
+
+        # authenticate based on the password provided in the old password field
+        @user = User.authenticate(User.find(session[:user_id]).email, params[:user][:password])
+
+        if @user
+          # old_pass_match used as boolean for correct JSON response
+          @user.old_pass_match = true
+          @user.update_attributes(new_pass_params)
+        else
+          @user = User.find(session[:user_id])
+          @user.old_pass_match = false
+        end
       end
 
       def destroy

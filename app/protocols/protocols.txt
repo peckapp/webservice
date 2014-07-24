@@ -9,6 +9,21 @@ Create:
 
 POST api/simple_events
 
+NOTES ON CREATE USER:
+- Check if current user device token already has a registered user associated to it
+  - UDT is in the DB:
+    - matching user has not yet registered
+      - ask user if they would like to continue using the app with the previous user's preferences
+        - If they wish to use that user's preferences: load those preferences
+        - Otherwise: create new annonymous user (with new ID)
+    - matching user is already registered
+      - ask user if they would like to continue using the app with the previous user's preferences
+      - make sure to include name of that previously created user
+        - If they wish to use that user's preferences: request login information
+        - Otherwise: create new annonymous user (with new ID)
+  - UDT is not in the DB:
+    - create new annonymous user
+
 Update:
 
 PATCH api/simple_events/:id
