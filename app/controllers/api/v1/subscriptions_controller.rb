@@ -37,7 +37,7 @@ module Api
           subscription_id_string = params[:subscriptions]
 
           # converts the query parameter string into an array. Query parameter gets sent like this "[1,2,3]"
-          all_ids = subscription_id_string[1,subscription_id_string.length - 2].split(",")
+          all_ids = subscription_id_string[subscription_id_string.index("[") + 1, subscription_id_string.index("]") - 1].split(",")
 
           # for each id in the array of ids, find the Subscription with that id, add it to the array of deleted subscriptions
           # for the view, and then destroy the subscription

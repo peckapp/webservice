@@ -39,34 +39,25 @@ gem 'bcrypt', '~> 3.1.7'
 # Active Admin for highly customizable interfaces
 gem 'activeadmin', github: 'gregbell/active_admin'
 
-
-
 ### FILE MANAGEMENT
 # Paperclip for handling larger files, mostly user-uploaded images: https://github.com/thoughtbot/paperclip
 gem 'paperclip', '~> 4.2.0'
-
 
 ### DATABASE INTERACTIONS
 # ransack for more powerful database queries. This branch supports only rails 4.1 https://github.com/activerecord-hackery/ransack/tree/rails-4.1
 gem "ransack", github: "activerecord-hackery/ransack", branch: "rails-4.1"
 
-
 ### SCRAPING
 # Feedjira provides a powerful and dead simple RSS scraping tool
 gem 'feedjira'
-
 # nokogiri HTML, XML, SAX, and Reader parser. can search using XPath or CSS selectors
 gem 'nokogiri'
-
 # mechanize for traversing webpages and links
 gem 'mechanize'
-
 # Restclient for gathering pages
 gem 'rest-client'
-
 # watir-webdriver as a selinium wrapper: http://watirwebdriver.com
 gem 'watir-webdriver'
-
 
 ### Job Scheduling
 # Sidekiq for running background jobs in seperate threads - https://github.com/mperham/sidekiq
@@ -77,24 +68,21 @@ gem 'sidetiq'
 gem 'sinatra', require: false
 gem 'slim'
 
-
 ### API
 # rabl rails for api
 gem 'rabl-rails'
 
-
 ### UTILITIES
 # Bloom Filter for crawlers to keep track of which pages have been traversed
 gem 'bloomfilter-rb', '~> 2.1.1'
-
 # primitive gui display of database models
 gem 'hirb', '~> 0.7.2'
-
 # validating dates
 gem 'validates_timeliness', '~> 3.0'
-
+# authentication gem, used by ActiveAdmin
 gem 'devise', '~> 3.2.4'
-
+# used by the cocain dependency of Paperclip to allow high-memory requirement operations to be performed without forking, eliminating out of memory errors
+gem 'posix-spawn'
 
 ### Development-specific gems
 group :development do
