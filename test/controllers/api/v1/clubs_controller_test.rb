@@ -10,6 +10,7 @@ class ClubsControllerTest < UltimateTestHelper
     @params_create = {:institution_id => 1, :club_name => "The Club!"}
     @params_update = {:club_name => "Harry Potter fan club"}
     @model_type = :club
+    @model = Club
     @id = 15
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

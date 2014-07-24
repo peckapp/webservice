@@ -13,6 +13,7 @@ class UsersControllerTest < UltimateTestHelper
     @params_update = {:first_name => "John", :active => false}
     @params_super_create = {:first_name => "John", :last_name => "Doe", :email => "jdoe@williams.edu", :password => "testagain", :password_confirmation => "testagain"}
     @model_type = :user
+    @model = User
     @id = 11
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

@@ -10,6 +10,7 @@ class NotificationViewsControllerTest < UltimateTestHelper
     @params_create = {:user_id => 2, :activity_log_id => 3, :viewed => false, :institution_id => 1}
     @params_update = {:viewed => true}
     @model_type = :notification_view
+    @model = NotificationView
     @id = 11
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

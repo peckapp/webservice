@@ -10,6 +10,7 @@ class CirclesControllerTest < UltimateTestHelper
     @params_create = {:institution_id => 3, :user_id => 59, :circle_name => "CIRCLE", :circle_members => [1,2,3,4]}
     @params_update = {:circle_name => "HIIII"}
     @model_type = :circle
+    @model = Circle
     @id = 11
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

@@ -10,6 +10,7 @@ class ActivityLogsControllerTest < UltimateTestHelper
     @params_create = {:institution_id => 3, :sender => 15, :receiver => 2, :category => "idk", :type_of_activity => "athletic", :message => "FUN FUN FUN", :read_status => false}
     @params_update = {:message => "HEYYYYYYYYYYYYYYY"}
     @model_type = :activity_log
+    @model = ActivityLog
     @id = 11
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

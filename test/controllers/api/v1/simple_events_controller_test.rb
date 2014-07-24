@@ -10,6 +10,7 @@ class SimpleEventsControllerControllerTest < UltimateTestHelper
     @params_create = {:title => "Super Dope Event", :institution_id => 3, :user_id => 3, :public => true, :start_date => DateTime.current, :end_date => DateTime.current + 1.hour}
     @params_update = {:title => "updated event title"}
     @model_type = :simple_event
+    @model = SimpleEvent
     @id = 11
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

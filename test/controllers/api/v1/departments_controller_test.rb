@@ -10,6 +10,7 @@ class DepartmentsControllerTest < UltimateTestHelper
     @params_create = {:name => "Stats", :institution_id => 1}
     @params_update = {:name => "Physics"}
     @model_type = :department
+    @model = Department
     @id = 1
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

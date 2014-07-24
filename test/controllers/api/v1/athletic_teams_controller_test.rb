@@ -10,6 +10,7 @@ class AthleticTeamsControllerTest < UltimateTestHelper
     @params_create = {:institution_id => 2, :sport_name => "swimming", :gender => "male"}
     @params_update = {:sport_name => "rugby"}
     @model_type = :athletic_team
+    @model = AthleticTeam
     @id = 11
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end
