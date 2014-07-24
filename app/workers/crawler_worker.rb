@@ -11,7 +11,7 @@ class CrawlerWorker
   # use is for efficiency, not accuracy, so occasional race conditions won't matter
   @@bf = nil
 
-  def perform
+  def perform(*attrs)
     CrawlSeed.all.each do |seed|
       if seed.active
         crawl_loop(seed.url, seed.institution_id)
