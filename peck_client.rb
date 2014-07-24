@@ -5,22 +5,23 @@
 
 require 'restclient'
 require 'json'
-require 'commander' # command line interface
+require 'thor' # command line interface
 require 'active_support/core_ext/hash'
 
-class PeckClient
+class PeckClient < Thor
 
   PECK_URL = 'loki.peckapp.com'
   PECK_PORT = 3500
 
   def initialize
+    super
+
     @user = create_user
     puts "Creates Peck Client with user: #{@user}"
     @auth_params = { api_key: @user.api_key }
-
-
   end
 
+  desc: 'Runs all the possible queries and to test all functionality'
   def run_all_queries
     # runs all the possible tests in this class
   end
