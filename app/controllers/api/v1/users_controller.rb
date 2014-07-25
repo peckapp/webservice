@@ -33,6 +33,8 @@ module Api
           @user.user_device_tokens << token
         end
 
+        logger.info "Created anonymous user with id: #{@user.id}"
+
         session[:user_id] = @user.id
         session[:api_key] = @user.api_key
       end
@@ -93,8 +95,14 @@ module Api
             @user.authentication_token = SecureRandom.hex(30)
             @user.save
             auth[:authentication_token] = @user.authentication_token
+            logger.info "super_created user with id: #{@user.id}"
+          else
+            logger.warn "attempted to super_create user with id: #{@user.id} with invalid authentication sign_up_params"
           end
+        else
+          logger.warn "attempted to super_create user with non-existant id: #{@user.id}"
         end
+
       end
 
       def update
@@ -121,9 +129,13 @@ module Api
           # old_pass_match used as boolean for correct JSON response
           @user.old_pass_match = true
           @user.update_attributes(new_pass_params)
+
+          logger.info "sucessfully updated password for user with id: #{@user.id}"
         else
           @user = User.find(session[:user_id])
           @user.old_pass_match = false
+
+          logger.warn "failed authentication for updating password for user with id: #{@user.id}"
         end
       end
 
