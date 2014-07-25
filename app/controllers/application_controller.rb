@@ -39,6 +39,7 @@ class ApplicationController < ActionController::Base
           end
         end
       end
+      head :unauthorized
       return false
     else
       render :file => "public/401.html", :status => :unauthorized
