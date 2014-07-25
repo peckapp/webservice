@@ -28,11 +28,7 @@ module Api
           most_recent = User.joins('LEFT OUTER JOIN user_device_tokens_users ON user_device_tokens_users.user_id = users.id').joins('LEFT OUTER JOIN user_device_tokens ON user_device_tokens_users.user_device_token_id = user_device_tokens.id').where("user_device_tokens.token" => params[:user_device_token]).maximum("user_device_tokens_users.created_at")
 
           id = User.joins('LEFT OUTER JOIN user_device_tokens_users ON user_device_tokens_users.user_id = users.id').joins('LEFT OUTER JOIN user_device_tokens ON user_device_tokens_users.user_device_token_id = user_device_tokens.id').where("user_device_tokens.token" => params[:user_device_token]).where("user_device_tokens_users.created_at" => most_recent).first.id
-          # .maximum("user_device_tokens.created_at")
-          # id = UserDeviceToken.where()
 
-          puts most_recent
-          puts id
           @user = specific_show(User, id)
           @user.newly_created_user = false
         else
