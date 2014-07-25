@@ -72,8 +72,12 @@ module Api
 
       private
 
-        def circle_params
+        def circle_create_params
           params.require(:circle).permit(:institution_id, :user_id, :circle_name, :circle_member_ids => [])
+        end
+
+        def circle_update_params
+          params.require(:circle).permit(:institution_id, :user_id, :circle_name)
         end
     end
   end
