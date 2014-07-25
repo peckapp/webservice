@@ -27,13 +27,19 @@ module Api
       end
 
       def create
-        @circle = Circle.create(circle_params)
+        the_params = params[:circle]
+        circle_members = the_params.delete(:circle_members)
+        @circle = Circle.create(the_params.permit(:institution_id, :user_id, :circle_name))
+
 
         @member_ids = []
 
         if @circle
           # takes the parameters under the circle block
           cparams = params[:circle]
+
+          # the array of circle members (value) from the previously deleted circle_members (key)
+          cparams[:circle_members] = circle_members
 
           # takes the array of circle members found in the circle block
           members = cparams[:circle_members]
