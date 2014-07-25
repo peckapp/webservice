@@ -27,7 +27,7 @@ module Api
       end
 
       def create
-        @circle = Circle.create(circle_params)
+        @circle = Circle.create(circle_create_params)
 
         @member_ids = []
 
@@ -63,7 +63,7 @@ module Api
 
       def update
         @circle = Circle.find(params[:id])
-        @circle.update_attributes(circle_params)
+        @circle.update_attributes(circle_update_params)
       end
 
       def destroy

@@ -89,24 +89,25 @@ module Api
           sign_up_params[:password] = uparams[:password]
           sign_up_params[:password_confirmation] = uparams[:password_confirmation]
 
-          # gets the image from the params
-          sign_up_params[:image] = params[:image]
-
-          @user.update_attributes(sign_up_params)
-
-          @user.authentication_token = SecureRandom.hex(30)
-          @user.save
-          auth[:authentication_token] = @user.authentication_token
+          if @user.update_attributes(sign_up_params)
+            @user.authentication_token = SecureRandom.hex(30)
+            @user.save
+            auth[:authentication_token] = @user.authentication_token
+          end
         end
       end
 
       def update
-        @user = User.find(params[:id])
-        update_params = user_update_params
+        if params[:id] == auth[:user_id]
+          @user = User.find(params[:id])
+          update_params = user_update_params
 
-        # gets the image from the params
-        update_params[:image] = params[:image]
-        @user.update_attributes(update_params)
+          # gets the image from the params
+          update_params[:image] = params[:image]
+          @user.update_attributes(update_params)
+        else
+          head :unauthorized
+        end
       end
 
       def change_password
@@ -127,7 +128,11 @@ module Api
       end
 
       def destroy
-        @user = User.find(params[:id]).destroy
+        if params[:id] == auth[:user_id]
+          @user = User.find(params[:id]).destroy
+        else
+          head :unauthorized
+        end
       end
 
       private

@@ -11,9 +11,9 @@ module Api
         @explore = []
         for event in @simple_events
           if !event.start_date.past?
-            if event.image_url = "null"
-              event.image_url = "/images/event.png"
-            end
+            # if event.image_url = "null"
+            #   event.image_url = "/images/event.png"
+            # end
             @positions[event.id] = position
             @explore << event
             position += 1

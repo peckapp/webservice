@@ -21,6 +21,10 @@ class Circle < ActiveRecord::Base
   ### circle's activity ###
   has_many :activity_logs #
 
+  ### ANNOUNCEMENTS ###
+  has_many :announcements
+  #####################
+
   ###############################
   ##                           ##
   ##        VALIDATIONS        ##

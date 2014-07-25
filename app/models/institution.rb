@@ -65,6 +65,10 @@ class Institution < ActiveRecord::Base
   ### caches urls where events for the institution can be found ###
   has_many :events_page_urls #
 
+  ### ANNOUNCEMENTS ###
+  has_many :announcements
+  #####################
+
   ### other relationships ###
   has_many :activity_logs
   has_many :circle_members
