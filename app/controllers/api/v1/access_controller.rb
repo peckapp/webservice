@@ -13,8 +13,10 @@ module Api
           @user.authentication_token = SecureRandom.hex(30)
           @user.save
           auth[:authentication_token] = @user.authentication_token
+          logger.info "created session for user with id: #{@user.id}"
         else
           head :bad_request
+          logger.warn "failed to authenticate user for session creation"
         end
       end
 
@@ -40,6 +42,8 @@ module Api
         # session[:user_id] = nil
         @user.authentication_token = nil
         @user.save
+
+        logger.info "destroyed session for user with id: #{@user.id}"
       end
 
       private
