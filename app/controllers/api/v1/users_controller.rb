@@ -20,6 +20,23 @@ module Api
         session[:api_key] = @user.api_key
       end
 
+      def user_for_device_token
+
+        the_token = UserDeviceToken.where(:token => params[:user_device_token]).first
+
+        if the_token
+          id = UserDeviceToken.joins(:user_device_tokens_users).where("user_device_tokens_users.user_device_tokens_id" => "user_device_tokens.id").maximum("user_device_token.created_on")
+          @user = specific_show(User, id)
+          @user.newly_created_user = false
+        else
+          @user = User.create
+          @user.newly_created_user = true
+        end
+        session[:user_id] = @user.id
+        session[:api_key] = @user.api_key
+        @user.save
+      end
+
       def super_create
 
         # params in the user block
