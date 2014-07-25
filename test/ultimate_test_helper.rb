@@ -4,9 +4,6 @@ class UltimateTestHelper < ActionController::TestCase
   include Devise::TestHelpers
   include Warden::Test::Helpers
   Warden.test_mode!
-  def setup
-
-  end
 
   def teardown
     Warden.test_reset!
@@ -119,7 +116,7 @@ class UltimateTestHelper < ActionController::TestCase
     end
 
     def is_subscriptions_controller?
-      self.class == SubscriptionsControllerTest
+      @class && @class == SubscriptionsControllerTest
     end
 
     def is_controller?

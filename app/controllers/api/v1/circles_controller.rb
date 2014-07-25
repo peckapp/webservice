@@ -27,10 +27,7 @@ module Api
       end
 
       def create
-        the_params = params[:circle]
-        circle_members = the_params.delete(:circle_members)
-        @circle = Circle.create(the_params.permit(:institution_id, :user_id, :circle_name))
-
+        @circle = Circle.create(circle_create_params)
 
         @member_ids = []
 
@@ -38,11 +35,8 @@ module Api
           # takes the parameters under the circle block
           cparams = params[:circle]
 
-          # the array of circle members (value) from the previously deleted circle_members (key)
-          cparams[:circle_members] = circle_members
-
           # takes the array of circle members found in the circle block
-          members = cparams[:circle_members]
+          members = cparams[:circle_member_ids]
 
           # members should be an array of integers corresponding to user ids
           members.each do |mem_id|
@@ -69,7 +63,7 @@ module Api
 
       def update
         @circle = Circle.find(params[:id])
-        @circle.update_attributes(circle_params)
+        @circle.update_attributes(circle_update_params)
       end
 
       def destroy
@@ -78,7 +72,11 @@ module Api
 
       private
 
-        def circle_params
+        def circle_create_params
+          params.require(:circle).permit(:institution_id, :user_id, :circle_name, :circle_member_ids => [])
+        end
+
+        def circle_update_params
           params.require(:circle).permit(:institution_id, :user_id, :circle_name)
         end
     end

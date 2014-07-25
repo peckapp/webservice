@@ -13,17 +13,18 @@ class PeckClient < Thor
 
   PECK_URL = 'loki.peckapp.com'
   PECK_PORT = 3500
-  #
-  # def initialize
-  #   super
-  #
-  #   create_user
-  #
-  # end
+
+  def initialize
+    super
+
+    create_user
+
+  end
 
   desc "run_all", "Runs all the possible queries and to test all functionality"
   def run_all
     # runs all the possible tests in this class
+    puts "running all commands"
   end
 
   no_commands {
