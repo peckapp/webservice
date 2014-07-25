@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140725145324) do
+ActiveRecord::Schema.define(version: 20140725160217) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -373,6 +373,15 @@ ActiveRecord::Schema.define(version: 20140725145324) do
     t.datetime "updated_at"
   end
 
+  create_table "rss_pages", force: true do |t|
+    t.integer  "institution_id",                  null: false
+    t.string   "url",                             null: false
+    t.integer  "scrape_interval", default: 1440
+    t.boolean  "paginated",       default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "scrape_resources", force: true do |t|
     t.string   "url",                                    null: false
     t.integer  "institution_id",                         null: false
@@ -446,7 +455,6 @@ ActiveRecord::Schema.define(version: 20140725145324) do
     t.string   "token"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "institution_id", null: false
   end
 
   create_table "user_device_tokens_users", id: false, force: true do |t|
