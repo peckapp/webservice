@@ -29,6 +29,12 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :users do
+        collection do
+          post :user_for_device_token
+        end
+      end
+
       # Separation by circles
       resources :circles do
         resources :circle_members, :activity_logs
