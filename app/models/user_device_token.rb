@@ -8,7 +8,7 @@ class UserDeviceToken < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  # validates :institution_id, :presence => true, :numericality => { :only_integer => true }
   validates :token, :presence => true, :uniqueness => true
 
   ###############################
@@ -16,9 +16,6 @@ class UserDeviceToken < ActiveRecord::Base
   ##        ASSOCIATIONS       ##
   ##                           ##
   ###############################
-
-  ### Institution ###
-  belongs_to :institution
 
   ### device is associated to a particular user ###
   has_and_belongs_to_many :users

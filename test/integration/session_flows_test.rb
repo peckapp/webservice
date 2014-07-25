@@ -73,7 +73,7 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
     end
 
     def create_circle
-      post "api/circles", :circle => {:institution_id => 3, :user_id => 59, :circle_name => "CIRCLE", :circle_members => [1,2,3,4]}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key, :authentication_token => User.find(1).authentication_token}, :format => :json
+      post "api/circles", :circle => {:institution_id => 3, :user_id => 1, :circle_name => "CIRCLE", :circle_member_ids => [1,2,3,4]}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key, :authentication_token => User.find(1).authentication_token}, :format => :json
       circle = assigns(:circle)
       assert_response :success, "no response from database"
       assert_not_nil circle.id, "circle was not created properly"

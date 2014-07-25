@@ -30,7 +30,7 @@ module Api
 
       def destroy
         # makes sure the id in the delete request matches the user id.
-        if params[:id] == auth[:user_id]
+        if params[:id].to_i == auth[:user_id].to_i
           @subscriptions = []
 
           # query parameter with the ids of all the necessarily deleted subscriptions

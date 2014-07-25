@@ -4,9 +4,6 @@ class UltimateTestHelper < ActionController::TestCase
   include Devise::TestHelpers
   include Warden::Test::Helpers
   Warden.test_mode!
-  def setup
-
-  end
 
   def teardown
     Warden.test_reset!
@@ -106,7 +103,7 @@ class UltimateTestHelper < ActionController::TestCase
 
     if is_subscriptions_controller?
       # need to fix this
-      delete :destroy, :format => :json, :authentication => auth_params, :subscriptions => "[1,2,3,4]"
+      delete :destroy, {:format => :json, :id => 3, :authentication => auth_params, :subscriptions => "[1,2,3,4]"}
       assert_response :success
     else
       delete :destroy, {:format => :json, :id => @id, :authentication => auth_params}
@@ -120,7 +117,7 @@ class UltimateTestHelper < ActionController::TestCase
     end
 
     def is_subscriptions_controller?
-      self.class == SubscriptionsControllerTest
+      @class && @class == SubscriptionsControllerTest
     end
 
     def is_controller?

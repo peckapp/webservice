@@ -75,7 +75,6 @@ class Institution < ActiveRecord::Base
   has_many :notification_views
   has_many :push_notifications
   has_many :subscriptions
-  has_many :user_device_tokens
 
   ###############################
   ##                           ##
