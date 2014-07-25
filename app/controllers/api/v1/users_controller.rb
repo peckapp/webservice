@@ -16,6 +16,13 @@ module Api
 
       def user_circles
         @circles = User.find(params[:id]).circles
+
+        # hash mapping circle id to array of its members for display in json
+        @member_ids = {}
+
+        for c in @circles
+          @member_ids[c.id] = CircleMember.where("circle_id" => c.id).pluck(:user_id)
+        end
       end
 
       def create
