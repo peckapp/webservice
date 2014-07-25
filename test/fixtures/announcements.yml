@@ -4,8 +4,19 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+<% (1..10).each do |n| %>
+announcement_<%= n %>:
+  title: "Dope"
+  id: <%= n %>
+  institution_id: 1
+  public: true
+<% end %>
+
+# public simple events from institution 2
+<% (11..20).each do |n| %>
+announcement_<%= n %>:
+  title: "Announcement"
+  id: <%= n %>
+  institution_id: 2
+  public: true
+<% end %>

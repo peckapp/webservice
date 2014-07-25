@@ -481,12 +481,13 @@ ActiveRecord::Schema.define(version: 20140725184504) do
     t.string   "token"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "institution_id", null: false
   end
 
   create_table "user_device_tokens_users", id: false, force: true do |t|
-    t.integer "user_device_token_id", null: false
-    t.integer "user_id",              null: false
+    t.integer  "user_device_token_id", null: false
+    t.integer  "user_id",              null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "user_device_tokens_users", ["user_device_token_id", "user_id"], name: "user_device_tokens_users_index", using: :btree

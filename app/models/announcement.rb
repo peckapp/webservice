@@ -1,5 +1,6 @@
 class Announcement < ActiveRecord::Base
-
+  include ModelNormalValidations
+  include ModelBeforeSaveValidations
   ###    Associations    ###
   ### user announcement creator ###
   belongs_to :creator, :class_name => "User", :foreign_key => "user_id" #

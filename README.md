@@ -36,6 +36,12 @@ There will be a few primary tasks that the API will handle:
  - will be setting up nginx http authentication for access to this site
 - `fail2ban` is used in tandem with [badIPs.com](www.badips.com) to keep track of malicious hosts. our specific information can be seen using our key.
 
+### Status Commands
+- Nginx
+ - `service nginx status`
+- Passenger
+ - `passenger-status`
+
 ### Config Files
 - Nginx
  - `/opt/nginx/conf/nginx.conf`
@@ -53,6 +59,12 @@ There will be a few primary tasks that the API will handle:
  - `/etc/logstash-forwarder`
  - `/etc/sysconfig/logstash-forwarder`
 
+#### Tuning Parameters
+- Nginx main configuration `/opt/nginx/conf/nginx.conf`
+ - `passenger_max_pool_size` can be modified to indicate the number fo processes that passenger runs. read more about passenger concurrency here: http://blog.phusion.nl/2013/03/12/tuning-phusion-passengers-concurrency-settings/
+ - `server_names_hash_bucket_size` was manually increased to allow for more server names to be specified
+ - buffers were added as possibly fixes for out of memory errors, not sure if these perform any important role for us
+
 ### Service restarts
 - Nginx
  - `service nginx restart`
@@ -60,6 +72,8 @@ There will be a few primary tasks that the API will handle:
  - `service elasticsearch restart`
  - `service logstash restart`
  - `service logstash-forwarder restart`
+- Passenger
+ - `touch /home/deployer/apps/webservice_development/current/tmp/restart.txt`
 
 ## Production Environment
 

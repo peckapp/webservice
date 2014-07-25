@@ -36,7 +36,7 @@ module Api
 
         def user_device_token_params
 
-          params.require(:user_device_token).permit(:institution_id, :user_id, :token)
+          params.require(:user_device_token).permit(:user_id, :token)
 
         end
     end

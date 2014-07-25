@@ -9,7 +9,6 @@
 <% (1..5).each do |n| %>
  user_device_token_<%= n %>:
   token: <%= "token_#{n}" %>
-  institution_id: 1
   id: <%= n %>
 <% end %>
 
@@ -17,6 +16,5 @@
 <% (6..10).each do |n| %>
  user_device_token_<%= n %>:
   token: <%= "token_#{n}" %>
-  institution_id: 2
   id: <%= n %>
 <% end %>
