@@ -106,7 +106,7 @@ module Api
       end
 
       def update
-        if params[:id] == auth[:user_id]
+        if params[:id].to_i == auth[:user_id].to_i
           @user = User.find(params[:id])
           update_params = user_update_params
 
@@ -140,7 +140,7 @@ module Api
       end
 
       def destroy
-        if params[:id] == auth[:user_id]
+        if params[:id].to_i == auth[:user_id].to_i
           @user = User.find(params[:id]).destroy
         else
           head :unauthorized

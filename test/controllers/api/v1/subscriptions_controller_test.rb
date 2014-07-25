@@ -3,6 +3,7 @@ require 'ultimate_test_helper'
 
 class SubscriptionsControllerTest < UltimateTestHelper
   def setup
+    @class = SubscriptionsControllerTest
     @the_controller = Api::V1::SubscriptionsController.new
     @attributes = [:id, :user_id, :category, :subscribed_to, :format, :authentication]
     @params_show = {:id => 11, :user_id => 1, :category => "math", :format => :json, :authentication => session_create}

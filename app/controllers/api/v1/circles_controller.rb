@@ -36,7 +36,7 @@ module Api
           cparams = params[:circle]
 
           # takes the array of circle members found in the circle block
-          members = cparams[:circle_members]
+          members = cparams[:circle_member_ids]
 
           # members should be an array of integers corresponding to user ids
           members.each do |mem_id|
@@ -73,8 +73,9 @@ module Api
       private
 
         def circle_create_params
-          params.require(:circle).permit(:institution_id, :user_id, :circle_name, :circle_members)
+          params.require(:circle).permit(:institution_id, :user_id, :circle_name, :circle_member_ids => [])
         end
+
         def circle_update_params
           params.require(:circle).permit(:institution_id, :user_id, :circle_name)
         end
