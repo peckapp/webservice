@@ -72,6 +72,10 @@ class User < ActiveRecord::Base
   has_many :subscriptions #
   #####################
 
+  ### ANNOUNCEMENTS ###
+  has_many :announcements
+  #####################
+
   ### devices on which peck is used ###
   has_and_belongs_to_many :user_device_tokens
   #####################################

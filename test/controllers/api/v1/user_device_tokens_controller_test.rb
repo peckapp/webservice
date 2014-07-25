@@ -5,10 +5,10 @@ class UserDeviceTokensControllerTest < UltimateTestHelper
 
   def setup
     @the_controller = Api::V1::UserDeviceTokensController.new
-    @attributes = [:token, :institution_id, :format, :id, :authentication]
+    @attributes = [:token, :format, :id, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 8, :format => :json, :authentication => session_create}
-    @params_create = {:institution_id => 2, :token => "dope_token"}
+    @params_create = {:token => "dope_token"}
     @params_update = {:token => "jill"}
     @model_type = :user_device_token
     @model = UserDeviceToken

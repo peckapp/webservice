@@ -105,8 +105,7 @@ class UltimateTestHelper < ActionController::TestCase
     @controller = @the_controller
 
     if is_subscriptions_controller?
-      # need to fix this
-      delete "api/subscriptions/3?subscriptions=[1,2,3,4]", :format => :json, :authentication => auth_params
+      delete :destroy, {:format => :json, :id => 3, :authentication => auth_params, :subscriptions => "[1,2,3,4]"}
       assert_response :success
     else
       delete :destroy, {:format => :json, :id => @id, :authentication => auth_params}

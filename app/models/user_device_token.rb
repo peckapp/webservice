@@ -8,7 +8,6 @@ class UserDeviceToken < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
   validates :token, :presence => true, :uniqueness => true
 
   ###############################

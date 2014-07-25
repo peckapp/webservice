@@ -4,17 +4,19 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-
-# user_device_token device tokens set 1
-<% (1..5).each do |n| %>
- user_device_token_<%= n %>:
-  token: <%= "token_#{n}" %>
+<% (1..10).each do |n| %>
+announcement_<%= n %>:
+  title: "Dope"
   id: <%= n %>
+  institution_id: 1
+  public: true
 <% end %>
 
-# user_device_token device tokens set 2
-<% (6..10).each do |n| %>
- user_device_token_<%= n %>:
-  token: <%= "token_#{n}" %>
+# public simple events from institution 2
+<% (11..20).each do |n| %>
+announcement_<%= n %>:
+  title: "Announcement"
   id: <%= n %>
+  institution_id: 2
+  public: true
 <% end %>
