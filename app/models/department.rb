@@ -14,6 +14,10 @@ class Department < ActiveRecord::Base
   # department's home institution
   belongs_to :institution
 
+  ### ANNOUNCEMENTS ###
+  has_many :announcements
+  #####################
+
   ###############################
   ##                           ##
   ##        VALIDATIONS        ##

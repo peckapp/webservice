@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140723200754) do
+ActiveRecord::Schema.define(version: 20140725184504) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -66,6 +66,32 @@ ActiveRecord::Schema.define(version: 20140723200754) do
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
 
+  create_table "announcements", force: true do |t|
+    t.string   "title",                    limit: 100,                 null: false
+    t.text     "announcement_description"
+    t.integer  "institution_id",                                       null: false
+    t.integer  "user_id"
+    t.integer  "department_id"
+    t.integer  "club_id"
+    t.integer  "circle_id"
+    t.boolean  "public",                               default: false
+    t.integer  "comment_count"
+    t.boolean  "deleted",                              default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+  end
+
+  add_index "announcements", ["circle_id"], name: "index_announcements_on_circle_id", using: :btree
+  add_index "announcements", ["club_id"], name: "index_announcements_on_club_id", using: :btree
+  add_index "announcements", ["department_id"], name: "index_announcements_on_department_id", using: :btree
+  add_index "announcements", ["institution_id"], name: "index_announcements_on_institution_id", using: :btree
+  add_index "announcements", ["title"], name: "index_announcements_on_title", using: :btree
+  add_index "announcements", ["user_id"], name: "index_announcements_on_user_id", using: :btree
+
   create_table "athletic_events", force: true do |t|
     t.integer  "institution_id",     null: false
     t.integer  "athletic_team_id",   null: false
@@ -102,6 +128,13 @@ ActiveRecord::Schema.define(version: 20140723200754) do
   add_index "athletic_teams", ["institution_id"], name: "index_athletic_teams_on_institution_id", using: :btree
   add_index "athletic_teams", ["sport_name"], name: "index_athletic_teams_on_sport_name", using: :btree
 
+  create_table "attendees_users", id: false, force: true do |t|
+    t.integer "event_attendee_id", null: false
+    t.integer "user_id",           null: false
+  end
+
+  add_index "attendees_users", ["event_attendee_id", "user_id"], name: "index_attendees_users_on_event_attendee_id_and_user_id", using: :btree
+
   create_table "circle_members", force: true do |t|
     t.integer  "circle_id",      null: false
     t.integer  "user_id",        null: false
@@ -115,6 +148,13 @@ ActiveRecord::Schema.define(version: 20140723200754) do
   add_index "circle_members", ["circle_id"], name: "index_circle_members_on_circle_id", using: :btree
   add_index "circle_members", ["invited_by"], name: "index_circle_members_on_invited_by", using: :btree
   add_index "circle_members", ["user_id"], name: "index_circle_members_on_user_id", using: :btree
+
+  create_table "circle_members_users", id: false, force: true do |t|
+    t.integer "user_id",          null: false
+    t.integer "circle_member_id", null: false
+  end
+
+  add_index "circle_members_users", ["user_id", "circle_member_id"], name: "circle_members_users_index", using: :btree
 
   create_table "circles", force: true do |t|
     t.integer  "institution_id", null: false
@@ -287,6 +327,13 @@ ActiveRecord::Schema.define(version: 20140723200754) do
   add_index "institutions", ["configuration_id"], name: "index_institutions_on_configuration_id", using: :btree
   add_index "institutions", ["name"], name: "index_institutions_on_name", using: :btree
 
+  create_table "inviters_users", id: false, force: true do |t|
+    t.integer "event_attendee_id", null: false
+    t.integer "user_id",           null: false
+  end
+
+  add_index "inviters_users", ["event_attendee_id", "user_id"], name: "index_inviters_users_on_event_attendee_id_and_user_id", using: :btree
+
   create_table "locations", force: true do |t|
     t.integer  "institution_id", null: false
     t.string   "name",           null: false
@@ -348,6 +395,15 @@ ActiveRecord::Schema.define(version: 20140723200754) do
     t.string   "info"
     t.string   "resource_name", null: false
     t.string   "model_name",    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rss_pages", force: true do |t|
+    t.integer  "institution_id",                  null: false
+    t.string   "url",                             null: false
+    t.integer  "scrape_interval", default: 1440
+    t.boolean  "paginated",       default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
