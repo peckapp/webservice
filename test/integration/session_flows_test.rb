@@ -59,6 +59,7 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
       #super create user
       patch "/api/users/2/super_create", :user => {:first_name => "John", :last_name => "Doe", :email => "jdoe1@williams.edu", :password => "anothertest", :password_confirmation => "wrongpassword"}, :authentication => {:user_id => 2, :institution_id => 1, :api_key => User.find(1).api_key },:format => :json
       user = assigns(:user)
+      assert_response :unauthorized, "authorized somehow"
       assert_nil user
     end
 
