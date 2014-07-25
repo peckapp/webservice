@@ -2,7 +2,7 @@ module Api
   module V1
     class UsersController < ApplicationController #Api::BaseController
 
-      before_action :confirm_minimal_access, :except => :create
+      before_action :confirm_minimal_access, :except => [:create, :user_for_device_token]
 
       respond_to :json
 
@@ -25,7 +25,14 @@ module Api
         the_token = UserDeviceToken.where(:token => params[:user_device_token]).first
 
         if the_token
-          id = UserDeviceToken.joins(:user_device_tokens_users).where("user_device_tokens_users.user_device_tokens_id" => "user_device_tokens.id").maximum("user_device_token.created_on")
+          most_recent = User.joins('LEFT OUTER JOIN user_device_tokens_users ON user_device_tokens_users.user_id = users.id').joins('LEFT OUTER JOIN user_device_tokens ON user_device_tokens_users.user_device_token_id = user_device_tokens.id').where("user_device_tokens.token" => params[:user_device_token]).maximum("user_device_tokens_users.created_at")
+
+          id = User.joins('LEFT OUTER JOIN user_device_tokens_users ON user_device_tokens_users.user_id = users.id').joins('LEFT OUTER JOIN user_device_tokens ON user_device_tokens_users.user_device_token_id = user_device_tokens.id').where("user_device_tokens.token" => params[:user_device_token]).where("user_device_tokens_users.created_at" => most_recent).first.id
+          # .maximum("user_device_tokens.created_at")
+          # id = UserDeviceToken.where()
+
+          puts most_recent
+          puts id
           @user = specific_show(User, id)
           @user.newly_created_user = false
         else
