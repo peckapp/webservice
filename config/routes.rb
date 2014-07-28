@@ -25,10 +25,10 @@ Rails.application.routes.draw do
 
       resources :announcements do
         member do
-          patch :add_like
+          patch :add_like, :unlike
         end
       end
-      
+
       resources :users do
         member do
           patch :super_create, :change_password
