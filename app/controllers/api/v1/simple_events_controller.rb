@@ -55,7 +55,7 @@ module Api
       def add_like
         @simple_event = SimpleEvent.find(params[:id])
         if params[:liker].to_i == auth[:user_id].to_i
-          liker = SimpleEvent.find(params[:liker])
+          liker = User.find(params[:liker])
           liker.like!(@simple_event)
           @likers = @simple_event.likers(User)
           @likes = []
