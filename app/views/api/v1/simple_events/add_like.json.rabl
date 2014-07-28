@@ -6,4 +6,4 @@ node(:event_type) {"simple"}
 
 node(:image) {@simple_event.image.url}
 
-node(:likes) {@likes.blank? ? nil : @likes}
+node(:likes) {@likes}

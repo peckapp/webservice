@@ -7,3 +7,7 @@ node(:event_type) {"simple"}
 node :image do |simple_event|
   simple_event.image.url
 end
+
+node :likes do |simple_event|
+  @likes_for_simple_event[simple_event]
+end

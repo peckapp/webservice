@@ -8,10 +8,31 @@ module Api
 
       def index
         @simple_events = specific_index(SimpleEvent, params)
+
+        @likes_for_simple_event = {}
+
+        @simple_events.each do |simple_event|
+          likers = []
+          simple_event.likers(User).each do |user|
+
+            likers << user.id
+
+          end
+
+          @likes_for_simple_event[simple_event] = likers
+        end
       end
 
       def show
         @simple_event = specific_show(SimpleEvent, params[:id])
+
+        @likers = @simple_event.likers(User)
+        @likes = []
+        if @likers
+          @likers.each do |user|
+            @likes << user.id
+          end
+        end
       end
 
       def create
@@ -29,6 +50,17 @@ module Api
         # gets the image from params
         update_params[:image] = params[:image]
         @simple_event.update_attributes(update_params)
+      end
+
+      def add_like
+        @simple_event = SimpleEvent.find(params[:id])
+        liker = SimpleEvent.find(params[:liker])
+        liker.like!(@simple_event)
+        @likers = @simple_event.likers(User)
+        @likes = []
+        @likers.each do |user|
+          @likes << user.id
+        end
       end
 
       def destroy

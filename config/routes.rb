@@ -29,6 +29,18 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :simple_events do
+        member do
+          patch :add_like
+        end
+      end
+
+      resources :comments do
+        member do
+          patch :add_like
+        end
+      end
+
       resources :users do
         member do
           patch :super_create, :change_password
