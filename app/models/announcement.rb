@@ -4,7 +4,7 @@ class Announcement < ActiveRecord::Base
   ###    Associations    ###
   ### user announcement creator ###
   acts_as_likeable
-  
+
   belongs_to :creator, :class_name => "User", :foreign_key => "user_id" #
 
   ### department announcement creator ###
