@@ -27,24 +27,26 @@ module Api
       end
 
       def create
-        @circle = Circle.create(circle_create_params)
+        # all of the parameters in the circle
+        cparams = params[:circle]
+
+        # returns the array of circle member ids
+        the_circle_members = cparams.delete(:circle_member_ids)
+
+        # passes in the cparams to permit certain attributes
+        @circle = Circle.create(circle_create_params(cparams))
 
         @member_ids = []
 
         if @circle
-          # takes the parameters under the circle block
-          cparams = params[:circle]
-
           # takes the array of circle members found in the circle block
-          members = cparams[:circle_member_ids]
-
+          members = the_circle_members
           # members should be an array of integers corresponding to user ids
           members.each do |mem_id|
-
           # creates a circle member
-            member = CircleMember.create(:institution_id => User.find(mem_id).institution_id, :circle_id => @circle.id, :user_id => User.find(mem_id).id, :invited_by => @circle.user_id)
+            member = CircleMember.create(:institution_id => @circle.institution_id, :circle_id => @circle.id, :user_id => mem_id, :invited_by => @circle.user_id)
 
-          # adds the member to the array of circle members for the created circle
+            # adds the member to the array of circle members for the created circle
             @circle.circle_members << member
           end
 
@@ -72,8 +74,8 @@ module Api
 
       private
 
-        def circle_create_params
-          params.require(:circle).permit(:institution_id, :user_id, :circle_name, :circle_member_ids => [])
+        def circle_create_params(parameters)
+          parameters.permit(:institution_id, :user_id, :circle_name)
         end
 
         def circle_update_params
