@@ -2,16 +2,24 @@ module Api
   module V1
     class AnnouncementsController < ApplicationController
 
-      before_action :confirm_logged_in, :only => [:create, :update, :destroy]
+      before_action :confirm_logged_in, :only => [:create, :update, :destroy, :add_like]
       respond_to :json
 
       def index
         @announcements = specific_index(Announcement, params)
-      end
+
+        # for each announcement
 
       def show
         @announcement = specific_show(Announcement, params[:id])
-        @likes = @announcement.likers(User)
+        @likers = @announcement.likers(User)
+        @likes = []
+        if @likers
+          # display the first and last name of all the likers
+          @likers.each do |user|
+            @likes << user.id
+          end
+        end
       end
 
       def create
@@ -34,12 +42,19 @@ module Api
 
       def add_like
         @announcement = Announcement.find(params[:id])
-        liker = User.find(params[:liker])
-        liker.like!(@announcement)
-        @likers = @announcement.likers(User)
-        @likes = []
-        @likers.each do |user|
-          @likes << user.id
+        # liker must be the same as the user id of authentication params
+        if params[:liker].to_i == auth[:user_id].to_i
+          liker = User.find(params[:liker])
+
+          # the person with the passed id likes this announcement
+          liker.like!(@announcement)
+          @likers = @announcement.likers(User)
+          @likes = []
+
+          # display the first and last name of all the likers
+          @likers.each do |user|
+            @likes << user.id
+          end
         end
       end
 
