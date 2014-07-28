@@ -4,3 +4,7 @@ collection :@announcements
 node :image do |announcement|
   announcement.image.url
 end
+
+node :likes do |announcement|
+  @likes_for_announcement[announcement]
+end
