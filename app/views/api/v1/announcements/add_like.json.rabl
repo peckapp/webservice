@@ -4,4 +4,4 @@ attributes :id, :title, :announcement_description, :institution_id, :user_id, :d
 
 node(:image) {@announcement.image.url}
 
-node(:likes) {@likes}
+node(:likes) {@likes.blank? ? nil : @likes}
