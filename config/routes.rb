@@ -31,13 +31,13 @@ Rails.application.routes.draw do
 
       resources :simple_events do
         member do
-          patch :add_like
+          patch :add_like, :unlike
         end
       end
 
       resources :comments do
         member do
-          patch :add_like
+          patch :add_like, :unlike
         end
       end
 

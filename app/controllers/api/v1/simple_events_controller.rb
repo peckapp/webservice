@@ -54,12 +54,27 @@ module Api
 
       def add_like
         @simple_event = SimpleEvent.find(params[:id])
-        liker = SimpleEvent.find(params[:liker])
+        liker = User.find(params[:liker])
         liker.like!(@simple_event)
         @likers = @simple_event.likers(User)
         @likes = []
         @likers.each do |user|
           @likes << user.id
+        end
+      end
+
+      def unlike
+        @simple_event = SimpleEvent.find(params[:id])
+        if params[:unliker].to_i == auth[:user_id].to_i
+          liker = User.find(params[:unliker])
+          liker.unlike!(@simple_event)
+
+          @likers = @simple_event.likers(User)
+          @likes = []
+
+          @likers.each do |user|
+            @likes << user.id
+          end
         end
       end
 
