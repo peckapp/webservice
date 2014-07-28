@@ -6,5 +6,5 @@ node :image do |announcement|
 end
 
 node :likes do |announcement|
-  @likes
+  @likes_for_announcement[announcement]
 end
