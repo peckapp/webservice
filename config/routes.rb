@@ -23,6 +23,12 @@ Rails.application.routes.draw do
 
       resources :access, :only => [:create, :destroy]
 
+      resources :announcements do
+        member do
+          patch :add_like
+        end
+      end
+      
       resources :users do
         member do
           patch :super_create, :change_password

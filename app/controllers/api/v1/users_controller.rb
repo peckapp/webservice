@@ -83,7 +83,7 @@ module Api
 
         @user = User.find(params[:id])
 
-        if @user
+        if @user && params[:id].to_i == auth[:user_id].to_i
           # makes it necessary for to have a password and password confirmation.
           @user.enable_strict_validation = true
 

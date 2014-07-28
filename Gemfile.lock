@@ -254,6 +254,8 @@ GEM
     slim (2.0.3)
       temple (~> 0.6.6)
       tilt (>= 1.3.3, < 2.1)
+    socialization (1.1.0)
+      activerecord
     spring (1.1.3)
     sprockets (2.11.0)
       hike (~> 1.2)
@@ -330,6 +332,7 @@ DEPENDENCIES
   sidetiq
   sinatra
   slim
+  socialization
   spring
   turbolinks
   uglifier (>= 1.3.0)

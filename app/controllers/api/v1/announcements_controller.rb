@@ -4,13 +4,14 @@ module Api
 
       before_action :confirm_logged_in, :only => [:create, :update, :destroy]
       respond_to :json
-      
+
       def index
         @announcements = specific_index(Announcement, params)
       end
 
       def show
         @announcement = specific_show(Announcement, params[:id])
+        @likes = @announcement.likers(User)
       end
 
       def create
@@ -29,6 +30,17 @@ module Api
         # gets the image from the params
         announcement_update_params[:image] = params[:image]
         @announcement.update_attributes(announcement_update_params)
+      end
+
+      def add_like
+        @announcement = Announcement.find(params[:id])
+        liker = User.find(params[:liker])
+        liker.like!(@announcement)
+        @likers = @announcement.likers(User)
+        @likes = []
+        @likers.each do |user|
+          @likes << user.id
+        end
       end
 
       def destroy

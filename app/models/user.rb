@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
   # each user has an encrypted secure password
   attr_accessor :enable_strict_validation, :password, :old_pass_match, :image, :newly_created_user
 
+  acts_as_liker
+  
   EMAIL_REGEX =/\A[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}\Z/
 
   ###############################

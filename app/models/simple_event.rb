@@ -2,6 +2,8 @@ class SimpleEvent < ActiveRecord::Base
   include ModelNormalValidations
   include ModelBeforeSaveValidations
 
+  acts_as_likeable
+
   ###############################
   ##                           ##
   ##         VALIDATIONS       ##
