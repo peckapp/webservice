@@ -25,7 +25,7 @@ Rails.application.routes.draw do
 
       resources :announcements do
         member do
-          patch :add_like
+          patch :add_like, :unlike
         end
       end
 

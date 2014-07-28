@@ -8,14 +8,16 @@ module Api
       def index
         @announcements = specific_index(Announcement, params)
 
+        # dictionary for the likes per announcement
         @likes_for_announcement = {}
 
+        # for each announcement
         @announcements.each do |announcement|
           likers = []
+
+          # for each liker in the array of announcement likers, add the user's id
           announcement.likers(User).each do |user|
-
             likers << user.id
-
           end
 
           @likes_for_announcement[announcement] = likers
@@ -27,6 +29,8 @@ module Api
         @announcement = specific_show(Announcement, params[:id])
         @likers = @announcement.likers(User)
         @likes = []
+
+        # if there are likers, then return the ids of each liker
         if @likers
           @likers.each do |user|
             @likes << user.id
@@ -65,6 +69,21 @@ module Api
 
           # display the first and last name of all the likers
           @likers.each do |user|
+            @likes << user.id
+          end
+        end
+      end
+
+      def unlike
+        @announcement = Announcement.find(params[:id])
+        if params[:unliker].to_i == auth[:unliker].to_i
+          liker = User.find(params[:liker])
+          liker.unlike!(@announcement)
+
+          @likers = @announcement.likers(User)
+          @likes = []
+
+          @likes.each do |user|
             @likes << user.id
           end
         end
