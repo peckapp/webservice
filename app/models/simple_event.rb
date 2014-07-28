@@ -25,10 +25,10 @@ class SimpleEvent < ActiveRecord::Base
   validate :correct_simple_event_types
 
   ### Event Photo Attachments ###
-  has_attached_file(:image, :url => "/images/simple_events/:style/:basename.:extension",
+  has_attached_file :image, :url => "/images/simple_events/:style/:basename.:extension",
                     :path => ":rails_root/public/images/simple_events/:style/:basename.:extension",
-                    :default_url => "/images/missing.png",
-                    :styles => { :medium => "300x300>", :thumb => ["32x32#", :png] })
+                    :default_url => "/images/missing.png"
+                    # :styles => { :medium => "300x300>", :thumb => ["32x32#", :png] }
 
   # validates_attachment :image, :content_type => { :content_type => "image/jpeg"}
   validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
