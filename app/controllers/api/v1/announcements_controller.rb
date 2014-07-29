@@ -76,14 +76,14 @@ module Api
 
       def unlike
         @announcement = Announcement.find(params[:id])
-        if params[:unliker].to_i == auth[:unliker].to_i
-          liker = User.find(params[:liker])
+        if params[:unliker].to_i == auth[:user_id].to_i
+          liker = User.find(params[:unliker])
           liker.unlike!(@announcement)
 
           @likers = @announcement.likers(User)
           @likes = []
 
-          @likes.each do |user|
+          @likers.each do |user|
             @likes << user.id
           end
         end

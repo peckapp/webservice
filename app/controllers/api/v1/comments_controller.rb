@@ -57,6 +57,21 @@ module Api
         end
       end
 
+      def unlike
+        @comment = Comment.find(params[:id])
+        if params[:unliker].to_i == auth[:user_id].to_i
+          liker = User.find(params[:unliker])
+          liker.unlike!(@comment)
+
+          @likers = @comment.likers(User)
+          @likes = []
+
+          @likers.each do |user|
+            @likes << user.id
+          end
+        end
+      end
+
       def destroy
         @comment = Comment.find(params[:id]).destroy
       end
