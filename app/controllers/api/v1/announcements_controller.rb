@@ -24,9 +24,11 @@ module Api
         end
       end
 
-
       def show
         @announcement = specific_show(Announcement, params[:id])
+
+        # get all likers for the given announcement and initialize an
+        # array to store them
         @likers = @announcement.likers(User)
         @likes = []
 
@@ -53,27 +55,33 @@ module Api
 
         # gets the image from the params
         announcement_update_params[:image] = params[:image]
+
+        # update attributes
         @announcement.update_attributes(announcement_update_params)
       end
 
+      # method for permitting users to "like" announcements
       def add_like
+
         @announcement = Announcement.find(params[:id])
-        # liker must be the same as the user id of authentication params
+
+        # liker must have same id as the user id of authentication params
         if params[:liker].to_i == auth[:user_id].to_i
           liker = User.find(params[:liker])
 
-          # the person with the passed id likes this announcement
+          # above user is added to the set of likers of this announcement
           liker.like!(@announcement)
           @likers = @announcement.likers(User)
           @likes = []
 
-          # display the first and last name of all the likers
+          # provide array of ids in json response
           @likers.each do |user|
             @likes << user.id
           end
         end
       end
 
+      # method for unliking announcements
       def unlike
         @announcement = Announcement.find(params[:id])
         if params[:unliker].to_i == auth[:user_id].to_i

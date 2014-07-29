@@ -2,44 +2,37 @@ module Api
   module V1
 
     class AccessController < ApplicationController
+
       # When you sign in, you get an authentication token.
       def create
+
+        # first authenticate user with email and password
         @user = User.authenticate(authentication_params[:email], authentication_params[:password])
+
+        # if authenticated
         if @user
 
-          # authentication token randomly generated each time signed in
-          # session[:authentication_token] = SecureRandom.hex(20)
-          # @user.authentication_token = session[:authentication_token]
+          # provide auth token, set it in database and set it in authentication params
           @user.authentication_token = SecureRandom.hex(30)
           @user.save
           auth[:authentication_token] = @user.authentication_token
           logger.info "created session for user with id: #{@user.id}"
+
         else
+
+          # something went wrong
           head :bad_request
           logger.warn "failed to authenticate user for session creation"
         end
       end
 
       def destroy
-        # should we add these checks?
-        # params[:id] will be the one sent in the path like api/v1/sessions/:id
+
+        # find user who is logging out
         @user = User.find(session[:user_id])
-        #
-        # # make sure the session matches with the user's id
-        # if @user
-        #   if session[:user_id] = @user.id
-        #     session[:user_id] = nil
-        #     session[:authentication_token] = nil
-        #     @user.authentication_token = nil
-        #   end
-        # end
-        # session[:user_id] = nil
+
+        # remove auth token from authentication params and database
         auth[:authentication_token] = nil
-        # if @user
-        #   @user.authentication_token = SecureRandom.hex(20)
-        #   @user.save
-        # end
-        # session[:user_id] = nil
         @user.authentication_token = nil
         @user.save
 
