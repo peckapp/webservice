@@ -3,7 +3,7 @@ module Api
     class EventAttendeesController < ApplicationController #Api::BaseController
 
       # before_action :authenticate_admin_user!, :only => [:create, :update, :destroy]
-      # before_action :confirm_logged_in, :only => [:create, :update, :destroy]
+      before_action :confirm_logged_in, :only => [:create, :update, :destroy]
 
       respond_to :json
 
@@ -16,7 +16,7 @@ module Api
       end
 
       def create
-        @event_attendee = EventAttendee.create(event_attendee_params)
+        @event_attendee = EventAttendee.current_or_create_new(event_attendee_params)
       end
 
       def update
@@ -32,6 +32,10 @@ module Api
 
         def event_attendee_params
           params.require(:event_attendee).permit(:institution_id, :user_id, :added_by, :category, :event_attended)
+        end
+
+        def delete_params
+          params.require(:event_attendee).permit(:institution_id, :user_id, :category, :event_attended)
         end
     end
   end
