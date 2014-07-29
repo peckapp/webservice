@@ -52,7 +52,7 @@ class ApplicationController < ActionController::Base
 
     # uses authentication institution_id to get initial set
     # result = allowed_model_instances(model, params[:authentication])
-    result = model.where(:institution_id => auth[:institution_id])
+    result = model.all # where(:institution_id => auth[:institution_id])
 
     # if there is at least one parameter, filter result
     if ! search_params.blank?
