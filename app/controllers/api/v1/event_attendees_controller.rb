@@ -8,7 +8,7 @@ module Api
       respond_to :json
 
       def index
-          @event_attendees = specific_index(EventAttendee, params)
+        @event_attendees = specific_index(EventAttendee, params)
       end
 
       def show

@@ -11,3 +11,7 @@ end
 node :likes do |simple_event|
   @likes_for_simple_event[simple_event]
 end
+
+node :attendees do |simple_event|
+  @attendee_ids[simple_event.id]
+end

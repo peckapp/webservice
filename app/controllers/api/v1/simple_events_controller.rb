@@ -2,13 +2,15 @@ module Api
   module V1
     class SimpleEventsController < ApplicationController #Api::BaseController
 
-      before_action :confirm_logged_in, :only => [:create, :update, :destroy]
+      before_action :confirm_logged_in, :only => [:create, :update, :destroy, :add_like, :unlike]
 
       respond_to :json
 
       def index
+        # get all simple events given provided params
         @simple_events = specific_index(SimpleEvent, params)
 
+        # initialize hash mapping events to arrays of likers
         @likes_for_simple_event = {}
 
         @simple_events.each do |simple_event|
@@ -20,6 +22,13 @@ module Api
           end
 
           @likes_for_simple_event[simple_event] = likers
+        end
+
+        # event attendees
+        @attendee_ids = {}
+
+        for se in @simple_events
+          @attendee_ids[se.id] = EventAttendee.where("category" => "simple").where("event_attended" => se.id).pluck(:user_id)
         end
       end
 
@@ -33,6 +42,9 @@ module Api
             @likes << user.id
           end
         end
+
+        @attendee_ids = EventAttendee.where("category" => "simple").where("event_attended" => @simple_event.id).pluck(:user_id)
+
       end
 
       def create
@@ -55,7 +67,7 @@ module Api
       def add_like
         @simple_event = SimpleEvent.find(params[:id])
         if params[:liker].to_i == auth[:user_id].to_i
-          liker = SimpleEvent.find(params[:liker])
+          liker = User.find(params[:liker])
           liker.like!(@simple_event)
           @likers = @simple_event.likers(User)
           @likes = []
