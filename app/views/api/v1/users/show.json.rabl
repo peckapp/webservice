@@ -2,4 +2,6 @@ object :@user
 
 attributes :id, :institution_id, :first_name, :last_name, :email, :blurb, :facebook_link,  :active, :created_at, :updated_at, :image
 
-node(:image) {@user.image.url}
+node(:image) { @user.image.url }
+
+node(:thumb_image) { @user.image.url(:thumb) }

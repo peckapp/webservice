@@ -5,3 +5,7 @@ attributes :id, :institution_id, :first_name, :last_name, :email, :blurb, :faceb
 node :image do |user|
   user.image.url
 end
+
+node :thumb_image do |user|
+  user.image.url(:thumb)
+end

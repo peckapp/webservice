@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
                     path: ':rails_root/public/images/users/:style/:basename.:extension',
                     default_url: '/images/missing.png',
                     styles: {
-                      thumb: '50x50#'
+                      thumb: '100x100#'
                     })
 
   # validates_attachment :image, :content_type => { :content_type => "image/jpeg"}
