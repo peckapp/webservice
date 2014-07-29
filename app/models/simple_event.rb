@@ -31,7 +31,13 @@ class SimpleEvent < ActiveRecord::Base
                     default_url: '/images/missing.png',
                     styles: {
                       detail: '100X100#',
-                      blurred: { processors: [:blur] }
+                      blurred: {
+                        size: '256X640',
+                        offset: '+0+0',
+                        raduis_sigma: '9x4',
+                        tint: '40',
+                        processors: [:blur]
+                      }
                     })
 
   # validates_attachment :image, :content_type => { :content_type => "image/jpeg"}

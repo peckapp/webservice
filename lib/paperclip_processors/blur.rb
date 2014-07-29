@@ -4,6 +4,7 @@ module Paperclip
   class Blur < Processor
     # copied in thumbnail processor from paperclip source
 
+    # some default values, may be overridden in the models that use this processor
     DEFAULT_SIZE = '256X640'
     OFFSET = '+0+0'
     RADIUS_SIGMA = '9x5'
@@ -19,6 +20,13 @@ module Paperclip
       @file                = file
       @whiny               = options.fetch(:whiny, true)
       @format              = options[:format]
+
+      @size                = options[:size] || DEFAULT_SIZE
+      @offset              = options[:offset] || OFFSET
+      @radius_sigma        = options[:radius_sigma] || RADIUS_SIGMA
+      @tint                = options[:tint] || TINT_STRENGTH
+      @brightness          = options[:brightness] || BRIGHTNESS
+      @saturation          = options[:saturation] || SATURATION
 
       @source_file_options = @source_file_options.split(/\s+/) if @source_file_options.respond_to?(:split)
       @convert_options     = @convert_options.split(/\s+/)     if @convert_options.respond_to?(:split)
