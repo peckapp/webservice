@@ -16,7 +16,7 @@ module Api
       end
 
       def create
-        @event_attendee = EventAttendee.create(event_attendee_params)
+        @event_attendee = EventAttendee.current_or_create_new(event_attendee_params)
       end
 
       def update
