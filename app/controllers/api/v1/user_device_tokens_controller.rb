@@ -21,6 +21,10 @@ module Api
 
       def create
         @user_device_token = UserDeviceToken.create(user_device_token_params)
+
+        # add both relations to join table
+        user = User.find(user_device_token_params[:user_id]).user_device_tokens << @user_device_token
+        @user_device_token.users << user
       end
 
       def update
