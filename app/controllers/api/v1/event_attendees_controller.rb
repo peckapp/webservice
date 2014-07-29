@@ -25,13 +25,17 @@ module Api
       end
 
       def destroy
-        @event_attendee = EventAttendee.find(params[:id]).destroy
+        @event_attendee = EventAttendee.where(:institution_id => delete_params[:institution_id]).where(:user_id => delete_params[:user_id]).where(:category => delete_params[:category]).where(:event_attended => delete_params[:event_attended]).first.destroy
       end
 
       private
 
         def event_attendee_params
           params.require(:event_attendee).permit(:institution_id, :user_id, :added_by, :category, :event_attended)
+        end
+
+        def delete_params
+          params.require(:event_attendee).permit(:institution_id, :user_id, :category, :event_attended)
         end
     end
   end
