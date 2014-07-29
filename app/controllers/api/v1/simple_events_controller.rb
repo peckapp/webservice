@@ -2,7 +2,7 @@ module Api
   module V1
     class SimpleEventsController < ApplicationController #Api::BaseController
 
-      before_action :confirm_logged_in, :only => [:create, :update, :destroy]
+      before_action :confirm_logged_in, :only => [:create, :update, :destroy, :add_like, :unlike]
 
       respond_to :json
 
