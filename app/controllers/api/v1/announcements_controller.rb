@@ -2,7 +2,7 @@ module Api
   module V1
     class AnnouncementsController < ApplicationController
 
-      before_action :confirm_logged_in, :only => [:create, :update, :destroy, :add_like]
+      before_action :confirm_logged_in, :only => [:create, :update, :destroy, :add_like, :unlike]
       respond_to :json
 
       def index
