@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   attr_accessor :enable_strict_validation, :password, :old_pass_match, :image, :newly_created_user
 
   acts_as_liker
-  
+
   EMAIL_REGEX =/\A[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}\Z/
 
   ###############################
@@ -27,7 +27,14 @@ class User < ActiveRecord::Base
   validate :correct_user_types
 
   # image validations
-  has_attached_file :image, :url => "/images/users/:style/:basename.:extension", :path => ":rails_root/public/images/users/:style/:basename.:extension", :default_url => "/images/missing.png" # :styles => { :medium => "300x300>", :thumb => "100x100>" },
+  has_attached_file(:image,
+                    url: '/images/users/:style/:basename.:extension',
+                    path: ':rails_root/public/images/users/:style/:basename.:extension',
+                    default_url: '/images/missing.png',
+                    styles: {
+                      thumb: '50x50#'
+                    })
+
   # validates_attachment :image, :content_type => { :content_type => "image/jpeg"}
   validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
   validates_with AttachmentSizeValidator, :attributes => :image, :less_than => 5.megabytes

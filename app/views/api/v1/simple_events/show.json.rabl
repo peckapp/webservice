@@ -1,11 +1,15 @@
 object :@simple_event
 
-attributes :id, :title, :event_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :event_url, :public, :comment_count, :start_date, :end_date, :created_at, :updated_at, :image
+attributes(:id, :title, :event_description, :institution_id, :user_id, :department_id, :club_id,
+           :circle_id, :event_url, :public, :comment_count, :start_date, :end_date, :created_at,
+           :updated_at, :image)
 
-node(:event_type) {"simple"}
+node(:event_type) { 'simple' }
 
-node(:image) {@simple_event.image.url}
+node(:image) { @simple_event.image.url }
 
-node(:likes) {@likes.blank? ? nil : @likes}
+node(:blurred_image) { @simple_event.image.url(:blurred) }
 
-node(:attendees) {@attendee_ids}
+node(:likes) { @likes.blank? ? nil : @likes }
+
+node(:attendees) { @attendee_ids }

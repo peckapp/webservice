@@ -30,6 +30,7 @@ class SimpleEvent < ActiveRecord::Base
                     path: ':rails_root/public/images/simple_events/:style/:basename.:extension',
                     default_url: '/images/missing.png',
                     styles: {
+                      detail: '44x44#',
                       blurred: { processors: [:blur] }
                     })
 
