@@ -37,6 +37,9 @@ gem "socialization"
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+### Push Notifications
+# pushmeup should be able to handle both ios and android push notifications
+gem 'pushmeup'
 
 ### Administrative Capabilities
 # Active Admin for highly customizable interfaces
@@ -45,6 +48,8 @@ gem 'activeadmin', github: 'gregbell/active_admin'
 ### FILE MANAGEMENT
 # Paperclip for handling larger files, mostly user-uploaded images: https://github.com/thoughtbot/paperclip
 gem 'paperclip', '~> 4.2.0'
+# allows for background job-based post-processing
+gem 'delayed_paperclip'
 
 ### DATABASE INTERACTIONS
 # ransack for more powerful database queries. This branch supports only rails 4.1 https://github.com/activerecord-hackery/ransack/tree/rails-4.1

@@ -15,6 +15,9 @@
 /log/*.log
 /tmp
 
+# ignore certificate files
+config/certs/*
+
 # emacs temp files
 *~
 

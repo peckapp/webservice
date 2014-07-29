@@ -30,8 +30,7 @@ class SimpleEvent < ActiveRecord::Base
                     :path => ":rails_root/public/images/simple_events/:style/:basename.:extension",
                     :default_url => "/images/missing.png",
                     :styles => {
-                      :medium => "300x300>",
-                      :thumb => ["32x32#", :png]
+                        
                       }
                     )
 
