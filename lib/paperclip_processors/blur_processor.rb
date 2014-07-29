@@ -1,17 +1,22 @@
 module Paperclip
-
+  # this class creates a blurred, darkened image for the background of the images
+  # in the homepage and explore dropdown of the app
   class BlurProcessor < Processor
-
     # copied in thumbnail processor from paperclip source
 
+    DEFAULT_SIZE = '640x256'
+    RADIUS_SIGMA = '9x5'
+    TINT_STRENGTH = 40 # range 0-100
+    BRIGHTNESS = 100 # range 0 to 200, current is 100
+    SATURATION = 110 # range 0 to 200, current is 100
+
     #   +format+ - the desired filename extension
-    #   +animated+ - whether to merge all the layers in the image. Defaults to true
+    #   +animated+ - whether to merge all the layers in the image. Defaults true
     def initialize(file, options = {}, attachment = nil)
       super
 
       geometry             = options[:geometry].to_s
       @file                = file
-      @crop                = geometry[-1,1] == '#'
       @target_geometry     = options.fetch(:string_geometry_parser, Geometry).parse(geometry)
       @current_geometry    = options.fetch(:file_geometry_parser, Geometry).from_file(@file)
       @source_file_options = options[:source_file_options]
@@ -31,11 +36,6 @@ module Paperclip
       @basename            = File.basename(@file.path, @current_format)
     end
 
-    # Returns true if the +target_geometry+ is meant to crop.
-    def crop?
-      @crop
-    end
-
     # Returns true if the image is meant to make use of additional convert options.
     def convert_options?
       !@convert_options.nil? && !@convert_options.empty?
@@ -51,18 +51,17 @@ module Paperclip
       begin
         parameters = []
         parameters << source_file_options
-        parameters << ":source"
+        parameters << ':source'
         parameters << transformation_command
-        parameters << convert_options
-        parameters << ":dest"
+        parameters << ':dest'
 
-        parameters = parameters.flatten.compact.join(" ").strip.squeeze(" ")
+        parameters = parameters.flatten.compact.join(' ').strip.squeeze(' ')
 
-        success = convert(parameters, :source => "#{File.expand_path(src.path)}#{'[0]' unless animated?}", :dest => File.expand_path(dst.path))
+        success = convert(parameters, source: "#{File.expand_path(src.path)}#{'[0]' unless animated?}", dest: File.expand_path(dst.path))
       rescue Cocaine::ExitStatusError => e
-        raise Paperclip::Error, "There was an error processing the thumbnail for #{@basename}" if @whiny
+        raise Paperclip::Error, "There was an error processing the blurred image for #{@basename}" if @whiny
       rescue Cocaine::CommandNotFoundError => e
-        raise Paperclip::Errors::CommandNotFoundError.new("Could not run the `convert` command. Please install ImageMagick.")
+        raise Paperclip::Errors::CommandNotFoundError.new('Could not run the `convert` command. Please install ImageMagick.')
       end
 
       dst
@@ -71,16 +70,17 @@ module Paperclip
     # Returns the command ImageMagick's +convert+ needs to transform the image
     # into the thumbnail.
     def transformation_command
-      scale, crop = @current_geometry.transformation_to(@target_geometry, crop?)
+      # -resize 640x256^ -gravity Center -crop 640x256+0-150 +repage -gaussian-blur 10X6 -normalize -fill black -colorize 40% -modulate 100,110
       trans = []
-      trans << "-coalesce" if animated?
-      trans << "-auto-orient" if auto_orient
-      trans << "-resize" << %["#{scale}"] unless scale.nil? || scale.empty?
-      trans << "-crop" << %["#{crop}"] << "+repage" if crop
-      trans << '-layers "optimize"' if animated?
+      trans << '-resize' << %("#{DEFAULT_SIZE}")
+      trans << '-crop' << %("#{DEFAULT_SIZE}^") << '+repage'
+      trans << '+repage'
+      trans << '-gaussian-blur' << %("#{RADIUS_SIGMA}")
+      trans << '-normailze'
+      trans << '-fill' << 'black'
+      trans << '-colorize' << %("#{TINT_STRENGTH}%")
+      trans << '-modulate' << %("#{BRIGHTNESS},#{SATURATION}")
       trans
     end
-
   end
-
 end
