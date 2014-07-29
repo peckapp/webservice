@@ -3,7 +3,7 @@ module Api
     class EventAttendeesController < ApplicationController #Api::BaseController
 
       # before_action :authenticate_admin_user!, :only => [:create, :update, :destroy]
-      # before_action :confirm_logged_in, :only => [:create, :update, :destroy]
+      before_action :confirm_logged_in, :only => [:create, :update, :destroy]
 
       respond_to :json
 
