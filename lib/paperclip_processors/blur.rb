@@ -4,7 +4,7 @@ module Paperclip
   class Blur < Processor
     # copied in thumbnail processor from paperclip source
 
-    DEFAULT_SIZE = '640x256'
+    DEFAULT_SIZE = '256X640'
     OFFSET = '+0+0'
     RADIUS_SIGMA = '9x5'
     TINT_STRENGTH = 40 # range 0-100
