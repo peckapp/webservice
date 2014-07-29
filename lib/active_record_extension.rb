@@ -4,9 +4,8 @@
 
 # A variety of methods are included to prevent duplicate entries in the database during scraping,
 # allowing jobs with side effects to remain idempotent
-
 module ActiveRecordExtension
-
+  # extends the active support concerns in order to enable direct calls on model objects
   extend ActiveSupport::Concern
 
   # add instance methods here
@@ -14,10 +13,10 @@ module ActiveRecordExtension
     attrs = attrs.extract_options!
     if attrs.blank?
       # use all non-blank fields in object as parameters
-      self.class.columns.each { |c|
+      self.class.columns.each do |c|
         val = self.read_attribute(c.name)
-        if ! val.blank? then attrs.merge!(c.name => val) end
-      }
+        attrs.merge!(c.name => val) unless val.blank?
+      end
     end
     # checks database for the object's existence
     if self.class.exists?(attrs)
@@ -39,7 +38,6 @@ module ActiveRecordExtension
 
   # add your static(class) methods here
   module ClassMethods
-
     # returns an object matching specified attributes, or creates one with them if none exist
     def current_or_create_new(*attrs)
 
@@ -56,10 +54,9 @@ module ActiveRecordExtension
         end
 
       else
-        raise "attempted to perform model interaction with inapplicable class: #{model.class}"
+        fail "attempted to perform model interaction with inapplicable class: #{model.class}"
       end
     end
-
   end
 end
 

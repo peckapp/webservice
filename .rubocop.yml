@@ -1,0 +1,4 @@
+Style/LineLength:
+  Max: 100
+AllCops:
+  RunRailsCops: true

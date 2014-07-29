@@ -11,7 +11,7 @@ set :use_sudo, false
 
 # Default value for :scm is :git, specifies branch of the repository to access
 set :scm, :git
-set :branch, "master"
+set :branch, 'master'
 
 # uses a more efficient technique for file deployment, fetching only changes from repo
 set :deploy_via, :remote_cache
@@ -30,10 +30,10 @@ set :format, :pretty
 set :pty, false
 
 # Default value for :linked_files is []
-set :linked_files, %w{config/database.yml config/environment_variables.yml config/certs/ck.pem}
+set :linked_files, %w(config/database.yml config/environment_variables.yml config/certs/ck.pem)
 
 # Default value for linked_dirs is []
-set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system public/images config/certs}
+set :linked_dirs, %w(bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system public/images config/certs)
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
