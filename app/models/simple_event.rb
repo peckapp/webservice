@@ -29,9 +29,9 @@ class SimpleEvent < ActiveRecord::Base
                     :url => "/images/simple_events/:style/:basename.:extension",
                     :path => ":rails_root/public/images/simple_events/:style/:basename.:extension",
                     :default_url => "/images/missing.png",
-                    :styles => {
-                        
-                      }
+                    # :styles => {
+                    #
+                    #   }
                     )
 
   # validates_attachment :image, :content_type => { :content_type => "image/jpeg"}
