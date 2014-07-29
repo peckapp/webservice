@@ -25,7 +25,7 @@ module Api
       end
 
       def destroy
-        @event_attendee = EventAttendee.where(:institution_id => delete_params[:institution_id]).where(:user_id => delete_params[:user_id]).where(:category => delete_params[:category]).where(:event_attended => delete_params[:event_attended]).first.destroy
+        @event_attendee = EventAttendee.find(params[:id]).destroy
       end
 
       private
