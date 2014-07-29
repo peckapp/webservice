@@ -15,7 +15,7 @@ class WilliamsDiningWorker
     column = "name"
     search = "Williams"
     inst = Institution.where("? LIKE ?", "#{column}", "%#{search}%").first
-    # 
+    # set to 1 for the current 
     inst_id = 1
     inst_id = inst.id unless inst.blank?
 

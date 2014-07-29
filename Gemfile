@@ -30,6 +30,8 @@ gem 'bcrypt', '~> 3.1.7'
 
 # Use unicorn as the app server
 # gem 'unicorn'
+
+# easy social features for the app
 gem "socialization"
 
 # Use debugger
@@ -76,13 +78,11 @@ gem 'rabl-rails'
 ### UTILITIES
 # Bloom Filter for crawlers to keep track of which pages have been traversed
 gem 'bloomfilter-rb', '~> 2.1.1'
-# primitive gui display of database models
-gem 'hirb', '~> 0.7.2'
 # validating dates
 gem 'validates_timeliness', '~> 3.0'
 # authentication gem, used by ActiveAdmin
 gem 'devise', '~> 3.2.4'
-# used by the cocain dependency of Paperclip to allow high-memory requirement operations to be performed without forking, eliminating out of memory errors
+# used by the cocaine dependency of Paperclip to allow high-memory requirement operations to be performed without forking, eliminating out of memory errors
 gem 'posix-spawn'
 
 ### Development-specific gems
@@ -100,4 +100,6 @@ group :development do
 
     # database visualization
     gem 'rails-erd'
+    # primitive gui display of database models
+    gem 'hirb', '~> 0.7.2'
 end
