@@ -6,6 +6,16 @@ child :@explore_events do
      @event_positions[event.id]
   end
 
+  node(:event_type) { 'simple' }
+
+  node :image do |simple_event|
+    simple_event.image.url
+  end
+
+  node :blurred_image do |simple_event|
+    simple_event.image.url(:blurred)
+  end
+
   node :likes do |explore_event|
     @likes_for_explore_events[explore_event]
   end
@@ -16,6 +26,10 @@ child :@explore_announcements do
 
   node :position do |announcement|
      @announcement_positions[announcement.id]
+  end
+
+  node :image do |announcement|
+    announcement.image.url
   end
 
   node :likes do |explore_announcement|
