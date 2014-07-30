@@ -13,9 +13,11 @@ module Api
 
       def create
         # removes unpermitted parameters from circle member creation params
+        # and saves them in token and message vars
         member_create_params = params[:circle_member]
         token = member_create_params.delete(:token)
         message = member_create_params.delete(:message)
+
         # push notification for circle member invite
         APNS.send_notification(token, message)
 
