@@ -104,7 +104,17 @@ module Api
         else
           logger.warn "attempted to super_create user with non-existant id: #{@user.id}"
         end
+      end
 
+      def create_device_token
+        @user = User.find(params[:id])
+        user_device_token_params = params[:user_device_token]
+        @user_device_token = UserDeviceToken.create(:token => user_device_token_params[:token])
+
+        # add both relations to join table
+        if @user_device_token
+          @user.user_device_tokens << @user_device_token
+        end
       end
 
       def update
