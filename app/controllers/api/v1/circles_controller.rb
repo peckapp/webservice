@@ -2,7 +2,7 @@ module Api
   module V1
     class CirclesController < ApplicationController #Api::BaseController
 
-      before_action :confirm_logged_in, :only => [:create, :update, :destroy]
+      before_action :confirm_logged_in
 
       # give circle admin power?
       respond_to :json
