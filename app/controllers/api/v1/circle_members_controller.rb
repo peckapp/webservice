@@ -18,14 +18,16 @@ module Api
         token = member_create_params.delete(:token)
         message = member_create_params.delete(:message)
 
-        # push notification for circle member invite
-        APNS.send_notification(token, message)
-
         @circle_member = CircleMember.create(circle_member_create_params(member_create_params))
+
+        # push notification for circle member invite
+        APNS.send_notification(token, alert: message, :other => {:circle_member_id => @circle_member.id})
       end
 
       # action for when pending circle member clicks accept to the invitation.
       def accept
+        @circle_member = CircleMember.find(params[:id])
+        @circle_member.update_attributes(:accepted => true)
       end
 
       def show

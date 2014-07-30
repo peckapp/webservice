@@ -16,6 +16,8 @@ module Api
           @user.authentication_token = SecureRandom.hex(30)
           @user.save
           auth[:authentication_token] = @user.authentication_token
+
+          # MAY NOT need user device token
           @user_device_token = @user.user_device_tokens.first
           logger.info "created session for user with id: #{@user.id}"
 

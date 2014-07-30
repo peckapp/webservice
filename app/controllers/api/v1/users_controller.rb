@@ -22,7 +22,7 @@ module Api
         @member_ids = {}
 
         for c in @circles
-          @member_ids[c.id] = CircleMember.where("circle_id" => c.id).pluck(:user_id)
+          @member_ids[c.id] = CircleMember.where("circle_id" => c.id).where("accepted" => true).pluck(:user_id)
         end
       end
 
