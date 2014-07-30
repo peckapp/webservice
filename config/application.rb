@@ -27,5 +27,17 @@ module Webservice
     # default doesn't need SSL, change this manualy in specific environments
     config.force_ssl = false
 
+    # loads environment variables from rails-specfiic yml file
+    config.before_configuration do
+      env_file = Rails.root.join('config', 'environment_variables.yml').to_s
+      if File.exist?(env_file)
+        yaml_for_env = YAML.load_file(env_file)[Rails.env]
+        unless yaml_for_env.blank? # protects against empty yaml entries
+          yaml_for_env.each do |key, value|
+            ENV[key.to_s] = value
+          end # end YAML.load_file
+        end # end ! yaml_for_env.blank?
+      end # end if File.exists?
+    end # end config.before_configuration
   end
 end

@@ -1,9 +1,10 @@
 module Api
   module V1
-    class ExploreController < ApplicationController #Api::BaseController
-
+    # this class handles the output of the explore feed, speficif to the user requesting it
+    class ExploreController < ApplicationController
       respond_to :json
 
+      # for now, just returns the 5 most recent events
       def index
 
         #### Simple Events ####
@@ -15,8 +16,8 @@ module Api
 
         @explore_events = []
 
-        for event in @simple_events
-          if !event.start_date.past?
+        @simple_events.each do |event|
+          unless event.start_date.past?
             # if event.image_url = "null"
             #   event.image_url = "/images/event.png"
             # end
@@ -49,7 +50,7 @@ module Api
 
         @explore_announcements = []
 
-        for announcement in @announcements
+        @announcements.each do |announcement|
           @announcement_positions[announcement.id] = announcement_position
           @explore_announcements << announcement
           announcement_position += 1
