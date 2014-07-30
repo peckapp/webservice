@@ -14,14 +14,14 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
-  namespace :api, defaults: {format: 'json'}  do
+  namespace :api, defaults: { format: 'json' }  do
     # /api/... Api::
     # adds versioning capabilities to the API using separate modules
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
 
       resources :simple_events, :activity_logs, :athletic_events, :athletic_teams, :clubs, :configurations, :departments, :dining_opportunities, :dining_periods, :dining_places,:event_attendees, :comments, :event_views, :events_page_urls, :institutions, :locations, :menu_items, :notification_views, :push_notifications, :simple_events, :subscriptions, :user_device_tokens, :explore, :announcements
 
-      resources :access, :only => [:create, :destroy]
+      resources :access, only: [:create, :destroy]
 
       resources :announcements do
         member do
@@ -98,7 +98,6 @@ Rails.application.routes.draw do
         resources :menu_items, :dining_opportunities, :dining_places
       end
 
-
       # Inviters for a particular circle member
       resources :circle_members do
         resources :users
@@ -134,7 +133,6 @@ Rails.application.routes.draw do
       resources :simple_events
     end
   end
-
 
   # api status and version information
   get 'api', to: 'api#index', via: [:get]

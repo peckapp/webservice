@@ -1,19 +1,17 @@
 module Api
   module V1
-    class ExploreController < ApplicationController #Api::BaseController
-
+    # this class handles the output of the explore feed, speficif to the user requesting it
+    class ExploreController < ApplicationController
       respond_to :json
 
+      # for now, just returns the 5 most recent events
       def index
         @positions = {}
         position = 1
         @simple_events = specific_index(SimpleEvent, params).sorted
         @explore = []
-        for event in @simple_events
-          if !event.start_date.past?
-            # if event.image_url = "null"
-            #   event.image_url = "/images/event.png"
-            # end
+        @simple_events.each do |event|
+          unless event.start_date.past?
             @positions[event.id] = position
             @explore << event
             position += 1
@@ -21,7 +19,6 @@ module Api
           break if @explore.count == 5
         end
       end
-
     end
   end
 end

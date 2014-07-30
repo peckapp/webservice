@@ -93,13 +93,13 @@ ActiveRecord::Schema.define(version: 20140729195643) do
   add_index "announcements", ["user_id"], name: "index_announcements_on_user_id", using: :btree
 
   create_table "athletic_events", force: true do |t|
-    t.integer  "institution_id",     null: false
-    t.integer  "athletic_team_id",   null: false
+    t.integer  "institution_id",                null: false
+    t.integer  "athletic_team_id",              null: false
     t.string   "opponent"
-    t.float    "team_score"
-    t.float    "opponent_score"
+    t.float    "team_score",         limit: 24
+    t.float    "opponent_score",     limit: 24
     t.string   "home_or_away"
-    t.string   "location",           null: false
+    t.string   "location",                      null: false
     t.string   "result"
     t.text     "note"
     t.datetime "date_and_time"
@@ -128,6 +128,13 @@ ActiveRecord::Schema.define(version: 20140729195643) do
   add_index "athletic_teams", ["institution_id"], name: "index_athletic_teams_on_institution_id", using: :btree
   add_index "athletic_teams", ["sport_name"], name: "index_athletic_teams_on_sport_name", using: :btree
 
+  create_table "attendees_users", id: false, force: true do |t|
+    t.integer "event_attendee_id", null: false
+    t.integer "user_id",           null: false
+  end
+
+  add_index "attendees_users", ["event_attendee_id", "user_id"], name: "index_attendees_users_on_event_attendee_id_and_user_id", using: :btree
+
   create_table "circle_members", force: true do |t|
     t.integer  "circle_id",                      null: false
     t.integer  "user_id",                        null: false
@@ -142,6 +149,13 @@ ActiveRecord::Schema.define(version: 20140729195643) do
   add_index "circle_members", ["circle_id"], name: "index_circle_members_on_circle_id", using: :btree
   add_index "circle_members", ["invited_by"], name: "index_circle_members_on_invited_by", using: :btree
   add_index "circle_members", ["user_id"], name: "index_circle_members_on_user_id", using: :btree
+
+  create_table "circle_members_users", id: false, force: true do |t|
+    t.integer "user_id",          null: false
+    t.integer "circle_member_id", null: false
+  end
+
+  add_index "circle_members_users", ["user_id", "circle_member_id"], name: "circle_members_users_index", using: :btree
 
   create_table "circles", force: true do |t|
     t.integer  "institution_id", null: false
@@ -245,12 +259,12 @@ ActiveRecord::Schema.define(version: 20140729195643) do
   end
 
   create_table "dining_places", force: true do |t|
-    t.integer  "institution_id", null: false
-    t.string   "name",           null: false
+    t.integer  "institution_id",            null: false
+    t.string   "name",                      null: false
     t.string   "details_link"
-    t.float    "gps_longitude"
-    t.float    "gps_latitude"
-    t.float    "range"
+    t.float    "gps_longitude",  limit: 24
+    t.float    "gps_latitude",   limit: 24
+    t.float    "range",          limit: 24
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -308,22 +322,29 @@ ActiveRecord::Schema.define(version: 20140729195643) do
   add_index "follows", ["follower_id", "follower_type"], name: "fk_follows", using: :btree
 
   create_table "institutions", force: true do |t|
-    t.string   "name",             null: false
-    t.string   "street_address",   null: false
-    t.string   "city",             null: false
-    t.string   "state",            null: false
-    t.string   "country",          null: false
-    t.float    "gps_longitude",    null: false
-    t.float    "gps_latitude",     null: false
-    t.float    "range",            null: false
-    t.integer  "configuration_id", null: false
-    t.string   "api_key",          null: false
+    t.string   "name",                        null: false
+    t.string   "street_address",              null: false
+    t.string   "city",                        null: false
+    t.string   "state",                       null: false
+    t.string   "country",                     null: false
+    t.float    "gps_longitude",    limit: 24, null: false
+    t.float    "gps_latitude",     limit: 24, null: false
+    t.float    "range",            limit: 24, null: false
+    t.integer  "configuration_id",            null: false
+    t.string   "api_key",                     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "institutions", ["configuration_id"], name: "index_institutions_on_configuration_id", using: :btree
   add_index "institutions", ["name"], name: "index_institutions_on_name", using: :btree
+
+  create_table "inviters_users", id: false, force: true do |t|
+    t.integer "event_attendee_id", null: false
+    t.integer "user_id",           null: false
+  end
+
+  add_index "inviters_users", ["event_attendee_id", "user_id"], name: "index_inviters_users_on_event_attendee_id_and_user_id", using: :btree
 
   create_table "likes", force: true do |t|
     t.string   "liker_type"
@@ -337,11 +358,11 @@ ActiveRecord::Schema.define(version: 20140729195643) do
   add_index "likes", ["liker_id", "liker_type"], name: "fk_likes", using: :btree
 
   create_table "locations", force: true do |t|
-    t.integer  "institution_id", null: false
-    t.string   "name",           null: false
-    t.float    "gps_longitude"
-    t.float    "gps_latitude"
-    t.float    "range"
+    t.integer  "institution_id",            null: false
+    t.string   "name",                      null: false
+    t.float    "gps_longitude",  limit: 24
+    t.float    "gps_latitude",   limit: 24
+    t.float    "range",          limit: 24
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -451,8 +472,8 @@ ActiveRecord::Schema.define(version: 20140729195643) do
     t.boolean  "deleted",                        default: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.float    "latitude"
-    t.float    "longitude"
+    t.float    "latitude",           limit: 24
+    t.float    "longitude",          limit: 24
     t.integer  "scrape_resource_id"
     t.string   "image_file_name"
     t.string   "image_content_type"
