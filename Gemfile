@@ -32,7 +32,7 @@ gem 'bcrypt', '~> 3.1.7'
 # gem 'unicorn'
 
 # easy social features for the app
-gem "socialization"
+gem 'socialization'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
@@ -53,7 +53,7 @@ gem 'delayed_paperclip'
 
 ### DATABASE INTERACTIONS
 # ransack for more powerful database queries. This branch supports only rails 4.1 https://github.com/activerecord-hackery/ransack/tree/rails-4.1
-gem "ransack", github: "activerecord-hackery/ransack", branch: "rails-4.1"
+gem 'ransack', github: 'activerecord-hackery/ransack', branch: 'rails-4.1'
 
 ### SCRAPING
 # Feedjira provides a powerful and dead simple RSS scraping tool
@@ -87,24 +87,28 @@ gem 'bloomfilter-rb', '~> 2.1.1'
 gem 'validates_timeliness', '~> 3.0'
 # authentication gem, used by ActiveAdmin
 gem 'devise', '~> 3.2.4'
-# used by the cocaine dependency of Paperclip to allow high-memory requirement operations to be performed without forking, eliminating out of memory errors
+# used by the cocaine dependency of Paperclip to allow high-memory requirement
+# operations to be performed without forking, *hopefully* eliminating some out of memory errors
 gem 'posix-spawn'
+
+### HOSTED SERVER MONITORING
+gem 'newrelic_rpm'
 
 ### Development-specific gems
 group :development do
-    # Capistrano for deployment to server: https://github.com/capistrano/capistrano
-    gem 'capistrano', '~> 3.2.1'
-    # rvm integration on deploys: https://github.com/capistrano/rvm
-    gem 'capistrano-rvm'
-    # installing necessary gems on deploys: http://github.com/capistrano/bundler
-    gem 'capistrano-bundler', '~> 1.1.2'
-    # rails-related operations: https://github.com/capistrano/rails
-    gem 'capistrano-rails', '~> 1.1'
-    # sidekiq task-management: https://github.com/seuros/capistrano-sidekiq
-    gem 'capistrano-sidekiq'
+  # Capistrano for deployment to server: https://github.com/capistrano/capistrano
+  gem 'capistrano', '~> 3.2.1'
+  # rvm integration on deploys: https://github.com/capistrano/rvm
+  gem 'capistrano-rvm'
+  # installing necessary gems on deploys: http://github.com/capistrano/bundler
+  gem 'capistrano-bundler', '~> 1.1.2'
+  # rails-related operations: https://github.com/capistrano/rails
+  gem 'capistrano-rails', '~> 1.1'
+  # sidekiq task-management: https://github.com/seuros/capistrano-sidekiq
+  gem 'capistrano-sidekiq'
 
-    # database visualization
-    gem 'rails-erd'
-    # primitive gui display of database models
-    gem 'hirb', '~> 0.7.2'
+  # database visualization
+  gem 'rails-erd'
+  # primitive gui display of database models
+  gem 'hirb', '~> 0.7.2'
 end
