@@ -1,8 +1,8 @@
 module Api
   module V1
-    class SimpleEventsController < ApplicationController #Api::BaseController
+    class SimpleEventsController < ApplicationController
 
-      before_action :confirm_logged_in, :only => [:create, :update, :destroy, :add_like, :unlike]
+      before_action :confirm_logged_in, only: [:create, :update, :destroy, :add_like, :unlike]
 
       respond_to :json
 
@@ -13,6 +13,7 @@ module Api
         # initialize hash mapping events to arrays of likers
         @likes_for_simple_event = {}
 
+        # TODO: causes wayyy to many database calls, should be done with some custom SQL
         @simple_events.each do |simple_event|
           likers = []
           simple_event.likers(User).each do |user|
@@ -27,8 +28,8 @@ module Api
         # event attendees
         @attendee_ids = {}
 
-        for se in @simple_events
-          @attendee_ids[se.id] = EventAttendee.where("category" => "simple").where("event_attended" => se.id).pluck(:user_id)
+        @simple_events.each do |se|
+          @attendee_ids[se.id] = EventAttendee.where('category' => 'simple').where('event_attended' => se.id).pluck(:user_id)
         end
       end
 
@@ -43,7 +44,7 @@ module Api
           end
         end
 
-        @attendee_ids = EventAttendee.where("category" => "simple").where("event_attended" => @simple_event.id).pluck(:user_id)
+        @attendee_ids = EventAttendee.where('category' => 'simple').where('event_attended' => @simple_event.id).pluck(:user_id)
 
       end
 
