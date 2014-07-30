@@ -2,7 +2,8 @@ module Api
   module V1
     class UsersController < ApplicationController #Api::BaseController
 
-      before_action :confirm_minimal_access, :except => [:create, :user_circles, :user_for_device_token]
+      before_action :confirm_minimal_access, :except => [:create, :user_for_device_token]
+      before_action :confirm_logged_in, :only => [:user_circles]
 
       respond_to :json
 
