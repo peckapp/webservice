@@ -1,11 +1,9 @@
 child :@explore_events do
 
-node :position do |pos|
-  @positions[pos.id]
   attributes :id, :title, :event_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :event_url, :public, :comment_count, :start_date, :end_date, :created_at, :updated_at
 
   node :position do |event|
-     @event_positions[event.id]
+    @event_positions[event.id]
   end
 
   node(:event_type) { 'simple' }
@@ -27,7 +25,7 @@ child :@explore_announcements do
   attributes :id, :title, :announcement_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :public, :comment_count, :created_at, :updated_at
 
   node :position do |announcement|
-     @announcement_positions[announcement.id]
+    @announcement_positions[announcement.id]
   end
 
   node :image do |announcement|
@@ -37,5 +35,4 @@ child :@explore_announcements do
   node :likes do |explore_announcement|
     @likes_for_explore_announcements[explore_announcement]
   end
->>>>>>> f01f51cfad3669afef759ba4c7af3f654eec2088
 end
