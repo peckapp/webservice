@@ -3,6 +3,7 @@ module Api
     class UsersController < ApplicationController #Api::BaseController
 
       before_action :confirm_minimal_access, :except => [:create, :user_for_device_token]
+      before_action :confirm_logged_in, :only => [:user_circles]
 
       respond_to :json
 
@@ -41,6 +42,8 @@ module Api
 
       # either returns an existing user with matching token
       # or creates new user
+      #
+      # DO NOT DELETE: Cannot use currently but may come in handy later
       def user_for_device_token
 
         # see if token exist in db
@@ -102,7 +105,17 @@ module Api
         else
           logger.warn "attempted to super_create user with non-existant id: #{@user.id}"
         end
+      end
 
+      def create_device_token
+        @user = User.find(params[:id])
+        user_device_token_params = params[:user_device_token]
+        @user_device_token = UserDeviceToken.create(:token => user_device_token_params[:token])
+
+        # add both relations to join table
+        if @user_device_token
+          @user.user_device_tokens << @user_device_token
+        end
       end
 
       def update

@@ -29,6 +29,30 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :users do
+        member do
+          patch :create_device_token
+        end
+      end
+
+      resources :circle_members do
+        collection do
+          delete :destroy
+        end
+      end
+
+      resources :event_attendees do
+        collection do
+          delete :destroy
+        end
+      end
+
+      resources :subscriptions do
+        collection do
+          delete :destroy
+        end
+      end
+
       resources :simple_events do
         member do
           patch :add_like, :unlike

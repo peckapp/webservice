@@ -11,6 +11,7 @@ class SubscriptionsControllerTest < UltimateTestHelper
     @params_create = [{:institution_id => 1, :user_id => 5, :category => "physics", :subscribed_to => 3}]
     @params_multiple_create = [{:institution_id => 2, :user_id => 10, :category => "chemistry", :subscribed_to => 5},{:institution_id => 1, :user_id => 5, :category => "computer science", :subscribed_to => 10}]
     @params_update = {:category => "statistics"}
+    @params_delete = {:subscriptions => "[1,2,3,4]"}
     @model_type = :subscription
     @model = Subscription
     @id = 2

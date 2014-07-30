@@ -46,4 +46,14 @@ class UsersControllerTest < UltimateTestHelper
     assert_nil user.password_salt
     assert_nil user.password_hash
   end
+
+  test "should set user_device_token" do
+    @controller = @the_controller
+
+    patch :create_device_token, :id => @id, :user_device_token => {:token => "helloooooo"}, :authentication => session_create, :format => :json
+    user = assigns(:user)
+    user_device_token = assigns(:user_device_token)
+    assert_not_nil user
+    assert_not_nil user_device_token
+  end
 end

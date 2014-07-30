@@ -2,7 +2,7 @@ module Api
   module V1
     class CircleMembersController < ApplicationController #Api::BaseController
 
-      before_action :confirm_logged_in, :only => [:create, :update, :destroy]
+      before_action :confirm_logged_in
 
       # give circle admin power?
       respond_to :json
@@ -13,9 +13,11 @@ module Api
 
       def create
         # removes unpermitted parameters from circle member creation params
+        # and saves them in token and message vars
         member_create_params = params[:circle_member]
         token = member_create_params.delete(:token)
         message = member_create_params.delete(:message)
+
         # push notification for circle member invite
         APNS.send_notification(token, message)
 
@@ -36,7 +38,8 @@ module Api
       end
 
       def destroy
-        @circle_member = CircleMember.find(params[:id]).destroy
+        circle_member_destroy_params = params[:circle_member]
+        @circle_member = CircleMember.where(:user_id => circle_member_destroy_params[:user_id]).where(:circle_id => circle_member_destroy_params[:circle_id]).first.destroy
       end
 
       private
