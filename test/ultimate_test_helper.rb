@@ -101,8 +101,8 @@ class UltimateTestHelper < ActionController::TestCase
 
     @controller = @the_controller
 
-    if is_subscriptions_controller?
-      delete :destroy, {:format => :json, :id => 3, :authentication => auth_params, :subscriptions => "[1,2,3,4]"}
+    if is_subscriptions_controller? || is_circle_members_controller? || is_event_attendees_controller?
+      delete :destroy, {:format => :json, :authentication => auth_params, @model_type => @params_delete}
       assert_response :success
     else
       delete :destroy, {:format => :json, :id => @id, :authentication => auth_params}
@@ -113,6 +113,14 @@ class UltimateTestHelper < ActionController::TestCase
   private
     def is_subclass?
       self.class.superclass == UltimateTestHelper
+    end
+
+    def is_circle_members_controller?
+      @class && @class == CircleMembersControllerTest
+    end
+
+    def is_event_attendees_controller?
+      @class && @class == EventAttendeesControllerTest
     end
 
     def is_subscriptions_controller?
