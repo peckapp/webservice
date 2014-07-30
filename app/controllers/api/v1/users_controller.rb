@@ -1,14 +1,14 @@
 module Api
   module V1
-    class UsersController < ApplicationController #Api::BaseController
+    class UsersController < ApplicationController
 
-      before_action :confirm_minimal_access, :except => [:create, :user_for_device_token]
-      before_action :confirm_logged_in, :only => [:user_circles]
+      before_action :confirm_minimal_access, except: [:create, :user_for_device_token]
+      before_action :confirm_logged_in, only: [:user_circles]
 
       respond_to :json
 
       def index
-        @users = specific_index(User, params).where("users.first_name IS NOT NULL")
+        @users = specific_index(User, params).where('users.first_name IS NOT NULL')
       end
 
       def show
@@ -21,7 +21,7 @@ module Api
         # hash mapping circle id to array of its members for display in json
         @member_ids = {}
 
-        for c in @circles
+        @circles.each do |c|
           @member_ids[c.id] = CircleMember.where("circle_id" => c.id).where("accepted" => true).pluck(:user_id)
         end
       end
@@ -30,7 +30,7 @@ module Api
         @user = User.create
 
         if params[:user_device_token]
-          token = UserDeviceToken.create(:token => params[:user_device_token])
+          token = UserDeviceToken.create(token: params[:user_device_token])
           @user.user_device_tokens << token
         end
 
@@ -47,7 +47,7 @@ module Api
       def user_for_device_token
 
         # see if token exist in db
-        the_token = UserDeviceToken.where(:token => params[:user_device_token]).first
+        the_token = UserDeviceToken.where(token: params[:user_device_token]).first
 
         if the_token
 
@@ -64,7 +64,7 @@ module Api
           @user.newly_created_user = false
         else
           # create user and a token in db and pair them up in join table
-          token = UserDeviceToken.create(:token => params[:user_device_token])
+          token = UserDeviceToken.create(token: params[:user_device_token])
           @user = User.create
           @user.user_device_tokens << token
           @user.newly_created_user = true
@@ -110,7 +110,7 @@ module Api
       def create_device_token
         @user = User.find(params[:id])
         user_device_token_params = params[:user_device_token]
-        @user_device_token = UserDeviceToken.create(:token => user_device_token_params[:token])
+        @user_device_token = UserDeviceToken.create(token: user_device_token_params[:token])
 
         # add both relations to join table
         if @user_device_token
