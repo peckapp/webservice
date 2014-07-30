@@ -47,6 +47,10 @@ class Announcement < ActiveRecord::Base
   ###   Callbacks     ###
   #######################
 
+  ### Scopes ###
+  scope :sorted, lambda {order("announcements.created_at DESC")}
+  ##############
+
   private
 
     def correct_announcement_types
