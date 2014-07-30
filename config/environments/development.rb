@@ -5,10 +5,6 @@ Rails.application.configure do
 
   APNS.pem = Rails.root.join('config/certs/ck.pem')
 
-  APNS.pass = ENV['PUSH_CERT_PASS']
-
-  GCM.key = ENV['GCM_API_KEY']
-
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
