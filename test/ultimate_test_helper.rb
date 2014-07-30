@@ -38,22 +38,47 @@ class UltimateTestHelper < ActionController::TestCase
 
   test "should_get_index" do
     next unless is_subclass? && is_controller?
+    the_user = super_create_user
+
+    auth_params = session_create
+    auth_params[:authentication_token] = the_user.authentication_token
+
     @controller = @the_controller
-    get :index, @params_index
-    assert_response :success
+
+    # circles and circle members require logging in.
+    if is_circle_members_controller? || is_circles_controller?
+      get :index, {:format => :json, :authentication => auth_params}
+      assert_response :success
+    else
+      get :index, @params_index
+      assert_response :success
+    end
   end
 
   test "should_get_show" do
     next unless is_subclass? && is_controller?
+    the_user = super_create_user
+
+    auth_params = session_create
+    auth_params[:authentication_token] = the_user.authentication_token
+
     @controller = @the_controller
     @params_show.keys.each do |attribute|
       unless @attributes.include? attribute
         assert(false, "Attribute not found in database table.")
       end
     end
-    get :show, @params_show
-    assert_response :success
-    assert_not_nil @model.find(@id)
+
+    # circles and circle members require logging in.
+    if is_circle_members_controller? || is_circles_controller?
+      get :show, {:format => :json, :id => @id, :authentication => auth_params}
+      assert_response :success
+      assert_not_nil @model.find(@id)
+    else
+      get :show, @params_show
+      assert_response :success
+      assert_not_nil @model.find(@id)
+    end
   end
 
   test "should_post_create" do
@@ -113,6 +138,10 @@ class UltimateTestHelper < ActionController::TestCase
   private
     def is_subclass?
       self.class.superclass == UltimateTestHelper
+    end
+
+    def is_circles_controller?
+      @class && @class == CirclesControllerTest
     end
 
     def is_circle_members_controller?
