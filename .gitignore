@@ -18,6 +18,9 @@
 # ignore certificate files
 config/certs/*
 
+# ignore environment variables
+config/environment_variables.yml
+
 # emacs temp files
 *~
 
