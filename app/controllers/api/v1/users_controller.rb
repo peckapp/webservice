@@ -41,6 +41,8 @@ module Api
 
       # either returns an existing user with matching token
       # or creates new user
+      #
+      # DO NOT DELETE: Cannot use currently but may come in handy later
       def user_for_device_token
 
         # see if token exist in db
