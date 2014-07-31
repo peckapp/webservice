@@ -8,7 +8,7 @@ class UniqueDeviceIdentifier < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  validates :udid, :presence => true, :uniqueness => true
+  validates :udid, :presence => true
 
 
   ###############################

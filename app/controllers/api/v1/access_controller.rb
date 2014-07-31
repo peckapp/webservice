@@ -17,10 +17,18 @@ module Api
           @user.save
           auth[:authentication_token] = @user.authentication_token
 
-          # MAY NOT need user device token
-          @udid = @user.unique_device_identifiers.first
-          logger.info "created session for user with id: #{@user.id}"
+          # Send UDID when you log in.
+          the_udid = params[:udid]
+          @udid = UniqueDeviceIdentifier.where(udid: the_udid)
 
+          # if this udid has never been put in the databse, create one
+          if !@udid
+            @udid = UniqueDeviceIdentifier.create(udid: the_udid)
+          end
+
+          # add the udid to the udids for the user unless it's already one of the user's udids.
+          @user.unique_device_identifiers << @udid unless check_udid(@user, the_udid)
+          logger.info "created session for user with id: #{@user.id}"
         else
 
           # something went wrong
@@ -44,10 +52,13 @@ module Api
 
       private
 
+        def check_udid(user, udid_param)
+          return user.unique_device_identifiers.where(udid: udid_param).first
+        end
+
         def authentication_params
           params.require(:user).permit(:email, :password)
         end
-
     end
   end
 end
