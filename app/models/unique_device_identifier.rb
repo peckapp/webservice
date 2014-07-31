@@ -1,4 +1,4 @@
-class UserDeviceToken < ActiveRecord::Base
+class UniqueDeviceIdentifier < ActiveRecord::Base
   include ModelNormalValidations
   include ModelBeforeSaveValidations
 
@@ -8,7 +8,8 @@ class UserDeviceToken < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  validates :token, :presence => true
+  validates :udid, :presence => true, :uniqueness => true
+
 
   ###############################
   ##                           ##
@@ -27,8 +28,8 @@ class UserDeviceToken < ActiveRecord::Base
 
   private
 
-    def correct_user_device_token_types
-      is_correct_type(token, String, "string", :token)
+    def correct_unique_device_identifier_types
+      is_correct_type(udid, String, "string", :udid)
     end
 
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140729195643) do
+ActiveRecord::Schema.define(version: 20140731132322) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -433,6 +433,15 @@ ActiveRecord::Schema.define(version: 20140729195643) do
     t.datetime "updated_at"
   end
 
+  create_table "rss_pages", force: true do |t|
+    t.integer  "institution_id",                  null: false
+    t.string   "url",                             null: false
+    t.integer  "scrape_interval", default: 1440
+    t.boolean  "paginated",       default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "scrape_resources", force: true do |t|
     t.string   "url",                                    null: false
     t.integer  "institution_id",                         null: false
@@ -501,6 +510,21 @@ ActiveRecord::Schema.define(version: 20140729195643) do
   add_index "subscriptions", ["institution_id"], name: "index_subscriptions_on_institution_id", using: :btree
   add_index "subscriptions", ["subscribed_to"], name: "index_subscriptions_on_subscribed_to", using: :btree
   add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
+
+  create_table "unique_device_identifiers", force: true do |t|
+    t.string   "udid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "unique_device_identifiers_users", id: false, force: true do |t|
+    t.integer  "unique_device_identifier_id", null: false
+    t.integer  "user_id",                     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "unique_device_identifiers_users", ["unique_device_identifier_id", "user_id"], name: "user_device_tokens_users_index", using: :btree
 
   create_table "user_device_tokens", force: true do |t|
     t.string   "token"
