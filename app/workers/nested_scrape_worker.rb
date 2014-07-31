@@ -2,7 +2,6 @@
 # correctly handles rss feeds in any format, but untested elsewhere
 
 class NestedScrapeWorker
-
   include Sidekiq::Worker
   include Sidetiq::Schedulable
 
@@ -27,7 +26,7 @@ class NestedScrapeWorker
       # iterate over pages for that resource
       # need to find a way to explicate pagination movement. may or may not need selenium, different url possibilities, form submissions, etc. may all be possible
       # for now just look at immediate url for the scrape resource
-      (0..0).each do |n| # placeholder page traversal
+      (0..0).each do |_n| # placeholder page traversal
 
         # down the road, extract html and send it off for parsing while continuing with pagination crawl
 
@@ -52,7 +51,7 @@ class NestedScrapeWorker
               # assumes there is only one element – could iterate instead but then where would that information go?
               content_item = html_item.css(cs.selector).first
 
-              if ! content_item.blank?
+              if !content_item.blank?
                 content = content_item.text.squish
                 if content.blank?
                   content = next_non_blank(content_item).text.squish
@@ -60,7 +59,7 @@ class NestedScrapeWorker
                 puts "CONTENT: #{content}"
                 new_model.assign_attributes(cs.column_name => content)
               else
-                puts "NO CONTENT FOUND"
+                puts 'NO CONTENT FOUND'
               end
             end
 
@@ -71,25 +70,21 @@ class NestedScrapeWorker
         end # end selector iteration
       end # end page iteration
     end # end resources do
-
-
   end # end perform
 
-  def validate_and_save(model)
-    #validate new model
+  def validate_and_save(_model)
+    # validate new model
 
     # check for partial matches that could indicate a change in the displayed content
 
     puts "new_model ---> #{new_model.inspect}"
     new_model.non_duplicative_save
-
   end
 
   def next_non_blank(elem)
-    until ! elem.text.blank? do
+    while elem.text.blank?
       elem = elem.next
     end
     elem
   end
-
 end

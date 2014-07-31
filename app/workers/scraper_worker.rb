@@ -1,7 +1,6 @@
 # This class iterates over the validated ScrapeResources
 
 class ScraperWorker
-
   include Sidekiq::Worker
   include Sidetiq::Schedulable
 
@@ -22,7 +21,7 @@ class ScraperWorker
       # need to find a way to explicate pagination movement.
       # may or may not need selenium, different url possibilities, form submissions, etc.
       # for now, this just looks at immediate url for the scrape resource
-      (0..0).each do |n| # placeholder page traversal
+      (0..0).each do |_n| # placeholder page traversal
 
         # perform asynchronous worker task to scrape the page
         SimplePageScraper.perform_async(resource.id)
@@ -30,7 +29,5 @@ class ScraperWorker
       end # end pagination traversal
 
     end # end resources iteration
-
   end # end perform
-
 end

@@ -4,7 +4,6 @@
 require 'csv'
 
 class WilliamsDiningWorker
-
   include Sidekiq::Worker
   include Sidetiq::Schedulable
 
@@ -12,16 +11,16 @@ class WilliamsDiningWorker
   # recurrence { minutely }
 
   def perform
-    column = "name"
-    search = "Williams"
-    inst = Institution.where("? LIKE ?", "#{column}", "%#{search}%").first
-    # set to 1 for the current 
+    column = 'name'
+    search = 'Williams'
+    inst = Institution.where('? LIKE ?', "#{column}", "%#{search}%").first
+    # set to 1 for the current
     inst_id = 1
     inst_id = inst.id unless inst.blank?
 
     if true # resources.blank?
-      #williams = Institution.where(name: "Williams")
-      scrape_csv_page("http://dining.williams.edu/files/daily-menu.csv", inst_id)
+      # williams = Institution.where(name: "Williams")
+      scrape_csv_page('http://dining.williams.edu/files/daily-menu.csv', inst_id)
     else
       resources.each do |r|
         scrape_csv_page(r.url, r.institution_id)
@@ -29,9 +28,7 @@ class WilliamsDiningWorker
     end
   end
 
-
   def scrape_csv_page(url, inst_id)
-
     puts "scraping csv page at url: #{url} for inst_id: #{inst_id}"
 
     file = RestClient.get(url)
@@ -64,7 +61,5 @@ class WilliamsDiningWorker
       result = mi.non_duplicative_save
       puts result
     end
-
   end
-
 end
