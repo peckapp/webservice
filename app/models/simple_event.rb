@@ -4,9 +4,6 @@ class SimpleEvent < ActiveRecord::Base
 
   acts_as_likeable
 
-  attr_writer :start_ts
-  attr_writer :end_ts
-
   ###############################
   ##                           ##
   ##         VALIDATIONS       ##
