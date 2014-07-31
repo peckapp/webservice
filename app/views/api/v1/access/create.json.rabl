@@ -4,4 +4,4 @@ attributes :id, :first_name, :last_name, :email, :blurb, :authentication_token, 
 
 node(:response) {@user.blank? ? "User did not successfully log in" : "#{@user.email} has successfully logged in"}
 
-node(:device_token) {@user_device_token.blank? ? nil : @user_device_token}
+node(:device_identifier) {@udid.blank? ? nil : @udid}
