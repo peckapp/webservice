@@ -8,9 +8,9 @@ class PushNotification < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  validates :user_id, :presence => true, :numericality => { :only_integer => true }
-  validates :notification_type, :presence => true
-  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validates :user_id, presence: true, numericality: { only_integer: true }
+  validates :notification_type, presence: true
+  validates :institution_id, presence: true, numericality: { only_integer: true }
   validate :correct_push_notification_types
 
   ###############################
@@ -32,10 +32,9 @@ class PushNotification < ActiveRecord::Base
   ###############################
 
   private
-  
-    def correct_push_notification_types
-      is_correct_type(notification_type, String, "string", :notification_type)
-      is_correct_type(response, String, "string", :response)
-    end
 
+  def correct_push_notification_types
+    is_correct_type(notification_type, String, 'string', :notification_type)
+    is_correct_type(response, String, 'string', :response)
+  end
 end

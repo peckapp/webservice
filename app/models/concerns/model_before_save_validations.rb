@@ -10,16 +10,16 @@ module ModelBeforeSaveValidations
   # end
   # private
 
-    # before callbacks. If valid, returns true. If invalid, returns false.
-    # def check_validity
-    #   return self.valid?
-    # end
-    #
-    # def sanitize_everything(attributes_array)
-    #   attributes_array.each do |attribute|
-    #     attribute.sanitize(attribute, :tags => %w(b i u))
-    #   end
-    # end
+  # before callbacks. If valid, returns true. If invalid, returns false.
+  # def check_validity
+  #   return self.valid?
+  # end
+  #
+  # def sanitize_everything(attributes_array)
+  #   attributes_array.each do |attribute|
+  #     attribute.sanitize(attribute, :tags => %w(b i u))
+  #   end
+  # end
 
   #### probably won't use everything below
   # def validate_attribute(theAttribute, attribute_string, theType, type_string)

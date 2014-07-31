@@ -15,7 +15,7 @@ class Club < ActiveRecord::Base
   belongs_to :institution #
 
   ### club administrator (only one admin per club?) ###
-  has_one :admin, :class_name => "User", :foreign_key => "user_id" #
+  has_one :admin, class_name: 'User', foreign_key: 'user_id' #
 
   ### ANNOUNCEMENTS ###
   has_many :announcements
@@ -27,9 +27,9 @@ class Club < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  validate :institution_id, :presence => true, :numericality => { :only_integer => true }
-  validate :club_name, :presence => true
-  validate :user_id, :numericality => { :only_integer => true }, :allow_nil => true
+  validate :institution_id, presence: true, numericality: { only_integer: true }
+  validate :club_name, presence: true
+  validate :user_id, numericality: { only_integer: true }, allow_nil: true
   validate :correct_club_types
 
   ###############################
@@ -39,7 +39,7 @@ class Club < ActiveRecord::Base
   ###############################
 
   private
-    def correct_club_types
-      is_correct_type(club_name, String, "string", :club_name)
-    end
+  def correct_club_types
+    is_correct_type(club_name, String, 'string', :club_name)
+  end
 end

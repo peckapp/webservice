@@ -1,6 +1,5 @@
 ActiveAdmin.register CrawlSeed do
 
-
   # See permitted parameters documentation:
   # https://github.com/gregbell/active_admin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
@@ -15,7 +14,6 @@ ActiveAdmin.register CrawlSeed do
   # end
 
   # Adds this into a dropdown in the top menu bar
-  menu :parent => "Scraping"
-
+  menu parent: 'Scraping'
 
 end

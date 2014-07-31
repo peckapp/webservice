@@ -15,6 +15,6 @@ ActiveAdmin.register DiningPeriod do
   # end
 
   # Adds this into a dropdown in the top menu bar
-  menu :parent => "Dining"
+  menu parent: 'Dining'
 
 end

@@ -8,6 +8,7 @@ class UniqueDeviceIdentifier < ActiveRecord::Base
   ##                           ##
   ###############################
 
+
   validates :udid, :presence => true
 
 
@@ -28,8 +29,7 @@ class UniqueDeviceIdentifier < ActiveRecord::Base
 
   private
 
-    def correct_unique_device_identifier_types
-      is_correct_type(udid, String, "string", :udid)
-    end
-
+  def correct_unique_device_identifier_types
+    is_correct_type(udid, String, 'string', :udid)
+  end
 end

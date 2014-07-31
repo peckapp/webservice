@@ -1,14 +1,12 @@
 class Selector < ActiveRecord::Base
-
   validates_associated :scrape_resources
   validates_associated :data_resources
   # validates that parent_selector_id must be nil for top level opbjects
   validate do |selector|
-    if top_level && ! parent_selector_id.blank?
+    if top_level && !parent_selector_id.blank?
       selector.errors[:base] << "top_level selectors must have nil parent_selector_id's"
     end
   end
-
 
   has_many :scrape_resources
 
@@ -35,5 +33,4 @@ class Selector < ActiveRecord::Base
   def column_name
     DataResource.find(data_resource_id).column_name
   end
-
 end
