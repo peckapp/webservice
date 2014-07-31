@@ -4,6 +4,9 @@ class SimpleEvent < ActiveRecord::Base
 
   acts_as_likeable
 
+  attr_writer :start_ts
+  attr_writer :end_ts
+
   ###############################
   ##                           ##
   ##         VALIDATIONS       ##
@@ -75,13 +78,21 @@ class SimpleEvent < ActiveRecord::Base
   ###############################
 
   # sorts
-  scope :sorted, lambda { order('simple_events.start_date ASC') }
+  scope :sorted, -> { order('simple_events.start_date ASC') }
 
   ###############################
   ##                           ##
   ##       HELPER METHODS      ##
   ##                           ##
   ###############################
+
+  def start_ts=(ts)
+    self[:start_date] = Time.at(ts).to_datetime
+  end
+
+  def end_ts=(ts)
+    self[:end_date] = Time.at(ts).to_datetime
+  end
 
   private
 
