@@ -1,5 +1,6 @@
+# contains code that applies to all the classes which subclass it, including all the API controllers
+# enforces security mechanisms for everything unless specified otherwise
 class ApplicationController < ActionController::Base
-
   # allows all classes to inherit
   before_action :confirm_minimal_access
 
@@ -11,15 +12,14 @@ class ApplicationController < ActionController::Base
     if auth[:authentication_token] && auth[:authentication_token] == user.authentication_token
       return true
     else
-      render :file => "public/401.html", :status => :unauthorized
+      render file: 'public/401.html', status: :unauthorized
       return false
     end
   end
 
   def confirm_minimal_access
-
     if auth_params_exist
-      # check validity of existing session
+      # check validity of existing session: params not nil and are equal to the current session's
       if session[:user_id] && session[:api_key] && session[:user_id] == auth[:user_id] && session[:api_key] == auth[:api_key]
         return true
       else
@@ -42,28 +42,25 @@ class ApplicationController < ActionController::Base
       head :unauthorized
       return false
     else
-      render :file => "public/401.html", :status => :unauthorized
+      render file: 'public/401.html', status: :unauthorized
     end
   end
 
   def specific_index(model, params_hash)
-
-    search_params = model_search_params(model,params_hash)
+    search_params = model_search_params(model, params_hash)
 
     # uses authentication institution_id to get initial set
     # result = allowed_model_instances(model, params[:authentication])
     result = model.all # where(:institution_id => auth[:institution_id])
 
     # if there is at least one parameter, filter result
-    if ! search_params.blank?
-      for p in search_params do
-        if params[p]
-          result = result.where(p => params[p])
-        end
+    unless search_params.blank?
+      search_params.each do |p|
+        result = result.where(p => params[p]) if params[p]
       end
     end
 
-    return result
+    result
   end
 
   # show instance of model
@@ -83,7 +80,6 @@ class ApplicationController < ActionController::Base
 
     # check existence of auth params
     def auth_params_exist
-
       if auth[:user_id].blank? || auth[:api_key].blank?
         return false
       else
@@ -99,7 +95,7 @@ class ApplicationController < ActionController::Base
     # returns a hash of only the search parameters that apply to the specific model being queried
     def model_search_params(model, params)
       search_params = []
-      for key in params.keys do
+      params.keys.each do |key|
         next unless model.column_names.include?(key)
         search_params << key
       end
