@@ -18,7 +18,7 @@ class DiningPlace < ActiveRecord::Base
   has_many :dining_periods #
 
   # dining opportunities #
-  has_and_belongs_to_many :dining_opportunities, :join_table => :dining_opportunities_dining_places #
+  has_and_belongs_to_many :dining_opportunities, join_table: :dining_opportunities_dining_places #
 
   ###############################
   ##                           ##
@@ -26,11 +26,11 @@ class DiningPlace < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
-  validates :name, :presence => true
-  validates :gps_longitude, :numericality => true, :allow_nil => true
-  validates :gps_latitude, :numericality => true, :allow_nil => true
-  validates :range, :numericality => true, :allow_nil => true
+  validates :institution_id, presence: true, numericality: { only_integer: true }
+  validates :name, presence: true
+  validates :gps_longitude, numericality: true, allow_nil: true
+  validates :gps_latitude, numericality: true, allow_nil: true
+  validates :range, numericality: true, allow_nil: true
   validate :correct_dining_place_types
 
   ###############################
@@ -40,8 +40,8 @@ class DiningPlace < ActiveRecord::Base
   ###############################
 
   private
-    def correct_dining_place_types
-      is_correct_type(name, String, "string", :name)
-      is_correct_type(details_link, String, "string", :details_link)
-    end
+  def correct_dining_place_types
+    is_correct_type(name, String, 'string', :name)
+    is_correct_type(details_link, String, 'string', :details_link)
+  end
 end

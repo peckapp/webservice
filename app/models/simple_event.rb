@@ -10,18 +10,18 @@ class SimpleEvent < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  validates :title, :presence => true, :length => {:maximum => 80}
-  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
-  validates :user_id, :numericality => { :only_integer => true }, :allow_nil => true
-  validates :department_id, :numericality => { :only_integer => true }, :allow_nil => true
-  validates :club_id, :numericality => { :only_integer => true }, :allow_nil => true
-  validates :circle_id, :numericality => { :only_integer => true }, :allow_nil => true
-  validates :comment_count, :numericality => { :only_integer => true }, :allow_nil => true
-  validates :event_url, :format => {:with => URI::regexp(%w(http https))}, :allow_nil => true
-  validates :start_date, :presence => true
-  validates :end_date, :presence => true
-  validates :latitude, :numericality => true, :allow_nil => true
-  validates :longitude, :numericality => true, :allow_nil => true
+  validates :title, presence: true, length: { maximum: 80 }
+  validates :institution_id, presence: true, numericality: { only_integer: true }
+  validates :user_id, numericality: { only_integer: true }, allow_nil: true
+  validates :department_id, numericality: { only_integer: true }, allow_nil: true
+  validates :club_id, numericality: { only_integer: true }, allow_nil: true
+  validates :circle_id, numericality: { only_integer: true }, allow_nil: true
+  validates :comment_count, numericality: { only_integer: true }, allow_nil: true
+  validates :event_url, format: { with: URI.regexp(%w(http https)) }, allow_nil: true
+  validates :start_date, presence: true
+  validates :end_date, presence: true
+  validates :latitude, numericality: true, allow_nil: true
+  validates :longitude, numericality: true, allow_nil: true
   validate :correct_simple_event_types
 
   ### Event Photo Attachments ###
@@ -41,8 +41,8 @@ class SimpleEvent < ActiveRecord::Base
                     })
 
   # validates_attachment :image, :content_type => { :content_type => "image/jpeg"}
-  validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
-  validates_with AttachmentSizeValidator, :attributes => :image, :less_than => 5.megabytes
+  validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
+  validates_with AttachmentSizeValidator, attributes: :image, less_than: 5.megabytes
 
   ###############################
   ##                           ##
@@ -51,16 +51,16 @@ class SimpleEvent < ActiveRecord::Base
   ###############################
 
   ### user event creator ###
-  belongs_to :creator, :class_name => "User", :foreign_key => "user_id" #
+  belongs_to :creator, class_name: 'User', foreign_key: 'user_id' #
 
   ### department event creator ###
-  belongs_to :host_department, :class_name => "Department", :foreign_key => "department_id" #
+  belongs_to :host_department, class_name: 'Department', foreign_key: 'department_id' #
 
   ### club event creator ###
-  belongs_to :host_club, :class_name => "Club", :foreign_key => "club_id" #
+  belongs_to :host_club, class_name: 'Club', foreign_key: 'club_id' #
 
   ### circle event creator ###
-  belongs_to :host_circle, :class_name => "Circle", :foreign_key => "circle_id" #
+  belongs_to :host_circle, class_name: 'Circle', foreign_key: 'circle_id' #
 
   ### event's home institution ###
   belongs_to :institution #
@@ -75,7 +75,7 @@ class SimpleEvent < ActiveRecord::Base
   ###############################
 
   # sorts
-  scope :sorted, lambda {order("simple_events.start_date ASC")}
+  scope :sorted, lambda { order('simple_events.start_date ASC') }
 
   ###############################
   ##                           ##
@@ -85,11 +85,10 @@ class SimpleEvent < ActiveRecord::Base
 
   private
 
-    def correct_simple_event_types
-      is_correct_type(title, String, "string", :title)
-      is_correct_type(event_url, String, "string", :event_url)
-      is_correct_type(start_date, Time, "datetime", :start_date)
-      is_correct_type(end_date, Time, "datetime", :end_date)
-    end
-
+  def correct_simple_event_types
+    is_correct_type(title, String, 'string', :title)
+    is_correct_type(event_url, String, 'string', :event_url)
+    is_correct_type(start_date, Time, 'datetime', :start_date)
+    is_correct_type(end_date, Time, 'datetime', :end_date)
+  end
 end

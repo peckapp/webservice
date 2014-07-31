@@ -8,10 +8,10 @@ class Subscription < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  validates :user_id, :presence => true, :numericality => { :only_integer => true }
-  validates :category, :presence => true
-  validates :subscribed_to, :presence => true, :numericality => { :only_integer => true }
-  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validates :user_id, presence: true, numericality: { only_integer: true }
+  validates :category, presence: true
+  validates :subscribed_to, presence: true, numericality: { only_integer: true }
+  validates :institution_id, presence: true, numericality: { only_integer: true }
   validate :correct_subscription_types
 
   ###############################
@@ -36,9 +36,8 @@ class Subscription < ActiveRecord::Base
   ###############################
 
   private
-  
-    def correct_subscription_types
-      is_correct_type(category, String, "string", :category)
-    end
 
+  def correct_subscription_types
+    is_correct_type(category, String, 'string', :category)
+  end
 end

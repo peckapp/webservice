@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
 
   acts_as_liker
 
-  EMAIL_REGEX =/\A[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}\Z/
+  EMAIL_REGEX = /\A[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}\Z/
 
   ###############################
   ##                           ##
@@ -15,15 +15,15 @@ class User < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  validates :password, :presence => true, :length => {:minimum => 5}, :if => :enable_strict_validation
-  validates :password_confirmation, :presence => true, if: lambda { |m| m.password.present? }
-  validates_confirmation_of :password, if: ->{ password.present? }
-  validates :first_name, :presence => true, :if => :enable_strict_validation
-  validates :last_name, :presence => true, :if => :enable_strict_validation
-  validates :email, :uniqueness => true, :presence => true, :length => {:maximum => 50}, :format => {:with => EMAIL_REGEX}, :if => :enable_strict_validation
-  validates :facebook_link, :uniqueness => true, :allow_nil => true
-  validates :facebook_token, :uniqueness => true, :allow_nil => true
-  validates :api_key, :uniqueness => true, :allow_nil => true
+  validates :password, presence: true, length: { minimum: 5 }, if: :enable_strict_validation
+  validates :password_confirmation, presence: true, if: lambda { |m| m.password.present? }
+  validates_confirmation_of :password, if: -> { password.present? }
+  validates :first_name, presence: true, if: :enable_strict_validation
+  validates :last_name, presence: true, if: :enable_strict_validation
+  validates :email, uniqueness: true, presence: true, length: { maximum: 50 }, format: { with: EMAIL_REGEX }, if: :enable_strict_validation
+  validates :facebook_link, uniqueness: true, allow_nil: true
+  validates :facebook_token, uniqueness: true, allow_nil: true
+  validates :api_key, uniqueness: true, allow_nil: true
   validate :correct_user_types
 
   # image validations
@@ -36,8 +36,8 @@ class User < ActiveRecord::Base
                     })
 
   # validates_attachment :image, :content_type => { :content_type => "image/jpeg"}
-  validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
-  validates_with AttachmentSizeValidator, :attributes => :image, :less_than => 5.megabytes
+  validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
+  validates_with AttachmentSizeValidator, attributes: :image, less_than: 5.megabytes
 
   ###############################
   ##                           ##
@@ -60,13 +60,13 @@ class User < ActiveRecord::Base
 
   #### CIRCLES ###
   has_many :circle_members #
-  has_many :circles, :through => :circle_members #
+  has_many :circles, through: :circle_members #
   ################
 
   ### EVENTS ###
   has_many :simple_events #
   has_many :event_attendees #
-  has_many :event_attendees_as_inviters, :class_name => "EventAttendee" #
+  has_many :event_attendees_as_inviters, class_name: 'EventAttendee' #
   ##############
 
   ### CLUBS ####
@@ -94,8 +94,8 @@ class User < ActiveRecord::Base
   ####################################
 
   ### ACTIVITY LOG ###
-  has_many :activity_logs_sent, :class_name => "ActivityLog" #
-  has_many :activity_logs_received, :class_name => "ActivityLog" #
+  has_many :activity_logs_sent, class_name: 'ActivityLog' #
+  has_many :activity_logs_received, class_name: 'ActivityLog' #
   ####################
 
   ### NOTIFICATIONS ###
@@ -111,7 +111,7 @@ class User < ActiveRecord::Base
 
   def self.authenticate(email, password)
     unless email.blank? || password.blank?
-      user = self.where(:email => email).first
+      user = where(email: email).first
 
       if user && user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
         user
@@ -127,19 +127,19 @@ class User < ActiveRecord::Base
   end
 
   private
-    def correct_user_types
-      is_correct_type(first_name, String, "string", :first_name)
-      is_correct_type(last_name, String, "string", :last_name)
-      is_correct_type(email, String, "string", :username)
-      is_correct_type(facebook_link, String, "string", :facebook_link)
-      is_correct_type(facebook_token, String, "string", :facebook_token)
-      is_correct_type(api_key, String, "string", :api_key)
-      is_correct_type(authentication_token, String, "string", :authentication_token)
-    end
+  def correct_user_types
+    is_correct_type(first_name, String, 'string', :first_name)
+    is_correct_type(last_name, String, 'string', :last_name)
+    is_correct_type(email, String, 'string', :username)
+    is_correct_type(facebook_link, String, 'string', :facebook_link)
+    is_correct_type(facebook_token, String, 'string', :facebook_token)
+    is_correct_type(api_key, String, 'string', :api_key)
+    is_correct_type(authentication_token, String, 'string', :authentication_token)
+  end
 
-    def generate_api_key
-      begin
-        self.api_key = SecureRandom.hex(25)
-      end while self.class.exists?(api_key: api_key)
-    end
+  def generate_api_key
+    begin
+      self.api_key = SecureRandom.hex(25)
+    end while self.class.exists?(api_key: api_key)
+  end
 end

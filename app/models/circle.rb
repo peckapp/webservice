@@ -13,7 +13,7 @@ class Circle < ActiveRecord::Base
 
   ### circle members ###
   has_many :circle_members
-  has_many :users, :through => :circle_members #
+  has_many :users, through: :circle_members #
 
   ### circle's home institution ###
   belongs_to :institution #
@@ -31,9 +31,9 @@ class Circle < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
-  validates :user_id, :presence => true, :numericality => { :only_integer => true }
-  validates :circle_name, :presence => true
+  validates :institution_id, presence: true, numericality: { only_integer: true }
+  validates :user_id, presence: true, numericality: { only_integer: true }
+  validates :circle_name, presence: true
   validate :correct_circle_types
 
   ###############################
@@ -44,6 +44,6 @@ class Circle < ActiveRecord::Base
 
   private
   def correct_circle_types
-    is_correct_type(circle_name, String, "string", :circle_name)
+    is_correct_type(circle_name, String, 'string', :circle_name)
   end
 end

@@ -24,8 +24,8 @@ class Department < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  validates :name, :presence => true
-  validates :institution_id, :presence => true, :numericality => { :only_integer => true }
+  validates :name, presence: true
+  validates :institution_id, presence: true, numericality: { only_integer: true }
   validate :correct_department_types
 
   ###############################
@@ -35,7 +35,7 @@ class Department < ActiveRecord::Base
   ###############################
 
   private
-    def correct_department_types
-      is_correct_type(name, String, "string", :name)
-    end
+  def correct_department_types
+    is_correct_type(name, String, 'string', :name)
+  end
 end

@@ -1,5 +1,4 @@
 class DataResource < ActiveRecord::Base
-
   ###############################
   ##                           ##
   ##       ASSOCIATIONS        ##
@@ -20,6 +19,6 @@ class DataResource < ActiveRecord::Base
   # model can be nil if it doesn't exist
   def model
     resource_type = ResourceType.find(resource_type_id)
-    return resource_type.model
+    resource_type.model
   end
 end

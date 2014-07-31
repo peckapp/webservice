@@ -1,5 +1,4 @@
 class CrawlSeed < ActiveRecord::Base
-
   ###############################
   ##                           ##
   ##       ASSOCIATIONS        ##
@@ -7,5 +6,4 @@ class CrawlSeed < ActiveRecord::Base
   ###############################
 
   has_many :institutions
-
 end

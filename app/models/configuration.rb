@@ -17,7 +17,7 @@ class Configuration < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  validates :config_file_name, :presence => true, :uniqueness => true
+  validates :config_file_name, presence: true, uniqueness: true
   validate :correct_configuration_types
 
   ###############################
@@ -27,8 +27,8 @@ class Configuration < ActiveRecord::Base
   ###############################
 
   private
-    def correct_configuration_types
-        is_correct_type(mascot, String, "string", :mascot)
-        is_correct_type(config_file_name, String, "string", :config_file_name)
-    end
+  def correct_configuration_types
+    is_correct_type(mascot, String, 'string', :mascot)
+    is_correct_type(config_file_name, String, 'string', :config_file_name)
+  end
 end

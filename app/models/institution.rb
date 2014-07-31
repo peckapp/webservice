@@ -8,16 +8,16 @@ class Institution < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  validates :name, :presence => true
-  validates :street_address, :presence => true
-  validates :city, :presence => true
-  validates :state, :presence => true
-  validates :country, :presence => true, :format => {:with => LETTERS_REGEX}
-  validates :gps_longitude, :presence => true, :numericality => true
-  validates :gps_latitude, :presence => true, :numericality => true
-  validates :range, :presence => true, :numericality => true
-  validates :configuration_id, :presence => true, :numericality => { :only_integer => true }, :uniqueness => true
-  validates :api_key, :presence => true, :uniqueness => true
+  validates :name, presence: true
+  validates :street_address, presence: true
+  validates :city, presence: true
+  validates :state, presence: true
+  validates :country, presence: true, format: { with: LETTERS_REGEX }
+  validates :gps_longitude, presence: true, numericality: true
+  validates :gps_latitude, presence: true, numericality: true
+  validates :range, presence: true, numericality: true
+  validates :configuration_id, presence: true, numericality: { only_integer: true }, uniqueness: true
+  validates :api_key, presence: true, uniqueness: true
   validate :correct_institution_types
 
   ###############################
@@ -87,12 +87,12 @@ class Institution < ActiveRecord::Base
   ###############################
 
   private
-    def correct_institution_types
-      is_correct_type(name, String, "string", :name)
-      is_correct_type(street_address, String, "string", :street_address)
-      is_correct_type(city, String, "string", :city)
-      is_correct_type(state, String, "string", :state)
-      is_correct_type(country, String, "string", :country)
-      is_correct_type(api_key, String, "string", :api_key)
-    end
+  def correct_institution_types
+    is_correct_type(name, String, 'string', :name)
+    is_correct_type(street_address, String, 'string', :street_address)
+    is_correct_type(city, String, 'string', :city)
+    is_correct_type(state, String, 'string', :state)
+    is_correct_type(country, String, 'string', :country)
+    is_correct_type(api_key, String, 'string', :api_key)
+  end
 end

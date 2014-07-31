@@ -1,7 +1,5 @@
 class Tasks::ScrapeResource < ActiveRecord::Base
+  self.table_name = 'scrape_resources'
 
-  self.table_name = "scrape_resources"
-
-  #set_fixture_class :scrape_resources => "Tasks::ScrapeResources"
-
+  # set_fixture_class :scrape_resources => "Tasks::ScrapeResources"
 end
