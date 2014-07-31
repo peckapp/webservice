@@ -5,16 +5,16 @@
 # below each fixture, per the syntax in the comments below
 #
 
-# user_device_token device tokens set 1
+# unique_device_identifier device tokens set 1
 <% (1..5).each do |n| %>
- user_device_token_<%= n %>:
-  token: <%= "token_#{n}" %>
+ unique_device_identifier_<%= n %>:
+  udid: <%= "udid_#{n}" %>
   id: <%= n %>
 <% end %>
 
-# user_device_token device tokens set 2
+# unique_device_identifier device tokens set 2
 <% (6..10).each do |n| %>
- user_device_token_<%= n %>:
-  token: <%= "token_#{n}" %>
+ unique_device_identifier_<%= n %>:
+  udid: <%= "udid_#{n}" %>
   id: <%= n %>
 <% end %>

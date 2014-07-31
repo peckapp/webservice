@@ -29,12 +29,6 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :users do
-        member do
-          patch :create_device_token
-        end
-      end
-
       resources :circle_members do
         collection do
           delete :destroy
