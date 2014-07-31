@@ -42,8 +42,6 @@ module Api
 
       # either returns an existing user with matching udid
       # or creates new user
-      #
-      # DO NOT DELETE: Cannot use currently but may come in handy later
       def user_for_udid
 
         # see if udid exist in db

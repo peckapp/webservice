@@ -21,16 +21,38 @@ module Api
           auth[:authentication_token] = @user.authentication_token
 
           # Send UDID when you log in.
-          @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
+          # @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
 
           # if this udid has never been put in the databse, create one
-          if !@udid
-            @udid = UniqueDeviceIdentifier.create(udid: the_udid)
-          end
+          # if ! @udid
+          @udid = UniqueDeviceIdentifier.create(udid: the_udid)
+          # end
+
+          # touch little boys
+          # all_things = UniqueDeviceIdentifier.all
+
+          # this_thing = UniqueDeviceIdentifier.joins("LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers.id = unique_device_identifiers_users.unique_device_identifier_id").joins("LEFT OUTER JOIN users ON users.id = unique_device_identifiers_users.user_id").where("unique_device_identifiers.udid" => @udid.udid).first
+
+
+          # .pluck("users.email")
+
+
+          # .pluck("unique_device_identifiers.udid")
+
+          # .where("unique_device_identifiers.udid" => @udid.udid)
+
+          # .maximum("users.updated_at")
+
+          # puts "----> @UDID.UDID: #{@udid.udid} <----"
+          #
+          #
+          # puts "----> ALL THINGS: #{all_things} <----"
+          #
+          #
+          # puts "----> THIS THING: #{this_thing} <----"
 
           # add the udid to the udids for the user unless it's already one of the user's udids.
-          @user.touch
-          @user.unique_device_identifiers << @udid unless check_udid(@user, the_udid)
+          @user.unique_device_identifiers << @udid #unless check_udid(@user, the_udid)
           logger.info "created session for user with id: #{@user.id}"
         else
 
