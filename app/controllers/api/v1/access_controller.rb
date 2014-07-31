@@ -18,7 +18,7 @@ module Api
           auth[:authentication_token] = @user.authentication_token
 
           # Send UDID when you log in.
-          the_udid = params[:udid]
+          the_udid = params[:user][:udid]
           @udid = UniqueDeviceIdentifier.where(udid: the_udid)
 
           # if this udid has never been put in the databse, create one
