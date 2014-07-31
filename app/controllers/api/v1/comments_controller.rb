@@ -19,7 +19,8 @@ module Api
 
         @comments.each do |comment|
           liker_ids = all_likes.where(:likeable_id => comment.id).pluck(:liker_id)
-          @likes_for_comment[comment] = all_likes.where(:liker_id => liker_ids).pluck(:liker_id)
+          @likes_for_comment[comment] = liker_ids
+          puts "-------> #{@likes_for_comment[comment]} <-------"
         end
 
 
