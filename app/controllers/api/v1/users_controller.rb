@@ -2,7 +2,7 @@ module Api
   module V1
     class UsersController < ApplicationController
 
-      before_action :confirm_minimal_access, except: [:create, :user_for_device_token]
+      before_action :confirm_minimal_access, except: [:create, :user_for_udid]
       before_action :confirm_logged_in, only: [:user_circles]
 
       respond_to :json
@@ -29,9 +29,9 @@ module Api
       def create
         @user = User.create
 
-        if params[:user_device_token]
-          token = UserDeviceToken.create(token: params[:user_device_token])
-          @user.user_device_tokens << token
+        if params[:udid]
+          udid = UniqueDeviceIdentifier.create(udid: params[:udid])
+          @user.unique_device_identifiers << udid
         end
 
         logger.info "Created anonymous user with id: #{@user.id}"
@@ -40,22 +40,22 @@ module Api
         session[:api_key] = @user.api_key
       end
 
-      # either returns an existing user with matching token
+      # either returns an existing user with matching udid
       # or creates new user
       #
       # DO NOT DELETE: Cannot use currently but may come in handy later
-      def user_for_device_token
+      def user_for_udid
 
-        # see if token exist in db
-        the_token = UserDeviceToken.where(token: params[:user_device_token]).first
+        # see if udid exist in db
+        the_udid = UniqueDeviceIdentifier.where(udid: params[:udid]).first
 
-        if the_token
+        if the_udid
 
           # date of creation of most recent user to use this device
-          most_recent = User.joins('LEFT OUTER JOIN user_device_tokens_users ON user_device_tokens_users.user_id = users.id').joins('LEFT OUTER JOIN user_device_tokens ON user_device_tokens_users.user_device_token_id = user_device_tokens.id').where("user_device_tokens.token" => params[:user_device_token]).maximum("user_device_tokens_users.created_at")
+          most_recent = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_idendifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => params[:udid]).maximum("unique_device_identifiers_users.created_at")
 
           # ID of most recent user to use this device
-          id = User.joins('LEFT OUTER JOIN user_device_tokens_users ON user_device_tokens_users.user_id = users.id').joins('LEFT OUTER JOIN user_device_tokens ON user_device_tokens_users.user_device_token_id = user_device_tokens.id').where("user_device_tokens.token" => params[:user_device_token]).where("user_device_tokens_users.created_at" => most_recent).first.id
+          id = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_idendifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => params[:udid]).where("unique_device_identifiers_users.created_at" => most_recent).first.id
 
           # return that user
           @user = specific_show(User, id)
@@ -63,10 +63,10 @@ module Api
           # this user was already in db
           @user.newly_created_user = false
         else
-          # create user and a token in db and pair them up in join table
-          token = UserDeviceToken.create(token: params[:user_device_token])
+          # create user and a udid in db and pair them up in join table
+          udid = UniqueDeviceIdentifier.create(udid: params[:udid])
           @user = User.create
-          @user.user_device_tokens << token
+          @user.unique_device_identifiers << udid
           @user.newly_created_user = true
         end
         # start session as in normal creation
@@ -104,17 +104,6 @@ module Api
           end
         else
           logger.warn "attempted to super_create user with non-existant id: #{@user.id}"
-        end
-      end
-
-      def create_device_token
-        @user = User.find(params[:id])
-        user_device_token_params = params[:user_device_token]
-        @user_device_token = UserDeviceToken.create(token: user_device_token_params[:token])
-
-        # add both relations to join table
-        if @user_device_token
-          @user.user_device_tokens << @user_device_token
         end
       end
 

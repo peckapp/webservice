@@ -74,7 +74,7 @@ Rails.application.routes.draw do
 
       resources :users do
         collection do
-          post :user_for_device_token
+          post :user_for_udid
         end
       end
 
