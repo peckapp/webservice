@@ -3,7 +3,7 @@ ActiveAdmin.register Like do
   # See permitted parameters documentation:
   # https://github.com/gregbell/active_admin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
-  # permit_params :list, :of, :attributes, :on, :model
+  permit_params :liker_type, :liker_id, :likeable_type, :likeable_id
   #
   # or
   #
@@ -14,6 +14,6 @@ ActiveAdmin.register Like do
   # end
 
   # Adds this into a dropdown in the top menu bar
-  menu parent: 'Accounts'
+  menu parent: 'Accounts and Social'
 
 end
