@@ -5,9 +5,12 @@ module Api
 
       # When you sign in, you get an authentication token.
       def create
+        uparams = params[:user]
 
+        # gets the udid from the user block
+        the_udid = uparams.delete(:udid)
         # first authenticate user with email and password
-        @user = User.authenticate(authentication_params[:email], authentication_params[:password])
+        @user = User.authenticate(authentication_params(uparams)[:email], authentication_params(uparams)[:password])
 
         # if authenticated
         if @user
@@ -18,7 +21,6 @@ module Api
           auth[:authentication_token] = @user.authentication_token
 
           # Send UDID when you log in.
-          the_udid = params[:user][:udid]
           @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
 
           # if this udid has never been put in the databse, create one
@@ -27,6 +29,7 @@ module Api
           end
 
           # add the udid to the udids for the user unless it's already one of the user's udids.
+          @user.touch
           @user.unique_device_identifiers << @udid unless check_udid(@user, the_udid)
           logger.info "created session for user with id: #{@user.id}"
         else
@@ -56,8 +59,8 @@ module Api
           return user.unique_device_identifiers.where(udid: udid_param).first
         end
 
-        def authentication_params
-          params.require(:user).permit(:email, :password)
+        def authentication_params(user_params)
+          user_params.permit(:email, :password)
         end
     end
   end
