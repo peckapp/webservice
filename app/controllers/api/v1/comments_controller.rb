@@ -11,16 +11,16 @@ module Api
 
         @likes_for_comment = {}
 
+        # get ids of all comments
+        comment_ids = @comments.pluck(:id)
+
+        all_likes = Like.where(:likeable_type => "Comment").where(:likeable_id => comment_ids)
+
         @comments.each do |comment|
-          likers = []
-          comment.likers(User).each do |user|
-
-            likers << user.id
-
-          end
-
-          @likes_for_comment[comment] = likers
+          liker_ids = all_likes.where(:likeable_id => comment.id).pluck(:liker_id)
+          @likes_for_comment[comment] = liker_ids
         end
+
       end
 
       def show

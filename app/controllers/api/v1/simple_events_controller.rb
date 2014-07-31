@@ -13,17 +13,17 @@ module Api
         # initialize hash mapping events to arrays of likers
         @likes_for_simple_event = {}
 
-        # TODO: causes wayyy to many database calls, should be done with some custom SQL
-        @simple_events.each do |simple_event|
-          likers = []
-          simple_event.likers(User).each do |user|
-
-            likers << user.id
-
-          end
-
-          @likes_for_simple_event[simple_event] = likers
-        end
+        # # TODO: causes wayyy to many database calls, should be done with some custom SQL
+        # @simple_events.each do |simple_event|
+        #   likers = []
+        #   simple_event.likers(User).each do |user|
+        #
+        #     likers << user.id
+        #
+        #   end
+        #
+        #   @likes_for_simple_event[simple_event] = likers
+        # end
 
         # event attendees
         @attendee_ids = {}
@@ -36,13 +36,13 @@ module Api
       def show
         @simple_event = specific_show(SimpleEvent, params[:id])
 
-        @likers = @simple_event.likers(User)
-        @likes = []
-        if @likers
-          @likers.each do |user|
-            @likes << user.id
-          end
-        end
+        # @likers = @simple_event.likers(User)
+        # @likes = []
+        # if @likers
+        #   @likers.each do |user|
+        #     @likes << user.id
+        #   end
+        # end
 
         @attendee_ids = EventAttendee.where('category' => 'simple').where('event_attended' => @simple_event.id).pluck(:user_id)
 
