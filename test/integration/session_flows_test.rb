@@ -100,5 +100,5 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
     def delete_subscriptions
       delete "api/subscriptions/1?subscription[subscriptions]=[1,2,3,4]", :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key }, :format => :json
       assert_response :success, "problem deleting subscriptions"
-    end
+    end 
 end
