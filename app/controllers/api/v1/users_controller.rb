@@ -72,7 +72,6 @@ module Api
         # start session as in normal creation
         session[:user_id] = @user.id
         session[:api_key] = @user.api_key
-        @user.save
       end
 
       # user registration
