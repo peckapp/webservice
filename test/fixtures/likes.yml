@@ -1,0 +1,19 @@
+# fixtures for likes
+
+<% (1..10).each do |n| %>
+ like_<%= n %>:
+  id: <%= n %>
+  liker_type: "User"
+  liker_id: <%= n %>
+  likeable_type: "Comment"
+  likeable_id: 1
+<% end %>
+
+<% (11..20).each do |n| %>
+ like_<%= n %>:
+  id: <%= n %>
+  liker_type: "User"
+  liker_id: <%= n %>
+  likeable_type: "Comment"
+  likeable_id: 2
+<% end %>
