@@ -21,7 +21,7 @@ module Api
         @circle_member = CircleMember.create(circle_member_create_params(member_create_params))
 
         # push notification for circle member invite
-        APNS.send_notification(token, alert: message, :other => {:circle_member_id => @circle_member.id})
+        APNS.send_notification(token, alert: message, badge: 1, sound: 'default', :other => {:circle_member_id => @circle_member.id})
       end
 
       # action for when pending circle member clicks accept to the invitation.

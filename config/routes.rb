@@ -92,26 +92,11 @@ Rails.application.routes.draw do
         resources :menu_items, :dining_opportunities, :dining_places
       end
 
-      # Inviters for a particular circle member
-      resources :circle_members do
-        resources :users
-      end
-
-      # Separation by users
-      resources :users do
-        resources :circle_members, :circles, :activity_logs, :user_device_tokens
-      end
 
       # Dining periods for a particular dining opportunity
       resources :dining_opportunities do
         resources :dining_places
       end
-
-      # separation by institutions
-      resources :institutions do
-        resources :users, :simple_events, :circles, :circle_members, :athletic_events, :athletic_teams, :clubs, :departments, :dining_opportunities, :dining_periods, :dining_places
-      end
-
       # separation by athletic teams
       resources :athletic_teams do
         resources :athletic_events
