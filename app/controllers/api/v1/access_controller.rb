@@ -19,7 +19,7 @@ module Api
 
           # Send UDID when you log in.
           the_udid = params[:user][:udid]
-          @udid = UniqueDeviceIdentifier.where(udid: the_udid)
+          @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
 
           # if this udid has never been put in the databse, create one
           if !@udid
