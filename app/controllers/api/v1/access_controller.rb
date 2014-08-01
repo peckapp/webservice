@@ -16,7 +16,7 @@ module Api
         if @user
 
           # provide auth token, set it in database and set it in authentication params
-          @user.authentication_token = SecureRandom.hex(30)
+          @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token
           @user.save
           auth[:authentication_token] = @user.authentication_token
 
@@ -38,13 +38,11 @@ module Api
         end
       end
 
-      def destroy
-
+      def logout
         # find user who is logging out
         @user = User.find(session[:user_id])
 
         # remove auth token from authentication params and database
-        auth[:authentication_token] = nil
         @user.authentication_token = nil
         @user.save
 
