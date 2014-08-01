@@ -2,7 +2,7 @@ module Api
   module V1
     class CommentsController < ApplicationController #Api::BaseController
 
-      before_action :confirm_logged_in, :only => [:create, :update, :destroy, :add_like, :unlike]
+      before_action :confirm_logged_in, :only => [:create, :update, :destroy, :add_like, :unlike] # touching little boys
 
       respond_to :json
 

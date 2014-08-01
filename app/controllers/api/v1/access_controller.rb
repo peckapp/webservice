@@ -28,28 +28,7 @@ module Api
           @udid = UniqueDeviceIdentifier.create(udid: the_udid)
           # end
 
-          # touch little boys
-          # all_things = UniqueDeviceIdentifier.all
-
-          # this_thing = UniqueDeviceIdentifier.joins("LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers.id = unique_device_identifiers_users.unique_device_identifier_id").joins("LEFT OUTER JOIN users ON users.id = unique_device_identifiers_users.user_id").where("unique_device_identifiers.udid" => @udid.udid).first
-
-
-          # .pluck("users.email")
-
-
-          # .pluck("unique_device_identifiers.udid")
-
-          # .where("unique_device_identifiers.udid" => @udid.udid)
-
-          # .maximum("users.updated_at")
-
-          # puts "----> @UDID.UDID: #{@udid.udid} <----"
-          #
-          #
-          # puts "----> ALL THINGS: #{all_things} <----"
-          #
-          #
-          # puts "----> THIS THING: #{this_thing} <----"
+          # touch little boys here
 
           # add the udid to the udids for the user unless it's already one of the user's udids.
           @user.unique_device_identifiers << @udid #unless check_udid(@user, the_udid)
