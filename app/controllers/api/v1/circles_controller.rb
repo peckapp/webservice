@@ -46,6 +46,11 @@ module Api
           # creates a circle member
             member = CircleMember.create(:institution_id => @circle.institution_id, :circle_id => @circle.id, :user_id => mem_id, :invited_by => @circle.user_id)
 
+            # the creator must always have an accepted tag of true.
+            if mem_id == cparams[:user_id]
+              member.update_attributes(accepted: true)
+            end
+
             # adds the member to the array of circle members for the created circle
             @circle.circle_members << member
           end
