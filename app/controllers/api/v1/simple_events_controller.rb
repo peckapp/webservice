@@ -17,8 +17,8 @@ module Api
         simple_event_ids = @simple_events.pluck(:id)
 
         all_likes = Like.where(:likeable_type => "SimpleEvent").where(:likeable_id => simple_event_ids).pluck(:likeable_id, :liker_id)
-        
-        @simple_event.each do |event|
+
+        @simple_events.each do |event|
 
           liker_ids = []
 
