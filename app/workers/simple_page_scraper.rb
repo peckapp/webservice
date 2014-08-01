@@ -3,13 +3,11 @@
 # it is not a scheduable sidetiq job, but rather a worker on a single page that is spawned by iterative workers
 
 class SimplePageScraper
-
   include Sidekiq::Worker
 
   PAGE_LIMIT = 30
 
   def perform(resource_id)
-
     resource = ScrapeResource.find(resource_id)
 
     puts "resource: #{resource.inspect}"
@@ -42,7 +40,7 @@ class SimplePageScraper
           # assumes there is only one element – could iterate instead but then where would that information go?
           content_item = html_item.css(cs.selector).first
 
-          if ! content_item.blank?
+          if !content_item.blank?
             content = content_item.text.squish
             if content.blank?
               content = next_non_blank(content_item).text.squish
@@ -50,7 +48,7 @@ class SimplePageScraper
             puts " ==> CONTENT: #{content}"
             new_model.assign_attributes(cs.column_name => content)
           else
-            puts " ==> NO CONTENT FOUND"
+            puts ' ==> NO CONTENT FOUND'
           end
         end
 
@@ -59,25 +57,21 @@ class SimplePageScraper
       end # end items iteration
 
     end # end selector iteration
-
   end # end perform
 
   def validate_and_save(model)
-
     # validate new model
 
     # check for partial matches that could indicate a change in the displayed content
 
     puts "new_model ---> #{model.inspect}"
     model.non_duplicative_save
-
   end
 
   def next_non_blank(elem)
-    until ! elem.text.blank? do
+    while elem.text.blank?
       elem = elem.next
     end
     elem
   end
-
 end

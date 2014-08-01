@@ -1,27 +1,26 @@
 # scrapes middlebury's dining menus
 class MiddleburyDiningWorker
-
   include Sidekiq::Worker
   include Sidetiq::Schedulable
 
   recurrence { daily.hour_of_day(2) }
 
-  MIDD_MENUS = "http://menus.middlebury.edu"
-  DATE_FORMAT = "%A, %B %-d, %Y"
+  MIDD_MENUS = 'http://menus.middlebury.edu'
+  DATE_FORMAT = '%A, %B %-d, %Y'
 
   def perform
     midd = Institution.where(name: 'Middlebury').first
-    resource_type = ResourceType.where(resource_name: "dining").first
+    resource_type = ResourceType.where(resource_name: 'dining').first
     unless midd.blank? || resource_type.blank?
       resources = ScrapeResource.where(resource_type_id: resource_type.id, validated: true, institution_id: midd.id)
       if resources.blank?
         resources << ScrapeResource.current_or_create_new(url: MIDD_MENUS, institution_id: midd.id)
       else
-        resources.each do |r|
+        resources.each do |_r|
           b = Watir::Browser.new
           b.goto MIDD_MENUS
           puts 'entering loop'
-          self.menu_loop(b)
+          menu_loop(b)
         end
       end
     end
@@ -40,7 +39,7 @@ class MiddleburyDiningWorker
       apply_button = b.button id: 'edit-submit-menus-test'
       apply_button.click
 
-      data = b.div :class => 'view view-menus-test view-id-menus_test view-display-id-page'
+      data = b.div class: 'view view-menus-test view-id-menus_test view-display-id-page'
 
       if data.exists?
         html_raw = data.html
@@ -56,31 +55,29 @@ class MiddleburyDiningWorker
   end
 
   def scrape_html(html_raw, date)
-  html = Nokogiri::HTML(html_raw)
+    html = Nokogiri::HTML(html_raw)
 
-  html.css("table[class*='views-view-grid']").each do |table|
+    html.css("table[class*='views-view-grid']").each do |table|
 
-    place = table.previous.previous.text
+      place = table.previous.previous.text
 
-    table.css('td').each do |entry|
-      opportunity_type = entry.css('span[class=field-content]').text
+      table.css('td').each do |entry|
+        opportunity_type = entry.css('span[class=field-content]').text
 
-      entry.css('p').children.each do |item|
-        if ! item.text.blank?
+        entry.css('p').children.each do |item|
+          unless item.text.blank?
 
-          item_name = item.text
+            item_name = item.text
 
-          mi = {item_name: item_name, opportunity_type: opportunity_type, place: place, date: date}
+            mi = { item_name: item_name, opportunity_type: opportunity_type, place: place, date: date }
 
-          puts mi
+            puts mi
 
-        end # end if
-      end # end entry items
+          end # end if
+        end # end entry items
 
-    end # end table entries
+      end # end table entries
 
-  end # end tables
-
+    end # end tables
 end
-
 end
