@@ -29,6 +29,7 @@ module Api
         @circle_member.update_attributes(accepted: true)
 
         @peck = Peck.find(params[:peck_id])
+
         @peck.update_attributes(interacted: true)
       end
 

@@ -117,6 +117,21 @@ class UltimateTestHelper < ActionController::TestCase
     assert_not_nil assigns(@model_type)
   end
 
+  test "should_patch_accept" do
+    next unless is_subclass? && is_controller? && is_circle_members_controller?
+    the_user = super_create_user
+
+    auth_params = session_create
+    auth_params[:authentication_token] = the_user.authentication_token
+
+    @controller = @the_controller
+    patch :accept, {:id => @id, :peck_id => 1, :authentication => auth_params, :format => :json}
+
+    peck = assigns(:peck)
+    assert_response :success
+    assert_not_nil peck
+  end
+
   test "should_delete_destroy" do
     next unless is_subclass? && is_controller?
     the_user = super_create_user
