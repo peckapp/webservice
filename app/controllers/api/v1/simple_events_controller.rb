@@ -28,14 +28,25 @@ module Api
             end
           end
 
-          @likes_for_simple_event[event] = liker_ids
+          @likes_for_simple_event[event.id] = liker_ids
         end
 
         # event attendees
         @attendee_ids = {}
 
-        @simple_events.each do |se|
-          @attendee_ids[se.id] = EventAttendee.where('category' => 'simple').where('event_attended' => se.id).pluck(:user_id)
+        all_attendees = EventAttendee.where('category' => 'simple').pluck(:event_attended, :user_id)
+
+        @simple_events.each do |event|
+
+          attendee_ids = []
+
+          all_attendees.each do |att|
+            if att[0] == event.id
+              attendee_ids << att[1]
+            end
+          end
+
+          @attendee_ids[event.id] = attendee_ids
         end
       end
 
