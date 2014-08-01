@@ -26,13 +26,8 @@ module Api
       def show
         @comment = specific_show(Comment,params[:id])
 
-        @likers = @comment.likers(User)
-        @likes = []
-        if @likers
-          @likers.each do |user|
-            @likes << user.id
-          end
-        end
+        @likers = Like.where(:likeable_type => "Comment").where(:likeable_id => @comment.id).pluck(:id)
+        
       end
 
       def create
