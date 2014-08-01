@@ -16,8 +16,6 @@ module Api
 
         all_likes = Like.where(:likeable_type => "Comment").where(:likeable_id => comment_ids).pluck(:likeable_id, :liker_id)
 
-        puts "THESE ARE ALL LIKES: #{all_likes}"
-
         @comments.each do |comment|
 
           liker_ids = []
@@ -28,12 +26,8 @@ module Api
             end
           end
 
-          puts "------> LIKER IDS: #{liker_ids} <------"
-
           @likes_for_comment[comment] = liker_ids
         end
-
-        puts "------> LIKES FOR COMMENT: #{@likes_for_comment} <------"
 
       end
 
