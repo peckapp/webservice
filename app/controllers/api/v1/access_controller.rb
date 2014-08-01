@@ -24,13 +24,13 @@ module Api
           @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
 
           # if this udid has never been put in the databse, create one
-          if !@udid
+          if ! @udid
             @udid = UniqueDeviceIdentifier.create(udid: the_udid)
           end
 
           # add the udid to the udids for the user unless it's already one of the user's udids.
-          @user.touch
           @user.unique_device_identifiers << @udid unless check_udid(@user, the_udid)
+          
           logger.info "created session for user with id: #{@user.id}"
         else
 
