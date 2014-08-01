@@ -1,6 +1,9 @@
 # Load DSL and Setup Up Stages
 require 'capistrano/setup'
 
+# record deployments with new relic
+require 'new_relic/recipes'
+
 # Includes default deployment tasks
 require 'capistrano/deploy'
 
