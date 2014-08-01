@@ -15,7 +15,7 @@ node :blurred_image do |simple_event|
 end
 
 node :likes do |simple_event|
-  @likes_for_simple_event[simple_event]
+  @likes_for_simple_event[simple_event.id]
 end
 
 node :attendees do |simple_event|
