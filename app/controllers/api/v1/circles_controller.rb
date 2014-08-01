@@ -32,6 +32,7 @@ module Api
 
         # returns the array of circle member ids
         the_circle_members = cparams.delete(:circle_member_ids)
+        the_message = cparams.delete(:message)
 
         # passes in the cparams to permit certain attributes
         @circle = Circle.create(circle_create_params(cparams))
@@ -53,6 +54,24 @@ module Api
 
             # adds the member to the array of circle members for the created circle
             @circle.circle_members << member
+
+            ### Push Notification Stuff ###
+            the_user = User.find(mem_id)
+
+            if the_user.id != cparams[:user_id]
+              the_user.unique_device_identifiers.each do |device|
+
+                # date of creation of most recent user to use this device
+                most_recent = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => device.udid).maximum("unique_device_identifiers_users.updated_at")
+
+                # ID of most recent user to use this device
+                id = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => device.udid).where("unique_device_identifiers_users.updated_at" => most_recent).first.id
+
+                if mem_id == id
+                  APNS.send_notification(device.token, alert: the_message, badge: 1, sound: 'default')
+                end
+              end
+            end
           end
 
           # circle members

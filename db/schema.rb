@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140801173844) do
+ActiveRecord::Schema.define(version: 20140801202712) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -437,6 +437,15 @@ ActiveRecord::Schema.define(version: 20140801173844) do
     t.datetime "updated_at"
   end
 
+  create_table "rss_pages", force: true do |t|
+    t.integer  "institution_id",                  null: false
+    t.string   "url",                             null: false
+    t.integer  "scrape_interval", default: 1440
+    t.boolean  "paginated",       default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "scrape_resources", force: true do |t|
     t.string   "url",                                    null: false
     t.integer  "institution_id",                         null: false
@@ -510,6 +519,7 @@ ActiveRecord::Schema.define(version: 20140801173844) do
     t.string   "udid"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "token"
   end
 
   create_table "unique_device_identifiers_users", id: false, force: true do |t|
@@ -520,6 +530,21 @@ ActiveRecord::Schema.define(version: 20140801173844) do
   end
 
   add_index "unique_device_identifiers_users", ["unique_device_identifier_id", "user_id"], name: "user_device_tokens_users_index", using: :btree
+
+  create_table "user_device_tokens", force: true do |t|
+    t.string   "token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_device_tokens_users", id: false, force: true do |t|
+    t.integer  "user_device_token_id", null: false
+    t.integer  "user_id",              null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_device_tokens_users", ["user_device_token_id", "user_id"], name: "user_device_tokens_users_index", using: :btree
 
   create_table "users", force: true do |t|
     t.integer  "institution_id"

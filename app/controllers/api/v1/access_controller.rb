@@ -9,6 +9,7 @@ module Api
 
         # gets the udid from the user block
         the_udid = uparams.delete(:udid)
+        the_token = uparams.delete(:device_token)
         # first authenticate user with email and password
         @user = User.authenticate(authentication_params(uparams)[:email], authentication_params(uparams)[:password])
 
@@ -24,7 +25,7 @@ module Api
           # @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
 
           # if this udid has never been put in the databse, create one
-          @udid = UniqueDeviceIdentifier.create(udid: the_udid)
+          @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
 
           # touch little boys
           @user.unique_device_identifiers << @udid
