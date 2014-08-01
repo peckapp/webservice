@@ -48,7 +48,7 @@ module Api
             member = CircleMember.create(:institution_id => @circle.institution_id, :circle_id => @circle.id, :user_id => mem_id, :invited_by => @circle.user_id)
 
             # the creator must always have an accepted tag of true.
-            if mem_id == cparams[:user_id]
+            if mem_id == @circle.user_id
               member.update_attributes(accepted: true)
             end
 
@@ -58,7 +58,11 @@ module Api
             ### Push Notification Stuff ###
             the_user = User.find(mem_id)
 
-            if the_user.id != cparams[:user_id]
+            # As long as the user is not the creator.
+            if the_user.id != @circle.user_id
+
+              # create a peck for the user in the passed array
+              Peck.create(user_id: mem_id, institution_id: @circle.institution_id, notification_type: "circle_invite", message: the_message, invited_by: @circle.user_id, invitation: member.id)
               the_user.unique_device_identifiers.each do |device|
 
                 # date of creation of most recent user to use this device
