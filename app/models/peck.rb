@@ -1,4 +1,4 @@
-class PushNotification < ActiveRecord::Base
+class Peck < ActiveRecord::Base
   include ModelNormalValidations
   include ModelBeforeSaveValidations
 
@@ -11,7 +11,7 @@ class PushNotification < ActiveRecord::Base
   validates :user_id, presence: true, numericality: { only_integer: true }
   validates :notification_type, presence: true
   validates :institution_id, presence: true, numericality: { only_integer: true }
-  validate :correct_push_notification_types
+  validate :correct_peck_types
 
   ###############################
   ##                           ##
@@ -33,8 +33,8 @@ class PushNotification < ActiveRecord::Base
 
   private
 
-  def correct_push_notification_types
+  def correct_peck_types
     is_correct_type(notification_type, String, 'string', :notification_type)
-    is_correct_type(response, String, 'string', :response)
+    is_correct_type(message, String, 'string', :message)
   end
 end

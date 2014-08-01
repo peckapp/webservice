@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140731132322) do
+ActiveRecord::Schema.define(version: 20140801132607) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -413,17 +413,19 @@ ActiveRecord::Schema.define(version: 20140731132322) do
   add_index "notification_views", ["activity_log_id"], name: "index_notification_views_on_activity_log_id", using: :btree
   add_index "notification_views", ["user_id"], name: "index_notification_views_on_user_id", using: :btree
 
-  create_table "push_notifications", force: true do |t|
-    t.integer  "user_id",           null: false
-    t.string   "notification_type", null: false
-    t.string   "response"
+  create_table "pecks", force: true do |t|
+    t.integer  "user_id",                                null: false
+    t.string   "notification_type",                      null: false
+    t.string   "message"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "institution_id",    null: false
+    t.integer  "institution_id",                         null: false
+    t.boolean  "send_push_notification", default: false
+    t.integer  "invited_by"
   end
 
-  add_index "push_notifications", ["notification_type"], name: "index_push_notifications_on_notification_type", using: :btree
-  add_index "push_notifications", ["user_id"], name: "index_push_notifications_on_user_id", using: :btree
+  add_index "pecks", ["notification_type"], name: "index_pecks_on_notification_type", using: :btree
+  add_index "pecks", ["user_id"], name: "index_pecks_on_user_id", using: :btree
 
   create_table "resource_types", force: true do |t|
     t.string   "info"
