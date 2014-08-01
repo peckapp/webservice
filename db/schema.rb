@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140801152300) do
+ActiveRecord::Schema.define(version: 20140801155138) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -128,13 +128,6 @@ ActiveRecord::Schema.define(version: 20140801152300) do
   add_index "athletic_teams", ["institution_id"], name: "index_athletic_teams_on_institution_id", using: :btree
   add_index "athletic_teams", ["sport_name"], name: "index_athletic_teams_on_sport_name", using: :btree
 
-  create_table "attendees_users", id: false, force: true do |t|
-    t.integer "event_attendee_id", null: false
-    t.integer "user_id",           null: false
-  end
-
-  add_index "attendees_users", ["event_attendee_id", "user_id"], name: "index_attendees_users_on_event_attendee_id_and_user_id", using: :btree
-
   create_table "circle_members", force: true do |t|
     t.integer  "circle_id",                      null: false
     t.integer  "user_id",                        null: false
@@ -149,13 +142,6 @@ ActiveRecord::Schema.define(version: 20140801152300) do
   add_index "circle_members", ["circle_id"], name: "index_circle_members_on_circle_id", using: :btree
   add_index "circle_members", ["invited_by"], name: "index_circle_members_on_invited_by", using: :btree
   add_index "circle_members", ["user_id"], name: "index_circle_members_on_user_id", using: :btree
-
-  create_table "circle_members_users", id: false, force: true do |t|
-    t.integer "user_id",          null: false
-    t.integer "circle_member_id", null: false
-  end
-
-  add_index "circle_members_users", ["user_id", "circle_member_id"], name: "circle_members_users_index", using: :btree
 
   create_table "circles", force: true do |t|
     t.integer  "institution_id", null: false
@@ -339,13 +325,6 @@ ActiveRecord::Schema.define(version: 20140801152300) do
   add_index "institutions", ["configuration_id"], name: "index_institutions_on_configuration_id", using: :btree
   add_index "institutions", ["name"], name: "index_institutions_on_name", using: :btree
 
-  create_table "inviters_users", id: false, force: true do |t|
-    t.integer "event_attendee_id", null: false
-    t.integer "user_id",           null: false
-  end
-
-  add_index "inviters_users", ["event_attendee_id", "user_id"], name: "index_inviters_users_on_event_attendee_id_and_user_id", using: :btree
-
   create_table "likes", force: true do |t|
     t.string   "liker_type"
     t.integer  "liker_id"
@@ -436,15 +415,6 @@ ActiveRecord::Schema.define(version: 20140801152300) do
     t.datetime "updated_at"
   end
 
-  create_table "rss_pages", force: true do |t|
-    t.integer  "institution_id",                  null: false
-    t.string   "url",                             null: false
-    t.integer  "scrape_interval", default: 1440
-    t.boolean  "paginated",       default: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "scrape_resources", force: true do |t|
     t.string   "url",                                    null: false
     t.integer  "institution_id",                         null: false
@@ -528,21 +498,6 @@ ActiveRecord::Schema.define(version: 20140801152300) do
   end
 
   add_index "unique_device_identifiers_users", ["unique_device_identifier_id", "user_id"], name: "user_device_tokens_users_index", using: :btree
-
-  create_table "user_device_tokens", force: true do |t|
-    t.string   "token"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "user_device_tokens_users", id: false, force: true do |t|
-    t.integer  "user_device_token_id", null: false
-    t.integer  "user_id",              null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "user_device_tokens_users", ["user_device_token_id", "user_id"], name: "user_device_tokens_users_index", using: :btree
 
   create_table "users", force: true do |t|
     t.integer  "institution_id"

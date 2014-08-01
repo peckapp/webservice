@@ -18,6 +18,20 @@ module Api
       def create
         peck_create_params = params[:peck]
         token = peck_create_params.delete(:token)
+        if peck_create_params[:notification_type] == "circle_invite"
+          circle = peck_create_params.delete(:circle_id)
+          user = User.find(peck_create_params[:user_id])
+
+          # create a circle member
+          circle_member = CircleMember.create(user_id: peck_create_params[:user_id], institution_id: peck_create_params[:institution_id], circle_id: circle, invited_by: peck_create_params[:invited_by])
+
+          # set the invitation to match the id of the circle member
+          peck_create_params[:invitation] = circle_member.id
+
+          # add the circle member to the array of circle members for the user
+          user.circle_members << circle_member
+        end
+
         @peck = Peck.create(peck_params(peck_create_params))
         if @peck.send_push_notification
           APNS.send_notification(token, alert: @peck.message, badge: 1, sound: 'default')
