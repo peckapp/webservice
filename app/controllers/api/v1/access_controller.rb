@@ -40,7 +40,7 @@ module Api
 
       def logout
         # find user who is logging out
-        @user = User.find(auth[:user_id])
+        @user = User.find(session[:user_id])
 
         # remove auth token from authentication params and database
         @user.authentication_token = nil
