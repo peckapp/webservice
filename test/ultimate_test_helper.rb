@@ -126,8 +126,11 @@ class UltimateTestHelper < ActionController::TestCase
 
     @controller = @the_controller
 
-    if is_subscriptions_controller? || is_circle_members_controller? || is_event_attendees_controller?
+    if is_subscriptions_controller? || is_event_attendees_controller?
       delete :destroy, {:format => :json, :authentication => auth_params, @model_type => @params_delete}
+      assert_response :success
+    elsif is_circle_members_controller?
+      delete :leave_circle, {:format => :json, :authentication => auth_params, @model_type => @params_delete}
       assert_response :success
     else
       delete :destroy, {:format => :json, :id => @id, :authentication => auth_params}

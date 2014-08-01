@@ -31,7 +31,7 @@ Rails.application.routes.draw do
 
       resources :circle_members do
         collection do
-          delete :destroy
+          delete :leave_circle
         end
 
         member do

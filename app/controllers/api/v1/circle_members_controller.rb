@@ -39,6 +39,10 @@ module Api
       end
 
       def destroy
+        @circle_member = CircleMember.find(params[:id]).destroy
+      end
+
+      def leave_circle
         circle_member_destroy_params = params[:circle_member]
         @circle_member = CircleMember.where(:user_id => circle_member_destroy_params[:user_id]).where(:circle_id => circle_member_destroy_params[:circle_id]).first.destroy
       end
