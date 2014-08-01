@@ -14,14 +14,13 @@ module Api
       def create
         # removes unpermitted parameters from circle member creation params
         # and saves them in token and message vars
-        member_create_params = params[:circle_member]
-        token = member_create_params.delete(:token)
-        message = member_create_params.delete(:message)
+        # member_create_params = params[:circle_member]
+        # token = member_create_params.delete(:token)
+        # message = member_create_params.delete(:message)
 
-        @circle_member = CircleMember.create(circle_member_create_params(member_create_params))
+        @circle_member = CircleMember.create(circle_member_create_params)
 
         # push notification for circle member invite
-        APNS.send_notification(token, alert: message, badge: 1, sound: 'default', :other => {:circle_member_id => @circle_member.id})
       end
 
       # action for when pending circle member clicks accept to the invitation.
@@ -36,7 +35,7 @@ module Api
 
       def update
         @circle_member = CircleMember.find(params[:id])
-        @circle_member.update_attributes(circle_member_params)
+        @circle_member.update_attributes(circle_member_update_params)
       end
 
       def destroy
@@ -46,11 +45,11 @@ module Api
 
       private
 
-        def circle_member_create_params(parameters)
-          parameters.permit(:institution_id, :user_id, :circle_id, :user_id, :invited_by, :date_added)
+        def circle_member_create_params
+          params.require(:circle_member).permit(:institution_id, :user_id, :circle_id, :user_id, :invited_by, :date_added)
         end
 
-        def circle_member_params
+        def circle_member_update_params
           params.require(:circle_member).permit(:institution_id, :circle_id, :user_id, :invited_by, :date_added)
         end
     end
