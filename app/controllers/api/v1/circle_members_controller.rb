@@ -26,7 +26,11 @@ module Api
       # action for when pending circle member clicks accept to the invitation.
       def accept
         @circle_member = CircleMember.find(params[:id])
-        @circle_member.update_attributes(:accepted => true)
+        @circle_member.update_attributes(accepted: true)
+
+        @peck = Peck.find(params[:peck_id])
+
+        @peck.update_attributes(interacted: true)
       end
 
       def show
@@ -39,6 +43,13 @@ module Api
       end
 
       def destroy
+        @circle_member = CircleMember.find(params[:id]).destroy
+
+        @peck = Peck.find(params[:peck_id])
+        @peck.update_attributes(interacted: true)
+      end
+
+      def leave_circle
         circle_member_destroy_params = params[:circle_member]
         @circle_member = CircleMember.where(:user_id => circle_member_destroy_params[:user_id]).where(:circle_id => circle_member_destroy_params[:circle_id]).first.destroy
       end

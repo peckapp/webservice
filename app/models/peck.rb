@@ -10,6 +10,7 @@ class Peck < ActiveRecord::Base
 
   validates :user_id, presence: true, numericality: { only_integer: true }
   validates :notification_type, presence: true
+  validates :invitation, numericality: { only_integer: true }, allow_nil: true
   validates :institution_id, presence: true, numericality: { only_integer: true }
   validate :correct_peck_types
 

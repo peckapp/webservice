@@ -14,10 +14,18 @@ module Api
         # get ids of all comments
         comment_ids = @comments.pluck(:id)
 
-        all_likes = Like.where(:likeable_type => "Comment").where(:likeable_id => comment_ids)
+        all_likes = Like.where(:likeable_type => "Comment").where(:likeable_id => comment_ids).pluck(:likeable_id, :liker_id)
 
         @comments.each do |comment|
-          liker_ids = all_likes.where(:likeable_id => comment.id).pluck(:liker_id)
+
+          liker_ids = []
+
+          all_likes.each do |like|
+            if like[0] == comment.id
+              liker_ids << like[1]
+            end
+          end
+
           @likes_for_comment[comment] = liker_ids
         end
 
@@ -27,7 +35,7 @@ module Api
         @comment = specific_show(Comment,params[:id])
 
         @likers = Like.where(:likeable_type => "Comment").where(:likeable_id => @comment.id).pluck(:id)
-        
+
       end
 
       def create
