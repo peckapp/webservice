@@ -33,6 +33,10 @@ Rails.application.routes.draw do
         collection do
           delete :destroy
         end
+
+        member do
+          patch :accept
+        end
       end
 
       resources :event_attendees do
