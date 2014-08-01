@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
     if auth[:authentication_token] && auth[:authentication_token] == user.authentication_token
       return true
     else
-      render file: 'public/401.html', status: :unauthorized
+      head :unauthorized
       return false
     end
   end
@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
       head :unauthorized
       return false
     else
-      render file: 'public/401.html', status: :unauthorized
+      head :unauthorized
     end
   end
 
