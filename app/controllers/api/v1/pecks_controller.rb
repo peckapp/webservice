@@ -18,6 +18,8 @@ module Api
       def create
         peck_create_params = params[:peck]
         token = peck_create_params.delete(:token)
+
+        #### Circle Invite ####
         if peck_create_params[:notification_type] == "circle_invite"
           circle = peck_create_params.delete(:circle_id)
           user = User.find(peck_create_params[:user_id])
@@ -32,7 +34,14 @@ module Api
           user.circle_members << circle_member
         end
 
+        #### Event Invite ####
+        if peck_create_params[:notification_type] == "event_invite"
+          peck_create_params[:invitation] = peck_create_params.delete(:event_id)
+        end
+
         @peck = Peck.create(peck_params(peck_create_params))
+
+        # if the peck is meant to be a push notification, then send it.
         if @peck.send_push_notification
           APNS.send_notification(token, alert: @peck.message, badge: 1, sound: 'default')
         end
