@@ -32,6 +32,7 @@ module Api
 
         # returns the array of circle member ids
         the_circle_members = cparams.delete(:circle_member_ids)
+        the_message = cparams.delete(:message)
 
         # passes in the cparams to permit certain attributes
         @circle = Circle.create(circle_create_params(cparams))
@@ -46,8 +47,35 @@ module Api
           # creates a circle member
             member = CircleMember.create(:institution_id => @circle.institution_id, :circle_id => @circle.id, :user_id => mem_id, :invited_by => @circle.user_id)
 
+            # the creator must always have an accepted tag of true.
+            if mem_id == @circle.user_id
+              member.update_attributes(accepted: true)
+            end
+
             # adds the member to the array of circle members for the created circle
             @circle.circle_members << member
+
+            ### Push Notification Stuff ###
+            the_user = User.find(mem_id)
+
+            # As long as the user is not the creator.
+            if the_user.id != @circle.user_id
+
+              # create a peck for the user in the passed array
+              Peck.create(user_id: mem_id, institution_id: @circle.institution_id, notification_type: "circle_invite", message: the_message, invited_by: @circle.user_id, invitation: member.id)
+              the_user.unique_device_identifiers.each do |device|
+
+                # date of creation of most recent user to use this device
+                most_recent = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => device.udid).maximum("unique_device_identifiers_users.updated_at")
+
+                # ID of most recent user to use this device
+                id = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => device.udid).where("unique_device_identifiers_users.updated_at" => most_recent).first.id
+
+                if mem_id == id
+                  APNS.send_notification(device.token, alert: the_message, badge: 1, sound: 'default')
+                end
+              end
+            end
           end
 
           # circle members

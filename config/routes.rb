@@ -21,7 +21,11 @@ Rails.application.routes.draw do
 
       resources :simple_events, :activity_logs, :athletic_events, :athletic_teams, :clubs, :configurations, :departments, :dining_opportunities, :dining_periods, :dining_places,:event_attendees, :comments, :event_views, :events_page_urls, :institutions, :locations, :menu_items, :notification_views, :pecks, :simple_events, :subscriptions, :unique_device_identifiers, :explore, :announcements
 
-      resources :access, only: [:create, :destroy]
+      resources :access, only: [:create] do
+        collection do
+          delete :logout
+        end
+      end
 
       resources :announcements do
         member do

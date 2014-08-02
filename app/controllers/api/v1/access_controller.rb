@@ -9,6 +9,7 @@ module Api
 
         # gets the udid from the user block
         the_udid = uparams.delete(:udid)
+        the_token = uparams.delete(:device_token)
         # first authenticate user with email and password
         @user = User.authenticate(authentication_params(uparams)[:email], authentication_params(uparams)[:password])
 
@@ -16,7 +17,7 @@ module Api
         if @user
 
           # provide auth token, set it in database and set it in authentication params
-          @user.authentication_token = SecureRandom.hex(30)
+          @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token
           @user.save
           auth[:authentication_token] = @user.authentication_token
 
@@ -24,7 +25,7 @@ module Api
           # @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
 
           # if this udid has never been put in the databse, create one
-          @udid = UniqueDeviceIdentifier.create(udid: the_udid)
+          @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
 
           # touch little boys
           @user.unique_device_identifiers << @udid
@@ -38,13 +39,11 @@ module Api
         end
       end
 
-      def destroy
-
+      def logout
         # find user who is logging out
         @user = User.find(session[:user_id])
 
         # remove auth token from authentication params and database
-        auth[:authentication_token] = nil
         @user.authentication_token = nil
         @user.save
 
