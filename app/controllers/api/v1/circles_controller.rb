@@ -71,9 +71,10 @@ module Api
 
                   # ID of most recent user to use this device
                   uid = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => device.udid).where("unique_device_identifiers_users.updated_at" => most_recent).first.id
-                  if the_user.id == uid && device.token
-                    logger.info "sending push notification to user with token #{token}"
-                    APNS.send_notification(device.token, alert: the_message, badge: 1, sound: 'default')
+                  the_token = device.token
+                  if the_user.id == uid && the_token
+                    logger.info "sending push notification to user with token #{the_token}"
+                    APNS.send_notification(the_token, alert: the_message, badge: 1, sound: 'default')
                   end
                 end
               end
