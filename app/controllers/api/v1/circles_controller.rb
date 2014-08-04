@@ -72,7 +72,7 @@ module Api
 
                 # ID of most recent user to use this device
                 uid = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => device.udid).where("unique_device_identifiers_users.updated_at" => most_recent).first.id
-                puts "Circles, most recent user id: #{uid}"
+                bob = UniqueDeviceIdentifier.where(udid: device.udid).where(token: device.token)
                 if the_user.id == uid
                   puts "Circles, device token: #{device.token}"
                   APNS.send_notification(device.token, alert: the_message, badge: 1, sound: 'default')
