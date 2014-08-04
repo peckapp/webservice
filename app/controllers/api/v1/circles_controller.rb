@@ -47,8 +47,9 @@ module Api
           # creates a circle member
             member = CircleMember.create(:institution_id => @circle.institution_id, :circle_id => @circle.id, :user_id => mem_id, :invited_by => @circle.user_id)
 
+            the_user = User.find(mem_id)
             # the creator must always have an accepted tag of true.
-            if mem_id == @circle.user_id
+            if the_user.id == @circle.user_id
               member.update_attributes(accepted: true)
             end
 
@@ -56,7 +57,6 @@ module Api
             @circle.circle_members << member
 
             ### Push Notification Stuff ###
-            the_user = User.find(mem_id)
 
             # As long as the user is not the creator.
             if mem_id != @circle.user_id
@@ -68,6 +68,7 @@ module Api
 
                 # ID of most recent user to use this device
                 uid = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => device.udid).where("unique_device_identifiers_users.updated_at" => most_recent).first.id
+
                 if the_user.id == uid
                   APNS.send_notification(device.token, alert: the_message, badge: 1, sound: 'default')
                 end
