@@ -1,5 +1,9 @@
-child :@peck do
+collection :@all_pecks do
   attributes :id, :user_id, :institution_id, :notification_type, :message, :send_push_notification, :invited_by, :interacted, :invitation, :created_at, :updated_at
 end
 
-node(:errors) {@peck.errors.full_messages}
+node(:device_tokens) {@peck_dict}
+
+node :errors do |peck|
+   peck.errors.full_messages
+ end
