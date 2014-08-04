@@ -64,7 +64,50 @@ module Api
 
         # gets the image from params
         event_params[:image] = params[:image]
+        event_members = event_params.delete(:event_member_ids) if event_params[:event_member_ids]
+        the_message = event_params.delete(:message) if event_params[:message]
+        send_push_notification = event_params.delete(:send_push_notification) if event_params[:send_push_notification]
+        inviter = event_params.delete(:invited_by) if event_params[:invited_by]
+        
         @simple_event = SimpleEvent.create(event_params)
+        @all_pecks = []
+        @peck_dict = {}
+
+        #### Event Invite ####
+
+        if event_members
+          # from the array of user ids
+          event_members.each do |member_id|
+            user = User.find(member_id)
+
+            # create a peck for that user
+            peck = Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "event_invite", message: the_message, send_push_notification: send_push_notification, invited_by: inviter, invitation: peck_create_params[:event_id])
+
+            @all_pecks << peck
+            # for each of the users udids
+            user.unique_device_identifiers.each do |device|
+
+              # date of creation of most recent user to use this device
+              most_recent = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => device.udid).maximum("unique_device_identifiers_users.updated_at")
+
+              # ID of most recent user to use this device
+              uid = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => device.udid).where("unique_device_identifiers_users.updated_at" => most_recent).first.id
+
+              # token for this udid
+              the_token = device.token
+
+              # as long as the token is not nil and the user is the most recent user
+              if user.id == uid && the_token
+                @peck_dict[the_token] = peck
+              end
+            end
+          end
+          @peck_dict.each do |token, peck|
+            if peck.send_push_notification
+              APNS.send_notification(token, alert: peck.message, badge: 1, sound: 'default')
+            end
+          end
+        end
       end
 
       def update
