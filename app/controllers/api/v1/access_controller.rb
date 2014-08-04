@@ -28,10 +28,11 @@ module Api
 
           # if this udid has never been put in the databse, create one
           @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
-
+          puts "Access, created udid: @udid.udid"
+          puts "Access, created token: @udid.token"
           # touch little boys
           @user.unique_device_identifiers << @udid
-
+          puts "Access, user's udids: @user.unique_device_identifiers"
           logger.info "created session for user with id: #{@user.id}"
         else
 

@@ -40,7 +40,7 @@ module Api
         @member_ids = []
 
         if @circle
-          @creator = CircleMember.create(accepted: true, user_id: @circle.user_id, circle_id: @circle.id, invited_by: @circle.user_id)
+          @creator = CircleMember.create(:accepted => true, :user_id => @circle.user_id, :circle_id => @circle.id, :institution_id => @circle.institution_id, :invited_by => @circle.user_id)
 
           @circle.circle_members << @creator
           # takes the array of circle members found in the circle block
