@@ -1,8 +1,7 @@
 module Api
   module V1
-
+    # controls login access to the api
     class AccessController < ApplicationController
-
       # When you sign in, you get an authentication token.
       def create
         uparams = params[:user]
@@ -10,7 +9,8 @@ module Api
         # gets the udid from the user block
         the_udid = uparams.delete(:udid)
         the_token = uparams.delete(:device_token)
-
+        logger.info "Access, udid: #{the_udid}"
+        logger.info "Access, token: #{the_token}"
         # first authenticate user with email and password
         @user = User.authenticate(authentication_params(uparams)[:email], authentication_params(uparams)[:password])
 

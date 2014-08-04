@@ -1,86 +1,108 @@
 #!/usr/bin/env ruby
 ### PECK COMMAND LINE INTERFACE ###
 
-# a stand-alone command line interface for inteacting with the rails application for testing purposes
-# not a part of the rails framework, runs as a stand-alone
-
 require 'restclient'
 require 'json'
 require 'thor' # command line interface
 require 'active_support/core_ext/hash'
 
+# a stand-alone command line interface for inteacting with the rails application for testing
+# not a part of the rails framework, runs as a stand-alone
 class PeckClient < Thor
-
-  PECK_URL = 'loki.peckapp.com'
-  PECK_PORT = 3500
+  PECK_URL = 'localhost'
+  PECK_PORT = 3000
 
   # requires these parameters as part of thor superclass
-  def initialize(a,b,c)
-    super(a,b,c)
+  def initialize(a, b, c)
+    super(a, b, c)
 
     create_user_action
+    super_create_user_action
   end
 
-  desc "run_all", "Runs all the possible queries and to test all functionality"
-  def run_all
-    # runs all the possible tests in this class
-    puts "running all commands"
-
-    get_events
-    get_explore
-
+  desc 'run_all', 'Runs all currently implemented queries the specified number of times'
+  def run_all(times = 1)
+    (0..times).each do
+      events_action
+      explore_action
+      circles_action
+    end
     destroy_user_action
   end
 
-  desc "get_events", "Retreives all the simple events from the server"
-  def get_events
-    get_events_action
+  desc 'events', 'Retreives all the simple events from the server'
+  def events
+    events_action
     destroy_user_action
   end
 
-  desc "get_explore", "Retreives the explore feed from the server"
-  def get_explore
-    get_explore_action
+  desc 'explore', 'Retreives the explore feed from the server'
+  def explore
+    explore_action
     destroy_user_action
   end
 
-  no_commands {
+  desc 'circles', 'Retreives all circles from the server'
+  def circles
+    circles_action
+    destroy_user_action
+  end
 
-    def get_events_action
-      response = RestClient.get(paramsURL('/api/simple_events'))
-      verify_response("get_events",response)
+  no_commands do
 
-      events = JSON.parse(response)["simple_events"]
+    def events_action
+      events = get_and_verify('/api/simple_events', 'simple_events')
       puts "retreived #{events.length} simple events from the server"
     end
 
-    def get_explore_action
-      response = RestClient.get(paramsURL('/api/explore'))
-      verify_response("get_explore",response)
+    def explore_action
+      items = get_and_verify('/api/explore', 'explore_events')
+      puts "retreived #{items ? items.length : '0'} explore items from the server"
+    end
 
-      items = JSON.parse(response)["explore"]
-      puts "retreived #{items.length} explore items from the server"
+    def circles_action
+      circles = get_and_verify('/api/circles', 'circles')
+      puts "retreived #{circles.length} circles from the server"
     end
 
     def create_user_action
-      response_str = RestClient.post(paramsURL('/api/users'),nil)
-      verify_response("create_user",response_str)
+      response_str = RestClient.post(paramsURL('/api/users'), nil)
+      verify_response('create_user', response_str)
       response = JSON.parse(response_str)
-      @user = User.new(response["user"])
+      @user = User.new(response['user'])
       puts "Created Peck Client with user: #{@user}"
     end
 
-    def destroy_user_action
-      response_str = RestClient.delete(paramsURL("/api/users/#{@user.id}",{authentication: auth_block}))
-      verify_response("destroy_user",response_str)
+    def super_create_user_action
+      params = { id: @user.id, first_name: 'Johnny', last_name: 'Appleseed', password: 'applz4life',
+                 password_confirmation: 'applz4life', blurb: "I'm not a real person, just testing!",
+                 email: "jappleseed#{rand(1000)}@test.edu", institution_id: 1 }
+      response_str = RestClient.patch(paramsURL("/api/users/#{@user.id}/super_create"), user: params)
+      # puts response_str
+      verify_response('super_create_user', response_str)
       response = JSON.parse(response_str)
+      @user.update(response['user'])
+      puts "Super created user: #{@user.to_s}"
+    end
+
+    def destroy_user_action
+      response_str = RestClient.delete(paramsURL("/api/users/#{@user.id}", authentication: auth_block))
+      verify_response('destroy_user', response_str)
+      JSON.parse(response_str)
+    end
+
+    def get_and_verify(uri, param)
+      response = RestClient.get(paramsURL(uri))
+      verify_response(param, response)
+      JSON.parse(response)[param]
     end
 
     def auth_block
-      return {user_id: @user.id, api_key: @user.api_key, institution_id: @user.institution_id, authentication_token: @user.authentication_token}
+      { user_id: @user.id, api_key: @user.api_key, institution_id: @user.institution_id,
+        authentication_token: @user.authentication_token }
     end
 
-    def verify_response(action,response)
+    def verify_response(action, response)
       case response.code
       when (200..299)
         puts "#{action} sucessful response with code #{response.code}"
@@ -103,21 +125,20 @@ class PeckClient < Thor
     end
 
     # creates a uri with the specified path and params, automatically adding auth_block to params
-    def paramsURL(path, params_hash={})
+    def paramsURL(path, params_hash = {})
       if @user
         params_hash[:authentication] = auth_block
       end
       query_str = params_hash.to_query
-      uri_http = URI::HTTP.build({host: PECK_URL, port: PECK_PORT, path: path, query: query_str})
-      return uri_http.to_s
+      uri_http = URI::HTTP.build(host: PECK_URL, port: PECK_PORT, path: path, query: query_str)
+      # puts uri_http.to_s
+      uri_http.to_s
     end
 
-  }
-
+  end
 end
 
 class User
-
   attr_accessor :first_name
   attr_accessor :last_name
   attr_accessor :email
@@ -128,11 +149,16 @@ class User
   attr_accessor :authentication_token
 
   def initialize(hash)
-    hash.each do |key, val|
-      instance_variable_set("@#{key}",val)
-    end
+    update(hash)
     # more concise syntax, pretty neat
     # hash.each &method(:instance_variable_set)
+  end
+
+  def update(hash)
+    hash.each do |key, val|
+      instance_variable_set("@#{key}", val)
+    end
+    puts to_s
   end
 
   def to_s
