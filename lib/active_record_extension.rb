@@ -27,10 +27,10 @@ module ActiveRecordExtension
   end
 
   # saves only if an instance of the object with matching attributes cannot be found in the database
+  # returns false if duplicate exists or the save actually failed due to validations
   def non_duplicative_save(*attrs)
-    if ! self.model_match_exists(attrs)
-      self.save
-      return true
+    if !model_match_exists(attrs)
+      return save
     else
       return false
     end
@@ -40,15 +40,13 @@ module ActiveRecordExtension
   module ClassMethods
     # returns an object matching specified attributes, or creates one with them if none exist
     def current_or_create_new(*attrs)
-
-      if self.superclass == ActiveRecord::Base
+      if superclass == ActiveRecord::Base
         attrs = attrs.extract_options!
 
-        result = self.where(attrs).first
+        result = where(attrs).first
 
         if result.blank?
-          puts "attrs: #{attrs}"
-          return self.create(attrs)
+          return create(attrs)
         else
           return result
         end

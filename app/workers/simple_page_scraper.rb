@@ -12,7 +12,8 @@ class SimplePageScraper
 
     puts "resource: #{resource.inspect}"
 
-    raw = RestClient::Request.execute(url: resource.url, method: :get, verify_ssl: false) # no dangerous security concern present here, possible data spoofing though
+    # no dangerous security concern present here through ssl, possible data spoofing though
+    raw = RestClient::Request.execute(url: resource.url, method: :get, verify_ssl: false)
 
     html = Nokogiri::HTML(raw.squish)
 

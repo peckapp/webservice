@@ -11,44 +11,47 @@ class NestedScrapeWorker
 
   def perform(*attrs)
     attrs = attrs.extract_options!
-    puts "attrs: #{attrs}"
+    logger.info "specified attrs for perform: #{attrs}"
     resources = ScrapeResource.where(attrs)
 
     # iterate over all resources
     resources.each do |resource|
 
-      puts "resource: #{resource.inspect}"
+      logger.info "scraping resource #{resource.id} with info: #{resource.info}"
 
-      raw = RestClient::Request.execute(url: resource.url, method: :get, verify_ssl: false) # no dangerous security concern present here, possible data spoofing though
+      # no dangerous security concern present here, possible data spoofing though
+      raw = RestClient::Request.execute(url: resource.url, method: :get, verify_ssl: false)
 
       html = Nokogiri::HTML(raw.squish)
 
       # iterate over pages for that resource
-      # need to find a way to explicate pagination movement. may or may not need selenium, different url possibilities, form submissions, etc. may all be possible
+      # need to find a way to explicate pagination movement.
+      # may or may not need selenium, different url possibilities, form submissions, etc.
       # for now just look at immediate url for the scrape resource
       (0..0).each do |_n| # placeholder page traversal
 
-        # down the road, extract html and send it off for parsing while continuing with pagination crawl
+        # eventually will extract html and send it off for parsing while continuing with pagination
 
         top_selectors = Selector.where(id: resource.id, top_level: true)
-        puts "found #{top_selectors.count} top selectors"
         top_selectors.each do |ts|
 
-          puts "ts: #{ts.inspect}"
+          logger.info "Iterating over top level selector ts: #{ts.selector}"
 
           # an array of all the top-level items for a given tag. these are nokogiri nodes
           html_items = html.css(ts.selector)
 
           html_items.each do |html_item| # iterates over Nokogiri nodeset for given css selector
 
-            new_model = ts.model.new
+            # creates a model with scrape resource info set
+            new_model = ts.model.new(scrape_resource_id: resource.id,
+                                     institution_id: resource.institution_id)
 
             # traverse all children for a given selector
             ts.children.each do |cs|
 
-              puts "cs: #{cs.inspect}"
+              logger.info "child selector: #{cs.selector}"
 
-              # assumes there is only one element – could iterate instead but then where would that information go?
+              # assumes there is only one element - could iterate instead but what case is that?
               content_item = html_item.css(cs.selector).first
 
               if !content_item.blank?
@@ -56,12 +59,12 @@ class NestedScrapeWorker
                 if content.blank?
                   content = next_non_blank(content_item).text.squish
                 end
-                puts "CONTENT: #{content}"
+                logger.info "CONTENT: #{content}"
                 new_model.assign_attributes(cs.column_name => content)
               else
-                puts 'NO CONTENT FOUND'
+                logger.warn "NO CONTENT FOUND for top selector: #{ts.selector} and child selector: #{cs.selector}"
               end
-            end
+            end # end top selector children iteration
 
             validate_and_save(new_model)
 
@@ -72,19 +75,24 @@ class NestedScrapeWorker
     end # end resources do
   end # end perform
 
-  def validate_and_save(_model)
-    # validate new model
+  def validate_and_save(new_model)
+    # validate new model using built-in validations
+    valid = new_model.valid?
+    logger.warn "model is invalid due to: #{new_model.errors.messages}" unless valid
 
     # check for partial matches that could indicate a change in the displayed content
 
-    puts "new_model ---> #{new_model.inspect}"
-    new_model.non_duplicative_save
+    if valid
+      # performs non-duplicative save
+      result = new_model.non_duplicative_save
+      logger.info "#{result} saved model ==> #{new_model.inspect}\n"
+    else
+      logger.warn "did not save invalid model: #{new_model.inspect}\n"
+    end
   end
 
   def next_non_blank(elem)
-    while elem.text.blank?
-      elem = elem.next
-    end
+    elem = elem.next while elem.text.blank?
     elem
   end
 end
