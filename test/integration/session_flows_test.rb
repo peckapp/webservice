@@ -66,7 +66,7 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
     def login(user)
       open_session do |sess|
         sess.https!
-        sess.post "api/access", :user => {email: "jdoe@williams.edu", password: "testingabcd", udid: "bobby"}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key }, :format => :json
+        sess.post "api/access", :user => {email: "jdoe@williams.edu", password: "testingabcd", udid: "bobby", device_token: "hellos"}, :authentication => {:user_id => 1, :institution_id => 1, :api_key => User.find(1).api_key }, :format => :json
         assert_not_nil session[:user_id], "the session does not exist"
       end
     end
