@@ -60,10 +60,7 @@ module Api
       end
 
       def create
-        event_params = simple_event_params
-
-        # gets the image from params
-        event_params[:image] = params[:image]
+        event_params = params[:simple_event]
 
         # for pecks and push notifications
         event_members = event_params.delete(:event_member_ids)
@@ -71,7 +68,10 @@ module Api
         send_push_notification = event_params.delete(:send_push_notification)
         inviter = event_params.delete(:invited_by)
 
-        @simple_event = SimpleEvent.create(event_params)
+        # gets the image from params
+        simple_event_create_params(event_params)[:image] = params[:image]
+
+        @simple_event = SimpleEvent.create(simple_event_create_params(event_params))
 
         # all the pecks
         @all_pecks = []
@@ -160,6 +160,9 @@ module Api
       end
 
       private
+        def simple_event_create_params(parameters)
+          parameters.permit(:title, :event_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :event_url, :public, :comment_count, :start_date, :end_date)
+        end
 
         def simple_event_params
           params.require(:simple_event).permit(:title, :event_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :event_url, :public, :comment_count, :start_date, :end_date)
