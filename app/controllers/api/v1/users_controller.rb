@@ -56,7 +56,7 @@ module Api
           id = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => params[:udid]).where("unique_device_identifiers_users.updated_at" => most_recent).first.id
 
           # return that user
-          @user = specific_show(User, id) 
+          @user = specific_show(User, id)
 
           # this user was already in db
           @user.newly_created_user = false
