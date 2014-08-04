@@ -56,10 +56,6 @@ module Api
             # as long as the token is not nil and the user is the most recent user
             if user.id == uid && the_token
               @peck_dict[the_token] = peck
-            else
-              # otherwise set token to 'no token' for clarity
-              the_token = "no token"
-              @peck_dict[the_token] = peck
             end
           end
         end
@@ -90,10 +86,6 @@ module Api
               # as long as the token is not nil and the user is the most recent user
               if user.id == uid && the_token
                 @peck_dict[the_token] = peck
-              else
-                # otherwise set token to 'no token' for clarity
-                the_token = "no token"
-                @peck_dict[the_token] = peck
               end
             end
           end
@@ -102,7 +94,7 @@ module Api
 
         # if the peck is meant to be a push notification, then send it.
         @peck_dict.each do |token, peck|
-          if peck.send_push_notification && token != "no token"
+          if peck.send_push_notification 
             APNS.send_notification(token, alert: peck.message, badge: 1, sound: 'default')
           end
         end
