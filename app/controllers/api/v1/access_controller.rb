@@ -10,8 +10,7 @@ module Api
         # gets the udid from the user block
         the_udid = uparams.delete(:udid)
         the_token = uparams.delete(:device_token)
-        puts "Access, udid: the_udid"
-        puts "Access, token: the_token"
+
         # first authenticate user with email and password
         @user = User.authenticate(authentication_params(uparams)[:email], authentication_params(uparams)[:password])
 
@@ -28,11 +27,9 @@ module Api
 
           # if this udid has never been put in the databse, create one
           @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
-          puts "Access, created udid: @udid.udid"
-          puts "Access, created token: @udid.token"
+
           # touch little boys
           @user.unique_device_identifiers << @udid
-          puts "Access, user's udids: @user.unique_device_identifiers"
           logger.info "created session for user with id: #{@user.id}"
         else
 
