@@ -10,7 +10,8 @@ module Api
         # gets the udid from the user block
         the_udid = uparams.delete(:udid)
         the_token = uparams.delete(:device_token)
-
+        puts "Access, udid: the_udid"
+        puts "Access, token: the_token"
         # first authenticate user with email and password
         @user = User.authenticate(authentication_params(uparams)[:email], authentication_params(uparams)[:password])
 

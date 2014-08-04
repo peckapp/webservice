@@ -41,7 +41,7 @@ module Api
 
         if @circle
           @creator = CircleMember.create(accepted: true, user_id: @circle.user_id, circle_id: @circle.id, invited_by: @circle.user_id)
-          
+
           @circle.circle_members << @creator
           # takes the array of circle members found in the circle block
           members = the_circle_members
@@ -53,7 +53,9 @@ module Api
             the_user = User.find(mem_id)
             # the creator must always have an accepted tag of true.
 
-
+            puts "Circles, current user: #{the_user}"
+            puts "Circles, current user id: #{the_user.id}"
+            puts "Circles, current mem id: #{mem_id}"
             # adds the member to the array of circle members for the created circle
             @circle.circle_members << member
 
@@ -63,13 +65,16 @@ module Api
               # create a peck for the user in the passed array
               Peck.create(user_id: mem_id, institution_id: @circle.institution_id, notification_type: "circle_invite", message: the_message, invited_by: @circle.user_id, invitation: member.id)
               the_user.unique_device_identifiers.each do |device|
+                puts "Circles, unique device identifiers: #{the_user.unique_device_identifiers}"
+                puts "Circles, current udid: #{device.udid}"
                 # date of creation of most recent user to use this device
                 most_recent = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => device.udid).maximum("unique_device_identifiers_users.updated_at")
 
                 # ID of most recent user to use this device
                 uid = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => device.udid).where("unique_device_identifiers_users.updated_at" => most_recent).first.id
-
+                puts "Circles, most recent user id: #{uid}"
                 if the_user.id == uid
+                  puts "Circles, device token: #{device.token}"
                   APNS.send_notification(device.token, alert: the_message, badge: 1, sound: 'default')
                 end
               end
