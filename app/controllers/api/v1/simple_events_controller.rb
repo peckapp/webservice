@@ -64,13 +64,19 @@ module Api
 
         # gets the image from params
         event_params[:image] = params[:image]
-        event_members = event_params.delete(:event_member_ids) if event_params[:event_member_ids]
-        the_message = event_params.delete(:message) if event_params[:message]
-        send_push_notification = event_params.delete(:send_push_notification) if event_params[:send_push_notification]
-        inviter = event_params.delete(:invited_by) if event_params[:invited_by]
-        
+
+        # for pecks and push notifications
+        event_members = event_params.delete(:event_member_ids)
+        the_message = event_params.delete(:message)
+        send_push_notification = event_params.delete(:send_push_notification)
+        inviter = event_params.delete(:invited_by)
+
         @simple_event = SimpleEvent.create(event_params)
+
+        # all the pecks
         @all_pecks = []
+
+        # dictionary with device token as key and peck as value
         @peck_dict = {}
 
         #### Event Invite ####
@@ -102,6 +108,8 @@ module Api
               end
             end
           end
+
+          # send a push notification to each token where send push notification is true for the peck.
           @peck_dict.each do |token, peck|
             if peck.send_push_notification
               APNS.send_notification(token, alert: peck.message, badge: 1, sound: 'default')
