@@ -30,8 +30,12 @@ module Api
             @user.unique_device_identifiers << @udid
           else
             # touch little boys
-            udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
-            udid_user.touch
+            @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
+            if @udid_user
+              @udid_user.touch
+            else
+              @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+            end
           end
           logger.info "created session for user with id: #{@user.id}"
         else
