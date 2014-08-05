@@ -31,7 +31,7 @@ module Api
 
         if params[:udid]
           udid = UniqueDeviceIdentifier.create(udid: params[:udid])
-          UdidUser.create(unique_device_identifier_id: udid.id, user_id: @user)
+          UdidUser.create(unique_device_identifier_id: udid.id, user_id: @user.id)
           @user.unique_device_identifiers << udid
         end
 
