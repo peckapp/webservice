@@ -31,8 +31,10 @@ module Api
           else
             # touch little boys
             @udid.touch
+
             @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
             if @udid_user
+              # update the timestamp if the udid_user already exists
               @udid_user.touch
             else
               @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)

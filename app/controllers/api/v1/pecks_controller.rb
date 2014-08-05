@@ -87,7 +87,7 @@ module Api
         end
 
         def peck_update_params
-          params.require(:peck).permit(:user_id, :institution_id, :notification_type, :message, :send_push_notification, :invited_by, :invitation)
+          params.require(:peck).permit(:user_id, :institution_id, :notification_type, :message, :send_push_notification, :invited_by, :invitation, :interacted)
         end
     end
   end
