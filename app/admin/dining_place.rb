@@ -1,6 +1,5 @@
 ActiveAdmin.register DiningPlace do
 
-
   # See permitted parameters documentation:
   # https://github.com/gregbell/active_admin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
@@ -15,7 +14,7 @@ ActiveAdmin.register DiningPlace do
   # end
 
   # Adds this into a dropdown in the top menu bar
-  menu :parent => "Dining"
+  menu parent: 'Dining'
 
   # active admin seems to have broken filter generations for simple joins
   remove_filter :diningopportunities_dining_places

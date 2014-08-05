@@ -33,7 +33,13 @@ class AthleticTeam < ActiveRecord::Base
   ##                           ##
   ###############################
 
+  # for active admin
+  def to_label
+    "#{Institution.find(institution_id)} #{sport_name}"
+  end
+
   private
+
   def correct_athletic_team_types
     is_correct_type(sport_name, String, 'string', :sport_name)
     is_correct_type(gender, String, 'string', :gender)

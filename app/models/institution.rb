@@ -80,6 +80,9 @@ class Institution < ActiveRecord::Base
   has_many :push_notifications
   has_many :subscriptions
 
+  ### Scraping Relationships
+  has_many :scrape_resources
+
   ###############################
   ##                           ##
   ##      HELPER METHODS       ##

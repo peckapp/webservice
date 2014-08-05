@@ -42,7 +42,13 @@ class Circle < ActiveRecord::Base
   ##                           ##
   ###############################
 
+  # for active admin
+  def to_label
+    circle_name
+  end
+
   private
+
   def correct_circle_types
     is_correct_type(circle_name, String, 'string', :circle_name)
   end

@@ -41,54 +41,60 @@ class DiningOpportunity < ActiveRecord::Base
   # store the opportunity start and end times in the database and update them with a sidetiq job
   # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  def earliest_start_latest_end(day_of_week)
-    early = earliest_start(day_of_week)
-    late = latest_end(day_of_week)
+  def self.earliest_start_latest_end(day_of_week)
 
-    if !early.blank? && !late.blank?
-      if early.hour > late.hour
-        late = late + 1.days
+    # get all dining opps and their times for a certain day of the week
+    all_times_for_opps = DiningPeriod.where(:day_of_week => day_of_week).pluck(:dining_opportunity_id, :start_time, :end_time)
+
+    # hash associating opps to an array of its earliest start and latest end
+    early_and_late_for_opps = {}
+    earliest_so_far = {}
+    latest_so_far = {}
+
+    for opp in all_times_for_opps
+
+      opp_id = opp[0]
+      start_time = Util.date_time_for_week_day(day_of_week, opp[1])
+      end_time = Util.date_time_for_week_day(day_of_week, opp[2])
+
+      if early_and_late_for_opps[opp_id] == nil || (start_time < earliest_so_far[opp_id] && end_time > latest_so_far[opp_id])
+
+        early_and_late_for_opps[opp_id] = [start_time, end_time]
+        earliest_so_far[opp_id] = start_time
+        latest_so_far[opp_id] = end_time
+
+      elsif start_time < earliest_so_far[opp_id]
+
+        early_and_late_for_opps[opp_id][0] = start_time
+
+      elsif end_time > latest_so_far[opp_id]
+
+        early_and_late_for_opps[opp_id][1] = end_time
+
       end
     end
-    [early, late]
+
+    for opp in early_and_late_for_opps
+
+      early = opp[1][0]
+      late = opp[1][1]
+
+      if !early.blank? && !late.blank?
+        if early.hour > late.hour
+          late = late + 1.days
+        end
+      end
+
+      early_and_late_for_opps[opp[0]][1] = late
+
+    end
+
+    early_and_late_for_opps
   end
 
   private
 
-  # methods to sort through earliest/latest times
-  def earliest_start(day_of_week)
-    start_times = DiningPeriod.where('dining_periods.dining_opportunity_id' => id, 'dining_periods.day_of_week' => day_of_week).pluck(:start_time)
-
-    earliest = nil
-
-    for t in start_times
-      if earliest.nil?
-        earliest = t
-      elsif t < earliest
-        earliest = t
-      end
+    def correct_dining_opportunity_types
+      is_correct_type(dining_opportunity_type, String, 'string', :dining_opportunity_type)
     end
-
-    Util.date_time_for_week_day(day_of_week, earliest)
-  end
-
-  def latest_end(day_of_week)
-    end_times = DiningPeriod.where('dining_periods.dining_opportunity_id' => id, 'dining_periods.day_of_week' => day_of_week).pluck(:end_time)
-
-    latest = nil
-
-    for t in end_times
-      if latest.nil?
-        latest = t
-      elsif t > latest
-        latest = t
-      end
-    end
-
-    Util.date_time_for_week_day(day_of_week, latest)
-  end
-
-  def correct_dining_opportunity_types
-    is_correct_type(dining_opportunity_type, String, 'string', :dining_opportunity_type)
-  end
-  end
+end

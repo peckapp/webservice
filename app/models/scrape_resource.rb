@@ -1,4 +1,6 @@
 class ScrapeResource < ActiveRecord::Base
+  belongs_to :institution
+
   belongs_to :resource_type
 
   ### each selector has a ScrapeResource from which it originated
@@ -7,4 +9,10 @@ class ScrapeResource < ActiveRecord::Base
   def paginated?
     pagination_selector_id.blank?
   end
+
+  # for active admin
+  def to_label
+    info
+  end
+
 end
