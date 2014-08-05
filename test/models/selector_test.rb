@@ -14,13 +14,13 @@ class SelectorTest < ActiveSupport::TestCase
     children.each do |child|
       assert_not(child.top_level, "no child should have top_level set to true")
       assert_not_nil(child, "child should not be null for this test")
-      assert_equal(parent.id, child.parent_selector_id, "parent id must be equal to child.parent_selector_id")
+      assert_equal(parent.id, child.parent_id, "parent id must be equal to child.parent_id")
     end
   end
 
   test "proper parent child relationships for selectors using parent and children methods" do
     Selector.where(top_level: true).each do |parent|
-      assert_nil( parent.parent_selector_id, "for each top-level object the parent_selector_id must be nil" )
+      assert_nil( parent.parent_id, "for each top-level object the parent_id must be nil" )
 
       assert_not_nil( parent.children, "each parent must have children specified in the selector fixtures" )
 
@@ -28,7 +28,7 @@ class SelectorTest < ActiveSupport::TestCase
 
       children.each do |child|
         assert_not_nil(child, "child should not be null for this test")
-        assert_not_nil child.parent_selector_id, "each child must have a parent_selector_id"
+        assert_not_nil child.parent_id, "each child must have a parent_id"
         assert_equal( parent, child.parent, "a parent's child's parent must equal the original parent at all times" )
       end
     end
