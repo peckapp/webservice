@@ -70,7 +70,7 @@ module Api
           @user = User.create
           @user.unique_device_identifiers << udid
 
-          udid_user = UdidUser.create(unique_device_identifier_id: udid, user_id: @user.id)
+          udid_user = UdidUser.create(unique_device_identifier_id: udid.id, user_id: @user.id)
 
           @user.newly_created_user = true
         end
