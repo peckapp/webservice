@@ -111,6 +111,7 @@ class NestedScrapeWorker
         logger.info "Saved validated model of type '#{new_model.class}' with id: #{new_model.id}\n"
       else
         logger.info "Validated model of type '#{new_model.class}' already existed and was not saved"
+      end
     else
       logger.warn "did not save invalid model with errors #{new_model.errors.messages} and model: #{new_model.inspect}\n"
     end
