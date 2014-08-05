@@ -27,6 +27,7 @@ class UniqueDeviceIdentifier < ActiveRecord::Base
   ##       HELPER METHODS      ##
   ##                           ##
   ###############################
+  scope :sorted, -> { order('unique_device_identifiers.updated_at ASC') }
 
   private
 
