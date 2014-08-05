@@ -46,8 +46,6 @@ module Api
             # date of creation of most recent user to use this device
             udid_id = UniqueDeviceIdentifier.where(udid: device.udid).sorted.last.id
 
-            logger.info "Pecks, most recent: #{most_recent}"
-
             # ID of most recent user to use this device
             uid = UdidUser.where(unique_device_identifier: udid_id).sorted.last.user_id
             logger.info "Pecks, uid: #{uid}"
