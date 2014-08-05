@@ -62,6 +62,7 @@ module Api
               # As long as the user is not the creator.
                 # create a peck for the user in the passed array
                 Peck.create(user_id: mem_id, institution_id: @circle.institution_id, notification_type: "circle_invite", message: the_message, invited_by: @circle.user_id, invitation: member.id)
+
                 the_user.unique_device_identifiers.each do |device|
                 #  bob = UniqueDeviceIdentifier.where(udid: device.udid).where(token: device.token)
 
@@ -70,11 +71,11 @@ module Api
 
                   # ID of most recent user to use this device
                   uid = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => device.udid).where("unique_device_identifiers_users.updated_at" => most_recent).first.id
-                  # if the_user.id == uid
-                  token = device.token
-                  logger.info "sending push notification to user with token #{token}"
-                  APNS.send_notification(token, alert: the_message, badge: 1, sound: 'default')
-                  # end
+                  the_token = device.token
+                  if the_user.id == uid && the_token
+                    logger.info "sending push notification to user with token #{the_token}"
+                    APNS.send_notification(the_token, alert: the_message, badge: 1, sound: 'default')
+                  end
                 end
               end
             end

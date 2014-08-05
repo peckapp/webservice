@@ -17,7 +17,10 @@ module Api
 
       def create
         peck_create_params = params[:peck]
-        token = peck_create_params.delete(:token)
+        # token = peck_create_params.delete(:token)
+
+        @all_pecks = []
+        @peck_dict = {}
 
         #### Circle Invite ####
         if peck_create_params[:notification_type] == "circle_invite"
@@ -32,18 +35,36 @@ module Api
 
           # add the circle member to the array of circle members for the user
           user.circle_members << circle_member
+
+          # create the peck with these attributes
+          peck = Peck.create(peck_params(peck_create_params))
+
+          @all_pecks << peck
+          # for each of the user's udids
+          user.unique_device_identifiers.each do |device|
+
+            # date of creation of most recent user to use this device
+            most_recent = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => device.udid).maximum("unique_device_identifiers_users.updated_at")
+
+            # ID of most recent user to use this device
+            uid = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => device.udid).where("unique_device_identifiers_users.updated_at" => most_recent).first.id
+
+            # the token for the udid
+            the_token = device.token
+
+            # as long as the token is not nil and the user is the most recent user
+            if user.id == uid && the_token
+              @peck_dict[the_token] = peck
+            end
+          end
         end
 
-        #### Event Invite ####
-        if peck_create_params[:notification_type] == "event_invite"
-          peck_create_params[:invitation] = peck_create_params.delete(:event_id)
-        end
-
-        @peck = Peck.create(peck_params(peck_create_params))
 
         # if the peck is meant to be a push notification, then send it.
-        if @peck.send_push_notification
-          APNS.send_notification(token, alert: @peck.message, badge: 1, sound: 'default')
+        @peck_dict.each do |token, peck|
+          if peck.send_push_notification
+            APNS.send_notification(token, alert: peck.message, badge: 1, sound: 'default')
+          end
         end
       end
 

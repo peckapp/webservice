@@ -25,7 +25,6 @@ module Api
           # Send UDID when you log in.
           # @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
 
-          # if this udid has never been put in the databse, create one
           @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
 
           # touch little boys
