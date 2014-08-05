@@ -78,10 +78,10 @@ def seed_williams_rss_scraping
   DataResource.current_or_create_new info: "rss feed simple event description", column_name: "event_description", resource_type_id: 1
   DataResource.current_or_create_new info: "rss feed simple event url", column_name: "event_url", resource_type_id: 1
 
-  Selector.current_or_create_new info: "simple event rss title selector", selector: "item", top_level: true, parent_selector_id: nil, data_resource_id: 1, scrape_resource_id: 1
-  Selector.current_or_create_new info: "rss events title selector", selector: "title", top_level: false, parent_selector_id: 1, data_resource_id: 1, scrape_resource_id: 1
-  Selector.current_or_create_new info: "rss events description selector", selector: "description", top_level: false, parent_selector_id: 1, data_resource_id: 2, scrape_resource_id: 1
-  Selector.current_or_create_new info: "simple event rss url selector", selector: "link", top_level: false, parent_selector_id: 1, data_resource_id: 3, scrape_resource_id: 1
+  Selector.current_or_create_new info: "simple event rss title selector", selector: "item", top_level: true, parent_id: nil, data_resource_id: 1, scrape_resource_id: 1
+  Selector.current_or_create_new info: "rss events title selector", selector: "title", top_level: false, parent_id: 1, data_resource_id: 1, scrape_resource_id: 1
+  Selector.current_or_create_new info: "rss events description selector", selector: "description", top_level: false, parent_id: 1, data_resource_id: 2, scrape_resource_id: 1
+  Selector.current_or_create_new info: "simple event rss url selector", selector: "link", top_level: false, parent_id: 1, data_resource_id: 3, scrape_resource_id: 1
 end
 
 

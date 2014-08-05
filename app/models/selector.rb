@@ -1,10 +1,10 @@
 class Selector < ActiveRecord::Base
   validates_associated :scrape_resource
   validates_associated :data_resource
-  # validates that parent_selector_id must be nil for top level opbjects
+  # validates that parent_id must be nil for top level opbjects
   validate do |selector|
-    if top_level && !parent_selector_id.blank?
-      selector.errors[:base] << "top_level selectors must have nil parent_selector_id's"
+    if top_level && !parent_id.blank?
+      selector.errors[:base] << "top_level selectors must have nil parent_id's"
     end
   end
 
