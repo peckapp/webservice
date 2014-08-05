@@ -79,6 +79,9 @@ class NestedScrapeWorker
     # will need to check for partial matches that could indicate a change in the displayed content
     # may also need to delete events that are no longer in the feed if they are determined to have been cancelled
 
+    # this structure will collect the attributes to check if the model currently exists in the databse or not
+    attrs = {}
+
     # validate new model using built-in model validations
     valid = new_model.valid?
     unless valid
@@ -88,6 +91,10 @@ class NestedScrapeWorker
       if new_model.class == SimpleEvent
         logger.info 'repairing simple event'
         repair_simple_event(new_model)
+
+        attrs[:title] = new_model.title
+        attrs[:institution_id] = new_model.institution_id
+        attrs[:start_date] = new_model.start_date
       else
         # handle other types as they come up building the scraping
       end
@@ -100,9 +107,12 @@ class NestedScrapeWorker
     if valid
       # performs non-duplicative save
       result = new_model.non_duplicative_save
-      logger.info "#{result} saved validated model of type '#{new_model.class}' with id: #{new_model.id}\n"
+      if result
+        logger.info "Saved validated model of type '#{new_model.class}' with id: #{new_model.id}\n"
+      else
+        logger.info "Validated model of type '#{new_model.class}' already existed and was not saved"
     else
-      logger.warn "did not save invalid model: #{new_model.inspect}\n"
+      logger.warn "did not save invalid model with errors #{new_model.errors.messages} and model: #{new_model.inspect}\n"
     end
   end
 

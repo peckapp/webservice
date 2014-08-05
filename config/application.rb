@@ -6,9 +6,12 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module Webservice
-  class Application < Rails::Application
+# enable garbage collection profiling for use with New Relic
+GC::Profiler.enable
 
+module Webservice
+  # loads the full rails application
+  class Application < Rails::Application
     # loads code in lib directory
     config.autoload_paths  << Rails.root.join('lib') # += %W(#{config.root}/lib)
 
