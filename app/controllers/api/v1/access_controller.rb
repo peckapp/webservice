@@ -30,7 +30,7 @@ module Api
             @user.unique_device_identifiers << @udid
           else
             # touch little boys
-            udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id)
+            udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
             udid_user.touch
           end
           logger.info "created session for user with id: #{@user.id}"
