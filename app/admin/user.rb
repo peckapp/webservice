@@ -1,6 +1,4 @@
 ActiveAdmin.register User do
-
-
   # See permitted parameters documentation:
   # https://github.com/gregbell/active_admin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
@@ -19,5 +17,12 @@ ActiveAdmin.register User do
 
   remove_filter :users_user_device_tokens
   filter :user_device_tokens_users
+
+  sidebar 'Unique Device Identifiers', only: :show do
+    table_for user.unique_device_identifiers do |t|
+      t.column('Identifier') { |udi| udi.udid }
+      t.column('Token') { |udi| udi.token }
+    end
+  end
 
 end

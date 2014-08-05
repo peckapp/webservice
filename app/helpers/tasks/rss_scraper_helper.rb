@@ -1,3 +1,0 @@
-module Tasks::RssScraperHelper
-  
-end

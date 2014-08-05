@@ -19,7 +19,11 @@ Rails.application.routes.draw do
     # adds versioning capabilities to the API using separate modules
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
 
-      resources :simple_events, :activity_logs, :athletic_events, :athletic_teams, :clubs, :configurations, :departments, :dining_opportunities, :dining_periods, :dining_places,:event_attendees, :comments, :event_views, :events_page_urls, :institutions, :locations, :menu_items, :notification_views, :pecks, :simple_events, :subscriptions, :unique_device_identifiers, :explore, :announcements
+      resources(:simple_events, :activity_logs, :athletic_events, :athletic_teams, :clubs,
+                :configurations, :departments, :dining_opportunities, :dining_periods,
+                :dining_places, :event_attendees, :comments, :event_views, :events_page_urls,
+                :institutions, :locations, :menu_items, :notification_views, :pecks, :simple_events,
+                :subscriptions, :unique_device_identifiers, :explore, :announcements)
 
       resources :access, only: [:create] do
         collection do
@@ -100,7 +104,6 @@ Rails.application.routes.draw do
         resources :menu_items, :dining_opportunities, :dining_places
       end
 
-
       # Dining periods for a particular dining opportunity
       resources :dining_opportunities do
         resources :dining_places
@@ -116,15 +119,15 @@ Rails.application.routes.draw do
     end
   end
 
-  # api status and version information
-  get 'api', to: 'api#index', via: [:get]
-
   authenticated :admin_user do
     mount Sidekiq::Web, at: '/tasks'
   end
 
+  # api status and version information
+  get 'api', to: 'api#index', via: [:get]
+
   # You can have the root of your site routed with "root"
-  # root 'welcome#index'
+  root 'api#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

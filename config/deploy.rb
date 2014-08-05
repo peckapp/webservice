@@ -30,7 +30,7 @@ set :format, :pretty
 set :pty, false
 
 # Default value for :linked_files is []
-set :linked_files, %w(config/database.yml config/environment_variables.yml config/certs/ck.pem)
+set :linked_files, %w(config/database.yml config/environment_variables.yml config/certs/ck.pem config/initializers/sidekiq.rb)
 
 # Default value for linked_dirs is []
 set :linked_dirs, %w(bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system public/images config/certs)
@@ -76,4 +76,3 @@ end
 
 # send notification to new relic of deployment
 after "deploy:updated", "newrelic:notice_deployment"
-

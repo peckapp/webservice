@@ -4,4 +4,6 @@ end
 
 node(:circle_members) {@member_ids}
 
+node(:creator) {@creator}
+
 node(:errors) {@circle.errors.full_messages}

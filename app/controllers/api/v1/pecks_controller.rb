@@ -17,7 +17,10 @@ module Api
 
       def create
         peck_create_params = params[:peck]
-        token = peck_create_params.delete(:token)
+        # token = peck_create_params.delete(:token)
+
+        @all_pecks = []
+        @peck_dict = {}
 
         #### Circle Invite ####
         if peck_create_params[:notification_type] == "circle_invite"
@@ -32,18 +35,37 @@ module Api
 
           # add the circle member to the array of circle members for the user
           user.circle_members << circle_member
+
+          # create the peck with these attributes
+          peck = Peck.create(peck_params(peck_create_params))
+
+          @all_pecks << peck
+          # for each of the user's udids
+          user.unique_device_identifiers.each do |device|
+
+            # date of creation of most recent user to use this device
+            udid_id = UniqueDeviceIdentifier.where(udid: device.udid).first.id
+            most_recent = UdidUser.where(unique_device_identifier_id: udid_id).maximum(:updated_at)
+
+            # ID of most recent user to use this device
+            uid = UdidUser.where(unique_device_identifier: udid_id, updated_at: most_recent).first.user_id
+            
+            # the token for the udid
+            the_token = device.token
+
+            # as long as the token is not nil and the user is the most recent user
+            if user.id == uid && the_token
+              @peck_dict[the_token] = peck
+            end
+          end
         end
 
-        #### Event Invite ####
-        if peck_create_params[:notification_type] == "event_invite"
-          peck_create_params[:invitation] = peck_create_params.delete(:event_id)
-        end
-
-        @peck = Peck.create(peck_params(peck_create_params))
 
         # if the peck is meant to be a push notification, then send it.
-        if @peck.send_push_notification
-          APNS.send_notification(token, alert: @peck.message, badge: 1, sound: 'default')
+        @peck_dict.each do |token, peck|
+          if peck.send_push_notification
+            APNS.send_notification(token, alert: peck.message, badge: 1, sound: 'default')
+          end
         end
       end
 

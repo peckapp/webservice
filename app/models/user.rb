@@ -86,7 +86,8 @@ class User < ActiveRecord::Base
   #####################
 
   ### devices on which peck is used ###
-  has_and_belongs_to_many :unique_device_identifiers
+  has_many :udid_users
+  has_many :unique_device_identifiers, through: :udid_users
   #####################################
 
   ### user viewed a specific event ###

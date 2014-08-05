@@ -7,7 +7,7 @@ parent_selector<%= "#{n}" %>:
   info: selector info
   selector: item
   top_level: true
-  parent_selector_id:
+  parent_id:
   data_resource_id: 1
   scrape_resource_id: 1
 
@@ -18,7 +18,7 @@ child_selector<%= "#{n * k + 5}" %>:
   info: selector info
   selector: title
   top_level: false
-  parent_selector_id: <%= n %>
+  parent_id: <%= n %>
   data_resource_id: 1
   scrape_resource_id: 1
 
