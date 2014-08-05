@@ -21,6 +21,7 @@ ActiveAdmin.register User do
   sidebar 'Unique Device Identifiers', only: :show do
     table_for user.unique_device_identifiers do |t|
       t.column('Identifier') { |udi| udi.udid }
+      t.column('Token') { |udi| udi.token }
     end
   end
 
