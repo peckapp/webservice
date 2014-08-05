@@ -38,11 +38,13 @@ class DiningOpportunitiesControllerTest < UltimateTestHelper
     early_late = []
 
     (0..6).each { |dow|
+
+      early_late = DiningOpportunity.earliest_start_latest_end(dow)
+
       DiningPeriod.where(:day_of_week => dow).pluck(:dining_opportunity_id).each { |opp_id|
 
-        early_late = DiningOpportunity.find(opp_id).earliest_start_latest_end(dow)
-        early = early_late[0]
-        late = early_late[1]
+        early = early_late[opp_id][0]
+        late = early_late[opp_id][1]
 
         # assert start
         assert( ! early.blank? , "the following opportunity has no start: day # #{dow} for #{DiningOpportunity.find(opp_id).dining_opportunity_type}")

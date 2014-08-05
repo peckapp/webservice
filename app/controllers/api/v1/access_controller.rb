@@ -23,12 +23,20 @@ module Api
           auth[:authentication_token] = @user.authentication_token
 
           # Send UDID when you log in.
-          # @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
-
-          @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
-
-          # touch little boys
-          @user.unique_device_identifiers << @udid
+          @udid = UniqueDeviceIdentifier.where(udid: the_udid, token: the_token).first
+          if !@udid
+            @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
+            UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+            @user.unique_device_identifiers << @udid
+          else
+            # touch little boys
+            @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
+            if @udid_user
+              @udid_user.touch
+            else
+              @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+            end
+          end
           logger.info "created session for user with id: #{@user.id}"
         else
 
