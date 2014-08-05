@@ -15,7 +15,7 @@ ActiveAdmin.register DataResource do
   # end
 
   # Adds this into a dropdown in the top menu bar
-  menu parent: 'Scraping'
+  menu parent: 'Scraping', priority: 3
 
   # some hackery to get a hash of column names with their model associated with the actual column name
   # if we are able to use javascript for selector options, just the top line will be needed to get models to columns

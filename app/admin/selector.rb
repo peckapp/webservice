@@ -13,7 +13,7 @@ ActiveAdmin.register Selector do
   # end
 
   # Adds this into a dropdown in the top menu bar
-  menu parent: 'Scraping'
+  menu parent: 'Scraping', priority: 4
 
   # creates a form for a new resource
   form do |f|
