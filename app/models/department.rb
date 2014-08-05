@@ -28,6 +28,11 @@ class Department < ActiveRecord::Base
   validates :institution_id, presence: true, numericality: { only_integer: true }
   validate :correct_department_types
 
+  # for active admin
+  def to_label
+    name
+  end
+
   ###############################
   ##                           ##
   ##      HELPER METHODS       ##

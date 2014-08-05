@@ -9,4 +9,10 @@ class ScrapeResource < ActiveRecord::Base
   def paginated?
     pagination_selector_id.blank?
   end
+
+  # for active admin
+  def to_label
+    info
+  end
+
 end

@@ -104,6 +104,11 @@ class User < ActiveRecord::Base
   has_many :push_notifications #
   #####################
 
+  # for active admin
+  def to_label
+    "#{first_name} #{last_name}"
+  end
+
   ###############################
   ##                           ##
   ##      HELPER METHODS       ##
