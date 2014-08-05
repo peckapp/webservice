@@ -32,7 +32,9 @@ module Api
             # touch little boys
             @udid.touch
             @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
-            if !@udid_user
+            if @udid_user
+              @udid_user.touch
+            else
               @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
             end
           end
