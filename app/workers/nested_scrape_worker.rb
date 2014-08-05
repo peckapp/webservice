@@ -59,7 +59,7 @@ class NestedScrapeWorker
                 if content.blank?
                   content = next_non_blank(content_item).text.squish
                 end
-                logger.info "CONTENT: #{content}"
+                # logger.info "CONTENT: #{content}"
                 new_model.assign_attributes(cs.column_name => content)
               else
                 logger.warn "NO CONTENT FOUND for top selector: #{ts.selector} and child selector: #{cs.selector}"

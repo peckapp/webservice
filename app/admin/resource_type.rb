@@ -15,6 +15,17 @@ ActiveAdmin.register ResourceType do
   # end
 
   # Adds this into a dropdown in the top menu bar
-  menu :parent => "Scraping"
+  menu parent: 'Scraping'
+
+  form do |f|
+    f.semantic_errors # shows errors on :base
+    f.inputs 'Details' do # builds an input field for every attribute
+      f.input :resource_name
+      f.input :info
+      # all model names that are neither HABTM relationships or nested modules with '::' in their name
+      f.input :model_name, collection: ActiveRecord::Base.descendants.select { |d| !d.name.match(/HABTM|::/) }
+    end
+    f.actions # adds the 'Submit' and 'Cancel' buttons
+  end
 
 end
