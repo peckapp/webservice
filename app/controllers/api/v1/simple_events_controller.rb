@@ -94,14 +94,16 @@ module Api
             user.unique_device_identifiers.each do |device|
 
               # date of creation of most recent user to use this device
-              udid_id = UniqueDeviceIdentifier.where(udid: device.udid).first.id
-              most_recent = UdidUser.where(unique_device_identifier_id: udid_id).maximum(:updated_at)
+              udid_id = UniqueDeviceIdentifier.where(udid: device.udid).sorted.last.id
 
               # ID of most recent user to use this device
-              uid = UdidUser.where(unique_device_identifier: udid_id, updated_at: most_recent).first.user_id
+              uid = UdidUser.where(unique_device_identifier: udid_id).first.user_id
+              logger.info "SimpleEvents, uid: #{uid}"
+              logger.info "SimpleEvents, user id: #{user.id}"
 
               # token for this udid
               the_token = device.token
+              logger.info "SimpleEvents, the token: #{the_token}"
 
               # as long as the token is not nil and the user is the most recent user
               if user.id == uid && the_token
