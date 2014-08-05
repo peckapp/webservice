@@ -19,7 +19,8 @@ class UniqueDeviceIdentifier < ActiveRecord::Base
   ###############################
 
   ### device is associated to a particular user ###
-  has_and_belongs_to_many :users
+  has_many :udid_users
+  has_many :users, through: :udid_users
 
   ###############################
   ##                           ##

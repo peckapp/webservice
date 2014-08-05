@@ -50,10 +50,12 @@ module Api
         if the_udid
 
           # date of creation of most recent user to use this device
-          most_recent = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => params[:udid]).maximum("unique_device_identifiers_users.updated_at")
+          most_recent = UdidUser.where(unique_device_identifier_id: the_udid.id).maximum(:updated_at)
+          # most_recent = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => params[:udid]).maximum("unique_device_identifiers_users.updated_at")
 
           # ID of most recent user to use this device
-          id = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => params[:udid]).where("unique_device_identifiers_users.updated_at" => most_recent).first.id
+          id = UdidUser.where(unique_device_identifier: the_udid.id, updated_at: most_recent).first.user_id
+          # id = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => params[:udid]).where("unique_device_identifiers_users.updated_at" => most_recent).first.id
 
           # return that user
           @user = specific_show(User, id)
@@ -65,6 +67,7 @@ module Api
           udid = UniqueDeviceIdentifier.create(udid: params[:udid])
           @user = User.create
           @user.unique_device_identifiers << udid
+          UdidUser.create(unique_device_identifier_id: udid, user_id: @user.id)
           @user.newly_created_user = true
         end
         # start session as in normal creation
