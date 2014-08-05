@@ -8,6 +8,15 @@ module ActiveRecordExtension
   # extends the active support concerns in order to enable direct calls on model objects
   extend ActiveSupport::Concern
 
+  # uses sql for a more general search than a strice model match exists
+  # requires attrs to be specified
+  def partial_match_exists(*attrs)
+    attrs = attrs.extract_options!
+    fail 'must specify hash parameters' if attrs.blank?
+
+    # search for partial matches
+  end
+
   # add instance methods here
   def model_match_exists(*attrs)
     attrs = attrs.extract_options!
