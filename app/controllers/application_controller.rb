@@ -92,7 +92,11 @@ class ApplicationController < ActionController::Base
         # as long as the token is not nil and the user is the most recent user
         if the_user.id == uid && the_token
           if the_peck.send_push_notification
-            APNS.send_notification(the_token, alert: the_peck.message, badge: 1, sound: 'default')
+            if the_peck.device_type == 'Android'
+              GCM.send_notification(the_token, the_peck.message)
+            else
+              APNS.send_notification(the_token, alert: the_peck.message, badge: 1, sound: 'default')
+            end
           end
         end
       end

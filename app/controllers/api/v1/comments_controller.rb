@@ -41,6 +41,7 @@ module Api
         cparams = params[:comment]
 
         the_message = cparams.delete(:message)
+        device_type = cparams.delete(:device_type)
         send_push_notification = cparams.delete(:send_push_notification)
 
         @comment = Comment.create(comment_create_params(cparams))
@@ -54,7 +55,7 @@ module Api
           unless member.user_id == @comment.user_id
             user = User.find(member.user_id)
 
-            peck = Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "circle_comment", message: the_message, send_push_notification: send_push_notification)
+            peck = Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "circle_comment", message: the_message, send_push_notification: send_push_notification, device_type: device_type)
 
             send_notification(user, peck)
           end
