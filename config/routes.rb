@@ -74,7 +74,7 @@ Rails.application.routes.draw do
       resources :users do
         member do
           patch :super_create, :change_password
-          get :user_circles
+          get :user_circles, :user_announcements
         end
       end
 
@@ -127,7 +127,11 @@ Rails.application.routes.draw do
   get 'api', to: 'api#index', via: [:get]
 
   # You can have the root of your site routed with "root"
-  root 'api#index'
+  if Rails.env.production?
+    root 'api#main_redirect'
+  else
+    root 'api#index'
+  end
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

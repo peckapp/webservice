@@ -30,3 +30,6 @@ Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
 # sidekiq job scheduling
 require 'capistrano/sidekiq'
 require 'capistrano/sidekiq/monit' # to require monit tasks # Only for capistrano3
+
+# capistrano 3 gem for unicorn rack servers used in production
+require 'capistrano3/unicorn'

@@ -1,6 +1,10 @@
+require 'new_relic/agent/method_tracer'
+
 module Api
   module V1
     class SimpleEventsController < ApplicationController
+      # allows us to track methods calls with new relics toolset
+      include ::NewRelic::Agent::MethodTracer
 
       before_action :confirm_logged_in, only: [:create, :update, :destroy, :add_like, :unlike]
 
@@ -16,16 +20,14 @@ module Api
         # get ids of all comments
         simple_event_ids = @simple_events.pluck(:id)
 
-        all_likes = Like.where(:likeable_type => "SimpleEvent").where(:likeable_id => simple_event_ids).pluck(:likeable_id, :liker_id)
+        all_likes = Like.where(likeable_type: 'SimpleEvent').where(likeable_id: simple_event_ids).pluck(:likeable_id, :liker_id)
 
         @simple_events.each do |event|
 
           liker_ids = []
 
           all_likes.each do |like|
-            if like[0] == event.id
-              liker_ids << like[1]
-            end
+            liker_ids << like[1] if like[0] == event.id
           end
 
           @likes_for_simple_event[event.id] = liker_ids
@@ -49,14 +51,14 @@ module Api
           @attendee_ids[event.id] = attendee_ids
         end
       end
+      add_method_tracer :index, 'SimpleEvent/index'
 
       def show
         @simple_event = specific_show(SimpleEvent, params[:id])
 
-        @likers = Like.where(:likeable_type => "SimpleEvent").where(:likeable_id => @simple_event.id).pluck(:id)
+        @likers = Like.where(likeable_type: 'SimpleEvent').where(likeable_id: @simple_event.id).pluck(:id)
 
         @attendee_ids = EventAttendee.where('category' => 'simple').where('event_attended' => @simple_event.id).pluck(:user_id)
-
       end
 
       def create
@@ -73,15 +75,9 @@ module Api
 
         @simple_event = SimpleEvent.create(simple_event_create_params(event_params))
 
-        # all the pecks
-        @all_pecks = []
-
-        # dictionary with device token as key and peck as value
-        @peck_dict = {}
-
         #### Event Invite ####
 
-        if event_members
+        if event_members && @simple_event
           # from the array of user ids
           event_members.each do |member_id|
             user = User.find(member_id)
@@ -89,35 +85,11 @@ module Api
             # create a peck for that user
             peck = Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "event_invite", message: the_message, send_push_notification: send_push_notification, invited_by: inviter, invitation: @simple_event.id)
 
-            @all_pecks << peck
-            # for each of the users udids
-            user.unique_device_identifiers.each do |device|
-
-              # date of creation of most recent user to use this device
-              udid_id = UniqueDeviceIdentifier.where(udid: device.udid).first.id
-              most_recent = UdidUser.where(unique_device_identifier_id: udid_id).maximum(:updated_at)
-
-              # ID of most recent user to use this device
-              uid = UdidUser.where(unique_device_identifier: udid_id, updated_at: most_recent).first.user_id
-
-              # token for this udid
-              the_token = device.token
-
-              # as long as the token is not nil and the user is the most recent user
-              if user.id == uid && the_token
-                @peck_dict[the_token] = peck
-              end
-            end
-          end
-
-          # send a push notification to each token where send push notification is true for the peck.
-          @peck_dict.each do |token, peck|
-            if peck.send_push_notification
-              APNS.send_notification(token, alert: peck.message, badge: 1, sound: 'default')
-            end
+            send_notification(user, peck)
           end
         end
       end
+      add_method_tracer :create, 'SimpleEvent/create'
 
       def update
         @simple_event = SimpleEvent.find(params[:id])
@@ -161,13 +133,14 @@ module Api
       end
 
       private
-        def simple_event_create_params(parameters)
-          parameters.permit(:title, :event_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :event_url, :public, :comment_count, :image, :start_date, :end_date)
-        end
 
-        def simple_event_params
-          params.require(:simple_event).permit(:title, :event_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :event_url, :public, :comment_count, :start_date, :end_date)
-        end
+      def simple_event_create_params(parameters)
+        parameters.permit(:title, :event_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :event_url, :public, :comment_count, :image, :start_date, :end_date)
+      end
+
+      def simple_event_params
+        params.require(:simple_event).permit(:title, :event_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :event_url, :public, :comment_count, :start_date, :end_date)
+      end
     end
   end
 end

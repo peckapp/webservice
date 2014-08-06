@@ -6,15 +6,25 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# enable garbage collection profiling for use with New Relic
+GC::Profiler.enable
+
 module Webservice
+  # loads the full rails application
   class Application < Rails::Application
+    # Settings in config/environments/* take precedence over those specified here.
+    # Application configuration should go into files in config/initializers
+    # -- all .rb files in that directory are automatically loaded.
 
     # loads code in lib directory
     config.autoload_paths  << Rails.root.join('lib') # += %W(#{config.root}/lib)
 
-    # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration should go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded.
+    # sets up a cache store, accessed with 'Rails.cache'
+    # first argument is the cache store to use, rest will be passed as arguments to the cache store constructor
+    # Create a concrete subclass of ActiveSupport::Cache::Store, or use one provided
+    # further detail at: http://guides.rubyonrails.org/caching_with_rails.html
+    config.cache_store = :memory_store, { size: 64.megabytes } # default for environments
+    # config.cache_store = :file_store, "/path/to/cache/directory"
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.

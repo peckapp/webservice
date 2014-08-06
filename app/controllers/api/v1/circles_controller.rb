@@ -40,49 +40,37 @@ module Api
         @member_ids = []
 
         if @circle
+
+          # separates the creator and adds the creator automatically with an accepted tag of true
           @creator = CircleMember.create(:accepted => true, :user_id => @circle.user_id, :circle_id => @circle.id, :institution_id => @circle.institution_id, :invited_by => @circle.user_id)
-
-          @circle.circle_members << @creator
-          # takes the array of circle members found in the circle block
-          members = the_circle_members
-          # members should be an array of integers corresponding to user ids
-          if members
-            members.each do |mem_id|
-            # creates a circle member
-              member = CircleMember.create(:institution_id => @circle.institution_id, :circle_id => @circle.id, :user_id => mem_id, :invited_by => @circle.user_id)
-
-              the_user = User.find(mem_id)
-              # the creator must always have an accepted tag of true.
-
-              # adds the member to the array of circle members for the created circle
-              @circle.circle_members << member
-
-              ### Push Notification Stuff ###
-
-              # As long as the user is not the creator.
-                # create a peck for the user in the passed array
-                Peck.create(user_id: mem_id, institution_id: @circle.institution_id, notification_type: "circle_invite", message: the_message, invited_by: @circle.user_id, invitation: member.id)
-
-                the_user.unique_device_identifiers.each do |device|
-
-                  # date of creation of most recent user to use this device
-                  udid_id = UniqueDeviceIdentifier.where(udid: device.udid).first.id
-                  most_recent = UdidUser.where(unique_device_identifier_id: udid_id).maximum(:updated_at)
-
-                  # ID of most recent user to use this device
-                  uid = UdidUser.where(unique_device_identifier: udid_id, updated_at: most_recent).first.user_id
-                  the_token = device.token
-
-                  if the_user.id == uid && the_token
-                    logger.info "sending push notification to user with token #{the_token}"
-                    APNS.send_notification(the_token, alert: the_message, badge: 1, sound: 'default')
-                  end
-                end
-              end
-            end
 
           # circle members
           circle_mems = @circle.circle_members
+          circle_mems << @creator
+
+          # takes the array of circle members found in the circle block
+          members = the_circle_members
+
+          # members should be an array of integers corresponding to user ids
+          if members
+            members.each do |mem_id|
+
+            # creates a circle member
+              member = CircleMember.create(:institution_id => @circle.institution_id, :circle_id => @circle.id, :user_id => mem_id, :invited_by => @circle.user_id)
+
+              user = User.find(mem_id)
+
+              # adds the member to the array of circle members for the created circle
+              circle_mems << member
+
+              ### Circle Member Invites Push Notifications ###
+
+              # create a peck for the user in the passed array
+              peck = Peck.create(user_id: mem_id, institution_id: @circle.institution_id, notification_type: "circle_invite", message: the_message, invited_by: @circle.user_id, send_push_notification: true, invitation: member.id)
+
+              send_notification(user, peck)
+            end
+          end
 
           circle_mems.each do |mem|
             @member_ids << mem.user_id
@@ -90,8 +78,6 @@ module Api
         else
           @member_ids = nil
         end
-
-        return @member_ids
       end
 
       def update

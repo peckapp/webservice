@@ -9,20 +9,30 @@ require 'active_support/core_ext/hash'
 # a stand-alone command line interface for inteacting with the rails application for testing
 # not a part of the rails framework, runs as a stand-alone
 class PeckClient < Thor
-  PECK_URL = 'localhost'
-  PECK_PORT = 3000
+  # need a way to customize these through the command line
+  # SSL = true
+  # PECK_URL = 'yggdrasil.peckapp.com'
+  # PECK_PORT = 443
+  SSL = false
+  PECK_URL = 'loki.peckapp.com'
+  PECK_PORT = 3500
 
   # requires these parameters as part of thor superclass
   def initialize(a, b, c)
     super(a, b, c)
 
-    create_user_action
-    super_create_user_action
+    begin
+      create_user_action
+      super_create_user_action
+    rescue => error
+      destroy_user_action
+      raise error
+    end
   end
 
-  desc 'run_all', 'Runs all currently implemented queries the specified number of times'
+  desc 'run_all TIMES', 'Runs all currently implemented queries the specified number of TIMES'
   def run_all(times = 1)
-    (0..times).each do
+    (0..times.to_i).each do
       events_action
       explore_action
       circles_action
@@ -66,7 +76,7 @@ class PeckClient < Thor
     end
 
     def create_user_action
-      response_str = RestClient.post(paramsURL('/api/users'), nil)
+      response_str = RestClient::Request.execute(method: :post, url: paramsURL('/api/users'), verify_ssl: false)
       verify_response('create_user', response_str)
       response = JSON.parse(response_str)
       @user = User.new(response['user'])
@@ -77,7 +87,7 @@ class PeckClient < Thor
       params = { id: @user.id, first_name: 'Johnny', last_name: 'Appleseed', password: 'applz4life',
                  password_confirmation: 'applz4life', blurb: "I'm not a real person, just testing!",
                  email: "jappleseed#{rand(1000)}@test.edu", institution_id: 1 }
-      response_str = RestClient.patch(paramsURL("/api/users/#{@user.id}/super_create"), user: params)
+      response_str = RestClient::Request.execute(method: :patch, url: paramsURL("/api/users/#{@user.id}/super_create"), payload: { user: params }, verify_ssl: false)
       # puts response_str
       verify_response('super_create_user', response_str)
       response = JSON.parse(response_str)
@@ -86,13 +96,13 @@ class PeckClient < Thor
     end
 
     def destroy_user_action
-      response_str = RestClient.delete(paramsURL("/api/users/#{@user.id}", authentication: auth_block))
+      response_str = RestClient::Request.execute(method: :delete, url: paramsURL("/api/users/#{@user.id}", authentication: auth_block), verify_ssl: false)
       verify_response('destroy_user', response_str)
       JSON.parse(response_str)
     end
 
     def get_and_verify(uri, param)
-      response = RestClient.get(paramsURL(uri))
+      response = RestClient::Request.execute(method: :get, url: paramsURL(uri), verify_ssl: false)
       verify_response(param, response)
       JSON.parse(response)[param]
     end
@@ -130,9 +140,14 @@ class PeckClient < Thor
         params_hash[:authentication] = auth_block
       end
       query_str = params_hash.to_query
-      uri_http = URI::HTTP.build(host: PECK_URL, port: PECK_PORT, path: path, query: query_str)
-      # puts uri_http.to_s
-      uri_http.to_s
+      if SSL
+        uri_https = URI::HTTPS.build(host: PECK_URL, port: PECK_PORT, path: path, query: query_str)
+        return uri_https.to_s
+      else
+        uri_http = URI::HTTP.build(host: PECK_URL, port: PECK_PORT, path: path, query: query_str)
+        # puts uri_http.to_s
+        return uri_http.to_s
+      end
     end
 
   end

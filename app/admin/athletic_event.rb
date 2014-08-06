@@ -1,6 +1,5 @@
 ActiveAdmin.register AthleticEvent do
 
-
   # See permitted parameters documentation:
   # https://github.com/gregbell/active_admin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
@@ -15,7 +14,7 @@ ActiveAdmin.register AthleticEvent do
   # end
 
   # Adds this into a dropdown in the top menu bar
-  menu :parent => "Content"
+  menu parent: 'Content'
 
   #### THESE SHOULD NOT HAVE TO BE HERE ####
   # need to figure out root cause of errors and solve them
