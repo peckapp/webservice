@@ -3,7 +3,7 @@ module Api
     class UsersController < ApplicationController
 
       before_action :confirm_minimal_access, except: [:create, :user_for_udid]
-      before_action :confirm_logged_in, only: [:user_circles]
+      before_action :confirm_logged_in, only: [:user_circles, :user_announcements]
 
       respond_to :json
 
@@ -16,7 +16,15 @@ module Api
       end
 
       def user_circles
-        @circles = User.find(params[:id]).circles
+
+        # only circles where the user has accepted the invite for should be visible
+        circle_members = CircleMember.where(accepted: true, user_id: params[:id])
+        @circles = []
+        circle_members.each do |member|
+          the_circle = Circle.find(member.circle_id)
+          @circles << the_circle
+        end
+
 
         # hash mapping circle id to array of its members for display in json
         @member_ids = {}
@@ -24,6 +32,11 @@ module Api
         @circles.each do |c|
           @member_ids[c.id] = CircleMember.where("circle_id" => c.id).where("accepted" => true).pluck(:user_id)
         end
+      end
+
+      def user_announcements
+        # all announcements for the user
+        @announcements = Announcement.where(user_id: params[:id])
       end
 
       def create
