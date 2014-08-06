@@ -18,9 +18,6 @@ module Api
 
         @simple_events.each do |event|
           unless event.start_date.past?
-            # if event.image_url = "null"
-            #   event.image_url = "/images/event.png"
-            # end
             @event_positions[event.id] = event_position
             @explore_events << event
             event_position += 1
