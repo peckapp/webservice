@@ -51,7 +51,7 @@ module Api
         end
 
         the_circle_members.each do |member|
-          unless member.user_id == @comment.id
+          unless member.user_id == @comment.user_id
             user = User.find(member.user_id)
 
             peck = Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "circle_comment", message: the_message, send_push_notification: send_push_notification)
