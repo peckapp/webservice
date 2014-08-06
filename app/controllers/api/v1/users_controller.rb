@@ -56,7 +56,7 @@ module Api
           # most_recent = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => params[:udid]).maximum("unique_device_identifiers_users.updated_at")
 
           # ID of most recent user to use this device
-          id = UdidUser.where(unique_device_identifier: the_udid.id).first.user_id
+          id = UdidUser.where(unique_device_identifier: the_udid.id).sorted.last.user_id
           # id = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => params[:udid]).where("unique_device_identifiers_users.updated_at" => most_recent).first.id
           logger.info "Users, most recent user id: #{id}"
           # return that user
@@ -70,7 +70,7 @@ module Api
           @user = User.create
           @user.unique_device_identifiers << udid
 
-          udid_user = UdidUser.create(unique_device_identifier_id: udid, user_id: @user.id)
+          udid_user = UdidUser.create(unique_device_identifier_id: udid.id, user_id: @user.id)
 
           @user.newly_created_user = true
         end

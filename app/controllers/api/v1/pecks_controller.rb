@@ -46,10 +46,8 @@ module Api
             # date of creation of most recent user to use this device
             udid_id = UniqueDeviceIdentifier.where(udid: device.udid).sorted.last.id
 
-            logger.info "Pecks, most recent: #{most_recent}"
-
             # ID of most recent user to use this device
-            uid = UdidUser.where(unique_device_identifier: udid_id).first.user_id
+            uid = UdidUser.where(unique_device_identifier: udid_id).sorted.last.user_id
             logger.info "Pecks, uid: #{uid}"
             logger.info "Pecks, user id: #{user.id}"
 
@@ -87,7 +85,7 @@ module Api
         end
 
         def peck_update_params
-          params.require(:peck).permit(:user_id, :institution_id, :notification_type, :message, :send_push_notification, :invited_by, :invitation)
+          params.require(:peck).permit(:user_id, :institution_id, :notification_type, :message, :send_push_notification, :invited_by, :invitation, :interacted)
         end
     end
   end
