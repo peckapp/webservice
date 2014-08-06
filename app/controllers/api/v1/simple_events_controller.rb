@@ -91,6 +91,31 @@ module Api
       end
       add_method_tracer :create, 'SimpleEvent/create'
 
+      def check_time_conflicts
+        the_start_date = params[:start_date]
+        the_end_date = params[:end_date]
+
+        @total_conflicts = []
+
+        # check for conflicts based on start and end date range passed
+        start_date_conflicts = SimpleEvent.where(start_date: the_start_date..the_end_date)
+        end_date_conflicts = SimpleEvent.where(end_date: the_start_date..the_end_date)
+
+        unless start_date_conflicts.blank?
+          start_date_conflicts.each do |event|
+            @total_conflicts << event.id
+          end
+        end
+
+        unless end_date_conflicts.blank?
+          end_date_conflicts.each do |event|
+            @total_conflicts << event.id
+          end
+        end
+
+        ### check_time_conflicts view returns the number of conflicts minus the duplicates ###
+      end
+
       def update
         @simple_event = SimpleEvent.find(params[:id])
         update_params = simple_event_params
