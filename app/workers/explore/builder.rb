@@ -4,6 +4,11 @@ module Explore
   class Builder
     include Sidekiq::Worker
 
+    include Sidetiq::Schedulable
+
+    # to be turned on once development of this functionality is complete
+    # recurrence { hourly }
+
     def perform(institution_id)
       analyze_simple_events(institution_id)
       analyze_athletic_events(institution_id)
