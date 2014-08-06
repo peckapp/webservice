@@ -19,11 +19,10 @@ Rails.application.routes.draw do
     # adds versioning capabilities to the API using separate modules
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
 
-      resources(:simple_events, :activity_logs, :athletic_events, :athletic_teams, :clubs,
-                :configurations, :departments, :dining_opportunities, :dining_periods,
-                :dining_places, :event_attendees, :comments, :event_views, :events_page_urls,
-                :institutions, :locations, :menu_items, :notification_views, :pecks, :simple_events,
-                :subscriptions, :unique_device_identifiers, :explore, :announcements)
+      resources(:activity_logs, :athletic_events, :athletic_teams, :clubs, :circles, :configurations,
+                :departments, :dining_opportunities, :dining_periods, :dining_places, :event_views,
+                :events_page_urls, :institutions, :locations, :menu_items, :notification_views,
+                :pecks, :unique_device_identifiers, :explore)
 
       resources :access, only: [:create] do
         collection do
@@ -80,41 +79,10 @@ Rails.application.routes.draw do
           patch :super_create, :change_password
           get :user_circles, :user_announcements
         end
-      end
 
-      resources :users do
         collection do
           post :user_for_udid
         end
-      end
-
-      # Separation by circles
-      resources :circles do
-        resources :circle_members, :activity_logs
-      end
-
-      # Separation by dining places
-      resources :dining_places do
-        resources :menu_items, :dining_opportunities, :dining_periods
-      end
-
-      # Separation by menu items
-      resources :menu_items do
-        resources :dining_places, :dining_periods
-      end
-
-      # Separation by dining periods
-      resources :dining_periods do
-        resources :menu_items, :dining_opportunities, :dining_places
-      end
-
-      # Dining periods for a particular dining opportunity
-      resources :dining_opportunities do
-        resources :dining_places
-      end
-      # separation by athletic teams
-      resources :athletic_teams do
-        resources :athletic_events
       end
     end
 
