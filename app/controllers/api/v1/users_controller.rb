@@ -63,15 +63,9 @@ module Api
 
         if the_udid
 
-          # date of creation of most recent user to use this device
-          # most_recent = UdidUser.where(unique_device_identifier_id: the_udid.id)
-
-          # most_recent = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => params[:udid]).maximum("unique_device_identifiers_users.updated_at")
-
           # ID of most recent user to use this device
           id = UdidUser.where(unique_device_identifier: the_udid.id).sorted.last.user_id
-          # id = User.joins('LEFT OUTER JOIN unique_device_identifiers_users ON unique_device_identifiers_users.user_id = users.id').joins('LEFT OUTER JOIN unique_device_identifiers ON unique_device_identifiers_users.unique_device_identifier_id = unique_device_identifiers.id').where("unique_device_identifiers.udid" => params[:udid]).where("unique_device_identifiers_users.updated_at" => most_recent).first.id
-          logger.info "Users, most recent user id: #{id}"
+
           # return that user
           @user = specific_show(User, id)
 

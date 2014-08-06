@@ -28,7 +28,6 @@ module Api
 
           @likes_for_comment[comment] = liker_ids
         end
-
       end
 
       def show
@@ -39,16 +38,32 @@ module Api
       end
 
       def create
-        @comment = Comment.create(comment_params)
+        cparams = params[:comment]
 
-        if @comment && @comment.category == "circle"
-          circle_members = Circle.find_by_id(@comment.comment_from).circle_members
+        the_message = cparams.delete(:message)
+        send_push_notification = cparams.delete(:send_push_notification)
+
+        @comment = Comment.create(comment_create_params(cparams))
+
+        ##### Circle Comment Push Notifications #####
+        if @comment && @comment.category == "circles"
+          the_circle_members = Circle.find_by_id(@comment.comment_from).circle_members
+        end
+
+        the_circle_members.each do |member|
+          unless member.user_id == @comment.user_id
+            user = User.find(member.user_id)
+
+            peck = Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "circle_comment", message: the_message, send_push_notification: send_push_notification)
+
+            send_notification(user, peck)
+          end
         end
       end
 
       def update
         @comment = Comment.find(params[:id])
-        @comment.update_attributes(comment_params)
+        @comment.update_attributes(comment_update_params)
       end
 
       def add_like
@@ -85,10 +100,12 @@ module Api
 
       private
 
-        def comment_params
+        def comment_create_params(parameters)
+          parameters.permit(:institution_id, :category, :comment_from, :user_id, :content)
+        end
 
+        def comment_update_params
           params.require(:comment).permit(:institution_id, :category, :comment_from, :user_id, :content)
-
         end
     end
   end

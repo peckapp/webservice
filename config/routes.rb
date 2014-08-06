@@ -63,6 +63,10 @@ Rails.application.routes.draw do
         member do
           patch :add_like, :unlike
         end
+
+        collection do
+          get :check_time_conflicts
+        end
       end
 
       resources :comments do

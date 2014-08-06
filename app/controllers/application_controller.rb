@@ -78,6 +78,26 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    def send_notification(the_user, the_peck)
+      the_user.unique_device_identifiers.each do |device|
+        # date of creation of most recent user to use this device
+        udid_id = UniqueDeviceIdentifier.where(udid: device.udid).sorted.last.id
+
+        # ID of most recent user to use this device
+        uid = UdidUser.where(unique_device_identifier: udid_id).sorted.last.user_id
+
+        # token for this udid
+        the_token = device.token
+
+        # as long as the token is not nil and the user is the most recent user
+        if the_user.id == uid && the_token
+          if the_peck.send_push_notification
+            APNS.send_notification(the_token, alert: the_peck.message, badge: 1, sound: 'default')
+          end
+        end
+      end
+    end
+
     # check existence of auth params
     def auth_params_exist
       if auth[:user_id].blank? || auth[:api_key].blank?

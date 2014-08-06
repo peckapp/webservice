@@ -20,7 +20,6 @@ module Api
         # token = peck_create_params.delete(:token)
 
         @all_pecks = []
-        @peck_dict = {}
 
         #### Circle Invite ####
         if peck_create_params[:notification_type] == "circle_invite"
@@ -40,35 +39,8 @@ module Api
           peck = Peck.create(peck_params(peck_create_params))
 
           @all_pecks << peck
-          # for each of the user's udids
-          unless user.unique_device_identifiers.blank?
-            user.unique_device_identifiers.each do |device|
 
-              # date of creation of most recent user to use this device
-              udid_id = UniqueDeviceIdentifier.where(udid: device.udid).sorted.last.id
-
-              # ID of most recent user to use this device
-              uid = UdidUser.where(unique_device_identifier: udid_id).sorted.last.user_id
-              logger.info "Pecks, uid: #{uid}"
-              logger.info "Pecks, user id: #{user.id}"
-
-              # the token for the udid
-              the_token = device.token
-              logger.info "Pecks, the token: #{the_token}"
-              # as long as the token is not nil and the user is the most recent user
-              if user.id == uid && the_token
-                @peck_dict[the_token] = peck
-              end
-            end
-          end
-        end
-
-
-        # if the peck is meant to be a push notification, then send it.
-        @peck_dict.each do |token, peck|
-          if peck.send_push_notification
-            APNS.send_notification(token, alert: peck.message, badge: 1, sound: 'default')
-          end
+          send_notification(user, peck)
         end
       end
 

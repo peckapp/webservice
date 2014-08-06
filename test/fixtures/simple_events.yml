@@ -12,8 +12,8 @@ simple_event_<%= n %>:
   id: <%= n %>
   institution_id: 1
   public: true
-  start_date: 2007-12-04 00:00:00
-  end_date: 2007-12-04 00:00:00
+  start_date: <%= DateTime.current + 1.hour %>
+  end_date: <%= DateTime.current + 2.hour %>
 <% end %>
 
 # public simple events from institution 2
@@ -24,7 +24,7 @@ simple_event_<%= n %>:
   institution_id: 2
   public: true
   start_date: 2007-12-04 00:00:00
-  end_date: 2007-12-04 00:00:00
+  end_date: <%= DateTime.current + 3.hour %>
 <% end %>
 
 # private simple events from institution 1
@@ -34,8 +34,8 @@ simple_event_<%= n %>:
   id: <%= n %>
   institution_id: 1
   public: false
-  start_date: 2007-12-04 00:00:00
-  end_date: 2007-12-04 00:00:00
+  start_date: <%= DateTime.current + 1.minute %>
+  end_date: <%= DateTime.current + 4.hour %>
 <% end %>
 
 # private simple events from institution 1

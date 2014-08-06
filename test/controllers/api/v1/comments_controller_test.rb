@@ -7,7 +7,7 @@ class CommentsControllerTest < UltimateTestHelper
     @attributes = [:id, :category, :comment_from, :user_id, :content, :institution_id, :format, :authentication]
     @params_index = {:format => :json, :authentication => session_create}
     @params_show = {:id => 11, :category => "athletic", :comment_from => 2, :format => :json, :authentication => session_create}
-    @params_create = {:category => "simple", :comment_from => 1, :user_id => 1, :content => "fun fun fun fun fun fun", :institution_id => 71}
+    @params_create = {:category => "circles", :comment_from => 1, :user_id => 1, :content => "fun fun fun fun fun fun", :institution_id => 71, :message => "hello", :send_push_notification => false}
     @params_update = {:category => "athletic"}
     @model_type = :comment
     @model = Comment
