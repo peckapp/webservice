@@ -46,7 +46,7 @@ module Api
         @comment = Comment.create(comment_create_params(cparams))
 
         ##### Circle Comment Push Notifications #####
-        if @comment && @comment.category == "circle"
+        if @comment && @comment.category == "circles"
           the_circle_members = Circle.find_by_id(@comment.comment_from).circle_members
         end
 
