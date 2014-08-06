@@ -111,6 +111,10 @@ common: &default_settings
   #     ex: ignored_params: credit_card, ssn, password
   capture_params: false
 
+  # captures Sidekiq job arguments in transaction traces and traced errors
+  # documentation: https://docs.newrelic.com/docs/agents/ruby-agent/background-jobs/sidekiq-instrumentation
+  sidekiq.capture_params: true
+
   # Transaction tracer captures deep information about slow
   # transactions and sends this to the New Relic service once a
   # minute. Included in the transaction is the exact call sequence of
