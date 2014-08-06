@@ -74,7 +74,7 @@ Rails.application.routes.draw do
       resources :users do
         member do
           patch :super_create, :change_password
-          get :user_circles
+          get :user_circles, :user_announcements
         end
       end
 

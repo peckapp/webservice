@@ -40,6 +40,10 @@ module Api
 
       def create
         @comment = Comment.create(comment_params)
+
+        if @comment && @comment.category == "circle"
+          circle_members = Circle.find_by_id(@comment.comment_from).circle_members
+        end
       end
 
       def update
