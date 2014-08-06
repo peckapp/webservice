@@ -36,11 +36,7 @@ class DiningOpportunity < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  # These methods perform an excessive number of database queries. May want to eventually
-  # store the opportunity start and end times in the database and update them with a sidetiq job
-  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+  # returns an array of triples each containing a dining opp with a start and end time given the day of week
   def self.earliest_start_latest_end(day_of_week)
 
     # get all dining opps and their times for a certain day of the week
@@ -48,6 +44,8 @@ class DiningOpportunity < ActiveRecord::Base
 
     # hash associating opps to an array of its earliest start and latest end
     early_and_late_for_opps = {}
+
+    # earliest and latest times so far given dining opportunity
     earliest_so_far = {}
     latest_so_far = {}
 

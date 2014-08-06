@@ -20,7 +20,7 @@ module Api
           week_day = params[:day_of_week].to_i
         end
 
-
+        # get earliest start and latest end of each dining opp
         dining_times = DiningOpportunity.earliest_start_latest_end(week_day)
 
         for opp in dining_opps
@@ -32,23 +32,7 @@ module Api
             @dining_opportunities << opp
 
           end
-
         end
-
-
-        # for opp in dining_opps
-        #
-        #   begin_time, finish_time = opp.earliest_start_latest_end(week_day)
-        #
-        #   if ! begin_time.blank? && ! finish_time.blank?
-        #     # insert start and end time into the view parameters
-        #     @service_start[opp.id] = begin_time
-        #     @service_end[opp.id] = finish_time
-        #
-        #     @dining_opportunities << opp
-        #   end
-        # end
-
       end
 
       def show
