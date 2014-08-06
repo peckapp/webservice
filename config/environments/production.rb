@@ -6,7 +6,7 @@ Rails.application.configure do
 
   # override default memory cache store to use magni memcached server
   # not properly configured at this point
-  config.cache_store = :mem_cache_store, 'magni.peckapp.com'
+  # config.cache_store = :mem_cache_store, 'magni.peckapp.com'
 
   # Eager load code on boot. This eager loads most of Rails and
   # your application in memory, allowing both threaded web servers
