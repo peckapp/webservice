@@ -81,7 +81,7 @@ module Api
 
         #### Event Invite ####
 
-        if event_members
+        if event_members && @simple_event
           # from the array of user ids
           event_members.each do |member_id|
             user = User.find(member_id)
