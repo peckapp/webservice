@@ -93,6 +93,14 @@ gem 'posix-spawn'
 ### HOSTED SERVER MONITORING
 gem 'newrelic_rpm'
 
+### Production Server Deployments using Unicorn
+group :production do
+  # unicorn interface gem: http://unicorn.bogomips.org
+  gem 'unicorn'
+  # dalli for interfacing with memcached in production
+  # gem 'dalli'
+end
+
 ### Development-specific gems
 group :development do
   # Capistrano for deployment to server: https://github.com/capistrano/capistrano
@@ -105,7 +113,7 @@ group :development do
   gem 'capistrano-rails', '~> 1.1'
   # sidekiq task-management: https://github.com/seuros/capistrano-sidekiq
   gem 'capistrano-sidekiq'
-  # unicorn gem for production deployments
+  # unicorn gem for production deployments: https://github.com/tablexi/capistrano3-unicorn
   gem 'capistrano3-unicorn'
 
   # database visualization
