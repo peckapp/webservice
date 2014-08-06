@@ -75,4 +75,4 @@ namespace :load do
 end
 
 # send notification to new relic of deployment
-after "deploy:updated", "newrelic:notice_deployment"
+after 'deploy:updated', 'newrelic:notice_deployment'

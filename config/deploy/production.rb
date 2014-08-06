@@ -17,7 +17,8 @@ set :deploy_to, '/home/deployer/apps/webservice_production'
 # used to set extended properties on the server.
 
 # Define server(s)
-server '104.131.214.176', user: 'deployer', roles: %w(web app db)
+# eir unicorn application server
+server '104.131.214.176 ', user: 'deployer', roles: %w(web app db)
 # server 'magni.peckapp.com', user: 'deployer', roles: %w{db}
 
 # Custom SSH Options
@@ -46,3 +47,12 @@ set :ssh_options, {
 #     auth_methods: %w(publickey password)
 #     # password: 'please use keys'
 #   }
+
+### Unicorn deployment
+# may move to config/deploy.rb if we move away from passenger in development server
+after 'deploy:publishing', 'deploy:restart'
+namespace :deploy do
+  task :restart do
+    invoke 'unicorn:reload'
+  end
+end

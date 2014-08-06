@@ -105,6 +105,8 @@ group :development do
   gem 'capistrano-rails', '~> 1.1'
   # sidekiq task-management: https://github.com/seuros/capistrano-sidekiq
   gem 'capistrano-sidekiq'
+  # unicorn gem for production deployments
+  gem 'capistrano3-unicorn'
 
   # database visualization
   gem 'rails-erd'
