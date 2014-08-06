@@ -10,7 +10,7 @@ Rails.application.config.assets.precompile << proc do |path|
       true
     else
       puts "excluding asset: #{full_path}"
-      true
+      false
     end
   else
     false
