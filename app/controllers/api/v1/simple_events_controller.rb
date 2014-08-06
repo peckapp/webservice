@@ -73,12 +73,6 @@ module Api
 
         @simple_event = SimpleEvent.create(simple_event_create_params(event_params))
 
-        # all the pecks
-        @all_pecks = []
-
-        # dictionary with device token as key and peck as value
-        @peck_dict = {}
-
         #### Event Invite ####
 
         if event_members && @simple_event
@@ -88,35 +82,8 @@ module Api
 
             # create a peck for that user
             peck = Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "event_invite", message: the_message, send_push_notification: send_push_notification, invited_by: inviter, invitation: @simple_event.id)
-
-            @all_pecks << peck
-            # for each of the users udids
-            user.unique_device_identifiers.each do |device|
-
-              # date of creation of most recent user to use this device
-              udid_id = UniqueDeviceIdentifier.where(udid: device.udid).sorted.last.id
-
-              # ID of most recent user to use this device
-              uid = UdidUser.where(unique_device_identifier: udid_id).sorted.last.user_id
-              logger.info "SimpleEvents, uid: #{uid}"
-              logger.info "SimpleEvents, user id: #{user.id}"
-
-              # token for this udid
-              the_token = device.token
-              logger.info "SimpleEvents, the token: #{the_token}"
-
-              # as long as the token is not nil and the user is the most recent user
-              if user.id == uid && the_token
-                @peck_dict[the_token] = peck
-              end
-            end
-          end
-
-          # send a push notification to each token where send push notification is true for the peck.
-          @peck_dict.each do |token, peck|
-            if peck.send_push_notification
-              APNS.send_notification(token, alert: peck.message, badge: 1, sound: 'default')
-            end
+            
+            send_notification(user, peck)
           end
         end
       end
