@@ -1,0 +1,207 @@
+\documentclass[12pt]{amsart}  
+  
+\usepackage{amscd}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{epsf}
+%\usepackage{LaTeXsym}
+\usepackage{verbatim}
+\input epsf.tex
+
+%%% SET LENTGH AND WIDTH %%%
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\topmargin}{0pt}
+\setlength{\marginparsep}{0pt}
+\setlength{\marginparwidth}{1in}
+%\renewcommand{\headrulewidth}{0pt}
+
+%%%COMMANDS%%%
+\newtheorem{definition}{Definition}
+%\newtheorem{theorem}{Theorem}[section]
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{exercise}[theorem]{Exercise}
+
+%%% MATH SYMBOLS%%%
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Rd}{\mathbb{R}^d}
+\newcommand{\Rdp}{{\mathbb{R}}^{d+1}}
+\newcommand{\Rdpm}{{\mathbb{R}}^{d+1}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Zd}{\mathbb{Z}^d}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Qm}{\mathbb{Q}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Nm}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Rm}{\mathbb{R}}
+\newcommand{\Rdm}{\mathbb{R}^d}
+\newcommand{\Zm}{\mathbb{Z}}
+\newcommand{\Zdm}{\mathbb{Z}^d}
+\newcommand{\Cm}{\mathbb{C}}
+\newcommand{\Pa}{\mathcal{P}}
+\newcommand{\Ia}{\mathcal{I}}
+\newcommand{\J}{\mathcal{J}}
+\newcommand{\gs}{\gamma^*}
+\newcommand{\kp}{k_{\phi}}
+\newcommand{\ve}{\varepsilon}
+\newcommand{\lom}{\lambda^{*}}
+\newcommand{\la}{\lambda}
+
+\def\full{\mathop{\rm Full}}
+\def\st{\mathop{\rm such\ that}}
+
+\newtheorem*{acknowledgement}{Acknowledgements}
+
+
+%%%%%%% Now that those are coded, let's begin the document...%%%%%%%%%%%%
+
+
+\begin{document}  
+
+\title{EXPLORE TAB SCORE CALCULATION}
+
+\author{PECK}
+
+\date{\today}
+
+\maketitle  %this makes a title from the above information
+
+%%%%%%%%%%%%%%%%%%%%SECTION 1 %%%%%%%%%%%%%%%%%%
+
+\section*{Description}
+
+This document describes how the Peck app's \textbf{Explore Tab} chooses which events and announcements to display. It provides the characteristics that are considered in providing a score for each Explore Tab item and how those characteristics are scored and weighed relative to the final \textbf{Peck Score}. The first section will describe a general \textbf{Campus Explore}, which is the same for every student, regardless of their personal interests, subscriptions, and circles. The second section will describe Peck's algorithm to personalize each user's Explore Tab, allowing them to discover new events that interest them based on an extended set of characteristics specific to the user.
+
+\section*{Campus Explore}
+
+\subsection*{Scored Characteristics}
+
+Here is a list of the characteristics that play a role in scoring the events appearing in the Campus Explore Tab (in parentheses are the names of each characteristic as they appear in the \textbf{Scoring and Formulas} section: \newline
+
+% list of the characteristics
+\begin{itemize}
+	\item Date of event (Temporal Proximity Score)	
+  	\item Number of attendees (Attendee Score)
+ 	\item Number of times users have viewed the event (Event View Score)
+  	\item Number of users who have liked the event (Event Like Score)
+	\item Comments on event (Comment Score)
+	\begin{enumerate}
+   		\item Number of unique commentors (uniques)
+    		\item Total number of comments (comments)
+  	\end{enumerate}
+	\item Number of subscribers to the entity running the event, this is mostly for scraped events (Subscription Score)
+\end{itemize}
+
+\medskip
+
+\subsection*{Scoring and Formulas}
+
+Each characteristic is scored from 0 to 100 with comprehensive formulas that are adaptable to any number of users and any school size, from small colleges with just a few thousand students, to much larger universities, such as state school, with tens of thousands of students. Note that the \textbf{users} variable below represents the total number of students at a particular that have fully registered with Peck, and not all users who use Peck (registered vs anonymous users). \\
+
+\subsubsection*{1. Date of Event}
+
+The Temporal Proximity Score will be described by a piecewise function with 3 pieces:
+
+\begin{itemize}
+	\item Events happening within the next 24 hours will receive a perfect score of 100 pts
+	\item Events happening in the 6 days after that receive between 60 and 100 pts
+	\item Events happening in the 3 weeks after that receive between 60 and 7 pts
+\end{itemize}
+
+\medskip
+
+\noindent Let $Temporal \ Proximity \ Score = f(x)$, where $x$ is the number of days until the event and define $f(x)$ as follows:
+
+	\begin{displaymath}
+		f(x) = \left\{
+			\begin{array}{lr}
+				100 & if \ x < 1 \ day\\
+				100 - \left[(40 / (6 \ days)) \times (x - (1 \ day))\right] & if \ 1 \ day < x < 7 \ days\\
+				60 \times 0.9^{(x - 7 \ days)} & if \ 7 \ days < x < 28 \ days\\
+			\end{array}
+		\right.
+	\end{displaymath}
+
+\medskip
+
+\subsubsection*{2. Number of attendees}
+
+Since users can only count for one attendee for any particular event, we can score this characteristic linearly. 
+
+	\begin{align*}
+		Attendee \ Score = \frac{400\times(number \ of \ attendees)}{users}\\
+	\end{align*}
+	
+\noindent A max score of 100 is attained when 25\% of registered users at the institution are attending the event.
+
+\medskip
+
+\subsubsection*{3. Number of times users have viewed the event}
+
+The formula for the Event View Score cannot be linear since users have the ability to view the event as many times as they wish. Also, the formula was made so that larger schools required a increasingly smaller percentage of their total number of registered users to view the event in order to get a perfect score. Although this may seem counter-intuitive at first, we can use as an example that it is much harder to get 30\% of students at a school with $2,000$ students ($600$ out of $2000$) to view an event than it is at a school with $40,000$ students ($12,000$ out of $40,000$).
+
+	\begin{align*}
+		Event \ View \ Score = \frac{32\times(number \ of \ event views)^{\frac{3}{2}}}{users^{\frac{1}{4}}}\\
+	\end{align*}
+	
+\noindent For this reason, the number of views required for a max score of 100 depends on the number of registered users: $~20\%$ of registered users for a school with $2,000$ students and $~5\%$ of registered users for a school with $40,000$ students.
+
+\medskip
+
+\subsubsection*{4. Number of users who have liked the event}
+
+Again, since users can only li
+
+	\begin{align*}
+		Event \ Like \ Score = \frac{333\times(number \ of \ likes)}{users}\\
+	\end{align*}
+	
+\noindent A max score of 100 is attained when 30\% of registered users at the institution are attending the event.
+
+\medskip
+
+\subsubsection*{5. Comments on event}
+
+As described above, the comments characteristic is scored piecewise. The \textbf{number of unique commentors (uniques)} accounts for 70\% of the total score as we believe this is the most important part of the score. The remaining 30\% are acquired through the \textbf{total number of comments (comments)}, this prevents users from gaining an advantage by repeatedly commenting on their own event.
+
+	\begin{align*}
+		Comment \ Score = 0.7 \times \left(\frac{1000 \times uniques^{\frac{3}{2}}}{users}\right) + 0.3 \times \left(\frac{400 \times comments^{\frac{3}{2}}}{users}\right)\\
+	\end{align*}
+	
+\noindent However, if the values on either left or the right of the plus sign go above $70$ or $30$, these values will be limited to $70$ or $30$, respectively.
+
+\medskip
+
+\subsubsection*{6. Number of subscribers}
+
+Has not yet been decided.
+
+	\begin{align*}
+		Subscriptions Score = 0\\
+	\end{align*}
+		
+\section*{Personalized Explore}
+
+TBD
+	
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
