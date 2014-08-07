@@ -30,18 +30,24 @@ ActiveAdmin.register ScrapeResource do
     actions
   end
 
-  # form do |f|
-  #   f.inputs 'Details' do
-  #     f.input :kind
-  #     f.input :info
-  #     f.input :institution
-  #     f.input :scrape_interval
-  #     f.input :validated
-  #     f.input :resource_type
-  #     f.input :info
-  #     f.input :url
-  #   end
-  #   f.actions
-  # end
+  form do |f|
+    f.inputs 'Details' do
+      f.input :kind
+      f.input :info
+      f.input :institution
+      f.input :scrape_interval
+      f.input :validated
+      f.input :resource_type
+      f.input :info
+      f.input :url
+    end
+    f.inputs 'Selectors' do
+      f.has_many :selectors do |j|
+        j.inputs :info, :selector, :parent, :top_level, :data_resource, :scrape_resource
+      end
+    end
+    f.actions
+  end
+
 
 end

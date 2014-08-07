@@ -32,7 +32,7 @@ class NestedScrapeWorker
 
         # eventually will extract html and send it off for parsing while continuing with pagination
 
-        top_selectors = Selector.where(id: resource.id, top_level: true)
+        top_selectors = Selector.where(scrape_resource_id: resource.id, top_level: true)
         top_selectors.each do |ts|
 
           logger.info "Iterating over top level selector ts: #{ts.selector}"

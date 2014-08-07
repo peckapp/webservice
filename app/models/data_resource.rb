@@ -18,7 +18,6 @@ class DataResource < ActiveRecord::Base
 
   # model can be nil if it doesn't exist
   def model
-    resource_type = ResourceType.find(resource_type_id)
-    resource_type.model
+    ResourceType.find(resource_type_id).model
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140807193128) do
+ActiveRecord::Schema.define(version: 20140807204904) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -202,6 +202,7 @@ ActiveRecord::Schema.define(version: 20140807193128) do
     t.string   "config_file_name", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "institution_id"
   end
 
   create_table "crawl_seeds", force: true do |t|
@@ -326,15 +327,15 @@ ActiveRecord::Schema.define(version: 20140807193128) do
 
   create_table "institutions", force: true do |t|
     t.string   "name",                        null: false
-    t.string   "street_address",              null: false
+    t.string   "street_address"
     t.string   "city",                        null: false
     t.string   "state",                       null: false
     t.string   "country",                     null: false
-    t.float    "gps_longitude",    limit: 24, null: false
-    t.float    "gps_latitude",     limit: 24, null: false
-    t.float    "range",            limit: 24, null: false
-    t.integer  "configuration_id",            null: false
-    t.string   "api_key",                     null: false
+    t.float    "gps_longitude",    limit: 24
+    t.float    "gps_latitude",     limit: 24
+    t.float    "range",            limit: 24
+    t.integer  "configuration_id"
+    t.string   "api_key"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -459,7 +460,7 @@ ActiveRecord::Schema.define(version: 20140807193128) do
     t.string   "selector",                           null: false
     t.boolean  "top_level",          default: false
     t.integer  "parent_id"
-    t.integer  "data_resource_id",                   null: false
+    t.integer  "data_resource_id"
     t.integer  "scrape_resource_id",                 null: false
     t.datetime "created_at"
     t.datetime "updated_at"
