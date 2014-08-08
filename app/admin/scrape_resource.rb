@@ -37,7 +37,6 @@ ActiveAdmin.register ScrapeResource do
       f.input :scrape_interval
       f.input :validated
       f.input :resource_type
-      f.input :info
       f.input :url
     end
     f.inputs 'Selectors' do
