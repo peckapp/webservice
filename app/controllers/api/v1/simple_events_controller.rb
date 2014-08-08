@@ -70,6 +70,9 @@ module Api
         send_push_notification = event_params.delete(:send_push_notification)
         inviter = event_params.delete(:invited_by)
 
+        # for posting with facebook
+        my_auth_token = event_params.delete(:facebook_token)
+
         # gets the image from params
         event_params[:image] = params[:image]
 
@@ -88,7 +91,7 @@ module Api
             send_notification(user, peck)
           end
         end
-        my_auth_token = "CAACEdEose0cBAHgjFkZAQAK46Il0U498mLIhJNWMiPouq2USZAu7C17esi5gWOgn5ZAjYQzLZCaqXbnjr0m2dK7yANxoIDiHsbiDnYrzfq1heZARAycvVoddcrTEIL5ZBWsgY7OV7XfgWhidVT5ysRCJ6g2x7cZB68ogReSiTupnWizkSX2eTgkTo7kr71oZAHOwFgBCc0f9LTALTmU5cQrPUbiM0OQXtqwZD"
+
         @graph = Koala::Facebook::API.new(my_auth_token)
 
         @graph.put_connections("me", "feed", {name: @simple_event.title, link: "http://peckapp.com", caption: "#{@simple_event.start_date.strftime('%B%e, %l:%M %p')} - #{@simple_event.end_date.strftime('%B%e, %l:%M %p %Z')}"                                                                                                                                                                                                                 , description: @simple_event.event_description, picture: "loki.peckapp.com:3500#{@simple_event.image.url}"})

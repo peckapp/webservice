@@ -44,10 +44,10 @@ module Api
 
       def destroy
         @circle_member = CircleMember.find(params[:id])
-        circle = @circle_member.circle_id
+        circle = Circle.find(@circle_member.circle_id)
         circle.circle_members.delete(@circle_member)
         @circle_member.destroy
-        
+
         @peck = Peck.find(params[:peck_id])
         @peck.update_attributes(interacted: true)
       end
