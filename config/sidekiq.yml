@@ -4,5 +4,6 @@ staging:
 production:
   :concurrency: 20
 :queues:
-  - default
-  - paperclip
+  - [default, 5]
+  - [scraping, 3]
+  - [paperclip, 6]

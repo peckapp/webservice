@@ -4,10 +4,9 @@ module SpecificScrape
   # this is done for now because dining menus are very specific to a certain school, and the most static of all
   class MiddDining
     include Sidekiq::Worker
-    # turn off retry for development
-    sidekiq_options retry: false
-    include Sidetiq::Schedulable
+    sidekiq_options queue: :scraping
 
+    include Sidetiq::Schedulable
     recurrence { daily.hour_of_day(2) }
 
     MIDD_MENUS = 'http://menus.middlebury.edu'
