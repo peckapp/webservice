@@ -261,7 +261,7 @@ module Api
           params.require(:user).permit(:first_name, :last_name, :blurb, :facebook_link, :active, :institution_id)
         end
 
-        def facebook_login_params
+        def facebook_login_params(parameters)
           parameters.permit(:first_name, :last_name, :email, :facebook_link, :facebook_token, :active, :institution_id)
         end
 
