@@ -146,6 +146,9 @@ module Api
 
       def facebook_login
         fb_params = params[:user]
+        the_udid = fb_params.delete(:udid)
+        the_token = fb_params.delete(:device_token)
+
         @user = User.find(params[:id])
 
         if @user && params[:id].to_i == auth[:user_id].to_i
@@ -168,7 +171,7 @@ module Api
 
             # Then the user has not logged in before
             @user.enable_facebook_validation = true
-            if @user.update_attributes(facebook_login_params)
+            if @user.update_attributes(facebook_login_params(fb_params))
                @user.authentication_token = SecureRandom.hex(30)
                @user.save
                auth[:authentication_token] = @user.authentication_token
@@ -177,12 +180,12 @@ module Api
 
           if @user.authentication_token
             # check if udid/device token is provided
-            @udid = UniqueDeviceIdentifier.where(udid: uparams[:udid]).first
+            @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
             if ! @udid
-              if uparams[:device_token]
-                @udid = UniqueDeviceIdentifier.create(udid: uparams[:udid], token: uparams[:device_token])
+              if the_token
+                @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
               else
-                @udid = UniqueDeviceIdentifier.create(udid: uparams[:udid])
+                @udid = UniqueDeviceIdentifier.create(udid: the_udid)
               end
 
               UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
@@ -259,7 +262,7 @@ module Api
         end
 
         def facebook_login_params
-          params.require(:user).permit(:first_name, :last_name, :email, :facebook_link, :facebook_token, :active, :institution_id)
+          parameters.permit(:first_name, :last_name, :email, :facebook_link, :facebook_token, :active, :institution_id)
         end
 
         def password_update_params
