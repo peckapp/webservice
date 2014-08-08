@@ -23,7 +23,6 @@ ActiveAdmin.register ScrapeResource do
     column :scrape_interval
     column :validated
     column :resource_type
-    column :info
     column :created_at
     column :updated_at
     column :url
