@@ -144,6 +144,69 @@ module Api
         end
       end
 
+      def facebook_login
+        fb_params = params[:facebook]
+        @user = User.find(params[:id])
+
+        if @user && params[:id].to_i == auth[:user_id].to_i
+
+          # if the user already has an email that matches with their facebook college email
+          if @user.email == fb_params[:email]
+
+            # if fb gave out an access token
+            if fb_params[:access_token]
+
+              # update the user and add their access token
+              @user.update_attributes(facebook_token: fb_params[:access_token])
+
+              # use the current one if they're logged in on another device
+              @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token
+              @user.save
+              auth[:authentication_token] = @user.authentication_token
+            end
+          else
+
+            # Then the user has not logged in before
+            @user.enable_facebook_validation = true
+            if @user.update_attributes(facebook_login_params)
+               @user.authentication_token = SecureRandom.hex(30)
+               @user.save
+               auth[:authentication_token] = @user.authentication_token
+            end
+          end
+
+          if @user.authentication_token
+            # check if udid/device token is provided
+            @udid = UniqueDeviceIdentifier.where(udid: uparams[:udid]).first
+            if ! @udid
+              if uparams[:device_token]
+                @udid = UniqueDeviceIdentifier.create(udid: uparams[:udid], token: uparams[:device_token])
+              else
+                @udid = UniqueDeviceIdentifier.create(udid: uparams[:udid])
+              end
+
+              UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+              @user.unique_device_identifiers << @udid
+
+            else
+              @udid.touch
+
+              @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
+              if @udid_user
+                  # update the timestamp if the udid_user already exists
+                @udid_user.touch
+              else
+                @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+              end
+            end
+          else
+            logger.warn "attempted to super_create user with id: #{@user.id} with invalid authentication sign_up_params"
+          end
+        else
+          logger.warn "attempted to super_create user with non-existant id: #{@user.id}"
+        end
+      end
+
       def update
         if params[:id].to_i == auth[:user_id].to_i
           @user = User.find(params[:id])
@@ -193,6 +256,10 @@ module Api
 
         def user_update_params
           params.require(:user).permit(:first_name, :last_name, :blurb, :facebook_link, :active, :institution_id)
+        end
+
+        def facebook_login_params
+          params.require(:user).permit(:first_name, :last_name, :email, :facebook_link, :facebook_token, :active, :institution_id)
         end
 
         def password_update_params
