@@ -145,7 +145,7 @@ module Api
       end
 
       def facebook_login
-        fb_params = params[:facebook]
+        fb_params = params[:user]
         @user = User.find(params[:id])
 
         if @user && params[:id].to_i == auth[:user_id].to_i
