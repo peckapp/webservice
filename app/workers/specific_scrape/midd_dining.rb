@@ -38,7 +38,7 @@ module SpecificScrape
           logger.info "scraping resource #{r.id}: #{r.kind}, #{r.info}"
           b.goto r.url
           logger.info 'entering middlebury dining scraping loop'
-          scrape_forward(b, inst_id)
+          scrape_forward(b, midd.id, r.id)
         end
       rescue => error
         raise error
@@ -48,7 +48,7 @@ module SpecificScrape
       end
     end
 
-    def scrape_forward(b, inst_id)
+    def scrape_forward(b, inst_id, sr_id)
       (0..7).each do |increment|
 
         logger.info "scraping midd dining for #{increment} days from now"
@@ -66,7 +66,7 @@ module SpecificScrape
 
         if data.exists?
           html_raw = data.html
-          scrape_html(html_raw.squish, date, inst_id)
+          scrape_html(html_raw.squish, date, inst_id, sr_id)
         else
           logger.error 'Middlebury dining information not found at specified CSS selectors'
           # one in place, trigger the analysis phase of the webpage once again
@@ -89,19 +89,20 @@ module SpecificScrape
           opportunity_type = entry.css('span[class=field-content]').text
           opportunity = DiningOpportunity.current_or_create_new(institution_id: inst_id,
                                                                 dining_opportunity_type: opportunity_type)
-
+          count = 0
           entry.css('p').children.each do |item|
-            if item.text.blank?
-              logger.warn 'skipped blank menu_item entry at css selector \'p\''
-              next
-            end
+            next if item.text.blank?
 
             item_name = item.text
             mi = MenuItem.new(name: item_name, dining_opportunity_id: opportunity.id, dining_place_id: place.id,
-                              date_available: date, scrape_resource_id: sr_id)
-            logger.info "menu item: #{mi.inspect}"
+                              institution_id: inst_id, date_available: date, scrape_resource_id: sr_id)
+            unless mi.valid?
+              logger.warn "invalid menu item with warnings: #{mi.errors.messages}"
+            end
+            count += 1 if mi.save
 
           end # end entry items
+          logger.info "saved #{count} menu items for opportunity #{opportunity_type} and place #{place_name}"
 
         end # end table entries
 

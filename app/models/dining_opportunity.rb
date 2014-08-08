@@ -36,6 +36,10 @@ class DiningOpportunity < ActiveRecord::Base
   ##                           ##
   ###############################
 
+  def to_label
+    dining_opportunity_type
+  end
+
   # returns an array of triples each containing a dining opp with a start and end time given the day of week
   def self.earliest_start_latest_end(day_of_week)
 
