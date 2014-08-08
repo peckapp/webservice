@@ -40,6 +40,8 @@ gem 'pushmeup'
 ### Administrative Capabilities
 # Active Admin for highly customizable interfaces
 gem 'activeadmin', github: 'gregbell/active_admin'
+# allows for easily selecting a country in admin interface
+gem 'country-select'
 
 ### FILE MANAGEMENT
 # Paperclip for handling larger files, mostly user-uploaded images: https://github.com/thoughtbot/paperclip

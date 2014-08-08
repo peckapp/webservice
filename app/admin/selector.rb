@@ -15,10 +15,22 @@ ActiveAdmin.register Selector do
   # Adds this into a dropdown in the top menu bar
   menu parent: 'Scraping', priority: 4
 
+  index do
+    id_column
+    column :info
+    column :selector
+    column :top_level
+    column :parent
+    column :scrape_resource, label: 'info'
+    column :created_at
+    column :updated_at
+    actions
+  end
+
   # creates a form for a new resource
   form do |f|
     f.semantic_errors # shows errors on :base
-    f.inputs 'Parameters' do # builds an input field for specified attributes
+    f.inputs do # builds an input field for specified attributes
       f.input :info
       f.input :selector
       f.input :top_level, as: :radio, label: 'Top Level Selector'
@@ -26,18 +38,16 @@ ActiveAdmin.register Selector do
       f.input :scrape_resource, as: :select, collection: Hash[ScrapeResource.all.map { |sr| ["#{sr.info} => #{sr.url}", sr.id] }]
       f.input :data_resource, as: :select, collection: Hash[DataResource.all.map { |dr| ["#{dr.info} => #{dr.column_name}", dr.id] }]
     end
+    f.inputs 'Children' do # builds an input field for specified attributes
+      f.has_many :children do |j|
+        j.input :info
+        j.input :selector
+        j.input :top_level, label: 'Top Level Selector'
+        j.input :scrape_resource, as: :select, collection: Hash[ScrapeResource.all.map { |sr| ["#{sr.info} => #{sr.url}", sr.id] }]
+        j.input :data_resource, as: :select, collection: Hash[DataResource.all.map { |dr| ["#{dr.info} => #{dr.column_name}", dr.id] }]
+      end
+    end
     f.actions # adds the 'Submit' and 'Cancel' buttons
-  end
-
-  index do
-    id_column
-    column :info
-    column :selector
-    column :top_level
-    column :parent
-    column :created_at
-    column :updated_at
-    actions
   end
 
 end

@@ -6,6 +6,8 @@ class ScrapeResource < ActiveRecord::Base
   ### each selector has a ScrapeResource from which it originated
   has_many :selectors
 
+  accepts_nested_attributes_for :selectors
+
   def paginated?
     pagination_selector_id.blank?
   end
@@ -15,4 +17,8 @@ class ScrapeResource < ActiveRecord::Base
     info
   end
 
+  # model can be nil if it doesn't exist
+  def model
+    ResourceType.find(resource_type_id).model
+  end
 end
