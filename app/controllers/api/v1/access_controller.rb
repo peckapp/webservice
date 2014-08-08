@@ -8,9 +8,14 @@ module Api
 
         # gets the udid from the user block
         the_udid = uparams.delete(:udid)
-        the_token = uparams.delete(:device_token)
         logger.info "Access, udid: #{the_udid}"
-        logger.info "Access, token: #{the_token}"
+
+        # if little john provides a device token
+        if uparams[:device_token]
+          the_token = uparams.delete(:device_token)
+          logger.info "Access, token: #{the_token}"
+        end
+
         # first authenticate user with email and password
         @user = User.authenticate(authentication_params(uparams)[:email], authentication_params(uparams)[:password])
 
@@ -23,9 +28,15 @@ module Api
           auth[:authentication_token] = @user.authentication_token
 
           # Send UDID when you log in.
-          @udid = UniqueDeviceIdentifier.where(udid: the_udid, token: the_token).first
+          @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
+
           if !@udid
-            @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
+            if the_token
+              @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
+            else
+              @udid = UniqueDeviceIdentifier.create(udid: the_udid)
+            end
+
             UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
             @user.unique_device_identifiers << @udid
           else

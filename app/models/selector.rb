@@ -19,9 +19,11 @@ class Selector < ActiveRecord::Base
   has_many :children, class_name: 'Selector', foreign_key: 'parent_id'
   belongs_to :parent, class_name: 'Selector'
 
+  accepts_nested_attributes_for :children
+
   # inferred model for this selector
   def model
-    DataResource.find(data_resource_id).model
+    ScrapeResource.find(scrape_resource_id).model
   end
 
   def column_name
