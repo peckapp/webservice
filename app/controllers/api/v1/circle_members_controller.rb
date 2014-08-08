@@ -46,7 +46,7 @@ module Api
         @circle_member = CircleMember.find(params[:id])
         circle = Circle.find(@circle_member.circle_id)
         circle.circle_members.destroy(@circle_member)
-        # @circle_member.destroy
+        @circle_member.destroy
 
         @peck = Peck.find(params[:peck_id])
         @peck.update_attributes(interacted: true)
