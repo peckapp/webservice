@@ -110,6 +110,32 @@ module Api
             @user.save
             auth[:authentication_token] = @user.authentication_token
             logger.info "super_created user with id: #{@user.id}"
+
+            # check if udid/device token is provided
+            @udid = UniqueDeviceIdentifier.where(udid: uparams[:udid]).first
+
+            if ! @udid
+              if uparams[:device_token]
+                @udid = UniqueDeviceIdentifier.create(udid: uparams[:udid], token: uparams[:device_token])
+              else
+                @udid = UniqueDeviceIdentifier.create(udid: uparams[:udid])
+              end
+
+              UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+              @user.unique_device_identifiers << @udid
+
+            else
+
+              @udid.touch
+
+              @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
+              if @udid_user
+                # update the timestamp if the udid_user already exists
+                @udid_user.touch
+              else
+                @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+              end
+            end
           else
             logger.warn "attempted to super_create user with id: #{@user.id} with invalid authentication sign_up_params"
           end
