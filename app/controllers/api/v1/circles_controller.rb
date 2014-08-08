@@ -33,7 +33,6 @@ module Api
         # returns the array of circle member ids
         the_circle_members = cparams.delete(:circle_member_ids)
         the_message = cparams.delete(:message)
-        device_type = cparams.delete(:device_type)
 
         # passes in the cparams to permit certain attributes
         @circle = Circle.create(circle_create_params(cparams))
@@ -67,7 +66,7 @@ module Api
               ### Circle Member Invites Push Notifications ###
 
               # create a peck for the user in the passed array
-              peck = Peck.create(user_id: mem_id, institution_id: @circle.institution_id, notification_type: "circle_invite", message: the_message, invited_by: @circle.user_id, send_push_notification: true, invitation: member.id, device_type: device_type)
+              peck = Peck.create(user_id: mem_id, institution_id: @circle.institution_id, notification_type: "circle_invite", message: the_message, invited_by: @circle.user_id, send_push_notification: true, invitation: member.id)
 
               send_notification(user, peck)
             end

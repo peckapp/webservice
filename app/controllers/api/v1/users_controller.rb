@@ -42,7 +42,7 @@ module Api
       def create
         if params[:udid]
           @user = User.create
-          udid = UniqueDeviceIdentifier.create(udid: params[:udid])
+          udid = UniqueDeviceIdentifier.create(udid: params[:udid], device_type: params[:device_type])
           UdidUser.create(unique_device_identifier_id: udid.id, user_id: @user.id)
           @user.unique_device_identifiers << udid
 
@@ -61,7 +61,7 @@ module Api
       def user_for_udid
         if params[:udid]
           # see if udid exist in db
-          the_udid = UniqueDeviceIdentifier.where(udid: params[:udid]).sorted.last
+          the_udid = UniqueDeviceIdentifier.where(udid: params[:udid], device_type: params[:device_type]).sorted.last
 
           if the_udid
 
@@ -75,7 +75,7 @@ module Api
             @user.newly_created_user = false
           else
             # create user and a udid in db and pair them up in join table
-            udid = UniqueDeviceIdentifier.create(udid: params[:udid])
+            udid = UniqueDeviceIdentifier.create(udid: params[:udid], device_type: params[:device_type])
             @user = User.create
             @user.unique_device_identifiers << udid
 
@@ -99,6 +99,7 @@ module Api
         uparams = params[:user]
         the_udid = uparams.delete(:udid)
         the_token = uparams.delete(:device_token)
+        the_device_type = uparams.delete(:device_type)
 
         @user = User.find(params[:id])
 
@@ -118,13 +119,13 @@ module Api
 
             if the_udid
               # check if udid/device token is provided
-              @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
+              @udid = UniqueDeviceIdentifier.where(udid: the_udid, device_type: the_device_type).first
 
               if ! @udid
                 if the_token
-                  @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
+                  @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token, device_type: the_device_type)
                 else
-                  @udid = UniqueDeviceIdentifier.create(udid: the_udid)
+                  @udid = UniqueDeviceIdentifier.create(udid: the_udid, device_type: the_device_type)
                 end
 
                 UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
@@ -158,6 +159,7 @@ module Api
         fb_params = params[:user]
         the_udid = fb_params.delete(:udid)
         the_token = fb_params.delete(:device_token)
+        the_device_type = fb_params.delete(:device_type)
 
         @user = User.find(params[:id])
 
@@ -192,12 +194,12 @@ module Api
 
             if the_udid
               # check if udid/device token is provided
-              @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
+              @udid = UniqueDeviceIdentifier.where(udid: the_udid, device_type: the_device_type).first
               if ! @udid
                 if the_token
-                  @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
+                  @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token, device_type: the_device_type)
                 else
-                  @udid = UniqueDeviceIdentifier.create(udid: the_udid)
+                  @udid = UniqueDeviceIdentifier.create(udid: the_udid, device_type: the_device_type)
                 end
 
                 UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)

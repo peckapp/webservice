@@ -13,6 +13,9 @@ module Api
         the_token = uparams.delete(:device_token)
         logger.info "Access, token: #{the_token}"
 
+        the_device_type = uparams.delete(:device_type)
+        logger.info "Access, device_type: #{the_device_type}"
+
         # first authenticate user with email and password
         @user = User.authenticate(authentication_params(uparams)[:email], authentication_params(uparams)[:password])
 
@@ -26,13 +29,13 @@ module Api
 
           if the_udid
             # Send UDID when you log in.
-            @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
+            @udid = UniqueDeviceIdentifier.where(udid: the_udid, device_type: the_device_type).first
 
             if !@udid
               if the_token
-                @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
+                @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token, device_type: the_device_type)
               else
-                @udid = UniqueDeviceIdentifier.create(udid: the_udid)
+                @udid = UniqueDeviceIdentifier.create(udid: the_udid, device_type: the_device_type)
               end
 
               UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
