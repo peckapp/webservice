@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140807204904) do
+ActiveRecord::Schema.define(version: 20140808134916) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -338,6 +338,7 @@ ActiveRecord::Schema.define(version: 20140807204904) do
     t.string   "api_key"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "email_regex"
   end
 
   add_index "institutions", ["configuration_id"], name: "index_institutions_on_configuration_id", using: :btree
