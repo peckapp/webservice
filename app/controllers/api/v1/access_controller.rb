@@ -66,6 +66,11 @@ module Api
 
         # remove auth token from authentication params and database
         @user.authentication_token = nil
+
+        if @user.facebook_token
+          @user.facebook_token = nil
+        end
+
         @user.save
 
         logger.info "destroyed session for user with id: #{@user.id}"
