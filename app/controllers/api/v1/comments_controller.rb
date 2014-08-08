@@ -72,8 +72,10 @@ module Api
         if params[:liker].to_i == auth[:user_id].to_i
           liker = User.find(params[:liker])
           liker.like!(@comment)
+
           @likers = @comment.likers(User)
           @likes = []
+          
           @likers.each do |user|
             @likes << user.id
           end
