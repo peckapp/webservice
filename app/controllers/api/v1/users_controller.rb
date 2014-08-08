@@ -40,50 +40,56 @@ module Api
       end
 
       def create
-        @user = User.create
-
         if params[:udid]
+          @user = User.create
           udid = UniqueDeviceIdentifier.create(udid: params[:udid])
           UdidUser.create(unique_device_identifier_id: udid.id, user_id: @user.id)
           @user.unique_device_identifiers << udid
+
+          logger.info "Created anonymous user with id: #{@user.id}"
+
+          session[:user_id] = @user.id
+          session[:api_key] = @user.api_key
+        else
+          head :bad_request
+          logger.warn "tried to not send a udid"
         end
-
-        logger.info "Created anonymous user with id: #{@user.id}"
-
-        session[:user_id] = @user.id
-        session[:api_key] = @user.api_key
       end
 
       # either returns an existing user with matching udid
       # or creates new user
       def user_for_udid
+        if params[:udid]
+          # see if udid exist in db
+          the_udid = UniqueDeviceIdentifier.where(udid: params[:udid]).sorted.last
 
-        # see if udid exist in db
-        the_udid = UniqueDeviceIdentifier.where(udid: params[:udid]).sorted.last
+          if the_udid
 
-        if the_udid
+            # ID of most recent user to use this device
+            id = UdidUser.where(unique_device_identifier: the_udid.id).sorted.last.user_id
 
-          # ID of most recent user to use this device
-          id = UdidUser.where(unique_device_identifier: the_udid.id).sorted.last.user_id
+            # return that user
+            @user = specific_show(User, id)
 
-          # return that user
-          @user = specific_show(User, id)
+            # this user was already in db
+            @user.newly_created_user = false
+          else
+            # create user and a udid in db and pair them up in join table
+            udid = UniqueDeviceIdentifier.create(udid: params[:udid])
+            @user = User.create
+            @user.unique_device_identifiers << udid
 
-          # this user was already in db
-          @user.newly_created_user = false
+            udid_user = UdidUser.create(unique_device_identifier_id: udid.id, user_id: @user.id)
+
+            @user.newly_created_user = true
+          end
+          # start session as in normal creation
+          session[:user_id] = @user.id
+          session[:api_key] = @user.api_key
         else
-          # create user and a udid in db and pair them up in join table
-          udid = UniqueDeviceIdentifier.create(udid: params[:udid])
-          @user = User.create
-          @user.unique_device_identifiers << udid
-
-          udid_user = UdidUser.create(unique_device_identifier_id: udid.id, user_id: @user.id)
-
-          @user.newly_created_user = true
+          head :bad_request
+          logger.warn "tried to not send a udid"
         end
-        # start session as in normal creation
-        session[:user_id] = @user.id
-        session[:api_key] = @user.api_key
       end
 
       # user registration
@@ -91,9 +97,8 @@ module Api
 
         # params in the user block
         uparams = params[:user]
-
-        # params for super creating with mass assignment.
-        sign_up_params = user_signup_params
+        the_udid = uparams.delete(:udid)
+        the_token = uparams.delete(:device_token)
 
         @user = User.find(params[:id])
 
@@ -102,39 +107,44 @@ module Api
           @user.enable_strict_validation = true
 
           # assigns the password and password_confirmation from the values in the user block of params.
-          sign_up_params[:password] = uparams[:password]
-          sign_up_params[:password_confirmation] = uparams[:password_confirmation]
+          user_signup_params(uparams)[:password] = uparams[:password]
+          user_signup_params(uparams)[:password_confirmation] = uparams[:password_confirmation]
 
-          if @user.update_attributes(sign_up_params)
+          if @user.update_attributes(user_signup_params(uparams))
             @user.authentication_token = SecureRandom.hex(30)
             @user.save
             auth[:authentication_token] = @user.authentication_token
             logger.info "super_created user with id: #{@user.id}"
 
-            # check if udid/device token is provided
-            @udid = UniqueDeviceIdentifier.where(udid: uparams[:udid]).first
+            if the_udid
+              # check if udid/device token is provided
+              @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
 
-            if ! @udid
-              if uparams[:device_token]
-                @udid = UniqueDeviceIdentifier.create(udid: uparams[:udid], token: uparams[:device_token])
+              if ! @udid
+                if the_token
+                  @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
+                else
+                  @udid = UniqueDeviceIdentifier.create(udid: the_udid)
+                end
+
+                UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+                @user.unique_device_identifiers << @udid
+
               else
-                @udid = UniqueDeviceIdentifier.create(udid: uparams[:udid])
+
+                @udid.touch
+
+                @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
+                if @udid_user
+                  # update the timestamp if the udid_user already exists
+                  @udid_user.touch
+                else
+                  @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+                end
               end
-
-              UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
-              @user.unique_device_identifiers << @udid
-
             else
-
-              @udid.touch
-
-              @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
-              if @udid_user
-                # update the timestamp if the udid_user already exists
-                @udid_user.touch
-              else
-                @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
-              end
+              head :bad_request
+              logger.warn "tried to not send a udid"
             end
           else
             logger.warn "attempted to super_create user with id: #{@user.id} with invalid authentication sign_up_params"
@@ -179,28 +189,34 @@ module Api
           end
 
           if @user.authentication_token
-            # check if udid/device token is provided
-            @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
-            if ! @udid
-              if the_token
-                @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
+
+            if the_udid
+              # check if udid/device token is provided
+              @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
+              if ! @udid
+                if the_token
+                  @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
+                else
+                  @udid = UniqueDeviceIdentifier.create(udid: the_udid)
+                end
+
+                UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+                @user.unique_device_identifiers << @udid
+
               else
-                @udid = UniqueDeviceIdentifier.create(udid: the_udid)
+                @udid.touch
+
+                @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
+                if @udid_user
+                    # update the timestamp if the udid_user already exists
+                  @udid_user.touch
+                else
+                  @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+                end
               end
-
-              UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
-              @user.unique_device_identifiers << @udid
-
             else
-              @udid.touch
-
-              @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
-              if @udid_user
-                  # update the timestamp if the udid_user already exists
-                @udid_user.touch
-              else
-                @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
-              end
+              head :bad_request
+              logger.warn "tried to not send a udid"
             end
           else
             logger.warn "attempted to super_create user with id: #{@user.id} with invalid authentication sign_up_params"
@@ -253,8 +269,8 @@ module Api
       end
 
       private
-        def user_signup_params
-          params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :blurb, :institution_id)
+        def user_signup_params(parameters)
+          parameters.permit(:first_name, :last_name, :email, :password, :password_confirmation, :blurb, :institution_id)
         end
 
         def user_update_params

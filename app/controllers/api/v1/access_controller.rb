@@ -10,11 +10,8 @@ module Api
         the_udid = uparams.delete(:udid)
         logger.info "Access, udid: #{the_udid}"
 
-        # if little john provides a device token
-        if uparams[:device_token]
-          the_token = uparams.delete(:device_token)
-          logger.info "Access, token: #{the_token}"
-        end
+        the_token = uparams.delete(:device_token)
+        logger.info "Access, token: #{the_token}"
 
         # first authenticate user with email and password
         @user = User.authenticate(authentication_params(uparams)[:email], authentication_params(uparams)[:password])
@@ -27,31 +24,36 @@ module Api
           @user.save
           auth[:authentication_token] = @user.authentication_token
 
-          # Send UDID when you log in.
-          @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
+          if the_udid
+            # Send UDID when you log in.
+            @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
 
-          if !@udid
-            if the_token
-              @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
+            if !@udid
+              if the_token
+                @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
+              else
+                @udid = UniqueDeviceIdentifier.create(udid: the_udid)
+              end
+
+              UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+              @user.unique_device_identifiers << @udid
             else
-              @udid = UniqueDeviceIdentifier.create(udid: the_udid)
-            end
+              # touch little boys
+              @udid.touch
 
-            UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
-            @user.unique_device_identifiers << @udid
+              @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
+              if @udid_user
+                # update the timestamp if the udid_user already exists
+                @udid_user.touch
+              else
+                @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+              end
+            end
+            logger.info "created session for user with id: #{@user.id}"
           else
-            # touch little boys
-            @udid.touch
-
-            @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
-            if @udid_user
-              # update the timestamp if the udid_user already exists
-              @udid_user.touch
-            else
-              @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
-            end
+            head :bad_request
+            logger.warn "tried to not send a udid"
           end
-          logger.info "created session for user with id: #{@user.id}"
         else
 
           # something went wrong
