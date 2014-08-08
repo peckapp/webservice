@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
 
   acts_as_liker
 
-  EMAIL_REGEX = /\A[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}\Z/
+  EMAIL_REGEX = /\A[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,4}\Z/
 
   ###############################
   ##                           ##
