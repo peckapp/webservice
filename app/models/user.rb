@@ -3,17 +3,29 @@ class User < ActiveRecord::Base
   include ModelBeforeSaveValidations
 
   # each user has an encrypted secure password
-  attr_accessor :enable_strict_validation, :password, :old_pass_match, :image, :newly_created_user
+  attr_accessor :enable_strict_validation, :enable_facebook_validation, :password, :old_pass_match, :image, :newly_created_user
 
   acts_as_liker
 
   EMAIL_REGEX = /\A[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,4}\Z/
+
+  # # AT LEAST ONE LOWERCASE, ONE UPPERCASE, AND ONE NUMBER
+  # PASSWORD_REGEX = /\A(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}\Z/
+  #
+  # # AT LEAST ONE NUMBER
+  # PASSWORD_REGEX = /\A(?=.*[0-9]).{8,}\Z/
 
   ###############################
   ##                           ##
   ##        VALIDATIONS        ##
   ##                           ##
   ###############################
+  ### Facebook Login ###
+  validates :facebook_token, presence: true, if: :enable_facebook_validation
+  validates :first_name, presence: true, if: :enable_facebook_validation
+  validates :last_name, presence: true, if: :enable_facebook_validation
+  validates :email, uniqueness: true, presence: true, length: {maximum: 50}, format: { with: EMAIL_REGEX }, if: :enable_facebook_validation
+  ######################
 
   validates :password, presence: true, length: { minimum: 5 }, if: :enable_strict_validation
   validates :password_confirmation, presence: true, if: lambda { |m| m.password.present? }

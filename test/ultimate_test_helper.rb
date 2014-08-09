@@ -96,6 +96,13 @@ class UltimateTestHelper < ActionController::TestCase
       assigns(:subscriptions).each do |sub|
         assert_not_nil sub
       end
+
+      # anonymous user creation
+    elsif is_users_controller?
+      post :create, {:udid => "hello", :format => :json, :authentication => session_create}
+      user = assigns(:user)
+      assert_not_nil user.id
+      assert_not_nil user.api_key
     else
       post :create, {@model_type => @params_create, :authentication => auth_params, :format => :json}
       assert_response :success
@@ -172,6 +179,10 @@ class UltimateTestHelper < ActionController::TestCase
 
     def is_subscriptions_controller?
       @class && @class == SubscriptionsControllerTest
+    end
+
+    def is_users_controller?
+      @class && @class == UsersControllerTest
     end
 
     def is_controller?

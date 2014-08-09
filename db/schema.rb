@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140808163555) do
+ActiveRecord::Schema.define(version: 20140808204817) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -430,7 +430,6 @@ ActiveRecord::Schema.define(version: 20140808163555) do
     t.integer  "invited_by"
     t.integer  "invitation"
     t.boolean  "interacted",             default: false
-    t.string   "device_type"
   end
 
   add_index "pecks", ["notification_type"], name: "index_pecks_on_notification_type", using: :btree
@@ -529,6 +528,7 @@ ActiveRecord::Schema.define(version: 20140808163555) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "token"
+    t.string   "device_type"
   end
 
   create_table "users", force: true do |t|

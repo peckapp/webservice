@@ -41,7 +41,6 @@ module Api
         cparams = params[:comment]
 
         the_message = cparams.delete(:message)
-        device_type = cparams.delete(:device_type)
         send_push_notification = cparams.delete(:send_push_notification)
 
         @comment = Comment.create(comment_create_params(cparams))
@@ -49,15 +48,14 @@ module Api
         ##### Circle Comment Push Notifications #####
         if @comment && @comment.category == "circles"
           the_circle_members = Circle.find_by_id(@comment.comment_from).circle_members
-        end
+          the_circle_members.each do |member|
+            unless member.user_id == @comment.user_id
+              user = User.find(member.user_id)
 
-        the_circle_members.each do |member|
-          unless member.user_id == @comment.user_id
-            user = User.find(member.user_id)
+              peck = Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "circle_comment", message: the_message, send_push_notification: send_push_notification)
 
-            peck = Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "circle_comment", message: the_message, send_push_notification: send_push_notification, device_type: device_type)
-
-            send_notification(user, peck)
+              send_notification(user, peck)
+            end
           end
         end
       end
@@ -75,7 +73,7 @@ module Api
 
           @likers = @comment.likers(User)
           @likes = []
-          
+
           @likers.each do |user|
             @likes << user.id
           end
