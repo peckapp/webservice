@@ -98,10 +98,10 @@ module SpecificScrape
             unless mi.valid?
               logger.warn "invalid menu item with warnings: #{mi.errors.messages}"
             end
-            count += 1 if mi.save
+            count += 1 if mi.non_duplicative_save
 
           end # end entry items
-          logger.info "saved #{count} menu items for opportunity #{opportunity_type} and place #{place_name}"
+          logger.info "saved #{count} new menu items for opportunity #{opportunity_type} and place #{place_name}"
 
         end # end table entries
 

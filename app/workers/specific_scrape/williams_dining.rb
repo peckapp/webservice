@@ -1,10 +1,10 @@
 module SpecificScrape
-  # scrapes middlebury's dining menus
+  # scrapes Middlebury's dining menus
   # uses hard-coded values for the selectors and data_resources instead of database table information
   # this is done for now because dining menus are very specific to a certain school, and the most static of all
-  class MiddDining
+  class WilliamsDining
     include Sidekiq::Worker
-    sidekiq_options queue: :scraping
+    sidekiq_options queue: :scraping, retry: false
 
     include Sidetiq::Schedulable
     recurrence { daily.hour_of_day(2) }
@@ -48,48 +48,62 @@ module SpecificScrape
 
     #
     def scrape_places(b, inst_id, sr_id)
-      top_selectors = Selector.where(scrape_resource_id: sr_id, top_level: true)
+      top_selectors = Selector.where(scrape_resource_id: sr_id, top_level: true).to_a
 
-      top_selectors.each do |ts|
+      while top_selectors.any?
+        ts = top_selectors.pop
+
+        if ts.parent
+          logger.info "clicking parent selector: #{ts.parent.selector}"
+          b.link(text: ts.parent.selector).click
+          be_nice
+        end
+
+        logger.info "clicking selector: #{ts.selector}"
         b.link(text: ts.selector).click
+        be_nice
 
         children = ts.children
         children.each do |child|
+          logger.info "handling child with selector: #{child.selector}"
           # because williams uses a variable level of nesting in their menu display, we have to dig to the lowest level
           if ts.data_resource == child.data_resource
             # if the child has the same data resource as the parent (both DiningPlace), add it back to the list
-            top_selectors << child
+            logger.info 'adding child back to top selectors'
+            top_selectors.push child
           else
             dining_place = DiningPlace.current_or_create_new(name: ts.selector, institution_id: inst_id)
 
             # for williams, at every specific place there is a table of days with meals inside of them
-            b.link(ts.selector).click
+            logger.info 'clicking child'
+            b.link(text: child.selector).click
             scrape_dates(b, dining_place, inst_id, sr_id)
+            go_back(b)
           end
-          be_nice
         end # end child iteration
-        be_nice
+        go_back(b)
       end # end top selector iteration
     end
 
     # scrapes dates using built-in css selectors since these are the same for each page
     def scrape_dates(b, place_id, inst_id, sr_id)
+      logger.info 'scraping dates'
       # iterates over the cells for each day
       b.trs(css: '.cbo_nn_menuCell').each do |cell|
         date = cell.td.text
+        logger.info "iterating over date #{date}"
         # should only be one
         cell.tds(css: '.cbo_nn_menuLink').each do |opp_link|
           opp_type = opp_link.text.downcase.camelize # creates a properly cased version of the dining opportunity
           opp = DiningOpportunity.current_or_create_new(institution_id: inst_id, dining_opportunity_type: opp_type)
 
+          logger.info "clicking on link type: #{opp_type}"
           opp_link.click
+          be_nice
           panel_html = b.table(css: '.cbo_nn_itemGridTable').html
           scrape_items_from_opportunity(panel_html, opp_id, date, place_id, inst_id, sr_id)
-          go_back(b)
         end
-
       end
-      be_nice
     end
 
     # passed in the html for the panel to be parsed as well as the necessary parameters for menu item creation
@@ -101,15 +115,19 @@ module SpecificScrape
         if row.css('.cbo_nn_itemGroupRow').count > 0 # update category during iteration
           category_name = row.text
         elsif row.css('.cbo_nn_itemHover').count > 0 # create menu item with current category
-          MenuItem.new(institution_id: inst_id, name: row.text, opportunity_id: opp_id,
-                       date: date, category: category_name)
+          mi = MenuItem.new(institution_id: inst_id, name: row.text, opportunity_id: opp_id,
+                            date: date, category: category_name)
+          logger.info "created valid menu item? #{mi.valid?}"
         end
 
       end
     end
 
     def go_back(b)
-      b.button(id: 'btn_BackmenuList').click
+      logger.info 'backin\' it up'
+      button = b.button(css: '.cbo_nn_backButton')
+      button.click if button.exists?
+      be_nice
     end
 
     def be_nice
