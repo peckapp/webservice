@@ -3,7 +3,7 @@ ActiveAdmin.register DataResource do
   # See permitted parameters documentation:
   # https://github.com/gregbell/active_admin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
-  permit_params :info, :column_name, :resource_type_id
+  permit_params :info, :column_name, :resource_type_id, :foreign_key
   #
   # or
   #
@@ -26,6 +26,7 @@ ActiveAdmin.register DataResource do
     f.inputs 'Details' do         # builds an input field for every attribute
       f.input :resource_type, collection: Hash[ResourceType.all.map { |rt| ["#{rt.info} => '#{rt.model_name}'", rt.id] }]
       f.input :column_name, collection: Hash[names.map { |m, c| ["#{m} => #{c}", c] }]
+      f.input :foreign_key, as: :radio
       f.input :info
     end
     f.actions         # adds the 'Submit' and 'Cancel' buttons

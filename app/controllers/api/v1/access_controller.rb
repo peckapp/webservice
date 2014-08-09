@@ -10,7 +10,7 @@ module Api
         the_udid = uparams.delete(:udid)
         logger.info "Access, udid: #{the_udid}"
 
-        # if little john provides a device token
+        # if little johnny provides a device token
         if uparams[:device_token]
           the_token = uparams.delete(:device_token)
           logger.info "Access, token: #{the_token}"
@@ -40,7 +40,7 @@ module Api
             UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
             @user.unique_device_identifiers << @udid
           else
-            # touch little boys
+            # touch up our timestamp
             @udid.touch
 
             @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
@@ -56,7 +56,7 @@ module Api
 
           # something went wrong
           head :bad_request
-          logger.warn "failed to authenticate user for session creation"
+          logger.warn 'failed to authenticate user for session creation'
         end
       end
 

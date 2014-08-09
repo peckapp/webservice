@@ -16,7 +16,6 @@ module Api
       end
 
       def user_circles
-
         # only circles where the user has accepted the invite for should be visible
         circle_members = CircleMember.where(accepted: true, user_id: params[:id])
         @circles = []
@@ -24,7 +23,6 @@ module Api
           the_circle = Circle.find(member.circle_id)
           @circles << the_circle
         end
-
 
         # hash mapping circle id to array of its members for display in json
         @member_ids = {}

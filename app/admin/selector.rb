@@ -21,10 +21,34 @@ ActiveAdmin.register Selector do
     column :selector
     column :top_level
     column :parent
-    column :scrape_resource, label: 'info'
+    column :data_resource
+    column :scrape_resource
     column :created_at
     column :updated_at
     actions
+  end
+
+  show do
+    attributes_table do # builds an input field for specified attributes
+      row :info
+      row :selector
+      row :top_level
+      row :parent
+      row :scrape_resource
+      row :data_resource
+    end
+    ### TODO: DOESNT CURRENTLY WORK, NEED TO FIGURE OUT HOW TO GET CHILDREN IN ATTRIBUTES TABLE
+    panel 'Children' do # builds an input field for specified attributes
+      selector.children.each do |cs|
+        attributes_table do
+          row :info
+          row :selector
+          row :top_level
+          row :scrape_resource
+          row :data_resource
+        end
+      end
+    end
   end
 
   # creates a form for a new resource
@@ -34,9 +58,13 @@ ActiveAdmin.register Selector do
       f.input :info
       f.input :selector
       f.input :top_level, as: :radio, label: 'Top Level Selector'
-      f.input :parent, as: :select, label: 'Parent Selector', collection: Hash[Selector.where(top_level: true).map { |s| ["#{s.info}: #{s.selector}", s.id] }]
-      f.input :scrape_resource, as: :select, collection: Hash[ScrapeResource.all.map { |sr| ["#{sr.info} => #{sr.url}", sr.id] }]
-      f.input :data_resource, as: :select, collection: Hash[DataResource.all.map { |dr| ["#{dr.info} => #{dr.column_name}", dr.id] }]
+      # showing all
+      f.input :parent, as: :select, label: 'Parent Selector',
+                       collection: Hash[Selector.all.map { |s| ["#{s.top_level ? 'TL ' : '-> ' } #{s.info}: #{s.selector}", s.id] }]
+      f.input :scrape_resource, as: :select,
+                                collection: Hash[ScrapeResource.all.map { |sr| ["#{sr.info} => #{sr.url}", sr.id] }]
+      f.input :data_resource, as: :select,
+                              collection: Hash[DataResource.all.map { |dr| ["#{dr.info} => #{dr.column_name}", dr.id] }]
     end
     f.inputs 'Children' do # builds an input field for specified attributes
       f.has_many :children do |j|
