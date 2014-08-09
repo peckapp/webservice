@@ -31,20 +31,12 @@ module Api
             # Send UDID when you log in.
             @udid = UniqueDeviceIdentifier.where(udid: the_udid, device_type: the_device_type).first
 
-<<<<<<< HEAD
-            UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
-            @user.unique_device_identifiers << @udid
-          else
-            # touch up our timestamp
-            @udid.touch
-=======
             if !@udid
               if the_token
                 @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token, device_type: the_device_type)
               else
                 @udid = UniqueDeviceIdentifier.create(udid: the_udid, device_type: the_device_type)
               end
->>>>>>> 40b4e92c7c6d4765d02348ed2281d560d3cd2302
 
               UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
               @user.unique_device_identifiers << @udid
