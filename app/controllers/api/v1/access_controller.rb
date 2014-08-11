@@ -61,7 +61,7 @@ module Api
 
           # something went wrong
           head :bad_request
-          logger.warn "failed to authenticate user for session creation"
+          logger.warn 'failed to authenticate user for session creation'
         end
       end
 

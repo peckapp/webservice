@@ -67,6 +67,8 @@ gem 'mechanize'
 gem 'rest-client'
 # watir-webdriver as a selinium wrapper: http://watirwebdriver.com
 gem 'watir-webdriver'
+# allows selenium to be run without a head GUI
+gem 'headless'
 
 ### Job Scheduling
 # Sidekiq for running background jobs in seperate threads - https://github.com/mperham/sidekiq

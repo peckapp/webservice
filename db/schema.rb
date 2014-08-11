@@ -221,6 +221,7 @@ ActiveRecord::Schema.define(version: 20140808204817) do
     t.integer  "resource_type_id", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "foreign_key"
   end
 
   create_table "departments", force: true do |t|
@@ -453,6 +454,7 @@ ActiveRecord::Schema.define(version: 20140808204817) do
     t.integer  "pagination_selector_id"
     t.string   "info"
     t.string   "kind"
+    t.string   "engine_type"
   end
 
   create_table "selectors", force: true do |t|

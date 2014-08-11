@@ -23,7 +23,6 @@ ActiveAdmin.register ScrapeResource do
     column :scrape_interval
     column :validated
     column :resource_type
-    column :info
     column :created_at
     column :updated_at
     column :url
@@ -38,7 +37,6 @@ ActiveAdmin.register ScrapeResource do
       f.input :scrape_interval
       f.input :validated
       f.input :resource_type
-      f.input :info
       f.input :url
     end
     f.inputs 'Selectors' do

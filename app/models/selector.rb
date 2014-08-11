@@ -1,3 +1,6 @@
+# css selectors indicating specific parts of a webpage
+# follow a nested structure with parent selectors that refer to child selectors
+# parent selectors contain a block of html
 class Selector < ActiveRecord::Base
   validates_associated :scrape_resource
   validates_associated :data_resource

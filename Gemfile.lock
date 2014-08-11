@@ -129,6 +129,7 @@ GEM
     has_scope (0.6.0.rc)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
+    headless (1.0.2)
     hike (1.2.3)
     hirb (0.7.2)
     http-cookie (1.0.2)
@@ -343,6 +344,7 @@ DEPENDENCIES
   delayed_paperclip
   devise (~> 3.2.4)
   feedjira
+  headless
   hirb (~> 0.7.2)
   jbuilder (~> 2.0)
   jquery-rails
