@@ -39,7 +39,7 @@ module Api
 
           @all_pecks << peck
 
-          send_notification(user, peck)
+          notify(user, peck)
         end
       end
 

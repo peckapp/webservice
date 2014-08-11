@@ -52,9 +52,9 @@ module Api
             unless member.user_id == @comment.user_id
               user = User.find(member.user_id)
 
-            peck = Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "circle_comment", message: the_message, send_push_notification: send_push_notification, invited_by: cparams[:user_id])
+              peck = Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "circle_comment", message: the_message, send_push_notification: send_push_notification, invited_by: cparams[:user_id])
 
-              send_notification(user, peck)
+              notify(user, peck)
             end
           end
         end

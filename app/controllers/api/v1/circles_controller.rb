@@ -68,7 +68,7 @@ module Api
               # create a peck for the user in the passed array
               peck = Peck.create(user_id: mem_id, institution_id: @circle.institution_id, notification_type: "circle_invite", message: the_message, invited_by: @circle.user_id, send_push_notification: true, invitation: member.id)
 
-              send_notification(user, peck)
+              notify(user, peck)
             end
           end
 
