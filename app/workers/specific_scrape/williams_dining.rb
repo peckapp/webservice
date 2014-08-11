@@ -125,13 +125,17 @@ module SpecificScrape
       html = Nokogiri::HTML(b.table(css: '.cbo_nn_itemGridTable').html)
       logger.info "scraping items from opportunity with id: #{opp_id}"
       category_name = nil
-      html.css('tr').each do |row|
-        if row.css('.cbo_nn_itemGroupRow').count > 0 # update category during iteration
+      b.table(css: '.cbo_nn_itemGridTable').trs.each do |row|
+        if row.td(css: '.cbo_nn_itemGroupRow').exists? # update category during iteration
           category_name = row.text
-        elsif row.css('.cbo_nn_itemHover').count > 0 # create menu item with current category
-          mi = MenuItem.new(institution_id: inst_id, name: row.text, dining_opportunity_id: opp_id,
+        elsif row.td(css: '.cbo_nn_itemHover').exists? # create menu item with current category
+          name = row.td(css: '.cbo_nn_itemHover').text
+          mi = MenuItem.new(institution_id: inst_id, name: name, dining_opportunity_id: opp_id,
                             dining_place_id: place_id, date_available: date, category: category_name)
-          logger.info "created valid menu item? #{mi.valid?}"
+          if mi.valid?
+            result = mi.non_duplicative_save
+            logger.info "#{result ? 'saved' : 'did not save'} valid menu item: #{name}"
+          end
         end
       end
     end
