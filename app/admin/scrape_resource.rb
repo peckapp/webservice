@@ -16,6 +16,8 @@ ActiveAdmin.register ScrapeResource do
   # Adds this into a dropdown in the top menu bar
   menu parent: 'Scraping', priority: 2
 
+  active_admin_importable
+
   index do
     column :kind
     column :info

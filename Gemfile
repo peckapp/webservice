@@ -45,6 +45,8 @@ gem 'pushmeup'
 gem 'activeadmin', github: 'gregbell/active_admin'
 # allows for easily selecting a country in admin interface
 gem 'country-select'
+# allows for data to be uploaded, useful for transferring scraping settings
+gem 'active_admin_importable'
 
 ### FILE MANAGEMENT
 # Paperclip for handling larger files, mostly user-uploaded images: https://github.com/thoughtbot/paperclip
