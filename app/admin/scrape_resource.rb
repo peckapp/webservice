@@ -23,6 +23,7 @@ ActiveAdmin.register ScrapeResource do
     hash.delete(:updated_at)
 
     m = model.new(hash)
+    m.institution_id ||= 1
     m.non_duplicative_save(url: m.url)
   end
 
