@@ -105,27 +105,26 @@ module SpecificScrape
           cell = b.tds(css: 'tr .cbo_nn_menuCell')[i - 1]
           opp_link = cell.tds(css: '.cbo_nn_menuLink')[j - 1]
 
-          logger.info "opp_link: #{opp_link}"
+          # logger.info "opp_link: #{opp_link}"
           opp_type = opp_link.text.downcase.camelize # creates a properly cased version of the dining opportunity
           opp = DiningOpportunity.current_or_create_new(institution_id: inst_id, dining_opportunity_type: opp_type)
 
-          logger.info "clicking on link type: #{opp_type}"
           opp_link.click
           be_nice
           scrape_items_from_opportunity(b, opp.id, date, place_id, inst_id, sr_id)
           be_nice
           go_back(b)
-          logger.info 'iterating over dining opportunities'
         end
       end
     end
 
     # passed in the html for the panel to be parsed as well as the necessary parameters for menu item creation
     def scrape_items_from_opportunity(b, opp_id, date, place_id, inst_id, sr_id)
-      html = Nokogiri::HTML(b.table(css: '.cbo_nn_itemGridTable').html)
-      logger.info "scraping items from opportunity with id: #{opp_id}"
       category_name = nil
-      b.table(css: '.cbo_nn_itemGridTable').trs.each do |row|
+
+      rows = b.table(css: '.cbo_nn_itemGridTable').trs
+      # use reduce to keep track of the number of new items actually saved
+      count = rows.reduce(0) do |acc, row|
         if row.td(css: '.cbo_nn_itemGroupRow').exists? # update category during iteration
           category_name = row.text
         elsif row.td(css: '.cbo_nn_itemHover').exists? # create menu item with current category
@@ -134,21 +133,23 @@ module SpecificScrape
                             dining_place_id: place_id, date_available: date, category: category_name)
           if mi.valid?
             result = mi.non_duplicative_save
-            logger.info "#{result ? 'saved' : 'did not save'} valid menu item: #{name}"
+            acc += 1 if result
           end
         end
+        acc # 'return' acc to continue with reduce
       end
+      logger.info "saved #{count} new out of #{rows.count} present valid menu items from opportunity with id: #{opp_id}"
     end
 
     def go_back(b)
-      logger.info 'backin\' it up'
+      # logger.info 'backin\' it up'
       button = b.button(css: '.cbo_nn_backButton')
       button.click if button.exists?
       be_nice
     end
 
     def be_nice
-      logger.info 'sleeping...'
+      # logger.info 'sleeping...'
       # sleeps so as to avoid blasting requests repeatedly in a row
       sleep 1.0 + rand
     end
