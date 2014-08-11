@@ -94,7 +94,7 @@ module Api
 
         @graph = Koala::Facebook::API.new(my_auth_token)
 
-        @graph.put_connections("me", "feed", {name: @simple_event.title, link: "http://peckapp.com", caption: "#{@simple_event.start_date.strftime('%B%e, %l:%M %p')} - #{@simple_event.end_date.strftime('%B%e, %l:%M %p %Z')}"                                                                                                                                                                                                                 , description: @simple_event.event_description, picture: "loki.peckapp.com:3500#{@simple_event.image.url}"})
+        @graph.put_connections("me", "feed", {name: @simple_event.title, link: "fb291944037642057", caption: "#{@simple_event.start_date.strftime('%B%e, %l:%M %p')} - #{@simple_event.end_date.strftime('%B%e, %l:%M %p %Z')}"                                                                                                                                                                                                                 , description: @simple_event.event_description, picture: "loki.peckapp.com:3500#{@simple_event.image.url}"})
       end
       add_method_tracer :create, 'SimpleEvent/create'
 
