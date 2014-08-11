@@ -1,15 +1,14 @@
 # scraped the williams daily dining menus from the CSV file provided by OIT
-# a more robust version should be written that appropriately handles the actual interface using sleinium
+# a more robust version should be written that appropriately handles the actual interface using seleinium
 
 require 'csv'
 
 module SpecificScrape
-  class WilliamsDiningWorker
+  class WilliamsCsvDining
     include Sidekiq::Worker
-    include Sidetiq::Schedulable
 
+    include Sidetiq::Schedulable
     recurrence { daily.hour_of_day(2) }
-    # recurrence { minutely }
 
     def perform
       column = 'name'

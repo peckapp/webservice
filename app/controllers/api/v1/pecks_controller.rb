@@ -17,7 +17,6 @@ module Api
 
       def create
         peck_create_params = params[:peck]
-        # token = peck_create_params.delete(:token)
 
         @all_pecks = []
 

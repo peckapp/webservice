@@ -20,4 +20,8 @@ class DataResource < ActiveRecord::Base
   def model
     ResourceType.find(resource_type_id).model
   end
+
+  def to_label
+    info
+  end
 end
