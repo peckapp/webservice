@@ -1,5 +1,5 @@
 child :@user do
-  attributes :id, :institution_id, :api_key, :created_at, :updated_at
+  attributes :id, :institution_id, :api_key, :active, :created_at, :updated_at
 
   node(:image) { @user.image.url }
   node(:thumb_image) { @user.image.url(:thumb) }
