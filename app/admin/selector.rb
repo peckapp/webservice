@@ -15,6 +15,8 @@ ActiveAdmin.register Selector do
   # Adds this into a dropdown in the top menu bar
   menu parent: 'Scraping', priority: 4
 
+  active_admin_importable
+
   index do
     id_column
     column :info

@@ -16,6 +16,8 @@ ActiveAdmin.register ResourceType do
   # Adds this into a dropdown in the top menu bar
   menu parent: 'Scraping', priority: 1
 
+  active_admin_importable
+
   form do |f|
     f.semantic_errors # shows errors on :base
     f.inputs 'Details' do # builds an input field for every attribute

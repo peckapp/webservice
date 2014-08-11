@@ -16,6 +16,8 @@ ActiveAdmin.register DataResource do
   # Adds this into a dropdown in the top menu bar
   menu parent: 'Scraping', priority: 3
 
+  active_admin_importable
+
   # some hackery to get a hash of column names with their model associated with the actual column name
   # if we are able to use javascript for selector options, just the top line will be needed to get models to columns
   mc = Hash[ResourceType.all.map { |rt| rt.model }.map { |m| [m, m.columns.map { |c| c.name }] }]
