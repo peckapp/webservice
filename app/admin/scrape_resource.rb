@@ -16,7 +16,15 @@ ActiveAdmin.register ScrapeResource do
   # Adds this into a dropdown in the top menu bar
   menu parent: 'Scraping', priority: 2
 
-  active_admin_importable
+  active_admin_importable do |model, hash|
+    # delete things that are unique to a specific database
+    hash.delete(:id)
+    hash.delete(:created_at)
+    hash.delete(:updated_at)
+
+    m = model.new(hash)
+    m.non_duplicative_save(url: m.url)
+  end
 
   index do
     column :kind

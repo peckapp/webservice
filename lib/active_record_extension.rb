@@ -29,6 +29,7 @@ module ActiveRecordExtension
   # saves only if an instance of the object with matching attributes cannot be found in the database
   # returns false if duplicate exists or the save actually failed due to validations
   def non_duplicative_save(*attrs)
+    attrs = attrs.extract_options!
     if !model_match_exists(attrs)
       return save
     else

@@ -16,7 +16,16 @@ ActiveAdmin.register DataResource do
   # Adds this into a dropdown in the top menu bar
   menu parent: 'Scraping', priority: 3
 
-  active_admin_importable
+  active_admin_importable do |model, hash|
+    # delete things that are unique to a specific database
+    hash.delete(:id)
+    hash.delete(:created_at)
+    hash.delete(:updated_at)
+
+    m = model.new(hash)
+    m.resource_type_id ||= 1
+    m.non_duplicative_save(column_name: m.column_name)
+  end
 
   # some hackery to get a hash of column names with their model associated with the actual column name
   # if we are able to use javascript for selector options, just the top line will be needed to get models to columns
@@ -32,6 +41,17 @@ ActiveAdmin.register DataResource do
       f.input :info
     end
     f.actions         # adds the 'Submit' and 'Cancel' buttons
+  end
+
+  index do
+    id_column
+    column :info
+    column :column_name
+    column :foreign_key
+    column :resource_type
+    column :created_at
+    column :updated_at
+    actions
   end
 
 end
