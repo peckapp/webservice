@@ -43,6 +43,7 @@ GEM
       activesupport (= 4.1.4)
       builder (~> 3.1)
       erubis (~> 2.7.0)
+    active_admin_importable (1.1.2)
     activemodel (4.1.4)
       activesupport (= 4.1.4)
       builder (~> 3.1)
@@ -330,6 +331,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_admin_importable
   activeadmin!
   bcrypt (~> 3.1.7)
   bloomfilter-rb (~> 2.1.1)
