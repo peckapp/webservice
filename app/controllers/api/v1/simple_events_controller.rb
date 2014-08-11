@@ -70,8 +70,8 @@ module Api
         send_push_notification = event_params.delete(:send_push_notification)
         inviter = event_params.delete(:invited_by)
 
-        # for posting with facebook
-        my_auth_token = event_params.delete(:facebook_token)
+        # # for posting with facebook
+        # my_auth_token = event_params.delete(:facebook_token)
 
         # gets the image from params
         event_params[:image] = params[:image]
@@ -92,9 +92,9 @@ module Api
           end
         end
 
-        @graph = Koala::Facebook::API.new(my_auth_token)
-
-        @graph.put_connections("me", "feed", {name: @simple_event.title, link: "fb291944037642057://", caption: "#{@simple_event.start_date.strftime('%B%e, %l:%M %p')} - #{@simple_event.end_date.strftime('%B%e, %l:%M %p %Z')}"                                                                                                                                                                                                                 , description: @simple_event.event_description, picture: "loki.peckapp.com:3500#{@simple_event.image.url}"})
+        # @graph = Koala::Facebook::API.new(my_auth_token)
+        #
+        # @graph.put_connections("me", "feed", {name: @simple_event.title, link: "fb291944037642057://", caption: "#{@simple_event.start_date.strftime('%B%e, %l:%M %p')} - #{@simple_event.end_date.strftime('%B%e, %l:%M %p %Z')}"                                                                                                                                                                                                                 , description: @simple_event.event_description, picture: "loki.peckapp.com:3500#{@simple_event.image.url}"})
       end
       add_method_tracer :create, 'SimpleEvent/create'
 
