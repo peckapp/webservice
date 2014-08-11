@@ -129,7 +129,7 @@ module SpecificScrape
           category_name = row.text
         elsif row.td(css: '.cbo_nn_itemHover').exists? # create menu item with current category
           name = row.td(css: '.cbo_nn_itemHover').text
-          mi = MenuItem.new(institution_id: inst_id, name: name, dining_opportunity_id: opp_id,
+          mi = MenuItem.new(institution_id: inst_id, name: name, dining_opportunity_id: opp_id, scrape_resource_id: sr_id,
                             dining_place_id: place_id, date_available: date, category: category_name)
           if mi.valid?
             result = mi.non_duplicative_save
