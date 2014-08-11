@@ -107,12 +107,12 @@ module SpecificScrape
 
           logger.info "opp_link: #{opp_link}"
           opp_type = opp_link.text.downcase.camelize # creates a properly cased version of the dining opportunity
-          # opp = DiningOpportunity.current_or_create_new(institution_id: inst_id, dining_opportunity_type: opp_type)
+          opp = DiningOpportunity.current_or_create_new(institution_id: inst_id, dining_opportunity_type: opp_type)
 
           logger.info "clicking on link type: #{opp_type}"
           opp_link.click
           be_nice
-          scrape_items_from_opportunity(panel_html, opp.id, date, place_id, inst_id, sr_id)
+          scrape_items_from_opportunity(b, opp.id, date, place_id, inst_id, sr_id)
           be_nice
           go_back(b)
           logger.info 'iterating over dining opportunities'
