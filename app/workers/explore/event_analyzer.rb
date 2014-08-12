@@ -4,7 +4,11 @@ module Explore
   class EventAnalyzer
     include Sidekiq::Worker
 
-    def perform(id, inst_id, model_str)
+    def initialize(institution_id)
+      @inst_id = institution_id
+    end
+
+    def perform(id, model_str)
       # set model to AthleticEvent or SimpleEvent
       model = Util.class_from_string(model_str)
 
@@ -25,15 +29,15 @@ module Explore
       # number of attendees, views, likes, and subscribers
       attendee_count = EventAttendee.where(category: cat_string, event_attended: the_event.id).count
       view_count = EventView.where(category: cat_string, event_viewed: the_event.id).count
-      like_count = the_event.likers.count
+      like_count = the_event.likers(User).count
 
       # just for scraped events??? think more about this
       if cat_string == "athletic"
         subscriber_count = AthleticTeam.find(the_event.athletic_team_id).subscriber_count
-      elsif the_event.department_id
-        subscriber_count = Department.find(the_event.department_id).subscriber_count
-      elsif the_event.club_id
-        subscriber_count = Club.find(the_event.club_id).subscriber_count
+      elsif the_event.category == "department"
+        subscriber_count = Department.find(the_event.organizer_id).subscriber_count
+      elsif the_event.category == "club"
+        subscriber_count = Club.find(the_event.organizer_id).subscriber_count
       else
         subscriber_count = 0
       end
@@ -43,13 +47,14 @@ module Explore
       comments = all_comments.count
       unique_commentors = all_comments.pluck(:user_id).uniq.count
 
+      weights = Weights.new(@inst_id)
       # sum weights
-      peck_score = Weights.temporal_proximity(time_of_event) +
-                   Weights.attendees(attendee_count, inst_id) +
-                   Weights.event_views(view_count, inst_id) +
-                   Weights.event_likes(like_count, inst_id) +
-                   Weights.subscriptions(subscriber_count, inst_id) +
-                   Weights.comments(unique_commentors, comment_count, inst_id)
+      peck_score = weights.temporal_proximity(time_of_event) +
+                   weights.attendees(attendee_count) +
+                   weights.event_views(view_count) +
+                   weights.event_likes(like_count) +
+                   weights.comments(unique_commentors, comments) #+
+                   #Weights.subscriptions(subscriber_count, inst_id)
 
       # RETURN THE EVENT'S PECK SCORE
       peck_score
