@@ -10,14 +10,20 @@ module Api
         the_udid = uparams.delete(:udid)
         logger.info "Access, udid: #{the_udid}"
 
-        # if little john provides a device token
-        if uparams[:device_token]
-          the_token = uparams.delete(:device_token)
-          logger.info "Access, token: #{the_token}"
-        end
+        the_token = uparams.delete(:device_token)
+        logger.info "Access, token: #{the_token}"
+
+        the_device_type = uparams.delete(:device_type)
+        logger.info "Access, device_type: #{the_device_type}"
 
         # first authenticate user with email and password
         @user = User.authenticate(authentication_params(uparams)[:email], authentication_params(uparams)[:password])
+        if @user.active == false
+          @response = "Please complete your registration with the confirmation we sent to your email."
+          respond_to do |format|
+            format.json { render json: @response, status: :bad_request}
+          end
+        end
 
         # if authenticated
         if @user
@@ -27,36 +33,41 @@ module Api
           @user.save
           auth[:authentication_token] = @user.authentication_token
 
-          # Send UDID when you log in.
-          @udid = UniqueDeviceIdentifier.where(udid: the_udid).first
+          if the_udid
+            # Send UDID when you log in.
+            @udid = UniqueDeviceIdentifier.where(udid: the_udid, device_type: the_device_type).first
 
-          if !@udid
-            if the_token
-              @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token)
+            if !@udid
+              if the_token
+                @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token, device_type: the_device_type)
+              else
+                @udid = UniqueDeviceIdentifier.create(udid: the_udid, device_type: the_device_type)
+              end
+
+              UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+              @user.unique_device_identifiers << @udid
             else
-              @udid = UniqueDeviceIdentifier.create(udid: the_udid)
-            end
+              # touch little boys
+              @udid.touch
 
-            UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
-            @user.unique_device_identifiers << @udid
+              @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
+              if @udid_user
+                # update the timestamp if the udid_user already exists
+                @udid_user.touch
+              else
+                @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+              end
+            end
+            logger.info "created session for user with id: #{@user.id}"
           else
-            # touch little boys
-            @udid.touch
-
-            @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
-            if @udid_user
-              # update the timestamp if the udid_user already exists
-              @udid_user.touch
-            else
-              @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
-            end
+            head :bad_request
+            logger.warn "tried to not send a udid"
           end
-          logger.info "created session for user with id: #{@user.id}"
         else
 
           # something went wrong
           head :bad_request
-          logger.warn "failed to authenticate user for session creation"
+          logger.warn 'failed to authenticate user for session creation'
         end
       end
 
@@ -66,6 +77,11 @@ module Api
 
         # remove auth token from authentication params and database
         @user.authentication_token = nil
+
+        if @user.facebook_token
+          @user.facebook_token = nil
+        end
+
         @user.save
 
         logger.info "destroyed session for user with id: #{@user.id}"

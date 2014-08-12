@@ -70,6 +70,9 @@ module Api
         send_push_notification = event_params.delete(:send_push_notification)
         inviter = event_params.delete(:invited_by)
 
+        # # for posting with facebook
+        # my_auth_token = event_params.delete(:facebook_token)
+
         # gets the image from params
         event_params[:image] = params[:image]
 
@@ -85,7 +88,7 @@ module Api
             # create a peck for that user
             peck = Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "event_invite", message: the_message, send_push_notification: send_push_notification, invited_by: inviter, invitation: @simple_event.id)
 
-            send_notification(user, peck)
+            notify(user, peck)
           end
         end
       end
@@ -130,8 +133,10 @@ module Api
         if params[:liker].to_i == auth[:user_id].to_i
           liker = User.find(params[:liker])
           liker.like!(@simple_event)
+
           @likers = @simple_event.likers(User)
           @likes = []
+
           @likers.each do |user|
             @likes << user.id
           end

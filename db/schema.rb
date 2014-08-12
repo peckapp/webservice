@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20140812150518) do
+=======
+ActiveRecord::Schema.define(version: 20140808204817) do
+>>>>>>> afac1c9790363d4980d3a74cf7db3165473f3596
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -221,6 +225,7 @@ ActiveRecord::Schema.define(version: 20140812150518) do
     t.integer  "resource_type_id", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "foreign_key"
   end
 
   create_table "departments", force: true do |t|
@@ -338,6 +343,7 @@ ActiveRecord::Schema.define(version: 20140812150518) do
     t.string   "api_key"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "email_regex"
   end
 
   add_index "institutions", ["configuration_id"], name: "index_institutions_on_configuration_id", using: :btree
@@ -428,7 +434,6 @@ ActiveRecord::Schema.define(version: 20140812150518) do
     t.integer  "invited_by"
     t.integer  "invitation"
     t.boolean  "interacted",             default: false
-    t.string   "device_type"
   end
 
   add_index "pecks", ["notification_type"], name: "index_pecks_on_notification_type", using: :btree
@@ -453,6 +458,7 @@ ActiveRecord::Schema.define(version: 20140812150518) do
     t.integer  "pagination_selector_id"
     t.string   "info"
     t.string   "kind"
+    t.string   "engine_type"
   end
 
   create_table "selectors", force: true do |t|
@@ -522,6 +528,7 @@ ActiveRecord::Schema.define(version: 20140812150518) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "token"
+    t.string   "device_type"
   end
 
   create_table "users", force: true do |t|

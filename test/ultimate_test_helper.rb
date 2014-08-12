@@ -96,6 +96,13 @@ class UltimateTestHelper < ActionController::TestCase
       assigns(:subscriptions).each do |sub|
         assert_not_nil sub
       end
+
+      # anonymous user creation
+    elsif is_users_controller?
+      post :create, {:udid => "hello", :format => :json, :authentication => session_create}
+      user = assigns(:user)
+      assert_not_nil user.id
+      assert_not_nil user.api_key
     else
       post :create, {@model_type => @params_create, :authentication => auth_params, :format => :json}
       assert_response :success
@@ -104,7 +111,7 @@ class UltimateTestHelper < ActionController::TestCase
   end
 
   test "should_patch_update" do
-    next unless is_subclass? && is_controller?
+    next unless is_subclass? && is_controller? && is_pecks_controller?
     the_user = super_create_user
 
     auth_params = session_create
@@ -158,6 +165,10 @@ class UltimateTestHelper < ActionController::TestCase
       self.class.superclass == UltimateTestHelper
     end
 
+    def is_pecks_controller?
+      @class && @class == PecksControllerTest
+    end
+
     def is_circles_controller?
       @class && @class == CirclesControllerTest
     end
@@ -172,6 +183,10 @@ class UltimateTestHelper < ActionController::TestCase
 
     def is_subscriptions_controller?
       @class && @class == SubscriptionsControllerTest
+    end
+
+    def is_users_controller?
+      @class && @class == UsersControllerTest
     end
 
     def is_controller?

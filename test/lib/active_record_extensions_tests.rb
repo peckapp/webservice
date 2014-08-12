@@ -14,6 +14,9 @@ class ActiveRecordExtensionTest < ActionController::TestCase
 
   test "prevent save using non duplicative save" do
     event = SimpleEvent.find(1)
+    # modify event outside of specificed parameters
+    event.end_date = event.end_date + 1.hours
+    event.description = 'some random description'
     assert event.non_duplicative_save(event, :title => event[:title], :start_date => event[:start_date])
   end
 

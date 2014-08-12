@@ -16,6 +16,17 @@ ActiveAdmin.register ScrapeResource do
   # Adds this into a dropdown in the top menu bar
   menu parent: 'Scraping', priority: 2
 
+  active_admin_importable do |model, hash|
+    # delete things that are unique to a specific database
+    hash.delete(:id)
+    hash.delete(:created_at)
+    hash.delete(:updated_at)
+
+    m = model.new(hash)
+    m.institution_id ||= 1
+    m.non_duplicative_save(url: m.url)
+  end
+
   index do
     column :kind
     column :info
@@ -23,7 +34,6 @@ ActiveAdmin.register ScrapeResource do
     column :scrape_interval
     column :validated
     column :resource_type
-    column :info
     column :created_at
     column :updated_at
     column :url
@@ -38,7 +48,6 @@ ActiveAdmin.register ScrapeResource do
       f.input :scrape_interval
       f.input :validated
       f.input :resource_type
-      f.input :info
       f.input :url
     end
     f.inputs 'Selectors' do

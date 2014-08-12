@@ -1,7 +1,7 @@
 collection :@simple_events
 
 attributes(:id, :title, :event_description, :institution_id, :user_id, :department_id, :club_id,
-           :circle_id, :event_url, :public, :comment_count, :start_date, :end_date, :created_at,
+           :circle_id, :event_url, :public, :comment_count, :start_date, :end_date, :scrape_resource_id, :created_at,
            :updated_at)
 
 node(:event_type) { 'simple' }
