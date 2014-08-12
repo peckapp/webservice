@@ -78,7 +78,7 @@
 
 \section*{Description}
 
-This document describes how the Peck app's \textbf{Explore Tab} chooses which events and announcements to display. It provides the characteristics that are considered in providing a score for each Explore Tab item and how those characteristics are scored and weighed relative to the final \textbf{Peck Score}. The first section will describe a general \textbf{Campus Explore}, which is the same for every student, regardless of their personal interests, subscriptions, and circles. The second section will describe Peck's algorithm to personalize each user's Explore Tab, allowing them to discover new events that interest them based on an extended set of characteristics specific to the user.
+This document describes how the Peck app's \textbf{Explore Tab} chooses which events and announcements to display. It provides the characteristics that are considered in providing a score for each Explore Tab item and how those characteristics are scored and weighed relative to the final \textbf{Peck Score}. The first section will describe a general \textbf{Campus Explore}, which is the same for every student, regardless of their personal interests, subscriptions, and circles. The second section will describe Peck's algorithm to personalize each user's Explore Tab, allowing them to discover new events that interest them based on an extended set of characteristics specific to the user. It is important to note that only the personalized version of the explore feed will be viewable by the user. 
 
 \section*{Campus Explore}
 
@@ -190,8 +190,57 @@ Has not yet been decided.
 		
 \section*{Personalized Explore}
 
+\subsection*{Scored Characteristics}
+
+Here is a list of the characteristics that play a role in scoring the events appearing in the Personalized Explore Tab: \newline
+
+% list of the characteristics
+\begin{itemize}
+	\item Top circle friends (Top Friends Score)
+  	\item Top similar subscribers (Top Subscribers Score)
+\end{itemize}
+
+\medskip
+
+\subsection*{Construction of Top Circle Friends List}
+
+The app will build an internal list of the users who appear most in a specific user's circles. Events who have one or more of these "top friends" marked as attending will receive bonuses to their \textbf{Peck Score}, and hence making it more likely that the event will appear in the user's Explore Feed. The Top Friends List is built as follows:
+
+\begin{enumerate}
+	\item Store a list of the user's circles
+	\item Store a list of all circle members appearing in those circles
+	\item Cycle through each circle member:
+		\begin{itemize}
+			\item If the current circle member was invited to the circle by the user, add 1.5 to that circle member's score
+			\item Otherwise just add 1 to that circle member's score
+		\end{itemize}
+	\item Take the 10 friends who have the highest score (or the entire list if user has less than 10 circle friends)
+\end{enumerate}
+
+\medskip
+
+\subsection*{Construction of Top Similar Subscribers List}
+
+This list will be constructed in a similar way as the top friends list, except with some restrictions, due to the fact that there will most likely be a lot more subscriptions in common as there will be circles in common. As for top circle friends, events who have one or more top common subscribers attending will receive a boost on their \textbf{Peck Score}. The Top Common Subscribers list is built as follows:
+
+\begin{enumerate}
+	\item Store a list of the user's subscriptions
+	\item Store a list of all user subscriptions at a given institution
+	\item Cycle through each subscription:
+		\begin{itemize}
+			\item If the current subscription is found in the user's subscriptions, then that subscriber receives a score of +1
+			\item Otherwise move on to the next subscription, no score added
+			\item If at any point, a subscriber reaches a score of 3 or more (i.e. 3 subscriptions or more in common), then add that subscriber to the list of top common subscribers
+		\end{itemize}
+	\item When the list of top common subscribers reaches 5 people, stop cycling through subscriptions and use that list
+\end{enumerate}
+
+\medskip
+
+\subsection*{Scoring}
+
 TBD
-	
+
 \end{document}
 
 

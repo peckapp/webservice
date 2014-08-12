@@ -119,4 +119,8 @@ group :development do
   gem 'rails-erd'
   # primitive gui display of database models
   gem 'hirb', '~> 0.7.2'
+  # used to easily generate fake data
+  gem 'faker', '~> 1.4.2'
+  # Mass populate an Active Record database
+  gem 'populator', '~> 1.0.0'
 end
