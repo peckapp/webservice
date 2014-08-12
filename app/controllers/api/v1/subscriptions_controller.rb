@@ -28,6 +28,7 @@ module Api
         @subscription.update_attributes(subscription_update_params)
       end
 
+      # possible fix, make the array sent in a dictionary so that it won't be a string.
       def destroy
           @subscriptions = []
 
@@ -56,7 +57,6 @@ module Api
         def subscription_create_params(parameters)
           parameters.permit(:institution_id, :user_id, :category, :subscribed_to)
         end
-
     end
   end
 end

@@ -10,19 +10,41 @@ module Communication
 
     # notification hash is of device_token string keys related to message hash values in the Pushmeup format
     # currently only supports ios notifications
-    def perform(notification_hash)
+    def perform(apple_hash, google_hash, google_hash_collapsable, the_key)
       # Define that we want persistent connection
       APNS.start_persistence
 
-      notifications = []
+      apple_notifications = []
 
-      notification_hash.each do |device_token, message|
-        notifications << APNS::Notification.new(device_token, alert: message,  badge: 1, sound: 'default')
+      unless apple_hash.blank?
+        apple_hash.each do |device_token, message|
+          logger.info "push notification sent to apple device: #{device_token}"
+          apple_notifications << APNS::Notification.new(device_token, alert: message,  badge: 1, sound: 'default')
+        end
+
+        APNS.send_notifications(apple_notifications)
       end
 
-      APNS.send_notifications(notifications)
-
       APNS.stop_persistence
+
+      ### Android ###
+      google_notifications = []
+
+      unless google_hash.blank?
+        google_hash.each do |device_token, the_message|
+          logger.info "push notification sent to google device: #{device_token}"
+          google_notifications << GCM::Notification.new(device_token, data: {message: the_message})
+        end
+      end
+
+      unless google_hash_collapsable.blank?
+        google_hash_collapsable.each do |device_token, the_message|
+          logger.info "collapsable push notification sent to google device: #{device_token}"
+          google_notifications << GCM::Notification.new(device_token, data: {message: the_message}, collapse_key: the_key, delay_while_idle: false)
+        end
+      end
+
+      GCM.send_notifications(google_notifications) unless google_notifications.blank?
     end
   end
 end
