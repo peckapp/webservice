@@ -24,7 +24,7 @@ module Api
         user.circle_members << @circle_member
 
         # create the peck with these attributes
-        peck = Peck.create(user_id: member_create_params, institution_id: @circle_member.institution_id, notification_type: "circle_invite", message: the_message, send_push_notification: send_push_notification, invited_by: @circle_member.invited_by, invitation: @circle_member.id )
+        peck = Peck.create(user_id: @circle_member.user_id, institution_id: @circle_member.institution_id, notification_type: "circle_invite", message: the_message, send_push_notification: send_push_notification, invited_by: @circle_member.invited_by, invitation: @circle_member.id )
 
         notify(user, peck)
       end
