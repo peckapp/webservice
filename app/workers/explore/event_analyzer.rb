@@ -54,7 +54,7 @@ module Explore
                    weights.event_views(view_count) +
                    weights.event_likes(like_count) +
                    weights.comments(unique_commentors, comments) #+
-                   #Weights.subscriptions(subscriber_count, inst_id)
+                   #weights.subscriptions(subscriber_count)
 
       # RETURN THE EVENT'S PECK SCORE
       peck_score

@@ -56,6 +56,10 @@ class Weights
       (0.3 * (85 * comments**1.5) / @user_count))
   end
 
+  def circle_friend_boost(appearances)
+    1.6*(appearances**2)
+  end
+
   protected
 
   def active_users(inst_id)
