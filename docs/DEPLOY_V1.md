@@ -24,6 +24,8 @@ The production server is deployed to using similar syntax to the development ser
  - `chkconfig redis on`
 - install ImageMagick for paperclip gem image manipulation
  - `yum install ImageMagick`
+- install Xvfb and Firefox for webdriver scraping
+ - `sudo yum -y install xorg-x11-server-Xvfb firefox`
 - verify startup configuration
  - `chkconfig --list`
 - configure users appropriately
