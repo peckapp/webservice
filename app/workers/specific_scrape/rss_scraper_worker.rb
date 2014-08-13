@@ -3,46 +3,46 @@ module SpecificScrape
   class RssScraperWorker
     include Sidekiq::Worker
     include Sidetiq::Schedulable
-
-    recurrence { daily }
+    
+    # recurrence { daily }
 
     def perform
       scrape
     end
 
     def scrape
-      puts 'in scrape method'
+      logger.info 'in scrape method'
 
       resources = ScrapeResource.where(resource_type: 'rss_events', validated: true)
-      resources.each { |page|
+      resources.each do |page|
         parse_and_store(page.url, page.institution_id)
-      }
+      end
     end
 
     private
 
     def parse_and_store(url, institution_id)
       # feed = Feedjira::Feed.fetch_and_parse(url)
-      puts 'in parse_and_store'
+      logger.info 'in parse_and_store'
 
       page = Nokogiri::XML(RestClient.get(url))
 
-      page.xpath('//rss/channel/item').each { |item|
+      page.xpath('//rss/channel/item').each do |item|
 
         event = SimpleEvent.new
 
         event.institution_id = institution_id
 
-        item.children.each { |child|
+        item.children.each do |child|
 
           next if child.blank?
 
-          if child.class == Nokogiri::XML::Element then
+          if child.class == Nokogiri::XML::Element
             insert_property_into_event(child, event)
           else
-            puts "unexpected child type: #{child.class}"
+            logger.info "unexpected child type: #{child.class}"
           end
-        }
+        end
         # a start_date is required
         next if event.start_date.blank?
 
@@ -55,8 +55,8 @@ module SpecificScrape
         # explicitely specify the sole attributes needed to uniquely identify events. ignores description and other changes for now
         result = event.non_duplicative_save(title: event.title, start_date: event.start_date, institution_id: event.institution_id)
 
-        if result then puts "filled event: #{event.inspect}" else puts "event #{event.inspect} was a duplicate" end
-      }
+        result ? logger.info("filled event: #{event.inspect}") : logger.info("event #{event.inspect} was a duplicate")
+      end
     end
 
     def insert_property_into_event(property, event)
@@ -72,7 +72,7 @@ module SpecificScrape
         event.start_date = DateTime.parse(property.content)
 
       elsif name.match(/link/)
-        puts property.to_html
+        logger.info property.to_html
         # williams' link html seems to be broken and missing a close tag, this handles that error
         link_elem = property.css('link')
         unless link_elem.blank?
@@ -84,7 +84,7 @@ module SpecificScrape
             link = property.css('link').first.next.text.squish
           end
 
-          if !link.blank? && link.uri? then event.event_url = link end
+          event.event_url = link if !link.blank? && link.uri?
         end
 
       elsif name.match(/latitude|lat/)
