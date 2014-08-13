@@ -52,7 +52,10 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
       assert_response :success, "no response from database"
       assert_not_nil user, "user was not super created properly"
       assert_not_nil user.authentication_token
-      return user
+
+      get "/registrations/1/confirm_email"
+      the_user = assigns(:user)
+      return the_user
     end
 
     def super_create_fail

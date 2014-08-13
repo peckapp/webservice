@@ -11,22 +11,22 @@ module Communication
     # notification hash is of device_token string keys related to message hash values in the Pushmeup format
     # currently only supports ios notifications
     def perform(apple_hash, google_hash, google_hash_collapsable, the_key)
-      
+
       # Define that we want persistent connection
-      APNS.start_persistence
-
-      apple_notifications = []
-
       unless apple_hash.blank?
-        apple_hash.each do |device_token, message|
-          logger.info "push notification sent to apple device: #{device_token}"
-          apple_notifications << APNS::Notification.new(device_token, alert: message,  badge: 1, sound: 'default')
-        end
+        APNS.start_persistence
+
+        apple_notifications = []
+
+          apple_hash.each do |device_token, message|
+            logger.info "push notification sent to apple device: #{device_token}"
+            apple_notifications << APNS::Notification.new(device_token, alert: message,  badge: 1, sound: 'default')
+          end
 
         APNS.send_notifications(apple_notifications)
-      end
 
-      APNS.stop_persistence
+        APNS.stop_persistence
+      end
 
       ### Android ###
       google_notifications = []
