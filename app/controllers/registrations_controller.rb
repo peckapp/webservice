@@ -1,5 +1,5 @@
 class RegistrationsController < ApplicationController
-  before_action :confirm_minimal_access, except: [:confirm_email, :set_request_format]
+  before_action :confirm_minimal_access, except: [:confirm_email, :set_request_format, :set_format_fallbacks]
   before_action :set_request_format, :set_format_fallbacks
 
   # sets the user's activity to true to make sure they're done registering.
