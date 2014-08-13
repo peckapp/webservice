@@ -11,28 +11,27 @@ module Api
       respond_to :json
 
       def index
-        # get all simple events given provided params
-        created_events = specific_index(SimpleEvent, params)
-
-        # this will add only created events IF user id is provided
-        # otherwise all events will be added
-        @simple_events = created_events
 
         if params[:user_id]
           # events you're attending
           events_attended_ids = EventAttendee.where(user_id: params[:user_id], category: "simple").pluck(:event_attended)
-          events_attended = SimpleEvent.where(id: events_attended_ids)
-          @simple_events += events_attended
 
           # club subscriptions
           club_subscription_ids = Subscription.where(user_id: params[:user_id], category: "club").pluck(:subscribed_to)
-          club_subscription_events = SimpleEvent.where(category: "club", organizer_id: club_subscription_ids)
-          @simple_events += club_subscription_events
 
           # department subscriptions
           dept_subscription_ids = Subscription.where(user_id: params[:user_id], category: "department").pluck(:subscribed_to)
-          dept_subscription_events = SimpleEvent.where(category: "department", organizer_id: club_subscription_ids)
-          @simple_events += club_subscription_events
+
+          all_ids = (events_attended_ids + club_subscription_ids + dept_subscription_ids).uniq
+
+          puts all_ids
+          @simple_events = SimpleEvent.where(id: all_ids)
+
+          puts @simple_events
+        else
+          # this will add only created events IF user id is provided
+          # otherwise all events will be added
+          @simple_events = specific_index(SimpleEvent, params)
         end
 
 

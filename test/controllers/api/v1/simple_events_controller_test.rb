@@ -5,7 +5,7 @@ class SimpleEventsControllerControllerTest < UltimateTestHelper
   def setup
     @the_controller = Api::V1::SimpleEventsController.new
     @attributes = [:id, :title, :event_description, :institution_id, :user_id, :category, :organizer_id, :event_url, :public, :image_url, :comment_count, :start_date, :end_date, :deleted, :latitude, :longitude, :format, :authentication]
-    @params_index = {:format => :json, :authentication => session_create}
+    @params_index = {:user_id => 1, :format => :json, :authentication => session_create}
     @params_show = {:id => 11, :title => "Summer Observatory", :public => true, :format => :json, :authentication => session_create}
     @params_create = {:title => "Super Dope Event", :institution_id => 3, :user_id => 3, :public => true, :start_date => DateTime.current, :end_date => DateTime.current + 1.hour}
     @params_check = {start_date: DateTime.current, end_date: DateTime.current + 3.hour, :format => :json, :authentication => session_create}
