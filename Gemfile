@@ -103,8 +103,6 @@ gem 'newrelic_rpm'
 group :production do
   # unicorn interface gem: http://unicorn.bogomips.org
   gem 'unicorn'
-  # for caching purposes
-  gem 'memcached', '~> 1.8.0'
   # dalli for interfacing with memcached in production
   gem 'dalli'
 end
