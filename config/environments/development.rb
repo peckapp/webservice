@@ -41,13 +41,13 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: 'smtp.gmail.com',
+    address: 'smtp.sendgrid.net',
     port: 587,
-    domain: 'gmail.com',
-    user_name: 'peckboblee',
-    password: 'bobbylee8',
-    authentication: 'plain'
-    #enable_starttls_auto: true
+    domain: 'peckapp.com',
+    user_name: 'atsou',
+    password: 'cq2vkmzvC82uJDd3vcMj',
+    authentication: 'plain',
+    enable_starttls_auto: true
     }
   # devise
   # config.action_mailer.default_url_options = { :host => 'localhost:3000' }
