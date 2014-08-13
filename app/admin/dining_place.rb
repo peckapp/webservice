@@ -16,8 +16,17 @@ ActiveAdmin.register DiningPlace do
   # Adds this into a dropdown in the top menu bar
   menu parent: 'Dining'
 
-  # active admin seems to have broken filter generations for simple joins
-  remove_filter :diningopportunities_dining_places
-  filter :dining_opportunities_dining_places
+  index do
+    id_column
+    column :name
+    column :institution
+    column :details_link
+    column :gps_longitude
+    column :gps_latitude
+    column :range
+    column :created_at
+    column :updated_at
+    actions
+  end
 
 end
