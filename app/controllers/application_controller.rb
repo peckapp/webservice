@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
     # user is found by session id
     user = User.find(session[:user_id])
     # the auth token must be present
-    if auth[:authentication_token] && auth[:authentication_token] == user.authentication_token #&& user.active
+    if auth[:authentication_token] && auth[:authentication_token] == user.authentication_token && user.active
       return true
     else
       head :unauthorized
