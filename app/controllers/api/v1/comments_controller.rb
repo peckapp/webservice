@@ -47,7 +47,7 @@ module Api
 
         ##### Circle Comment Push Notifications #####
         if @comment && @comment.category == "circles"
-          the_circle_members = Circle.find_by_id(@comment.comment_from).circle_members
+          the_circle_members = Circle.find_by_id(@comment.comment_from).circle_members.where(accepted: true)
           the_circle_members.each do |member|
             unless member.user_id == @comment.user_id
               user = User.find(member.user_id)
