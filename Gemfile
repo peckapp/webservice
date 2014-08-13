@@ -104,7 +104,7 @@ group :production do
   # unicorn interface gem: http://unicorn.bogomips.org
   gem 'unicorn'
   # dalli for interfacing with memcached in production
-  # gem 'dalli'
+  gem 'dalli'
 end
 
 ### Development-specific gems
@@ -126,4 +126,8 @@ group :development do
   gem 'rails-erd'
   # primitive gui display of database models
   gem 'hirb', '~> 0.7.2'
+  # used to easily generate fake data
+  gem 'faker', '~> 1.4.2'
+  # Mass populate an Active Record database
+  gem 'populator', '~> 1.0.0'
 end

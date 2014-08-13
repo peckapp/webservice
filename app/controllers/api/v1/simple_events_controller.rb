@@ -12,7 +12,29 @@ module Api
 
       def index
         # get all simple events given provided params
-        @simple_events = specific_index(SimpleEvent, params)
+        created_events = specific_index(SimpleEvent, params)
+
+        # this will add only created events IF user id is provided
+        # otherwise all events will be added
+        @simple_events = created_events
+
+        if params[:user_id]
+          # events you're attending
+          events_attended_ids = EventAttendee.where(user_id: params[:user_id], category: "simple").pluck(:event_from)
+          events_attended = SimpleEvent.where(id: events_attended_ids)
+          @simple_events += events_attended
+
+          # club subscriptions
+          club_subscription_ids = Subscription.where(user_id: params[:user_id], category: "club").pluck(:subscribed_to)
+          club_subscription_events = SimpleEvent.where(category: "club", organizer_id: club_subscription_ids)
+          @simple_events += club_subscription_events
+
+          # department subscriptions
+          dept_subscription_ids = Subscription.where(user_id: params[:user_id], category: "department").pluck(:subscribed_to)
+          dept_subscription_events = SimpleEvent.where(category: "department", organizer_id: club_subscription_ids)
+          @simple_events += club_subscription_events
+        end
+
 
         # initialize hash mapping events to arrays of likers
         @likes_for_simple_event = {}
@@ -165,11 +187,11 @@ module Api
       private
 
       def simple_event_create_params(parameters)
-        parameters.permit(:title, :event_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :event_url, :public, :comment_count, :image, :start_date, :end_date)
+        parameters.permit(:title, :event_description, :institution_id, :user_id, :category, :organizer_id, :event_url, :public, :comment_count, :image, :start_date, :end_date)
       end
 
       def simple_event_params
-        params.require(:simple_event).permit(:title, :event_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :event_url, :public, :comment_count, :start_date, :end_date)
+        params.require(:simple_event).permit(:title, :event_description, :institution_id, :user_id, :category, :organizer_id, :event_url, :public, :comment_count, :start_date, :end_date)
       end
     end
   end

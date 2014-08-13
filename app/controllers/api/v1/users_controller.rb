@@ -113,7 +113,6 @@ module Api
             @user.authentication_token = SecureRandom.hex(30)
             @user.save
             auth[:authentication_token] = @user.authentication_token
-            logger.info "super_created user with id: #{@user.id}"
 
             if the_udid
               # check if udid/device token is provided
@@ -220,6 +219,7 @@ module Api
               head :bad_request
               logger.warn "tried to not send a udid"
             end
+            logger.info "super_created user with id: #{@user.id}"
           else
             logger.warn "attempted to super_create user with id: #{@user.id} with invalid authentication sign_up_params"
           end

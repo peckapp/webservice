@@ -58,8 +58,12 @@ module SpecificScrape
         logger.error 'middlebury dining date_field not found' if date_field.blank?
         date_field.set date_str
 
+        logger.info 'set date field'
+
         apply_button = b.button id: 'edit-submit-menus-test'
         apply_button.click
+
+        logger.info 'clicked "apply" button'
 
         data = b.div class: 'view view-menus-test view-id-menus_test view-display-id-page'
 
@@ -83,6 +87,7 @@ module SpecificScrape
 
         place_name = table.previous.previous.text
         place = DiningPlace.current_or_create_new(institution_id: inst_id, name: place_name)
+        logger.info "scraping place: #{place_name}"
 
         table.css('td').each do |entry|
           opportunity_type = entry.css('span[class=field-content]').text

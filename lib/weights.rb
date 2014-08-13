@@ -8,7 +8,14 @@ class Weights
   # Minimum number of users
   MIN_USERS = 100
 
+  # Minimum number of circles
+  MIN_CIRCLES = 3
+
   ###################
+
+  def initialize(inst_id)
+    @user_count = active_users(inst_id)
+  end
 
   def temporal_proximity(time)
     tdist = time - Time.now
@@ -25,31 +32,34 @@ class Weights
     end
   end
 
-  def attendees(count, inst_id)
-    users = active_users(inst_id)
-    (400 * count) / users
+  def attendees(count)
+    (400 * count) / @user_count
   end
 
-  def event_views(count, inst_id)
-    users = active_users(inst_id)
-    (32 * (count**1.5)) / users**0.25
+  def event_views(count)
+    (32 * (count**0.5)) / @user_count**0.25
   end
 
-  def event_likes(count, inst_id)
-    users = active_users(inst_id)
-    (333 * count) / users
+  def event_likes(count)
+    (333 * count) / @user_count
   end
 
-  def subscriptions(subscribers, inst_id)
-    users = active_users(inst_id)
+  def subscriptions(subscribers)
     # just a placeholder
-    subscribers / users
+    subscribers / @user_count
   end
 
-  def comments(uniques, comments, inst_id)
-    users = active_users(inst_id)
-    ((0.7 * (250 * uniques**1.5) / users) +
-      (0.3 * (85 * comments**1.5) / users))
+  def comments(uniques, comments)
+    ((0.7 * (250 * uniques**1.5) / @user_count) +
+      (0.3 * (85 * comments**1.5) / @user_count))
+  end
+
+  def circle_friend_boost(appearances, circle_count)
+    if circle_count < 3
+      42.43 * (appearances**1.4) / MIN_CIRCLES
+    else
+      42.43 * (appearances**1.4) / circle_count
+    end
   end
 
   protected
