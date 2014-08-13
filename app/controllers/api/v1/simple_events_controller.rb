@@ -86,7 +86,7 @@ module Api
             user = User.find(member_id)
 
             # create a peck for that user
-            peck = Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "event_invite", message: the_message, send_push_notification: send_push_notification, invited_by: inviter, invitation: @simple_event.id)
+            peck = Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "event_invite", message: the_message, send_push_notification: send_push_notification, invited_by: inviter, invitation: @simple_event.id, refers_to: @simple_event.id)
 
             notify(user, peck)
           end
