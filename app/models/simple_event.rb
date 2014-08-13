@@ -32,7 +32,7 @@ class SimpleEvent < ActiveRecord::Base
                     styles: {
                       detail: '100X100#',
                       blurred: {
-                        size: '256X640',
+                        size: '640x256',
                         offset: '+0+0',
                         raduis_sigma: '9x4',
                         tint: '40',

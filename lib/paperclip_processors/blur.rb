@@ -5,7 +5,7 @@ module Paperclip
     # copied in thumbnail processor from paperclip source
 
     # some default values, may be overridden in the models that use this processor
-    DEFAULT_SIZE = '256X640'
+    DEFAULT_SIZE = '640X256'
     OFFSET = '+0+0'
     RADIUS_SIGMA = '9x5'
     TINT_STRENGTH = 40 # range 0-100
