@@ -20,7 +20,7 @@ module Api
         @circle_member = CircleMember.new(circle_member_create_params(member_create_params))
 
         # if the circle member is not a duplicate, don't send another invite.
-        if @circle_member.non_duplicative_save
+        # if @circle_member.non_duplicative_save
 
           # add the circle member to the array of circle members for the user
           user = User.find(@circle_member.user_id)
@@ -30,7 +30,7 @@ module Api
           peck = Peck.create(user_id: @circle_member.user_id, institution_id: @circle_member.institution_id, notification_type: "circle_invite", message: the_message, send_push_notification: send_push_notification, invited_by: @circle_member.invited_by, invitation: @circle_member.id )
 
           notify(user, peck)
-        end
+        # end
       end
 
       # action for when pending circle member clicks accept to the invitation.
