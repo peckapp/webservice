@@ -135,4 +135,8 @@ class ApplicationController < ActionController::Base
       end
       search_params
     end
+
+    def mobile_request?
+      request.user_agent =~ /Mobile|webOs/
+    end
 end
