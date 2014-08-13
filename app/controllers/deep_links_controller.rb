@@ -4,7 +4,7 @@ class DeepLinksController < ApplicationController
   def native_peck
     if mobile_request?
       begin
-        response = HTTParty.get("peckapp://", limit: 50)
+        response = HTTParty.get("peckapp://")
       rescue URI::InvalidURIError => encoding
         redirect_to("https://itunes.apple.com/us/app/peck-williams/id702672553?mt=8")
       else
