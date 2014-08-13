@@ -35,7 +35,7 @@ module Api
 
           if the_udid
             # Send UDID when you log in.
-            @udid = UniqueDeviceIdentifier.where(udid: the_udid, device_type: the_device_type).first
+            @udid = UniqueDeviceIdentifier.where(udid: the_udid, device_type: the_device_type, token: the_token).first
 
             if !@udid
               if the_token
