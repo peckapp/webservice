@@ -20,19 +20,19 @@ module Api
 
         if params[:user_id]
           # events you're attending
-          events_attended_ids = EventAttendees.where(user_id: params[:user_id], category: "simple").pluck(:event_from)
+          events_attended_ids = EventAttendee.where(user_id: params[:user_id], category: "simple").pluck(:event_from)
           events_attended = SimpleEvent.where(id: events_attended_ids)
-          @simple_events << events_attended
+          @simple_events += events_attended
 
           # club subscriptions
           club_subscription_ids = Subscription.where(user_id: params[:user_id], category: "club").pluck(:subscribed_to)
           club_subscription_events = SimpleEvent.where(category: "club", organizer_id: club_subscription_ids)
-          @simple_events << club_subscription_events
+          @simple_events += club_subscription_events
 
           # department subscriptions
           dept_subscription_ids = Subscription.where(user_id: params[:user_id], category: "department").pluck(:subscribed_to)
           dept_subscription_events = SimpleEvent.where(category: "department", organizer_id: club_subscription_ids)
-          @simple_events << club_subscription_events
+          @simple_events += club_subscription_events
         end
 
 
