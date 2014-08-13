@@ -47,12 +47,12 @@ module Api
 
         ##### Circle Comment Push Notifications #####
         if @comment && @comment.category == "circles"
-          the_circle_members = Circle.find_by_id(@comment.comment_from).circle_members
+          the_circle_members = Circle.find_by_id(@comment.comment_from).circle_members.where(accepted: true)
           the_circle_members.each do |member|
             unless member.user_id == @comment.user_id
               user = User.find(member.user_id)
 
-              peck = Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "circle_comment", message: the_message, send_push_notification: send_push_notification, invited_by: cparams[:user_id], invitation: @comment.comment_from)
+              peck = Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "circle_comment", message: the_message, send_push_notification: send_push_notification, invited_by: cparams[:user_id], refers_to: @comment.comment_from)
 
               notify(user, peck)
             end
