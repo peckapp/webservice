@@ -8,6 +8,9 @@ class Weights
   # Minimum number of users
   MIN_USERS = 100
 
+  # Minimum number of circles
+  MIN_CIRCLES = 3
+
   ###################
 
   def initialize(inst_id)
@@ -30,34 +33,33 @@ class Weights
   end
 
   def attendees(count)
-    #users = active_users(inst_id)
     (400 * count) / @user_count
   end
 
   def event_views(count)
-    #users = active_users(inst_id)
     (32 * (count**0.5)) / @user_count**0.25
   end
 
   def event_likes(count)
-    #users = active_users(inst_id)
     (333 * count) / @user_count
   end
 
   def subscriptions(subscribers)
-    #users = active_users(inst_id)
     # just a placeholder
     subscribers / @user_count
   end
 
   def comments(uniques, comments)
-    #users = active_users(inst_id)
     ((0.7 * (250 * uniques**1.5) / @user_count) +
       (0.3 * (85 * comments**1.5) / @user_count))
   end
 
-  def circle_friend_boost(appearances)
-    1.6*(appearances**2)
+  def circle_friend_boost(appearances, circle_count)
+    if circle_count < 3
+      42.43 * (appearances**1.4) / MIN_CIRCLES
+    else
+      42.43 * (appearances**1.4) / circle_count
+    end
   end
 
   protected

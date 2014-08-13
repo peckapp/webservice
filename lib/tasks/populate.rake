@@ -6,7 +6,7 @@ namespace :db do
 
     [User, Subscription, Circle, CircleMember, Department, Club, AthleticTeam, SimpleEvent, Comment, EventAttendee, EventView, Like].each(&:delete_all)
 
-    User.populate 500 do |user|
+    User.populate 2000 do |user|
       user.institution_id = 1
       user.first_name = Faker::Name.first_name
       user.last_name = Faker::Name.last_name
@@ -14,7 +14,7 @@ namespace :db do
       user.blurb = Populator.sentences(1..3)
       user.created_at = 2.years.ago..Time.now
 
-      Subscription.populate 5..20 do |subscription|
+      Subscription.populate 15..40 do |subscription|
         subscription.user_id = user.id
         subscription.category = ["athletic", "club", "department"]
         subscription.subscribed_to = 1..50
@@ -70,7 +70,7 @@ namespace :db do
       end
     end
 
-    SimpleEvent.populate 500 do |event|
+    SimpleEvent.populate 1000 do |event|
       event.title = Faker::Commerce.product_name
       event.event_description = Populator.sentences(1..3)
       event.institution_id = 1

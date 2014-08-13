@@ -15,6 +15,7 @@ module Explore
 
       top_circle_friends = top_friends(user_id)
       top_similar_subscribers = similar_subscribers(user_id, inst_id)
+      circle_count = CircleMember.where(user_id: user_id).count
 
       # @user_circles gets set in top_friends method
       if @user_circles.count >= MIN_CIRCLES
@@ -35,10 +36,10 @@ module Explore
         top_circle_friends.each do |friend|
           if attendees.include? friend[0]
 
-            if weights.circle_friend_boost(friend[1]) > MAX_FRIEND_SCORE
+            if weights.circle_friend_boost(friend[1], circle_count) > MAX_FRIEND_SCORE
               friend_score = MAX_FRIEND_SCORE
             else
-              friend_score = weights.circle_friend_boost(friend[1])
+              friend_score = weights.circle_friend_boost(friend[1], circle_count)
             end
 
             friend_boost += friend_score
