@@ -20,7 +20,7 @@ module Api
 
         if params[:user_id]
           # events you're attending
-          events_attended_ids = EventAttendee.where(user_id: params[:user_id], category: "simple").pluck(:event_from)
+          events_attended_ids = EventAttendee.where(user_id: params[:user_id], category: "simple").pluck(:event_attended)
           events_attended = SimpleEvent.where(id: events_attended_ids)
           @simple_events += events_attended
 
