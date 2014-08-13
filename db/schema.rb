@@ -115,14 +115,14 @@ ActiveRecord::Schema.define(version: 20140813132935) do
   add_index "athletic_events", ["opponent"], name: "index_athletic_events_on_opponent", using: :btree
 
   create_table "athletic_teams", force: true do |t|
-    t.integer  "institution_id", null: false
-    t.string   "sport_name",     null: false
-    t.string   "gender",         null: false
+    t.integer  "institution_id",   null: false
+    t.string   "sport_name",       null: false
+    t.string   "gender",           null: false
     t.string   "head_coach"
     t.string   "team_link"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "subscriptions"
+    t.integer  "subscriber_count"
   end
 
   add_index "athletic_teams", ["gender"], name: "index_athletic_teams_on_gender", using: :btree
@@ -171,13 +171,13 @@ ActiveRecord::Schema.define(version: 20140813132935) do
   add_index "circles", ["user_id"], name: "index_circles_on_user_id", using: :btree
 
   create_table "clubs", force: true do |t|
-    t.integer  "institution_id", null: false
-    t.string   "club_name",      null: false
+    t.integer  "institution_id",   null: false
+    t.string   "club_name",        null: false
     t.text     "description"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "subscriptions"
+    t.integer  "subscriber_count"
   end
 
   add_index "clubs", ["club_name"], name: "index_clubs_on_club_name", using: :btree
@@ -225,11 +225,11 @@ ActiveRecord::Schema.define(version: 20140813132935) do
   end
 
   create_table "departments", force: true do |t|
-    t.string   "name",           null: false
-    t.integer  "institution_id", null: false
+    t.string   "name",             null: false
+    t.integer  "institution_id",   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "subscriptions"
+    t.integer  "subscriber_count"
   end
 
   add_index "departments", ["institution_id"], name: "index_departments_on_institution_id", using: :btree
@@ -474,9 +474,6 @@ ActiveRecord::Schema.define(version: 20140813132935) do
     t.text     "event_description"
     t.integer  "institution_id",                                 null: false
     t.integer  "user_id"
-    t.integer  "department_id"
-    t.integer  "club_id"
-    t.integer  "circle_id"
     t.string   "event_url"
     t.boolean  "public",                         default: false
     t.integer  "comment_count"
@@ -492,11 +489,10 @@ ActiveRecord::Schema.define(version: 20140813132935) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
+    t.string   "category"
+    t.integer  "organizer_id"
   end
 
-  add_index "simple_events", ["circle_id"], name: "index_simple_events_on_circle_id", using: :btree
-  add_index "simple_events", ["club_id"], name: "index_simple_events_on_club_id", using: :btree
-  add_index "simple_events", ["department_id"], name: "index_simple_events_on_department_id", using: :btree
   add_index "simple_events", ["institution_id"], name: "index_simple_events_on_institution_id", using: :btree
   add_index "simple_events", ["title"], name: "index_simple_events_on_title", using: :btree
   add_index "simple_events", ["user_id"], name: "index_simple_events_on_user_id", using: :btree

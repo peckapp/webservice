@@ -42,7 +42,6 @@ module Webservice
       env_file = Rails.root.join('config', 'environment_variables.yml').to_s
       if File.exist?(env_file)
         yaml_for_env = YAML.load_file(env_file)[Rails.env]
-        puts yaml_for_env
         unless yaml_for_env.blank? # protects against empty yaml entries
           yaml_for_env.each do |key, value|
             ENV[key.to_s] = value
