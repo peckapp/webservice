@@ -31,10 +31,6 @@ module Communication
       ### Android ###
       google_notifications = []
 
-      ###### CHANGE LOCATION TO PRODUCTION ENVIRONMENT LATER #####
-      GCM.key = "AIzaSyDIEpeKjFTOR2PA9y32NLJwwL36IMRt_nk"
-      ############################################################
-
       unless google_hash.blank?
         google_hash.each do |device_token, the_message|
           logger.info "push notification sent to google device: #{device_token}"
