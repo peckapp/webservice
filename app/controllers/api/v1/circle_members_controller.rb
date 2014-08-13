@@ -12,15 +12,25 @@ module Api
       end
 
       def create
-        # removes unpermitted parameters from circle member creation params
-        # and saves them in token and message vars
-        # member_create_params = params[:circle_member]
-        # token = member_create_params.delete(:token)
-        # message = member_create_params.delete(:message)
+        member_create_params = params[:circle_member]
+        the_message = member_create_params.delete(:message)
+        send_push_notification = member_create_params.delete(:send_push_notification)
 
-        @circle_member = CircleMember.create(circle_member_create_params)
+        # create a circle member
+        @circle_member = CircleMember.new(circle_member_create_params(member_create_params))
 
-        # push notification for circle member invite
+        # if the circle member is not a duplicate, don't send another invite.
+        # if @circle_member.non_duplicative_save
+
+          # add the circle member to the array of circle members for the user
+          user = User.find(@circle_member.user_id)
+          user.circle_members << @circle_member
+
+          # create the peck with these attributes
+          peck = Peck.create(user_id: @circle_member.user_id, institution_id: @circle_member.institution_id, notification_type: "circle_invite", message: the_message, send_push_notification: send_push_notification, invited_by: @circle_member.invited_by, invitation: @circle_member.id )
+
+          notify(user, peck)
+        # end
       end
 
       # action for when pending circle member clicks accept to the invitation.
@@ -59,8 +69,8 @@ module Api
 
       private
 
-        def circle_member_create_params
-          params.require(:circle_member).permit(:institution_id, :user_id, :circle_id, :user_id, :invited_by, :date_added)
+        def circle_member_create_params(parameters)
+          parameters.permit(:institution_id, :user_id, :circle_id, :user_id, :invited_by, :date_added)
         end
 
         def circle_member_update_params

@@ -8,7 +8,6 @@ class ApplicationController < ActionController::Base
   def confirm_logged_in
     # user is found by session id
     user = User.find(session[:user_id])
-
     # the auth token must be present
     if auth[:authentication_token] && auth[:authentication_token] == user.authentication_token #&& user.active
       return true
@@ -80,7 +79,12 @@ class ApplicationController < ActionController::Base
     end
 
     def notify(the_user, the_peck)
-      the_notifications = {}
+      logger.info "sent peck to #{the_peck.user_id}"
+
+      apple_notifications = {}
+      google_notifications = {}
+      google_collapse_notifications = {}
+
       the_user.unique_device_identifiers.each do |device|
         # date of creation of most recent user to use this device
         udid_id = UniqueDeviceIdentifier.where(udid: device.udid).sorted.last.id
@@ -94,11 +98,18 @@ class ApplicationController < ActionController::Base
         # as long as the token is not nil and the user is the most recent user
         if the_user.id == uid && the_token
           if the_peck.send_push_notification
-            the_notifications[the_token] = the_peck.message
+            # collapse circle comments
+            if device.device_type == 'android' && the_peck.notification_type == 'circle_comment'
+              google_collapse_notifications[the_token] = the_peck.message
+            elsif device.device_type == 'android'
+              google_notifications[the_token] = the_peck.message
+            else
+              apple_notifications[the_token] = the_peck.message
+            end
           end
         end
       end
-      Communication::PushNotificationWorker.perform_async(the_notifications)
+      Communication::PushNotificationWorker.perform_async(apple_notifications, google_notifications, google_collapse_notifications, the_user.id)
     end
 
     # check existence of auth params

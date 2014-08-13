@@ -2,8 +2,8 @@
 <html>
   <head>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
-    <meta property="al:ios:url" content="fb291944037642057://" />
-    <!--<meta property="al:ios:app_store_id" content="702672553" />
+    <!--<meta property="al:ios:url" content="fb291944037642057://" />
+    <meta property="al:ios:app_store_id" content="702672553" />
     <meta property="al:ios:app_name" content="Peck" />-->
   </head>
   <body>
@@ -12,7 +12,7 @@
       your username is: <%= @user.email %>.<br>
     </p>
     <p>
-      To finish registration, please click the following link: <%= link_to "Confirm", confirm_email_registration_url(host: "loki.peckapp.com:3500", id: @id)%>
+      To finish registration, please click the following link: <%= link_to "Confirm", confirm_email_registration_url(host: "localhost:3000", id: @id)%>
     </p>
   </body>
 </html>

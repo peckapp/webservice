@@ -145,7 +145,8 @@ module Api
               head :bad_request
               logger.warn "tried to not send a udid"
             end
-            Communication::SendEmail.perform_async(params[:id])
+            the_id = params[:id]
+            Communication::SendEmail.perform_async(the_id)
           else
             logger.warn "attempted to super_create user with id: #{@user.id} with invalid authentication sign_up_params"
           end

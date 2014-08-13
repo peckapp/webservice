@@ -1,6 +1,5 @@
-collection :@all_pecks
-  attributes :id, :user_id, :institution_id, :notification_type, :message, :send_push_notification, :invited_by, :interacted, :invitation, :created_at, :updated_at
+child :@peck do
+  attributes :id, :user_id, :institution_id, :notification_type, :message, :send_push_notification, :invitation, :invited_by, :interacted, :created_at, :updated_at
+end
 
-node :errors do |peck|
-   peck.errors.full_messages
- end
+node(:errors) {@peck.errors.full_messages}

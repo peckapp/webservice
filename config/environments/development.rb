@@ -46,7 +46,7 @@ Rails.application.configure do
     domain: 'gmail.com',
     user_name: 'peckboblee',
     password: 'bobbylee8',
-    authentication: 'plain',
+    authentication: 'plain'
     #enable_starttls_auto: true
     }
   # devise
