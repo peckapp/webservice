@@ -13,6 +13,9 @@ module Api
       def index
 
         if params[:user_id]
+          # events created
+          created_ids = specific_index(SimpleEvent, params).pluck(:id)
+
           # events you're attending
           events_attended_ids = EventAttendee.where(user_id: params[:user_id], category: "simple").pluck(:event_attended)
 
@@ -22,12 +25,9 @@ module Api
           # department subscriptions
           dept_subscription_ids = Subscription.where(user_id: params[:user_id], category: "department").pluck(:subscribed_to)
 
-          all_ids = (events_attended_ids + club_subscription_ids + dept_subscription_ids).uniq
+          all_ids = (created_ids + events_attended_ids + club_subscription_ids + dept_subscription_ids).uniq
 
-          puts all_ids
           @simple_events = SimpleEvent.where(id: all_ids)
-
-          puts @simple_events
         else
           # this will add only created events IF user id is provided
           # otherwise all events will be added
