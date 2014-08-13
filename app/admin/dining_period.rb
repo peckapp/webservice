@@ -16,4 +16,17 @@ ActiveAdmin.register DiningPeriod do
   # Adds this into a dropdown in the top menu bar
   menu parent: 'Dining'
 
+  index do
+    id_column
+    column :dining_place
+    column :dining_opportunity
+    column :institution
+    column :day_of_week
+    column :start_time
+    column :end_time
+    column :created_at
+    column :updated_at
+    actions
+  end
+
 end
