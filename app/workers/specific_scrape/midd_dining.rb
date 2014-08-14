@@ -4,7 +4,7 @@ module SpecificScrape
   # this is done for now because dining menus are very specific to a certain school, and the most static of all
   class MiddDining
     include Sidekiq::Worker
-    sidekiq_options queue: :scraping
+    sidekiq_options queue: :scraping, retry: 5
 
     include Sidetiq::Schedulable
     recurrence { daily.hour_of_day(2) }

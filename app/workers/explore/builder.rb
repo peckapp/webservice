@@ -11,7 +11,7 @@ module Explore
     # recurrence { hourly }
 
     def perform(institution_id)
-      options = { :namespace => "peck", :compress => true }
+      options = { namespace: 'peck', compress: true }
       @cache_client = Dalli::Client.new('localhost:11211', options)
 
       @cache_client.set('campus_explore', analyze_simple_events(institution_id))
@@ -24,18 +24,16 @@ module Explore
     # should add something to only get a certain range of dates
 
     def analyze_simple_events(institution_id)
-      
       analyzer = Explore::EventAnalyzer.new
       analysis_group = SimpleEvent.where(start_date: Time.now..1.month.from_now)
 
-      event_scores = analysis_group.inject([]) do |acc, e|
+      event_scores = analysis_group.reduce([]) do |acc, e|
 
         acc << [e.id, analyzer.perform(e.id, institution_id, 'SimpleEvent')]
 
       end
 
       Hash[event_scores]
-
     end
 
     def analyze_athletic_events(institution_id)

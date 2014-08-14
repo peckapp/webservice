@@ -2,6 +2,8 @@
 
 class ScraperWorker
   include Sidekiq::Worker
+  sidekiq_options queue: :scraping
+
   include Sidetiq::Schedulable
 
   recurrence { daily }
