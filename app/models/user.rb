@@ -31,7 +31,7 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password, if: -> { password.present? }
   validates :first_name, presence: true, if: :enable_strict_validation
   validates :last_name, presence: true, if: :enable_strict_validation
-  validates :email, uniqueness: true, presence: true, length: { maximum: 50 }, format: { with: EMAIL_REGEX }, if: :enable_strict_validation
+  validates :email, presence: true, length: { maximum: 50 }, format: { with: EMAIL_REGEX }, if: :enable_strict_validation
   validates :facebook_link, uniqueness: true, allow_nil: true
   validates :facebook_token, uniqueness: true, allow_nil: true
   validates :api_key, uniqueness: true, allow_nil: true
