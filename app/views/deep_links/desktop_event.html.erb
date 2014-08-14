@@ -4,14 +4,14 @@
   <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
 </head>
 <body>
-  <h1><font face="verdana"><center><%= @simple_event.title %></center></font><h1><br>
+  <h1><font face="verdana"><center><%= @simple_event.title %></center></font><h1>
 
-    <center><img src="http://loki.peckapp.com:3500<%=@simple_event.image.url%>"></center><br>
+    <center><img src="http://loki.peckapp.com:3500<%=@simple_event.image.url%>"></center>
 
     <h2><font face="verdana"><center><%= "#{@simple_event.start_date.strftime('%B%e, %l:%M %p')} - #{@simple_event.end_date.strftime('%B%e, %l:%M %p %Z')}" %></center></font><h2>
 
       <p><font face="verdana"><center><%= @institution.name %></center></font></p>
-      
+
       <p><font face="verdana" color="blue"><center>Event Description: </font><font face="verdana"><%= @simple_event.event_description %></center></font></p>
 
       <p><font size="5" face="verdana" color="red"><center>To attend, like, or comment on this event, please use a mobile device with Peck installed.</center></p>
