@@ -1,6 +1,5 @@
 class Configuration < ActiveRecord::Base
   include ModelNormalValidations
-  include ModelBeforeSaveValidations
 
   ###############################
   ##                           ##

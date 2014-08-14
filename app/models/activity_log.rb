@@ -1,6 +1,5 @@
 class ActivityLog < ActiveRecord::Base
   include ModelNormalValidations
-  include ModelBeforeSaveValidations
 
   ###############################
   ##                           ##

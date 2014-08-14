@@ -1,6 +1,5 @@
 class Department < ActiveRecord::Base
   include ModelNormalValidations
-  include ModelBeforeSaveValidations
 
   ###############################
   ##                           ##

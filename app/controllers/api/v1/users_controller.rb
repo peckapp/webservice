@@ -166,13 +166,13 @@ module Api
         if @user && params[:id].to_i == auth[:user_id].to_i
 
           # if the user already has an email that matches with their facebook college email
-          user = User.where(email: fb_params[:email]).first
+          user = User.where(facebook_link: fb_params[:facebook_link], email: fb_params[:email]).first
           if user
             @user = user
             # if fb gave out an access token
             if fb_params[:facebook_token]
               # update the user and add their access token
-              @user.update_attributes(facebook_token: fb_params[:facebook_token], facebook_link: fb_params[:facebook_link])
+              @user.update_attributes(facebook_token: fb_params[:facebook_token])
 
               # use the current one if they're logged in on another device
               @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token

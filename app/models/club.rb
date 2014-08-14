@@ -1,6 +1,5 @@
 class Club < ActiveRecord::Base
   include ModelNormalValidations
-  include ModelBeforeSaveValidations
 
   ###############################
   ##                           ##

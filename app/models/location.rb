@@ -1,7 +1,6 @@
 class Location < ActiveRecord::Base
   include ModelNormalValidations
-  include ModelBeforeSaveValidations
-
+  
   ###############################
   ##                           ##
   ##        VALIDATIONS        ##
