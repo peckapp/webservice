@@ -1,1 +1,1 @@
-node(:facebook_registered) {@user.facebook_registered} 
+node(:facebook_registered) {@facebook_registered} 
