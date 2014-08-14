@@ -116,7 +116,7 @@ module Api
 
             if the_udid
               # check if udid/device token is provided
-              @udid = UniqueDeviceIdentifier.where(udid: the_udid, device_type: the_device_type).first
+              @udid = UniqueDeviceIdentifier.where(udid: the_udid, token: the_token, device_type: the_device_type).first
 
               if ! @udid
                 if the_token
@@ -159,6 +159,7 @@ module Api
         the_udid = fb_params.delete(:udid)
         the_token = fb_params.delete(:device_token)
         the_device_type = fb_params.delete(:device_type)
+        send_confirmation_email = fb_params.delete(:send_email)
 
         @user = User.find(params[:id])
 
@@ -172,7 +173,7 @@ module Api
             if fb_params[:facebook_token]
               # update the user and add their access token
               @user.update_attributes(facebook_token: fb_params[:facebook_token])
-              
+
               # use the current one if they're logged in on another device
               @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token
               @user.save
@@ -184,9 +185,14 @@ module Api
             @user.enable_facebook_validation = true
             if @user.update_attributes(facebook_login_params(fb_params))
                @user.authentication_token = SecureRandom.hex(30)
-               @user.active = true
                @user.save
                auth[:authentication_token] = @user.authentication_token
+               if send_confirmation_email
+                 Communication::SendEmail.perform_async(@user.id)
+               else
+                 @user.active = true
+                 @user.save
+               end
             end
           end
 
@@ -194,7 +200,7 @@ module Api
 
             if the_udid
               # check if udid/device token is provided
-              @udid = UniqueDeviceIdentifier.where(udid: the_udid, device_type: the_device_type).first
+              @udid = UniqueDeviceIdentifier.where(udid: the_udid, token: the_token, device_type: the_device_type).first
               if ! @udid
                 if the_token
                   @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token, device_type: the_device_type)
@@ -277,7 +283,7 @@ module Api
         end
 
         def user_update_params
-          params.require(:user).permit(:first_name, :last_name, :blurb, :facebook_link, :active, :institution_id)
+          params.require(:user).permit(:first_name, :last_name, :blurb, :facebook_link, :institution_id)
         end
 
         def facebook_login_params(parameters)
