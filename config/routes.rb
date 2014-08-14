@@ -93,6 +93,7 @@ Rails.application.routes.draw do
 
         collection do
           post :user_for_udid
+          get :check_link
         end
       end
     end

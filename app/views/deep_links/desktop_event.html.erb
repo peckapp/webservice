@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <style>
+.borderexample
+{
+border-style:solid;
+border-color:#287EC7;
+}
+</style>
   <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
 </head>
 <body>
-  <h1><font face="verdana"><center><%= @simple_event.title %></center></font><h1>
+  <h1><font face="tahoma"><center><%= @simple_event.title %></center></font><h1>
 
-    <center><img src="http://loki.peckapp.com:3500<%=@simple_event.image.url%>"></center>
+    <center><img src="http://localhost:3000<%=@simple_event.image.url%>" height="270" width="270"></center>
 
-    <h2><font face="verdana"><center><%= "#{@simple_event.start_date.strftime('%B %e, %l:%M %p')} - #{@simple_event.end_date.strftime('%B %e, %l:%M %p %Z')}" %></center></font><h2>
+    <h2><font face="tahoma"><center><%= "#{@simple_event.start_date.strftime('%B %e, %l:%M %p')} - #{@simple_event.end_date.strftime('%B %e, %l:%M %p %Z')}" %></center></font><h2>
 
-      <p><font face="verdana"><center><%= @institution.name %></center></font></p>
+      <p><font size="4" face="tahoma"><center><%= @institution.name %></center></font></p>
 
-      <p><font face="verdana" color="blue"><center>Event Description: </font><font face="verdana"><%= @simple_event.event_description %></center></font></p>
+      <p><font size="4" face="tahoma" color="blue"><center>Event Description: </font><font size="3" face="tahoma"><%= @simple_event.event_description %></center></font></p>
 
-      <p><font size="5" face="verdana" color="red"><center>To attend, like, or comment on this event, please use a mobile device with Peck installed.</center></p>
+      <p><center><i><font size="4" face="tahoma" color="burlywood">To attend, like, or comment on this event, please use a mobile device with </font><font size="4" face="tahoma" color="blueviolet">Peck </font><font size="4" face="tahoma" color="burlywood">installed.</font></i></center></p>
 </body>
 </html>

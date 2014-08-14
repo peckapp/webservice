@@ -6,7 +6,7 @@ class DeepLinksController < ApplicationController
   end
 
   def desktop_event
-    @simple_event = SimpleEvent.find(393)
+    @simple_event = SimpleEvent.find(61)
     @institution = Institution.find(@simple_event.institution_id)
   end
 end

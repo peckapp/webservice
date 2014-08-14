@@ -9,15 +9,15 @@ class Institution < ActiveRecord::Base
   ###############################
 
   validates :name, presence: true
-  validates :street_address, presence: true
+  #validates :street_address, presence: true
   validates :city, presence: true
   validates :state, presence: true
   validates :country, presence: true, format: { with: LETTERS_REGEX }
-  validates :gps_longitude, presence: true, numericality: true
-  validates :gps_latitude, presence: true, numericality: true
-  validates :range, presence: true, numericality: true
-  validates :configuration_id, presence: true, numericality: { only_integer: true }, uniqueness: true
-  validates :api_key, presence: true, uniqueness: true
+  #validates :gps_longitude, presence: true, numericality: true
+  #validates :gps_latitude, presence: true, numericality: true
+  #validates :range, presence: true, numericality: true
+  #validates :configuration_id, presence: true, numericality: { only_integer: true }, uniqueness: true
+  #validates :api_key, presence: true, uniqueness: true
   validate :correct_institution_types
 
   ###############################

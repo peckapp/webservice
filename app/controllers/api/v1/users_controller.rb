@@ -235,6 +235,16 @@ module Api
         end
       end
 
+      def check_link
+        uparams = params[:user]
+        @user = User.where(facebook_link: uparams[:facebook_link]).first
+        if @user
+          @user.facebook_registered = true
+        else
+          @user.facebook_registered = false
+        end
+      end
+
       def update
         if params[:id].to_i == auth[:user_id].to_i
           @user = User.find(params[:id])
