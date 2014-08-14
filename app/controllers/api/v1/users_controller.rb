@@ -238,10 +238,10 @@ module Api
       def check_link
         uparams = params[:user]
         @user = User.where(facebook_link: uparams[:facebook_link]).first
-        if @user && uparams[:facebook_link] 
-          @user.facebook_registered = true
+        if @user && uparams[:facebook_link]
+          @facebook_registered = true
         else
-          @user.facebook_registered = false
+          @facebook_registered = false
         end
       end
 
