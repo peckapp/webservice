@@ -10,6 +10,9 @@ Rails.application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
+  # allow caching using dalli
+  config.cache_store = :dalli_store
+
   # Eager load code on boot.
   # set to true in order to use the sidetiq gem in the web application provided
   config.eager_load = true

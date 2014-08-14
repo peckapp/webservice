@@ -105,6 +105,8 @@ group :production do
   gem 'unicorn'
   # dalli for interfacing with memcached in production
   gem 'dalli'
+  ## apparently provides 20-30% performance boost to dalli ##
+  # gem 'kgio'
 end
 
 ### Development-specific gems
