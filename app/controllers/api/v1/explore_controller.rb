@@ -49,7 +49,7 @@ module Api
 
         personalizer = Personalizer.new
 
-        personal_scores = personalizer.perform(scores, 1, 1)
+        personal_scores = personalizer.perform(scores, params[:authentication][:user_id], params[:authentication][:institution_id])
 
         # params[:authentication][:user_id], params[:authentication][:institution_id])
 
