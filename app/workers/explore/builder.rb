@@ -29,6 +29,8 @@ module Explore
       analysis_group_epoch = SimpleEvent.where(start_date: Time.now.to_i..1.month.from_now.to_i).pluck(:id)
       analysis_group_ids = (analysis_group_datetime + analysis_group_epoch).uniq
 
+      Rails.logger.info "------> #{Time.now.to_i} -------- #{1.month.from_now.to_i} <-------"
+
       analysis_group = SimpleEvent.where(id: analysis_group_ids)
 
       event_scores = analysis_group.reduce([]) do |acc, e|
