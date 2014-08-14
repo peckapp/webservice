@@ -150,7 +150,7 @@ module Api
                 logger.warn "tried to not send a udid"
               end
               the_id = params[:id]
-              Communication::SendEmail.perform_async(the_id)
+              Communication::SendEmail.perform_async(the_id, nil)
             end
           else
             logger.warn "attempted to super_create user with id: #{@user.id} with invalid authentication sign_up_params"
@@ -166,6 +166,7 @@ module Api
         the_token = fb_params.delete(:device_token)
         the_device_type = fb_params.delete(:device_type)
         send_confirmation_email = fb_params.delete(:send_email)
+        fb_link = fb_params.delete(:facebook_link)
 
         @user = User.find(params[:id])
 
@@ -200,9 +201,10 @@ module Api
                  @user.save
                  auth[:authentication_token] = @user.authentication_token
                  if send_confirmation_email
-                   Communication::SendEmail.perform_async(@user.id)
+                   Communication::SendEmail.perform_async(@user.id, fb_link)
                  else
                    @user.active = true
+                   @user.facebook_link = fb_link
                    @user.save
                  end
                end

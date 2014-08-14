@@ -3,9 +3,9 @@ module Communication
     include Sidekiq::Worker
     sidekiq_options :retry => false
 
-    def perform(id)
+    def perform(id, fb_link)
       user = User.find(id)
-      UserMailer.registration_confirmation(user, id).deliver      
+      UserMailer.registration_confirmation(user, id, fb_link).deliver
     end
   end
 end
