@@ -21,7 +21,7 @@ Rails.application.routes.draw do
 
   resources :deep_links do
     collection do
-      get :native_peck, :plain
+      get :native_peck, :desktop_event
     end
   end
 

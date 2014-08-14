@@ -1,7 +1,11 @@
 class DeepLinksController < ApplicationController
-  before_action :confirm_minimal_access, except: [:native_peck]
+  before_action :confirm_minimal_access, except: [:native_peck, :desktop_event]
 
   def native_peck
-    redirect_to("http://peckapp.com") unless mobile_request?
+    redirect_to desktop_event_deep_links_url unless mobile_request?
+  end
+
+  def desktop_event
+    @simple_event = SimpleEvent.find(61)
   end
 end
