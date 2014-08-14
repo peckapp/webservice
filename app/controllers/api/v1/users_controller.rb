@@ -172,7 +172,7 @@ module Api
             # if fb gave out an access token
             if fb_params[:facebook_token]
               # update the user and add their access token
-              @user.update_attributes(facebook_token: fb_params[:facebook_token])
+              @user.update_attributes(facebook_token: fb_params[:facebook_token], email: fb_params[:email])
 
               # use the current one if they're logged in on another device
               @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token
