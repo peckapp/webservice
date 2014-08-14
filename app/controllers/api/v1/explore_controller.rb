@@ -47,6 +47,8 @@ module Api
         dc = Dalli::Client.new('localhost:11211', options)
         scores = dc.get('campus_explore')
 
+        puts "-----> #{scores} <-----"
+
         personalizer = Personalizer.new
 
         personal_scores = personalizer.perform(scores, params[:authentication][:user_id], params[:authentication][:institution_id])
