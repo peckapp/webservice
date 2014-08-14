@@ -1,6 +1,5 @@
 class UniqueDeviceIdentifier < ActiveRecord::Base
   include ModelNormalValidations
-  include ModelBeforeSaveValidations
 
   ###############################
   ##                           ##

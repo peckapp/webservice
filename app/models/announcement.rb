@@ -1,6 +1,5 @@
 class Announcement < ActiveRecord::Base
   include ModelNormalValidations
-  include ModelBeforeSaveValidations
   ###    Associations    ###
   ### user announcement creator ###
   acts_as_likeable

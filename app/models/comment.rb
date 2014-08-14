@@ -1,6 +1,5 @@
 class Comment < ActiveRecord::Base
   include ModelNormalValidations
-  include ModelBeforeSaveValidations
 
   acts_as_likeable
   ###############################

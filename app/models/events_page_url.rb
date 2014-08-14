@@ -1,6 +1,5 @@
 class EventsPageUrl < ActiveRecord::Base
   include ModelNormalValidations
-  include ModelBeforeSaveValidations
 
   ###############################
   ##                           ##

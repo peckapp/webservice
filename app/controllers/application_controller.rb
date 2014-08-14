@@ -136,7 +136,11 @@ class ApplicationController < ActionController::Base
       search_params
     end
 
-    def mobile_request?
-      request.user_agent =~ /Mobile|webOs/
+    def android_request?
+      request.user_agent =~ /android/i
+    end
+
+    def apple_request?
+      request.user_agent =~ /iphone|ipad|ipod/i
     end
 end

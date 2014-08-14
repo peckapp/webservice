@@ -1,6 +1,5 @@
 class UdidUser < ActiveRecord::Base
 include ModelNormalValidations
-include ModelBeforeSaveValidations
 
 ###############################
 ##                           ##
