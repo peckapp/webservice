@@ -1,14 +1,17 @@
 # nests all explore workers within their own module
 module Explore
+
+  ### COMMENT HERE ###
+  # currently running in a single block but could be split up
+  # splitting up will require assessing race conditions and
+  # possibly implementing our own lock
+
   # sub worker that analyses a specific
   class EventAnalyzer
-    include Sidekiq::Worker
+    # include Sidekiq::Worker
 
-    def initialize(institution_id)
-      @inst_id = institution_id
-    end
+    def perform(id, inst_id, model_str)
 
-    def perform(id, model_str)
       # set model to AthleticEvent or SimpleEvent
       model = Util.class_from_string(model_str)
 
@@ -16,8 +19,6 @@ module Explore
 
       # all necessary values to get this event's Peck Score
       time_of_event = the_event.start_date
-
-      logger.info "MODEL STRING -----> #{model_str} <------"
 
       # if the model string contains the word simple then event is simple otherwise athletic
       if model_str.downcase["simple"]
@@ -47,7 +48,7 @@ module Explore
       comments = all_comments.count
       unique_commentors = all_comments.pluck(:user_id).uniq.count
 
-      weights = Weights.new(@inst_id)
+      weights = Weights.new(inst_id)
       # sum weights
       peck_score = weights.temporal_proximity(time_of_event) +
                    weights.attendees(attendee_count) +
