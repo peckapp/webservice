@@ -58,6 +58,7 @@ module Api
         explore_ids = []
         @explore_scores = {}
         (0...NUMBER_OF_EVENTS).each do |n|
+          logger.info("-----> #{n} <-----")
           explore_ids << personal_scores[n][0]
           @explore_scores[personal_scores[n][0]] = personal_scores[n][1]
         end
