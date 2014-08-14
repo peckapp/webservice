@@ -66,7 +66,7 @@ class Weights
 
   def active_users(inst_id)
     # may want to add further customization if certain users are not actively involved in their accounts
-    users = User.where(institution_id: inst_id).where('email IS NOT NULL').count
+    users = User.where(institution_id: inst_id, active: true).count
     return users if users > MIN_USERS
     MIN_USERS
   end
