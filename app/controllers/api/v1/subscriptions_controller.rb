@@ -34,7 +34,7 @@ module Api
 
           # query parameter with the ids of all the necessarily deleted subscriptions
           subscription_id_string = params[:subscription][:subscriptions]
-
+          
           # converts the query parameter string into an array. Query parameter gets sent like this "[1,2,3]"
           all_ids = subscription_id_string[subscription_id_string.index("[") + 1, subscription_id_string.index("]") - 1].split(",")
 
