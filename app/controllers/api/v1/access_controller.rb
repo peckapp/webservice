@@ -66,7 +66,7 @@ module Api
         else
 
           # something went wrong
-          head :bad_request
+          head :unprocessable_entity
           logger.warn 'failed to authenticate user for session creation'
         end
       end

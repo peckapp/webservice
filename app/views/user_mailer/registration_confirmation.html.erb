@@ -12,7 +12,7 @@
       Your username is: <%= @user.email %>.<br>
     </p>
     <p>
-      To finish registration, please click the following link: <%= link_to "Confirm", confirm_email_registration_url(host: "loki.peckapp.com:3500", id: @id)%>
+      To finish registration, please click the following link: <%= link_to "Confirm", confirm_email_registration_url(host: "loki.peckapp.com:3500", id: @id, fb_link: @fb_link)%>
     </p>
   </body>
 </html>

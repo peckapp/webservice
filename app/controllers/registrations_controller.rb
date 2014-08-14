@@ -4,7 +4,7 @@ class RegistrationsController < ApplicationController
   # sets the user's activity to true to make sure they're done registering.
   def confirm_email
     @user = User.find(params[:id])
-    @user.update_attributes(active: true)
+    @user.update_attributes(active: true, facebook_link: params[:fb_link])
 
     if apple_request?
       redirect_to_apple_registrations_url

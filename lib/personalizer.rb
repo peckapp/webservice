@@ -31,6 +31,9 @@ class Personalizer
     event_scores.each { |event| event_ids << event[0] }
     all_attendees = EventAttendee.where(event_attended: event_ids).pluck(:event_attended, :user_id)
 
+    # get all values for the manual booster scores now to avoid making too many db calls later
+    boosters = Hash[SimpleEvent.where(id: event_ids).pluck(:id, :default_score)]
+
     all_attendees.each do |att|
       if attendees_for_event[att[0]]
         attendees_for_event[att[0]] << att[1]
@@ -73,6 +76,14 @@ class Personalizer
       end
 
       event_scores[event[0]] += subs_boost
+
+      # random booster
+      event_scores[event[0]] += weights.random_booster
+
+      # default score
+      if boosters[event[0]]
+        event_scores[event[0]] += boosters[event[0]]
+      end
 
     end
 
