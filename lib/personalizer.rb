@@ -69,7 +69,7 @@ class Personalizer
       ## Scoring boost for similar subscribers
       subs_boost = 0
       top_similar_subscribers.each do |subs|
-        if attendees != nil attendees.include? subs[0]
+        if attendees != nil && attendees.include?(subs[0])
           subs_boost += MAX_SUB_BOOST/NUMBER_OF_TOP_SUBSCRIBERS
         end
       end
