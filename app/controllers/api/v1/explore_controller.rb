@@ -47,7 +47,7 @@ module Api
         dc = Dalli::Client.new('localhost:11211', options)
         scores = dc.get('campus_explore')
 
-        puts "-----> #{scores} <-----"
+        logger.info("-----> #{scores} <-----")
 
         personalizer = Personalizer.new
 
