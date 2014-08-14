@@ -47,9 +47,9 @@ class Personalizer
       friend_boost = 0
       top_circle_friends.each do |friend|
 
-        logger.info("----> #{attendees} <----")
+        Rails.logger.info("----> #{attendees} <----")
         if attendees != nil && attendees.include?(friend[0])
-          logger.info("----> HERE <----")
+          Rails.logger.info("----> HERE <----")
           if weights.circle_friend_boost(friend[1], circle_count) > MAX_FRIEND_SCORE
             friend_score = MAX_FRIEND_SCORE
           else
