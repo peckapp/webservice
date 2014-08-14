@@ -173,7 +173,7 @@ module Api
         if @user && params[:id].to_i == auth[:user_id].to_i
 
           # if the user already has an email that matches with their facebook college email
-          user = User.where(facebook_link: fb_params[:facebook_link], email: fb_params[:email]).first
+          user = User.where(facebook_link: fb_link, email: fb_params[:email]).first
           if user
             @user = user
             # if fb gave out an access token
