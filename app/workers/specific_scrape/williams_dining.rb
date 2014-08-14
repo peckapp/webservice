@@ -78,7 +78,7 @@ module SpecificScrape
             logger.info "clicking child: #{child.selector}"
             b.link(text: child.selector).click
             be_nice
-            scrape_dates(b, dining_place, inst_id, sr_id)
+            scrape_dates(b, dining_place.id, inst_id, sr_id)
             logger.info 'done scraping dates'
             be_nice
             go_back(b)
