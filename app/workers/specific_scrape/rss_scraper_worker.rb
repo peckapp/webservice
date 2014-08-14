@@ -2,8 +2,10 @@ module SpecificScrape
   # old class soon to be deprecated and removed in favor of a more flexible approach
   class RssScraperWorker
     include Sidekiq::Worker
-    include Sidetiq::Schedulable
+    sidekiq_options queue: :scraping, retry: 5
     
+    include Sidetiq::Schedulable
+
     # recurrence { daily }
 
     def perform

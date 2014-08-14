@@ -11,7 +11,7 @@ Rails.application.configure do
   config.cache_classes = false
 
   # allow caching using dalli
-  config.cache_store = :dalli_store
+  config.cache_store = :dalli_store, 'localhost:11211'
 
   # Eager load code on boot.
   # set to true in order to use the sidetiq gem in the web application provided

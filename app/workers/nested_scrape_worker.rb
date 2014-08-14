@@ -3,6 +3,8 @@
 # relies on a nested structure of the html content
 class NestedScrapeWorker
   include Sidekiq::Worker
+  sidekiq_options queue: :scraping, retry: 5
+
   include Sidetiq::Schedulable
 
   recurrence { daily }

@@ -4,6 +4,7 @@
 
 class SimplePageScraper
   include Sidekiq::Worker
+  sidekiq_options queue: :scraping, retry: 5
 
   PAGE_LIMIT = 30
 
