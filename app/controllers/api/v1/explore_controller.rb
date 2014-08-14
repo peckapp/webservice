@@ -47,19 +47,19 @@ module Api
         dc = Dalli::Client.new('localhost:11211', options)
         scores = dc.get('campus_explore')
 
-        logger.info("-----> #{scores} <-----")
-
         personalizer = Personalizer.new
 
         personal_scores = personalizer.perform(scores, params[:authentication][:user_id], params[:authentication][:institution_id])
 
-        # params[:authentication][:user_id], params[:authentication][:institution_id])
-
         explore_ids = []
         @explore_scores = {}
         (0...NUMBER_OF_EVENTS).each do |n|
-          explore_ids << personal_scores[n][0]
-          @explore_scores[personal_scores[n][0]] = personal_scores[n][1]
+          if personal_scores[n]
+            explore_ids << personal_scores[n][0]
+            @explore_scores[personal_scores[n][0]] = personal_scores[n][1]
+          else
+            break
+          end
         end
 
         @explore_events = SimpleEvent.where(id: explore_ids)

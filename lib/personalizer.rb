@@ -46,8 +46,10 @@ class Personalizer
       ## Scoring boost for circle friends
       friend_boost = 0
       top_circle_friends.each do |friend|
-        if attendees.include? friend[0]
 
+        Rails.logger.info("----> #{attendees} <----")
+        if attendees != nil && attendees.include?(friend[0])
+          Rails.logger.info("----> HERE <----")
           if weights.circle_friend_boost(friend[1], circle_count) > MAX_FRIEND_SCORE
             friend_score = MAX_FRIEND_SCORE
           else
@@ -67,7 +69,7 @@ class Personalizer
       ## Scoring boost for similar subscribers
       subs_boost = 0
       top_similar_subscribers.each do |subs|
-        if attendees.include? subs[0]
+        if attendees != nil && attendees.include?(subs[0])
           subs_boost += MAX_SUB_BOOST/NUMBER_OF_TOP_SUBSCRIBERS
         end
       end
@@ -93,22 +95,27 @@ class Personalizer
 
     ranked_friends = {}
 
-    all_circle_friends.each do |friend|
+    if all_circle_friends != nil
+      all_circle_friends.each do |friend|
 
-      if ranked_friends[friend[0]]
-        if ranked_friends[friend[1]] == user_id
-          ranked_friends[friend[0]] += 1.5
+        if ranked_friends[friend[0]]
+          if ranked_friends[friend[1]] == user_id
+            ranked_friends[friend[0]] += 1.5
+          else
+            ranked_friends[friend[0]] += 1
+          end
         else
-          ranked_friends[friend[0]] += 1
+          if ranked_friends[friend[1]] == user_id
+            ranked_friends[friend[0]] = 1.5
+          else
+            ranked_friends[friend[0]] = 1
+          end
         end
-      else
-        if ranked_friends[friend[1]] == user_id
-          ranked_friends[friend[0]] = 1.5
-        else
-          ranked_friends[friend[0]] = 1
-        end
+
       end
-
+    else
+      # no friends, return empty array
+      return []
     end
 
     # sort hash from small to big and reverse order
@@ -141,27 +148,32 @@ class Personalizer
     similar_subscribers = {}
     top_subscribers = {}
 
-    all_subscribers.each do |subscriber|
+    # should NEVER be nil but add check anyways just in case
+    if all_subscriber != nil
+      all_subscribers.each do |subscriber|
 
-      current_sub = [subscriber[1], subscriber[2]]
-      if user_subscriptions.include? current_sub
+        current_sub = [subscriber[1], subscriber[2]]
+        if user_subscriptions.include? current_sub
 
-        # increment number of subscriptions in common
-        if similar_subscribers[subscriber[0]]
-          similar_subscribers[subscriber[0]] += 1
-        else
-          similar_subscribers[subscriber[0]] = 1
-        end
+          # increment number of subscriptions in common
+          if similar_subscribers[subscriber[0]]
+            similar_subscribers[subscriber[0]] += 1
+          else
+            similar_subscribers[subscriber[0]] = 1
+          end
 
-        # if they have the minimum number of subscriptions in common
-        if similar_subscribers[subscriber[0]] >= MINIMUM_SUBSCRIPTIONS
-          top_subscribers[subscriber[0]] = similar_subscribers[subscriber[0]]
-        end
+          # if they have the minimum number of subscriptions in common
+          if similar_subscribers[subscriber[0]] >= MINIMUM_SUBSCRIPTIONS
+            top_subscribers[subscriber[0]] = similar_subscribers[subscriber[0]]
+          end
 
-        if top_subscribers.size >= NUMBER_OF_TOP_SUBSCRIBERS
-          return top_subscribers.to_a
+          if top_subscribers.size >= NUMBER_OF_TOP_SUBSCRIBERS
+            return top_subscribers.to_a
+          end
         end
       end
+    else
+      return []
     end
 
     # return hash of top similar subscribers
