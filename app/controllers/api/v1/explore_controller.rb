@@ -47,6 +47,9 @@ module Api
         dc = Dalli::Client.new('localhost:11211', options)
         scores = dc.get('campus_explore')
 
+        # save all events that user is attending to remove it from explore
+        user_events = EventAttendee.where(user_id: params[:authentication][:user_id], category: "simple").pluck(:event_attended)
+
         personalizer = Personalizer.new
 
         personal_scores = personalizer.perform(scores, params[:authentication][:user_id], params[:authentication][:institution_id])
@@ -55,10 +58,11 @@ module Api
         @explore_scores = {}
         (0...NUMBER_OF_EVENTS).each do |n|
           if personal_scores[n]
-            explore_ids << personal_scores[n][0]
-            @explore_scores[personal_scores[n][0]] = personal_scores[n][1]
-          else
-            break
+            # make sure user is not attending
+            if ! user_events.include?(personal_scores[n][0])
+              explore_ids << personal_scores[n][0]
+              @explore_scores[personal_scores[n][0]] = personal_scores[n][1]
+            end
           end
         end
 
