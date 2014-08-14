@@ -54,6 +54,10 @@ class Weights
       (0.3 * (85 * comments**1.5) / @user_count))
   end
 
+  def random_booster
+    rand * 100
+  end
+
   def circle_friend_boost(appearances, circle_count)
     if circle_count < 3
       42.43 * (appearances**1.4) / MIN_CIRCLES

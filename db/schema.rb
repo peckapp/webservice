@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140814220654) do
+ActiveRecord::Schema.define(version: 20140814225808) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -83,6 +83,7 @@ ActiveRecord::Schema.define(version: 20140814220654) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
+    t.integer  "default_score",                        default: 0
   end
 
   add_index "announcements", ["circle_id"], name: "index_announcements_on_circle_id", using: :btree
@@ -93,19 +94,20 @@ ActiveRecord::Schema.define(version: 20140814220654) do
   add_index "announcements", ["user_id"], name: "index_announcements_on_user_id", using: :btree
 
   create_table "athletic_events", force: true do |t|
-    t.integer  "institution_id",                null: false
-    t.integer  "athletic_team_id",              null: false
+    t.integer  "institution_id",                            null: false
+    t.integer  "athletic_team_id",                          null: false
     t.string   "opponent"
     t.float    "team_score",         limit: 24
     t.float    "opponent_score",     limit: 24
     t.string   "home_or_away"
-    t.string   "location",                      null: false
+    t.string   "location",                                  null: false
     t.string   "result"
     t.text     "note"
     t.datetime "date_and_time"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "scrape_resource_id"
+    t.integer  "default_score",                 default: 0
   end
 
   add_index "athletic_events", ["athletic_team_id"], name: "index_athletic_events_on_athletic_team_id", using: :btree
@@ -499,6 +501,7 @@ ActiveRecord::Schema.define(version: 20140814220654) do
     t.datetime "image_updated_at"
     t.string   "category"
     t.integer  "organizer_id"
+    t.integer  "default_score",                  default: 0
   end
 
   add_index "simple_events", ["institution_id"], name: "index_simple_events_on_institution_id", using: :btree
