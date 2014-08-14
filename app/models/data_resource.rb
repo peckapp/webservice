@@ -1,7 +1,7 @@
 class DataResource < ActiveRecord::Base
   ### VALIDATIONS ###
   validates_associated :scrape_resources
-  validated_associated :data_resources
+  validates_associated :data_resources
 
   validates :column_name, inclusion: { in: %w(small medium large), message: "%{value} is not a valid size" }
 
