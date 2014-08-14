@@ -22,7 +22,9 @@ class PeckClient < Thor
     super(a, b, c)
 
     begin
+      puts 'creating user'
       create_user_action
+      puts 'super creating user'
       super_create_user_action
     rescue => error
       destroy_user_action
@@ -58,6 +60,12 @@ class PeckClient < Thor
     destroy_user_action
   end
 
+  desc 'menu_items', 'Retreives current day\'s menu_items from the server'
+  def menu_items
+    menu_items_action
+    destroy_user_action
+  end
+
   no_commands do
 
     def events_action
@@ -73,6 +81,15 @@ class PeckClient < Thor
     def circles_action
       circles = get_and_verify('/api/circles', 'circles')
       puts "retreived #{circles.length} circles from the server"
+    end
+
+    def menu_items_action
+      params = { date_available: Date.current, dining_opportunity_id: 1 }
+
+      response = RestClient::Request.execute(method: :get, url: paramsURL('/api/menu_items', menu_items: params), verify_ssl: false)
+      verify_response(param, response)
+      menu_items = JSON.parse(response)['menu_items']
+      puts menu_items
     end
 
     def create_user_action

@@ -40,13 +40,15 @@ module SpecificScrape
             link = tl.css('a').first.values.first
             break
           end
-          sleep 0.5 + rand
-          parse_scheule_page(link)
+          sleep 0.5 + rand / 2
+          parse_schedule_page(link)
         end
       end
     end
 
-    def parse_scheule_page(link)
+    # each schedule page has a table of information on all the games for that season
+    def parse_schedule_page(link)
+      logger.info link
       full_link = "#{rooted_link(link)}?print=rss"
 
       logger.info "parsing schedule with link: #{full_link}"
@@ -55,11 +57,22 @@ module SpecificScrape
       logger.info 'retrieved raw'
       html = Nokogiri::HTML(raw)
 
-      logger.info html
+      table = html.css('.schedule-content table')
+
+      parse_table(table)
+    end
+
+    def parse_table(table)
+      # gets all elements of any type with the current element as the parent
+      immediate_children = table.css("#{table.css_path} > *")
+
+      immediate_children.each do |child|
+        # parse the child rows to handle each type properly
+      end
     end
 
     def rooted_link(ext)
-      return ext if false
+      return ext if ext.match(/\Ahttps?:/)
       "#{EPH_SPORTS_ROOT}#{ext}"
     end
 

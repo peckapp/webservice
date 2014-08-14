@@ -110,42 +110,48 @@ module Api
           user_signup_params(uparams)[:password_confirmation] = uparams[:password_confirmation]
 
           if @user.update_attributes(user_signup_params(uparams))
-            @user.authentication_token = SecureRandom.hex(30)
-            @user.save
-            auth[:authentication_token] = @user.authentication_token
-
-            if the_udid
-              # check if udid/device token is provided
-              @udid = UniqueDeviceIdentifier.where(udid: the_udid, token: the_token, device_type: the_device_type).first
-
-              if ! @udid
-                if the_token
-                  @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token, device_type: the_device_type)
-                else
-                  @udid = UniqueDeviceIdentifier.create(udid: the_udid, device_type: the_device_type)
-                end
-
-                UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
-                @user.unique_device_identifiers << @udid
-
-              else
-
-                @udid.touch
-
-                @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
-                if @udid_user
-                  # update the timestamp if the udid_user already exists
-                  @udid_user.touch
-                else
-                  @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
-                end
-              end
+            active_user = User.where(email: @user.email, active: true).first
+            if active_user
+              head :unprocessable_entity
+              logger.warn "tried to take the email of an already existing user"
             else
-              head :bad_request
-              logger.warn "tried to not send a udid"
+              @user.authentication_token = SecureRandom.hex(30)
+              @user.save
+              auth[:authentication_token] = @user.authentication_token
+
+              if the_udid
+                # check if udid/device token is provided
+                @udid = UniqueDeviceIdentifier.where(udid: the_udid, token: the_token, device_type: the_device_type).first
+
+                if ! @udid
+                  if the_token
+                    @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token, device_type: the_device_type)
+                  else
+                    @udid = UniqueDeviceIdentifier.create(udid: the_udid, device_type: the_device_type)
+                  end
+
+                  UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+                  @user.unique_device_identifiers << @udid
+
+                else
+
+                  @udid.touch
+
+                  @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
+                  if @udid_user
+                    # update the timestamp if the udid_user already exists
+                    @udid_user.touch
+                  else
+                    @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+                  end
+                end
+              else
+                head :bad_request
+                logger.warn "tried to not send a udid"
+              end
+              the_id = params[:id]
+              Communication::SendEmail.perform_async(the_id)
             end
-            the_id = params[:id]
-            Communication::SendEmail.perform_async(the_id)
           else
             logger.warn "attempted to super_create user with id: #{@user.id} with invalid authentication sign_up_params"
           end
@@ -184,14 +190,21 @@ module Api
             # Then the user has not logged in before
             @user.enable_facebook_validation = true
             if @user.update_attributes(facebook_login_params(fb_params))
-               @user.authentication_token = SecureRandom.hex(30)
-               @user.save
-               auth[:authentication_token] = @user.authentication_token
-               if send_confirmation_email
-                 Communication::SendEmail.perform_async(@user.id)
+
+               active_user = User.where(email: @user.email, active: true).first
+               if active_user
+                 head :unprocessable_entity
+                 logger.warn "tried to take the email of an already existing user"
                else
-                 @user.active = true
+                 @user.authentication_token = SecureRandom.hex(30)
                  @user.save
+                 auth[:authentication_token] = @user.authentication_token
+                 if send_confirmation_email
+                   Communication::SendEmail.perform_async(@user.id)
+                 else
+                   @user.active = true
+                   @user.save
+                 end
                end
             end
           end

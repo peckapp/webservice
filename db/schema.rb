@@ -446,6 +446,14 @@ ActiveRecord::Schema.define(version: 20140814225808) do
     t.datetime "updated_at"
   end
 
+  create_table "resource_urls", force: true do |t|
+    t.string   "url",                null: false
+    t.string   "info"
+    t.integer  "scrape_resource_id", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "scrape_resources", force: true do |t|
     t.string   "url",                                    null: false
     t.integer  "institution_id",                         null: false
