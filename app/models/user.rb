@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   include ModelBeforeSaveValidations
 
   # each user has an encrypted secure password
-  attr_accessor :enable_strict_validation, :enable_facebook_validation, :password, :old_pass_match, :image, :newly_created_user
+  attr_accessor :enable_strict_validation, :enable_facebook_validation, :password, :old_pass_match, :image, :newly_created_user, :facebook_registered
 
   acts_as_liker
 
