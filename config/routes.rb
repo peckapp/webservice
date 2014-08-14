@@ -19,6 +19,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :deep_links do
+    collection do
+      get :native_peck
+    end
+  end
+
   namespace :api, defaults: { format: 'json' }  do
     # /api/... Api::
     # adds versioning capabilities to the API using separate modules
