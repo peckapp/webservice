@@ -17,11 +17,15 @@ Rails.application.routes.draw do
     member do
       get :confirm_email
     end
+
+    collection do
+      get :apple, :android
+    end
   end
 
   resources :deep_links do
     collection do
-      get :native_peck, :desktop_event
+      get :native_peck, :apple, :android
     end
   end
 
@@ -93,6 +97,7 @@ Rails.application.routes.draw do
 
         collection do
           post :user_for_udid
+          get :check_link
         end
       end
     end

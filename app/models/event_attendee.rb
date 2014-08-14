@@ -1,6 +1,5 @@
 class EventAttendee < ActiveRecord::Base
   include ModelNormalValidations
-  include ModelBeforeSaveValidations
 
   ###############################
   ##                           ##

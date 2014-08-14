@@ -1,6 +1,5 @@
 class User < ActiveRecord::Base
   include ModelNormalValidations
-  include ModelBeforeSaveValidations
 
   # each user has an encrypted secure password
   attr_accessor :enable_strict_validation, :enable_facebook_validation, :password, :old_pass_match, :image, :newly_created_user
@@ -24,7 +23,7 @@ class User < ActiveRecord::Base
   validates :facebook_token, presence: true, if: :enable_facebook_validation
   validates :first_name, presence: true, if: :enable_facebook_validation
   validates :last_name, presence: true, if: :enable_facebook_validation
-  validates :email, uniqueness: true, presence: true, length: {maximum: 50}, format: { with: EMAIL_REGEX }, if: :enable_facebook_validation
+  validates :email, presence: true, length: {maximum: 50}, format: { with: EMAIL_REGEX }, if: :enable_facebook_validation
   ######################
 
   validates :password, presence: true, length: { minimum: 5 }, if: :enable_strict_validation

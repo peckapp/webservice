@@ -1,6 +1,5 @@
 class AthleticTeam < ActiveRecord::Base
   include ModelNormalValidations
-  include ModelBeforeSaveValidations
 
   ###############################
   ##                           ##

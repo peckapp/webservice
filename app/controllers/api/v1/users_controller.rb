@@ -166,7 +166,7 @@ module Api
         if @user && params[:id].to_i == auth[:user_id].to_i
 
           # if the user already has an email that matches with their facebook college email
-          user = User.where(email: fb_params[:email]).first
+          user = User.where(facebook_link: fb_params[:facebook_link], email: fb_params[:email]).first
           if user
             @user = user
             # if fb gave out an access token
@@ -232,6 +232,16 @@ module Api
           end
         else
           logger.warn "attempted to super_create user with non-existant id: #{@user.id}"
+        end
+      end
+
+      def check_link
+        uparams = params[:user]
+        @user = User.where(facebook_link: uparams[:facebook_link]).first
+        if @user && uparams[:facebook_link]
+          @facebook_registered = true
+        else
+          @facebook_registered = false
         end
       end
 

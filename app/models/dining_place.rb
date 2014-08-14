@@ -1,6 +1,5 @@
 class DiningPlace < ActiveRecord::Base
   include ModelNormalValidations
-  include ModelBeforeSaveValidations
 
   ###############################
   ##                           ##
