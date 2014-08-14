@@ -149,7 +149,7 @@ class Personalizer
     top_subscribers = {}
 
     # should NEVER be nil but add check anyways just in case
-    if all_subscriber != nil
+    if all_subscribers != nil
       all_subscribers.each do |subscriber|
 
         current_sub = [subscriber[1], subscriber[2]]
