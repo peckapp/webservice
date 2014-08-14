@@ -8,7 +8,7 @@
 
     <center><img src="http://loki.peckapp.com:3500<%=@simple_event.image.url%>"></center>
 
-    <h2><font face="verdana"><center><%= "#{@simple_event.start_date.strftime('%B%e, %l:%M %p')} - #{@simple_event.end_date.strftime('%B%e, %l:%M %p %Z')}" %></center></font><h2>
+    <h2><font face="verdana"><center><%= "#{@simple_event.start_date.strftime('%B %e, %l:%M %p')} - #{@simple_event.end_date.strftime('%B %e, %l:%M %p %Z')}" %></center></font><h2>
 
       <p><font face="verdana"><center><%= @institution.name %></center></font></p>
 

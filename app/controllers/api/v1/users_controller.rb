@@ -172,7 +172,7 @@ module Api
             if fb_params[:facebook_token]
               # update the user and add their access token
               @user.update_attributes(facebook_token: fb_params[:facebook_token])
-
+              
               # use the current one if they're logged in on another device
               @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token
               @user.save
@@ -184,6 +184,7 @@ module Api
             @user.enable_facebook_validation = true
             if @user.update_attributes(facebook_login_params(fb_params))
                @user.authentication_token = SecureRandom.hex(30)
+               @user.active = true
                @user.save
                auth[:authentication_token] = @user.authentication_token
             end
@@ -280,7 +281,7 @@ module Api
         end
 
         def facebook_login_params(parameters)
-          parameters.permit(:first_name, :last_name, :email, :facebook_link, :facebook_token, :active, :institution_id)
+          parameters.permit(:first_name, :last_name, :email, :facebook_link, :facebook_token, :institution_id)
         end
 
         def password_update_params
