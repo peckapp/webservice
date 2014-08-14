@@ -58,7 +58,11 @@ module Explore
                    #weights.subscriptions(subscriber_count)
 
       # RETURN THE EVENT'S PECK SCORE
-      peck_score
+      if peck_score > 0.01
+        peck_score
+      else
+        0
+      end
     end
   end
 end
