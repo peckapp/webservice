@@ -30,28 +30,36 @@ module SpecificScrape
         logger.info teams.count
         teams.each do |team|
           team_name = team.css('a').first
-          logger.info team_name
+          logger.info "team_name: #{team_name}"
 
           team_links = team.css('div.secondary-links>ul>li')
           link = nil
           team_links.each do |tl|
+            logger.info "team link: #{tl}"
             next unless tl.to_s.match(/schedule/)
             link = tl.css('a').first.values.first
             break
           end
+          sleep 0.5 + rand
           parse_scheule_page(link)
         end
       end
     end
 
     def parse_scheule_page(link)
-      # raw = RestClient.get(rooted_link(link))
-      # html = Nokogiri::HTML(raw)
+      full_link = "#{rooted_link(link)}?print=rss"
 
-      logger.info link
+      logger.info "parsing schedule with link: #{full_link}"
+
+      raw = RestClient.get(full_link)
+      logger.info 'retrieved raw'
+      html = Nokogiri::HTML(raw)
+
+      logger.info html
     end
 
     def rooted_link(ext)
+      return ext if false
       "#{EPH_SPORTS_ROOT}#{ext}"
     end
 
