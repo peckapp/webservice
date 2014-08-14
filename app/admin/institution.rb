@@ -27,6 +27,7 @@ ActiveAdmin.register Institution do
       f.input :gps_latitude
       f.input :range
       f.input :configuration_id
+      f.input :email_regex
       f.input :api_key
     end
     f.actions
