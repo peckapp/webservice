@@ -160,6 +160,13 @@ module Api
         end
       end
 
+      def reset_password
+        user = User.where(email: params[:email]).first
+        if user
+          Communication::PasswordReset.perform_async(user.id)
+        end
+      end
+
       def facebook_login
         fb_params = params[:user]
         the_udid = fb_params.delete(:udid)
@@ -193,20 +200,17 @@ module Api
             if @user.update_attributes(facebook_login_params(fb_params))
 
                active_user = User.where(email: @user.email, active: true).first
-               if active_user
+               if active_user && send_confirmation_email
                  head :unprocessable_entity
                  logger.warn "tried to take the email of an already existing user"
-               else
+               elsif send_confirmation_email
                  @user.authentication_token = SecureRandom.hex(30)
                  @user.save
                  auth[:authentication_token] = @user.authentication_token
-                 if send_confirmation_email
-                   Communication::SendEmail.perform_async(@user.id, fb_link)
-                 else
-                   @user.active = true
-                   @user.facebook_link = fb_link
-                   @user.save
-                 end
+                 Communication::SendEmail.perform_async(@user.id, fb_link)
+               else
+                 @user.update_attributes(active: true, facebook_link: fb_link, authentication_token: SecureRandom.hex(30))
+                 auth[:authentication_token] = @user.authentication_token
                end
             end
           end

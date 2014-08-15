@@ -29,6 +29,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :mobile_resets do
+    collection do
+      get :desktop, :apple, :android
+    end
+  end
+
   namespace :api, defaults: { format: 'json' }  do
     # /api/... Api::
     # adds versioning capabilities to the API using separate modules
