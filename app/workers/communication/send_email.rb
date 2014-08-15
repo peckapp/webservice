@@ -5,7 +5,7 @@ module Communication
 
     def perform(id, fb_link)
       user = User.find(id)
-      UserMailer.registration_confirmation(user, id, fb_link).deliver
+      UserMailer.delay.registration_confirmation(user, id, fb_link).deliver
     end
   end
 end
