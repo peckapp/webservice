@@ -26,11 +26,20 @@ class User < ActiveRecord::Base
   validates :email, presence: true, length: {maximum: 50}, format: { with: EMAIL_REGEX }, if: :enable_facebook_validation
   ######################
 
-  validates :password, presence: true, length: { minimum: 5 }, if: [:enable_strict_validation, :old_pass_match]
-  validates :password_confirmation, presence: true, if: [:enable_strict_validation, :old_pass_match]
-  validates_confirmation_of :password, if: [:enable_strict_validation, :old_pass_match]
+  ### Super Create ###
+  validates :password, presence: true, length: { minimum: 5 }, if: :enable_strict_validation
+  validates :password_confirmation, presence: true, if: :enable_strict_validation
+  validates_confirmation_of :password, if: :enable_strict_validation
   validates :first_name, presence: true, if: :enable_strict_validation
   validates :last_name, presence: true, if: :enable_strict_validation
+  #####################
+
+  ### Change Password ###
+  validates :password, presence: true, length: { minimum: 5 }, if: :old_pass_match
+  validates :password_confirmation, presence: true, if: :old_pass_match
+  validates_confirmation_of :password, if: :old_pass_match
+  #######################
+
   validates :email, presence: true, length: { maximum: 50 }, format: { with: EMAIL_REGEX }, if: :enable_strict_validation
   validates :facebook_link, uniqueness: true, allow_nil: true
   validates :facebook_token, uniqueness: true, allow_nil: true

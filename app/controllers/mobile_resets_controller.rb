@@ -6,7 +6,7 @@ class MobileResetsController < ApplicationController
     user = User.find(the_id)
     new_pass_params = pass_reset_params
     user.update_attributes(new_pass_params)
-    puts user.errors.full_messages
+    
     if apple_request?
       redirect_to apple_mobile_resets_url(id: user.id)
     elsif android_request?
