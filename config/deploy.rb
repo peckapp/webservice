@@ -38,6 +38,9 @@ set :linked_dirs, %w(bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 
+# handles issues with rails c in deployed environments
+set :bundle_binstubs, nil
+
 # Default value for keep_releases is 5
 set :keep_releases, 5
 
