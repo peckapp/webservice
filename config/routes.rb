@@ -103,7 +103,7 @@ Rails.application.routes.draw do
 
         collection do
           post :user_for_udid
-          get :check_link
+          get :check_link, :reset_password
         end
       end
     end
