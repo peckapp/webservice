@@ -14,7 +14,7 @@ module Explore
       options = { namespace: 'peck', compress: true }
       @cache_client = Dalli::Client.new('localhost:11211', options)
 
-      @cache_client.set('campus_explore', analyze_simple_events(institution_id))
+      @cache_client.set("campus_explore_#{institution_id}", analyze_simple_events(institution_id))
       # analyze_athletic_events(institution_id)
       # analyze_announcements(institution_id)
     end

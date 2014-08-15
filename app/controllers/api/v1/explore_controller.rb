@@ -45,7 +45,7 @@ module Api
 
         options = { :namespace => "peck", :compress => true }
         dc = Dalli::Client.new('localhost:11211', options)
-        scores = dc.get('campus_explore')
+        scores = dc.get("campus_explore_#{params[:authentication][:institution_id]}")
 
         # save all events that user is attending to remove it from explore
         user_events = EventAttendee.where(user_id: params[:authentication][:user_id], category: "simple").pluck(:event_attended)

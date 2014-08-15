@@ -109,6 +109,7 @@ GEM
     dalli (2.7.2)
     delayed_paperclip (2.8.0)
       paperclip (>= 3.3)
+    descriptive-statistics (2.1.2)
     devise (3.2.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -349,6 +350,7 @@ DEPENDENCIES
   country-select
   dalli
   delayed_paperclip
+  descriptive-statistics
   devise (~> 3.2.4)
   faker (~> 1.4.2)
   feedjira

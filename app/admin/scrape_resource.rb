@@ -29,6 +29,7 @@ ActiveAdmin.register ScrapeResource do
   end
 
   index do
+    id_column
     column :kind
     column :info
     column :engine_type
