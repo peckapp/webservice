@@ -26,9 +26,9 @@ class User < ActiveRecord::Base
   validates :email, presence: true, length: {maximum: 50}, format: { with: EMAIL_REGEX }, if: :enable_facebook_validation
   ######################
 
-  validates :password, presence: true, length: { minimum: 5 }, if: :enable_strict_validation
-  validates :password_confirmation, presence: true, if: lambda { |m| m.password.present? }
-  validates_confirmation_of :password, if: -> { password.present? }
+  validates :password, presence: true, length: { minimum: 5 }, if: [:enable_strict_validation, :old_pass_match]
+  validates :password_confirmation, presence: true, if: [:enable_strict_validation, :old_pass_match]
+  validates_confirmation_of :password, if: [:enable_strict_validation, :old_pass_match]
   validates :first_name, presence: true, if: :enable_strict_validation
   validates :last_name, presence: true, if: :enable_strict_validation
   validates :email, presence: true, length: { maximum: 50 }, format: { with: EMAIL_REGEX }, if: :enable_strict_validation
