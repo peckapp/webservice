@@ -3,9 +3,7 @@ class MobileResetsController < ApplicationController
 
   def desktop
     user = User.find(params[:id])
-    user.update_attributes(password_hash: nil, password_salt: nil)
-    user.password = params[:temp]
-    user.save
+    user.update_attributes(password: params[:temp])
     if apple_request?
       redirect_to apple_mobile_resets_url(id: user.id)
     elsif android_request?
