@@ -32,6 +32,7 @@ class ScraperWorker
   end # end perform
 
   def handle_nested(resource)
+    
   end
 
   def handle_simple(resource)

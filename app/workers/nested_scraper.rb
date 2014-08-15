@@ -1,7 +1,7 @@
 # a worker using database information to scrape structured data off of websites
 # correctly handles rss feeds in any format, but untested elsewhere
 # relies on a nested structure of the html content
-class NestedScrapeWorker
+class NestedScraper
   include Sidekiq::Worker
   sidekiq_options queue: :scraping, retry: 5
 
