@@ -250,9 +250,6 @@ module Api
         end
       end
 
-      def check_password
-      end
-      
       def check_link
         uparams = params[:user]
         @user = User.where(facebook_link: uparams[:facebook_link]).first
