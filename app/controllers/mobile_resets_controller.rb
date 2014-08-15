@@ -2,8 +2,9 @@ class MobileResetsController < ApplicationController
   before_action :confirm_minimal_access, except: [:apple, :android, :desktop]
 
   def desktop
-    user = User.find(params[:id])
-    user.update_attributes(password: params[:temp])
+    the_id = params.delete(the_id)
+    user = User.find(the_id)
+    user.update_attributes(pass_reset_params)
     if apple_request?
       redirect_to apple_mobile_resets_url(id: user.id)
     elsif android_request?
@@ -17,5 +18,11 @@ class MobileResetsController < ApplicationController
 
   def android
     @user = User.find(params[:id])
+  end
+
+  private
+
+  def pass_reset_params
+    params.permit(:password)
   end
 end
