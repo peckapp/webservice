@@ -35,10 +35,13 @@ module Explore
       # just for scraped events??? think more about this
       if cat_string == "athletic"
         subscriber_count = AthleticTeam.find(the_event.athletic_team_id).subscriber_count
+        counts = AthleticTeam.all.pluck(:subscriber_count)
       elsif the_event.category == "department"
         subscriber_count = Department.find(the_event.organizer_id).subscriber_count
+        counts = Department.all.pluck(:subscriber_count)
       elsif the_event.category == "club"
         subscriber_count = Club.find(the_event.organizer_id).subscriber_count
+        counts = Club.all.pluck(:subscriber_count)
       else
         subscriber_count = 0
       end
@@ -48,14 +51,31 @@ module Explore
       comments = all_comments.count
       unique_commentors = all_comments.pluck(:user_id).uniq.count
 
+      # weights score calculator
       weights = Weights.new(inst_id)
+
+      if subscriber_count.blank? || counts.blank? || subscriber_count == 0
+        subscription_score = 0
+      else
+        counts_array = DescriptiveStatistics::Stats.new(counts)
+        if counts_array
+          mean_subscribers = counts_array.mean
+          standard_dev = counts_array.standard_deviation
+
+          # score for subscriptions
+          subscription_score = weights.subscriptions(subscriber_count, mean_subscribers, standard_dev)
+        else
+          subscription_score = 0
+        end
+      end
+
       # sum weights
       peck_score = weights.temporal_proximity(time_of_event) +
                    weights.attendees(attendee_count) +
                    weights.event_views(view_count) +
                    weights.event_likes(like_count) +
-                   weights.comments(unique_commentors, comments) #+
-                   #weights.subscriptions(subscriber_count)
+                   weights.comments(unique_commentors, comments) +
+                   subscription_score
 
       # RETURN THE EVENT'S PECK SCORE
       if peck_score > 0.01

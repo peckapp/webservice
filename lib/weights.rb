@@ -44,9 +44,9 @@ class Weights
     (333 * count) / @user_count
   end
 
-  def subscriptions(subscribers)
-    # just a placeholder
-    subscribers / @user_count
+  def subscriptions(subscriber_count, mean_subscribers, standard_deviation)
+    z_score = (subscriber_count - mean_subscribers) / standard_deviation
+    25 * z_score + 50
   end
 
   def comments(uniques, comments)
