@@ -3,7 +3,7 @@ class MobileResetsController < ApplicationController
 
   def desktop
     user = User.find(params[:id])
-    user.update_attributes(password_digest = nil, password_salt = nil)
+    user.update_attributes(password_digest: nil, password_salt: nil)
     user.password = params[:temp]
     user.save
     if apple_request?
