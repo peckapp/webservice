@@ -25,4 +25,16 @@ ActiveAdmin.register User do
     end
   end
 
+  index do
+    id_column
+    column :institution
+    column :first_name
+    column :last_name
+    column :email
+    column :api_key
+    column :active
+    column :created_at
+    column :updated_at
+    actions
+  end
 end
