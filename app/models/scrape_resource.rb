@@ -1,6 +1,11 @@
 class ScrapeResource < ActiveRecord::Base
+  ### VALIDATIONS ###
+  validates :engine_type, inclusion: { in: %w(nested simple), message: "%{value} is not an available engine" }
+
+  # this is the only point in the scraping data network where it is connected to an institution_ids
   belongs_to :institution
 
+  # a resource type indicates the model to which the data in this resource relates
   belongs_to :resource_type
 
   ### each selector has a ScrapeResource from which it originated

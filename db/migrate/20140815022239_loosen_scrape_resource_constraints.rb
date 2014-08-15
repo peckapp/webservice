@@ -1,6 +1,6 @@
 class LoosenScrapeResourceConstraints < ActiveRecord::Migration
   def up
-    change_column :scrape_resources, :url, :string
+    change_column :scrape_resources, :url, :string, null: true
   end
 
   def down

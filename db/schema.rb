@@ -455,7 +455,7 @@ ActiveRecord::Schema.define(version: 20140815022239) do
   end
 
   create_table "scrape_resources", force: true do |t|
-    t.string   "url",                                    null: false
+    t.string   "url"
     t.integer  "institution_id",                         null: false
     t.integer  "scrape_interval",        default: 1440
     t.boolean  "validated",              default: false
