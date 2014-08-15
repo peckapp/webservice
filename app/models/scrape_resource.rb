@@ -15,6 +15,7 @@ class ScrapeResource < ActiveRecord::Base
   has_many :resource_urls
 
   accepts_nested_attributes_for :selectors
+  accepts_nested_attributes_for :resource_urls
 
   def paginated?
     pagination_selector_id.blank?

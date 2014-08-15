@@ -53,6 +53,11 @@ ActiveAdmin.register ScrapeResource do
       f.input :resource_type
       f.input :url
     end
+    f.inputs 'Resource Urls' do
+      f.has_many :resource_urls do |j|
+        j.inputs :info, :url
+      end
+    end
     f.inputs 'Selectors' do
       f.has_many :selectors do |j|
         j.inputs :info, :selector, :parent, :top_level, :data_resource, :scrape_resource

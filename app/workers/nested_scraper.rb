@@ -7,7 +7,7 @@ class NestedScraper
 
   include Sidetiq::Schedulable
 
-  recurrence { daily }
+  # recurrence { daily }
 
   PAGE_LIMIT = 30
 
@@ -16,21 +16,23 @@ class NestedScraper
 
     logger.info "Scraping nested resource #{resource.id} with info: #{resource.info}"
 
-    # no dangerous security concern present here, possible data spoofing though
-    raw = RestClient::Request.execute(url: resource.url, method: :get, verify_ssl: false)
+    resource.resource_urls.each do |cur_url|
+      # no dangerous security concern present here with skipped ssl verification, possible data spoofing though
+      raw = RestClient::Request.execute(url: cur_url, method: :get, verify_ssl: false)
 
-    html = Nokogiri::HTML(raw.squish)
+      html = Nokogiri::HTML(raw.squish)
 
-    # iterate over pages for that resource
-    # need to find a way to explicate pagination movement.
-    # may or may not need selenium, different url possibilities, form submissions, etc.
-    # for now just look at immediate url for the scrape resource
-    (0..0).each do |_n| # placeholder page traversal
+      # iterate over pages for that resource
+      # need to find a way to explicate pagination movement.
+      # may or may not need selenium, different url possibilities, form submissions, etc.
+      # for now just look at immediate url for the scrape resource
+      (0..0).each do |_n| # placeholder page traversal
 
-      # eventually should extract html and send it off for parsing in another worker while continuing with pagination
+        # eventually should extract html and send it off for parsing in another worker while continuing with pagination
 
-      scrape_page(html, resource)
-    end # end page iteration
+        scrape_page(html, resource)
+      end # end page iteration
+    end # end resource_url iteration
   end # end perform
 
   def scrape_page(html, resource)

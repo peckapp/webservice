@@ -19,10 +19,10 @@ class ScrapeMaster
 
       case resource.engine_type
       when 'nested'
-        logger.info "handling scrape resource: #{resource.name} with nested scrape engine"
+        logger.info "handling scrape resource: #{resource.info} with nested scrape engine"
         handle_nested(resource)
       when 'simple'
-        logger.info "handling scrape resource: #{resource.name} with simple scrape engine"
+        logger.info "handling scrape resource: #{resource.info} with simple scrape engine"
         handle_simple(resource)
       else
         logger.error "unable to handle scrape resource: #{resource.id} with engine type: #{resource.engine_type}"
