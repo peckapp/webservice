@@ -3,7 +3,8 @@ ActiveAdmin.register ScrapeResource do
   # See permitted parameters documentation:
   # https://github.com/gregbell/active_admin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
-  permit_params :url, :institution_id, :scrape_interval, :validated, :resource_type_id, :pagination_selector_id, :info, :kind
+  permit_params :url, :institution_id, :scrape_interval, :validated, :resource_type_id, :pagination_selector_id,
+                :info, :kind, :engine_type
   #
   # or
   #
@@ -30,6 +31,7 @@ ActiveAdmin.register ScrapeResource do
   index do
     column :kind
     column :info
+    column :engine_type
     column :institution
     column :scrape_interval
     column :validated
@@ -44,11 +46,17 @@ ActiveAdmin.register ScrapeResource do
     f.inputs 'Details' do
       f.input :kind
       f.input :info
+      f.input :engine_type, collection: {nested: 'nested', simple: 'simple'} # one option for each type of scraping engine
       f.input :institution
       f.input :scrape_interval
       f.input :validated
       f.input :resource_type
       f.input :url
+    end
+    f.inputs 'Resource Urls' do
+      f.has_many :resource_urls do |j|
+        j.inputs :info, :url
+      end
     end
     f.inputs 'Selectors' do
       f.has_many :selectors do |j|

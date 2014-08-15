@@ -62,14 +62,13 @@ module Api
 
       private
 
-        def dining_opportunity_create_params
-          params.require(:dining_opportunity).permit(:dining_opportunity_type, :institution_id, :dining_place_id)
-        end
+      def dining_opportunity_create_params
+        params.require(:dining_opportunity).permit(:dining_opportunity_type, :institution_id, :dining_place_id)
+      end
 
-        def dining_opportunity_update_params
-          params.require(:dining_opportunity).permit(:dining_opportunity_type, :institution_id)
-        end
-
+      def dining_opportunity_update_params
+        params.require(:dining_opportunity).permit(:dining_opportunity_type, :institution_id)
+      end
     end
   end
 end
