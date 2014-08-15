@@ -20,6 +20,15 @@ module Api
         params[:subscriptions].each do |parameters|
           this_subscription = Subscription.create(subscription_create_params(parameters))
           @subscriptions << this_subscription
+
+          # increment subscription count of corresponding dept/club/team
+          if parameters[:category] == "department"
+            Department.find(parameters[:subscribed_to]).subscriber_count += 1
+          elsif parameters[:category] == "club"
+            Club.find(parameters[:subscribed_to]).subscriber_count += 1
+          else
+            AthleticTeam.find(parameters[:subscribed_to]).subscriber_count += 1
+          end
         end
       end
 
@@ -34,7 +43,7 @@ module Api
 
           # query parameter with the ids of all the necessarily deleted subscriptions
           subscription_id_string = params[:subscription][:subscriptions]
-          
+
           # converts the query parameter string into an array. Query parameter gets sent like this "[1,2,3]"
           all_ids = subscription_id_string[subscription_id_string.index("[") + 1, subscription_id_string.index("]") - 1].split(",")
 
@@ -43,6 +52,16 @@ module Api
           all_ids.each do |id|
             this_subscription = Subscription.find(id)
             @subscriptions << this_subscription
+
+            # decrement subscription count of corresponding dept/club/team
+            if this_subscription.category == "department"
+              Department.find(this_subscription.subscribed_to).subscriber_count -= 1
+            elsif this_subscription.category == "club"
+              Club.find(this_subscription.subscribed_to).subscriber_count -= 1
+            else
+              AthleticTeam.find(this_subscription.subscribed_to).subscriber_count -= 1
+            end
+
             this_subscription.destroy
           end
       end
