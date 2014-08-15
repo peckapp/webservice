@@ -1,6 +1,6 @@
 # This class iterates over the validated ScrapeResources
 
-class ScraperWorker
+class ScrapeMaster
   include Sidekiq::Worker
   sidekiq_options queue: :scraping
 
@@ -32,7 +32,7 @@ class ScraperWorker
   end # end perform
 
   def handle_nested(resource)
-    
+    NestedScraper.perform_async(resource.id)
   end
 
   def handle_simple(resource)

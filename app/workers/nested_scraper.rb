@@ -11,33 +11,26 @@ class NestedScraper
 
   PAGE_LIMIT = 30
 
-  def perform(*attrs)
-    attrs = attrs.extract_options!
-    attrs[:validated] = true unless attrs[:validated]
-    logger.info "specified attrs for perform: #{attrs}"
-    resources = ScrapeResource.where(attrs)
+  def perform(resource_id)
+    resource = ScrapeResource.find(resource_id)
 
-    # iterate over all resources
-    resources.each do |resource|
+    logger.info "Scraping nested resource #{resource.id} with info: #{resource.info}"
 
-      logger.info "scraping resource #{resource.id} with info: #{resource.info}"
+    # no dangerous security concern present here, possible data spoofing though
+    raw = RestClient::Request.execute(url: resource.url, method: :get, verify_ssl: false)
 
-      # no dangerous security concern present here, possible data spoofing though
-      raw = RestClient::Request.execute(url: resource.url, method: :get, verify_ssl: false)
+    html = Nokogiri::HTML(raw.squish)
 
-      html = Nokogiri::HTML(raw.squish)
+    # iterate over pages for that resource
+    # need to find a way to explicate pagination movement.
+    # may or may not need selenium, different url possibilities, form submissions, etc.
+    # for now just look at immediate url for the scrape resource
+    (0..0).each do |_n| # placeholder page traversal
 
-      # iterate over pages for that resource
-      # need to find a way to explicate pagination movement.
-      # may or may not need selenium, different url possibilities, form submissions, etc.
-      # for now just look at immediate url for the scrape resource
-      (0..0).each do |_n| # placeholder page traversal
+      # eventually should extract html and send it off for parsing in another worker while continuing with pagination
 
-        # eventually should extract html and send it off for parsing in another worker while continuing with pagination
-
-        scrape_page(html, resource)
-      end # end page iteration
-    end # end resources do
+      scrape_page(html, resource)
+    end # end page iteration
   end # end perform
 
   def scrape_page(html, resource)
