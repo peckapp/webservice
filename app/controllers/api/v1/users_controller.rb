@@ -250,6 +250,9 @@ module Api
         end
       end
 
+      def check_password
+      end
+      
       def check_link
         uparams = params[:user]
         @user = User.where(facebook_link: uparams[:facebook_link]).first
@@ -312,7 +315,7 @@ module Api
         end
 
         def facebook_login_params(parameters)
-          parameters.permit(:first_name, :last_name, :email, :facebook_link, :facebook_token, :institution_id)
+          parameters.permit(:first_name, :last_name, :email, :facebook_token, :institution_id)
         end
 
         def password_update_params
