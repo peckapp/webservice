@@ -4,6 +4,10 @@ Rails.application.configure do
   # Code is not reloaded between requests.
   config.cache_classes = true
 
+  # allows for the use of a memcache using the dalli gem
+  # uses a connection pool to limit sidekiq workers connections
+  config.cache_store = :dalli_store, 'magni.peckapp.com', { :pool_size => 5 }
+
   # override default memory cache store to use magni memcached server
   # not properly configured at this point
   # config.cache_store = :mem_cache_store, 'magni.peckapp.com'
