@@ -163,7 +163,7 @@ module Api
       def reset_password
         @user = User.where(email: params[:email]).first
         if @user
-          Communication::PasswordReset.perform_async(user.id)
+          Communication::PasswordReset.perform_async(@user.id)
         end
       end
 
