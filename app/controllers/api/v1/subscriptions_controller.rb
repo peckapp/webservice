@@ -23,11 +23,21 @@ module Api
 
           # increment subscription count of corresponding dept/club/team
           if parameters[:category] == "department"
-            Department.find(parameters[:subscribed_to]).subscriber_count += 1
+            dept = Department.find(parameters[:subscribed_to])
+            if dept.subscriber_count == nil
+              dept.subscriber_count = 1
+            else
+              dept.subscriber_count += 1
+            end
+            dept.save
           elsif parameters[:category] == "club"
-            Club.find(parameters[:subscribed_to]).subscriber_count += 1
+            club = Club.find(parameters[:subscribed_to])
+            club.subscriber_count += 1
+            club.save
           else
-            AthleticTeam.find(parameters[:subscribed_to]).subscriber_count += 1
+            team = AthleticTeam.find(parameters[:subscribed_to])
+            team.subscriber_count += 1
+            team.save
           end
         end
       end
@@ -55,11 +65,17 @@ module Api
 
             # decrement subscription count of corresponding dept/club/team
             if this_subscription.category == "department"
-              Department.find(this_subscription.subscribed_to).subscriber_count -= 1
+              dept = Department.find(this_subscription.subscribed_to)
+              dept.subscriber_count -= 1
+              dept.save
             elsif this_subscription.category == "club"
-              Club.find(this_subscription.subscribed_to).subscriber_count -= 1
+              club = Club.find(this_subscription.subscribed_to)
+              club.subscriber_count -= 1
+              club.save
             else
-              AthleticTeam.find(this_subscription.subscribed_to).subscriber_count -= 1
+              team = AthleticTeam.find(this_subscription.subscribed_to)
+              team.subscriber_count -= 1
+              team.save
             end
 
             this_subscription.destroy
