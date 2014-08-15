@@ -16,6 +16,12 @@ module Api
         the_device_type = uparams.delete(:device_type)
         logger.info "Access, device_type: #{the_device_type}"
 
+        the_facebook_link = uparams.delete(:facebook_link)
+        logger.info "Access, facebook_link: #{the_facebook_link}"
+
+        the_facebook_token = uparams.delete(:facebook_token)
+        logger.info "Access, facebook_token: #{the_facebook_token}"
+
         # first authenticate user with email and password
         @user = User.authenticate(authentication_params(uparams)[:email], authentication_params(uparams)[:password])
         if @user.active == false
@@ -28,6 +34,9 @@ module Api
         # if authenticated
         if @user
 
+          if the_facebook_link && the_facebook_token
+            @user.update_attributes(facebook_link: the_facebook_link, facebook_token: the_facebook_token)
+          end
           # provide auth token, set it in database and set it in authentication params
           @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token
           @user.save
