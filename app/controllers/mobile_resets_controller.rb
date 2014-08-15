@@ -1,5 +1,5 @@
 class MobileResetsController < ApplicationController
-  before_action :confirm_minimal_access, except: [:apple, :android]
+  before_action :confirm_minimal_access, except: [:apple, :android, :desktop]
 
   def desktop
     user = User.find(params[:id])
