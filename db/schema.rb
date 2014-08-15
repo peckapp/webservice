@@ -117,14 +117,14 @@ ActiveRecord::Schema.define(version: 20140815022239) do
   add_index "athletic_events", ["opponent"], name: "index_athletic_events_on_opponent", using: :btree
 
   create_table "athletic_teams", force: true do |t|
-    t.integer  "institution_id",   null: false
-    t.string   "sport_name",       null: false
-    t.string   "gender",           null: false
+    t.integer  "institution_id",               null: false
+    t.string   "sport_name",                   null: false
+    t.string   "gender",                       null: false
     t.string   "head_coach"
     t.string   "team_link"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "subscriber_count"
+    t.integer  "subscriber_count", default: 0
   end
 
   add_index "athletic_teams", ["gender"], name: "index_athletic_teams_on_gender", using: :btree
@@ -173,13 +173,13 @@ ActiveRecord::Schema.define(version: 20140815022239) do
   add_index "circles", ["user_id"], name: "index_circles_on_user_id", using: :btree
 
   create_table "clubs", force: true do |t|
-    t.integer  "institution_id",   null: false
-    t.string   "club_name",        null: false
+    t.integer  "institution_id",               null: false
+    t.string   "club_name",                    null: false
     t.text     "description"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "subscriber_count"
+    t.integer  "subscriber_count", default: 0
   end
 
   add_index "clubs", ["club_name"], name: "index_clubs_on_club_name", using: :btree
@@ -227,11 +227,11 @@ ActiveRecord::Schema.define(version: 20140815022239) do
   end
 
   create_table "departments", force: true do |t|
-    t.string   "name",             null: false
-    t.integer  "institution_id",   null: false
+    t.string   "name",                         null: false
+    t.integer  "institution_id",               null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "subscriber_count"
+    t.integer  "subscriber_count", default: 0
   end
 
   add_index "departments", ["institution_id"], name: "index_departments_on_institution_id", using: :btree

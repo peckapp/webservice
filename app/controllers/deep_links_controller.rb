@@ -1,5 +1,5 @@
 class DeepLinksController < ApplicationController
-  before_action :confirm_minimal_access, except: [:native_peck, :desktop_event]
+  before_action :confirm_minimal_access, except: [:native_peck, :apple, :android]
 
   def native_peck
     if apple_request?
