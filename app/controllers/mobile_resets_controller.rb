@@ -2,7 +2,7 @@ class MobileResetsController < ApplicationController
   before_action :confirm_minimal_access, except: [:apple, :android, :desktop]
 
   def desktop
-    the_id = params.delete(the_id)
+    the_id = params.delete(:id)
     user = User.find(the_id)
     user.update_attributes(pass_reset_params)
     if apple_request?
