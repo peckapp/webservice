@@ -7,13 +7,19 @@ module SpecificScrape
     sidekiq_options queue: :scraping, retry: 5
 
     include Sidetiq::Schedulable
-    recurrence { daily.hour_of_day(2) }
+    # recurrence { daily.hour_of_day(2) }
 
     EPH_SPORTS_ROOT = 'http://ephsports.williams.edu'
     EPH_SPORTS_INDEX = '/landing/index'
 
     def perform
       logger.info 'scraping Williams Athletic Events'
+
+      rt = ResourceType.where(model_name: 'AthleticEvent').first
+      inst = Institution.where(api_key: 'WILLIAMS').first
+      @sr = ScrapeResource.current_or_create_new(resource_type_id: rt.id, institution_id: inst.id,
+                                                 info: 'Williams Athletic Team Page', kind: 'rss', engine_type: 'nested')
+      puts "scrape resource: #{@sr}"
 
       raw = RestClient.get(rooted_link(EPH_SPORTS_INDEX))
       html = Nokogiri::HTML(raw.squish)
@@ -57,9 +63,19 @@ module SpecificScrape
       logger.info 'retrieved raw'
       html = Nokogiri::HTML(raw)
 
-      table = html.css('.schedule-content table')
+      html.css('div.subscribe_links a').each do |a|
+        url = a.values.first
+        next unless url.match(/rss/)
 
-      parse_table(table)
+        logger.info "unexpected URL format: #{url} from full_link: #{full_link}"
+
+        ru = ResourceUrl.current_or_create_new(url: full_link, scrape_resource_id: @sr.id)
+
+        logger.info ru
+      end
+
+      # table = html.css('.schedule-content table')
+      # parse_table(table)
     end
 
     def parse_table(table)
@@ -68,6 +84,7 @@ module SpecificScrape
 
       immediate_children.each do |child|
         # parse the child rows to handle each type properly
+        logger.info child.text
       end
     end
 
