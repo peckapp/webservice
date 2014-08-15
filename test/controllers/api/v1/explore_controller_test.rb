@@ -13,11 +13,11 @@ class ExploreControllerTest < ActionController::TestCase
     @auth = {}
 
     request.session.each { |key, value| @auth[key] = value }
-    return @auth
+    @auth
   end
 
-  test "should get index" do
-    get :index, :format => :json, :authentication => session_create
-    assert_response :success, "Index action not successful"
+  test 'should get index' do
+    get :index, format: :json, authentication: session_create
+    assert_response :success, 'Index action not successful'
   end
 end

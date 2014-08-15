@@ -5,5 +5,4 @@ class Tasks::RssScraperControllerTest < ActionController::TestCase
   #   get :scrape
   #   assert_response :success
   # end
-
 end
