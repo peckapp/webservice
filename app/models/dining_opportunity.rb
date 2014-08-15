@@ -40,10 +40,10 @@ class DiningOpportunity < ActiveRecord::Base
   end
 
   # returns an array of triples each containing a dining opp with a start and end time given the day of week
-  def self.earliest_start_latest_end(day_of_week)
+  def self.earliest_start_latest_end(day_of_week, inst_id)
 
     # get all dining opps and their times for a certain day of the week
-    all_times_for_opps = DiningPeriod.where(:day_of_week => day_of_week).pluck(:dining_opportunity_id, :start_time, :end_time)
+    all_times_for_opps = DiningPeriod.where(day_of_week: day_of_week, institution_id: inst_id).pluck(:dining_opportunity_id, :start_time, :end_time)
 
     # hash associating opps to an array of its earliest start and latest end
     early_and_late_for_opps = {}
@@ -52,7 +52,7 @@ class DiningOpportunity < ActiveRecord::Base
     earliest_so_far = {}
     latest_so_far = {}
 
-    for opp in all_times_for_opps
+    all_times_for_opps.each do |opp|
 
       opp_id = opp[0]
       start_time = Util.date_time_for_week_day(day_of_week, opp[1])
@@ -75,15 +75,13 @@ class DiningOpportunity < ActiveRecord::Base
       end
     end
 
-    for opp in early_and_late_for_opps
+    early_and_late_for_opps.each do |opp|
 
       early = opp[1][0]
       late = opp[1][1]
 
       if !early.blank? && !late.blank?
-        if early.hour > late.hour
-          late = late + 1.days
-        end
+        late += 1.days if early.hour > late.hour
       end
 
       early_and_late_for_opps[opp[0]][1] = late

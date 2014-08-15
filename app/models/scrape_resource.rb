@@ -6,6 +6,9 @@ class ScrapeResource < ActiveRecord::Base
   ### each selector has a ScrapeResource from which it originated
   has_many :selectors
 
+  ### each scrape resource has at least one url which fits the format of that resource
+  has_many :resource_urls
+
   accepts_nested_attributes_for :selectors
 
   def paginated?

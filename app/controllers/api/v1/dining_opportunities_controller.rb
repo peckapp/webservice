@@ -20,18 +20,20 @@ module Api
           week_day = params[:day_of_week].to_i
         end
 
+        # return an error if no institution_id is given
+        head :bad_request, location: 'missing institution_id parameter' unless params[:institution_id]
+
         # get earliest start and latest end of each dining opp
-        dining_times = DiningOpportunity.earliest_start_latest_end(week_day)
+        dining_times = DiningOpportunity.earliest_start_latest_end(week_day, params[:institution_id])
 
-        for opp in dining_opps
+        dining_opps.each do |opp|
 
-          if dining_times[opp.id] != nil && ! dining_times[opp.id][0].blank? && ! dining_times[opp.id][1].blank?
+          next unless dining_times[opp.id] && !dining_times[opp.id][0].blank? && !dining_times[opp.id][1].blank?
 
-            @service_start[opp.id] = dining_times[opp.id][0]
-            @service_end[opp.id] = dining_times[opp.id][1]
-            @dining_opportunities << opp
+          @service_start[opp.id] = dining_times[opp.id][0]
+          @service_end[opp.id] = dining_times[opp.id][1]
+          @dining_opportunities << opp
 
-          end
         end
       end
 
