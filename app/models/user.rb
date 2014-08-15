@@ -81,7 +81,8 @@ class User < ActiveRecord::Base
   ##############
 
   ### CLUBS ####
-  belongs_to :club #
+  # TODO: user does not currently have a club_id, this needs to be fixed if it is to be used
+  # belongs_to :club #
   ##############
 
   ### EVENT COMMENTS ###
@@ -102,7 +103,8 @@ class User < ActiveRecord::Base
   #####################################
 
   ### user viewed a specific event ###
-  belongs_to :event_view #
+  # TODO: user does not currently have an event_view_id, this needs to be fixed if it is to be used
+  # belongs_to :event_view #
   ####################################
 
   ### ACTIVITY LOG ###
