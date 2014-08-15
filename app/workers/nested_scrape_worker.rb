@@ -13,6 +13,7 @@ class NestedScrapeWorker
 
   def perform(*attrs)
     attrs = attrs.extract_options!
+    attrs[:validated] = true unless attrs[:validated]
     logger.info "specified attrs for perform: #{attrs}"
     resources = ScrapeResource.where(attrs)
 
@@ -32,50 +33,54 @@ class NestedScrapeWorker
       # for now just look at immediate url for the scrape resource
       (0..0).each do |_n| # placeholder page traversal
 
-        # eventually will extract html and send it off for parsing while continuing with pagination
+        # eventually should extract html and send it off for parsing in another worker while continuing with pagination
 
-        top_selectors = Selector.where(scrape_resource_id: resource.id, top_level: true)
-        top_selectors.each do |ts|
-
-          logger.info "Iterating over top level selector ts: #{ts.selector}"
-
-          # an array of all the top-level items for a given tag. these are nokogiri nodes
-          html_items = html.css(ts.selector)
-
-          html_items.each do |html_item| # iterates over Nokogiri nodeset for given css selector
-
-            # creates a model with scrape resource info set
-            new_model = ts.model.new(scrape_resource_id: resource.id,
-                                     institution_id: resource.institution_id)
-
-            # traverse all children for a given selector
-            ts.children.each do |cs|
-
-              logger.info "child selector: #{cs.selector}"
-
-              # assumes there is only one element - could iterate instead but what case is that?
-              content_item = html_item.css(cs.selector).first
-
-              if !content_item.blank?
-                content = content_item.text.squish
-                if content.blank?
-                  content = next_non_blank(content_item).text.squish
-                end
-                # logger.info "CONTENT: #{content}"
-                new_model.assign_attributes(cs.column_name => content)
-              else
-                logger.warn "NO CONTENT FOUND for top selector: #{ts.selector} and child selector: #{cs.selector}"
-              end
-            end # end top selector children iteration
-
-            validate_and_save(new_model)
-
-          end # end items iteration
-
-        end # end selector iteration
+        scrape_page(html, resource)
       end # end page iteration
     end # end resources do
   end # end perform
+
+  def scrape_page(html, resource)
+    top_selectors = Selector.where(scrape_resource_id: resource.id, top_level: true)
+    top_selectors.each do |ts|
+
+      logger.info "Iterating over top level selector ts: #{ts.selector}"
+
+      # an array of all the top-level items for a given tag. these are nokogiri nodes
+      html_items = html.css(ts.selector)
+
+      html_items.each do |html_item| # iterates over Nokogiri nodeset for given css selector
+
+        # creates a model with scrape resource info set
+        new_model = ts.model.new(scrape_resource_id: resource.id,
+                                 institution_id: resource.institution_id)
+
+        # traverse all children for a given selector
+        ts.children.each do |cs|
+
+          logger.info "child selector: #{cs.selector}"
+
+          # assumes there is only one element - could iterate instead but what case is that?
+          content_item = html_item.css(cs.selector).first
+
+          if !content_item.blank?
+            content = content_item.text.squish
+            if content.blank?
+              content = next_non_blank(content_item).text.squish
+            end
+            # logger.info "CONTENT: #{content}"
+            new_model.assign_attributes(cs.column_name => content)
+          else
+            logger.warn "NO CONTENT FOUND for top selector: #{ts.selector} and child selector: #{cs.selector}"
+          end
+        end # end top selector children iteration
+
+        validate_and_save(new_model)
+
+      end # end items iteration
+
+    end # end selector iteration
+  end
 
   def validate_and_save(new_model)
     # will need to check for partial matches that could indicate a change in the displayed content

@@ -7,10 +7,6 @@ require 'api_constraints'
 
 Rails.application.routes.draw do
 
-  # Active Admin route configuration
-  devise_for :admin_users, ActiveAdmin::Devise.config
-  ActiveAdmin.routes(self)
-
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
   resources :registrations do
@@ -107,6 +103,11 @@ Rails.application.routes.draw do
     end
   end
 
+  # Active Admin route configuration
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
+
+  # sidekiq background jobs panel
   authenticated :admin_user do
     mount Sidekiq::Web, at: '/tasks'
   end

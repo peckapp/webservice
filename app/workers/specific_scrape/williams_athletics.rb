@@ -60,34 +60,35 @@ module SpecificScrape
 
       logger.info "parsing schedule with link: #{full_link}"
 
-      raw = RestClient.get(full_links)
+      raw = RestClient.get(full_link)
       html = Nokogiri::HTML(raw)
 
       html.css('div.subscribe_links a').each do |a|
         url = rooted_link(a.values.first)
         next unless url && url.match(/rss/)
 
+        # checks that the scraped url is in the expected rss format based on a manual page inspection
         logger.info "unexpected URL format: #{url} from full_link_rss: #{full_link_rss}" if url != full_link_rss
 
         # creates a resource url for the current scrape resource, which can in turn be scraped by the nested scraper
-        ru = ResourceUrl.current_or_create_new(url: url, scrape_resource_id: @sr.id)
+        ru = ResourceUrl.new(url: url, scrape_resource_id: @sr.id)
 
-        logger.info "#{team_name}: #{ru}"
+        logger.info "saved URL for #{team_name}: #{ru.inspect}" if ru.non_duplicative_save
       end
 
       # table = html.css('.schedule-content table')
       # parse_table(table)
     end
 
-    def parse_table(table)
-      # gets all elements of any type with the current element as the parent
-      immediate_children = table.css("#{table.css_path} > *")
-
-      immediate_children.each do |child|
-        # parse the child rows to handle each type properly
-        logger.info child.text
-      end
-    end
+    # def parse_table(table)
+    #   # gets all elements of any type with the current element as the parent
+    #   immediate_children = table.css("#{table.css_path} > *")
+    #
+    #   immediate_children.each do |child|
+    #     # parse the child rows to handle each type properly
+    #     logger.info child.text
+    #   end
+    # end
 
     def rooted_link(ext)
       return ext if ext && ext.match(/\Ahttps?:/)
