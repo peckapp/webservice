@@ -1,11 +1,11 @@
 module Communication
-  class SendEmail
+  class PasswordReset
     include Sidekiq::Worker
     sidekiq_options :retry => false
 
-    def perform(id, fb_link)
+    def perform(id)
       user = User.find(id)
-      UserMailer.delay.registration_confirmation(user, id, fb_link).deliver
+      PasswordResetMailer.delay.reset_pass(user, id).deliver
     end
   end
 end

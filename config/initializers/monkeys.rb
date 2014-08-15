@@ -3,8 +3,8 @@
 
 # changes the format of dates in the JSON api responses
 class ActiveSupport::TimeWithZone
-    def as_json(options = {})
-        # strftime('%s')
-        to_f
-    end
+  def as_json(options = {})
+    # strftime('%s')
+    to_f
+  end
 end
