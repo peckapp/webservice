@@ -1,5 +1,5 @@
 class MobileResetsController < ApplicationController
-  before_action :confirm_minimal_access, except: [:apple, :android, :desktop, :nonmobile]
+  before_action :confirm_minimal_access, except: [:apple, :android, :desktop, :confirmation]
 
   def desktop
     the_id = params.delete(:id)
@@ -13,7 +13,7 @@ class MobileResetsController < ApplicationController
     elsif android_request?
       redirect_to android_mobile_resets_url(id: user.id, temp: temp_pass)
     else
-      redirect_to nonmobile_mobile_resets_url
+      redirect_to confirmation_mobile_resets_url
     end
   end
 
