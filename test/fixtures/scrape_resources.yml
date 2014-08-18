@@ -2,6 +2,7 @@
 
 # rss event resource
 williams:
+ id: 1
  url: https://events.williams.edu/widget/view?schools=williams&days=90&num=100&format=rss
  institution_id: 3
  resource_type_id: 1
@@ -10,6 +11,7 @@ williams:
 
 # rss event resource
 middlebury:
+ id: 2
  url: http://25livepub.collegenet.com/calendars/featured-title-events-calendar-search.rss
  institution_id: 4
  resource_type_id: 1

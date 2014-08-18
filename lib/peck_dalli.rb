@@ -1,6 +1,6 @@
 # returns the proper dalli connection for the current environment
 class PeckDalli
-  def client
+  def self.client
     options = { namespace: 'peck', compress: true }
 
     if Rails.env.production?
