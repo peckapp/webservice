@@ -1,4 +1,4 @@
-collection :@dining_opportunity_event_ids
+collection :@dining_opportunity_event_ids => :dining_opportunities
 
 node :dining_opportunity_type do |uniq_id|
   @dining_opportunities[uniq_id].dining_opportunity_type
