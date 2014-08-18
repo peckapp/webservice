@@ -27,7 +27,7 @@ module Api
 
         week_days.each do |wd|
           # get earliest start and latest end of each dining opp
-          dining_times = DiningOpportunity.earliest_start_latest_end(wd, params[:institution_id])
+          dining_times = DiningOpportunity.earliest_start_latest_end((wd % 7), params[:institution_id])
 
           dining_opps.each do |opp|
             # uniq_ids allow for each opportunity for a date to be treated as a separate event by the apps
