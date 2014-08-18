@@ -7,9 +7,9 @@ class RegistrationsController < ApplicationController
     @user.update_attributes(active: true, facebook_link: params[:fb_link])
 
     if apple_request?
-      redirect_to_apple_registrations_url
+      redirect_to apple_registrations_url
     elsif android_request?
-      redirect_to_android_registrations_url
+      redirect_to android_registrations_url
     end
   end
 

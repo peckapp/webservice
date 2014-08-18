@@ -27,7 +27,7 @@ Rails.application.routes.draw do
 
   resources :mobile_resets do
     collection do
-      get :desktop, :apple, :android
+      get :desktop, :apple, :android, :confirmation
     end
   end
 

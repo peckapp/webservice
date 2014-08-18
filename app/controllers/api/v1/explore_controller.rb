@@ -72,7 +72,7 @@ module Api
           end
         end
 
-        @explore_events = SimpleEvent.where(id: explore_ids)
+        @explore_events = SimpleEvent.where(id: explore_ids).where.not(user_id: params[:authentication][:user_id])
 
         # initialize hash mapping events to arrays of likers
         @likes_for_explore_events = {}
