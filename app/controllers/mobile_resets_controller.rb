@@ -27,7 +27,7 @@ class MobileResetsController < ApplicationController
     @temp_pass = params[:temp]
   end
 
-  def nonmobile
+  def confirmation
   end
 
   private
