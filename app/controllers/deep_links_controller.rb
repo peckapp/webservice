@@ -6,6 +6,8 @@ class DeepLinksController < ApplicationController
       redirect_to apple_deep_links_url
     elsif android_request?
       redirect_to android_deep_links_url
+    else
+      @simple_event = SimpleEvent.find(params[:event_id])
     end
   end
 
