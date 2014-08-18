@@ -6,12 +6,12 @@ class MobileResetsController < ApplicationController
     user = User.find(the_id)
     new_pass_params = pass_reset_params
     user.update_attributes(new_pass_params)
-    temp_pass = new_pass_params[:password]
+    # temp_pass = new_pass_params[:password]
 
     if apple_request?
-      redirect_to apple_mobile_resets_url(id: user.id, temp: temp_pass)
+      redirect_to apple_mobile_resets_url(id: user.id) #, temp: temp_pass)
     elsif android_request?
-      redirect_to android_mobile_resets_url(id: user.id, temp: temp_pass)
+      redirect_to android_mobile_resets_url(id: user.id) #, temp: temp_pass)
     else
       redirect_to confirmation_mobile_resets_url
     end
@@ -19,12 +19,12 @@ class MobileResetsController < ApplicationController
 
   def apple
     @user = User.find(params[:id])
-    @temp_pass = params[:temp]
+    #@temp_pass = params[:temp]
   end
 
   def android
     @user = User.find(params[:id])
-    @temp_pass = params[:temp]
+    #@temp_pass = params[:temp]
   end
 
   def confirmation
