@@ -17,7 +17,7 @@ require 'pathname'
 #
 namespace :sync do
 
-  after "deploy:setup", "sync:setup"
+  after 'deploy:setup', 'sync:setup'
 
   desc <<-DESC
     Creates the sync dir in shared path. The sync directory is used to keep
@@ -36,7 +36,7 @@ namespace :sync do
       'sync:down:fs' tasks.
     DESC
     task :default do
-      db and fs
+      db && fs
     end
 
     desc <<-DESC
@@ -45,17 +45,17 @@ namespace :sync do
       dump will be kept within the shared sync directory. The amount of backups that will be kept is
       declared in the sync_backups variable and defaults to 5.
     DESC
-    task :db, :roles => :db, :only => { :primary => true } do
+    task :db, roles: :db, only: { primary: true } do
 
       filename = "database.#{stage}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
       on_rollback { delete "#{shared_path}/sync/#{filename}" }
 
       # Remote DB dump
       username, password, database = database_config(stage)
-      run "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{shared_path}/sync/#{filename}" do |channel, stream, data|
+      run "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{shared_path}/sync/#{filename}" do |_channel, _stream, data|
         puts data
       end
-      purge_old_backups "database"
+      purge_old_backups 'database'
 
       # Download dump
       download "#{shared_path}/sync/#{filename}", filename
@@ -72,7 +72,7 @@ namespace :sync do
       environment. The synced directories must be declared as an array of Strings with the sync_directories
       variable. The path is relative to the rails root.
     DESC
-    task :fs, :roles => :web, :once => true do
+    task :fs, roles: :web, once: true do
 
       server, port = host_and_port
 
@@ -83,7 +83,7 @@ namespace :sync do
         end
         logger.info "sync #{syncdir} from #{server}:#{port} to local"
         destination, base = Pathname.new(syncdir).split
-        system "rsync --verbose --archive --compress --copy-links --delete --stats --rsh='ssh -p #{port}' #{user}@#{server}:#{current_path}/#{syncdir} #{destination.to_s}"
+        system "rsync --verbose --archive --compress --copy-links --delete --stats --rsh='ssh -p #{port}' #{user}@#{server}:#{current_path}/#{syncdir} #{destination}"
       end
 
       logger.important "sync filesystem from the stage '#{stage}' to local finished"
@@ -99,7 +99,7 @@ namespace :sync do
       'sync:up:fs' tasks.
     DESC
     task :default do
-      db and fs
+      db && fs
     end
 
     desc <<-DESC
@@ -108,7 +108,7 @@ namespace :sync do
       dump will be kept within the shared sync directory. The amount of backups that will be kept is
       declared in the sync_backups variable and defaults to 5.
     DESC
-    task :db, :roles => :db, :only => { :primary => true } do
+    task :db, roles: :db, only: { primary: true } do
 
       filename = "database.#{stage}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
 
@@ -119,7 +119,7 @@ namespace :sync do
 
       # Make a backup before importing
       username, password, database = database_config(stage)
-      run "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{shared_path}/sync/#{filename}" do |channel, stream, data|
+      run "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{shared_path}/sync/#{filename}" do |_channel, _stream, data|
         puts data
       end
 
@@ -133,7 +133,7 @@ namespace :sync do
       # Remote DB import
       username, password, database = database_config(stage)
       run "bzip2 -d -c #{shared_path}/sync/#{filename} | mysql -u #{username} --password='#{password}' #{database}; rm -f #{shared_path}/sync/#{filename}"
-      purge_old_backups "database"
+      purge_old_backups 'database'
 
       logger.important "sync database from local to the stage '#{stage}' finished"
     end
@@ -143,7 +143,7 @@ namespace :sync do
       environment. The synced directories must be declared as an array of Strings with the sync_directories
       variable.  The path is relative to the rails root.
     DESC
-    task :fs, :roles => :web, :once => true do
+    task :fs, roles: :web, once: true do
 
       server, port = host_and_port
       Array(fetch(:sync_directories, [])).each do |syncdir|
@@ -160,7 +160,7 @@ namespace :sync do
 
         # Sync directory up
         logger.info "sync #{syncdir} to #{server}:#{port} from local"
-        system "rsync --verbose --archive --compress --keep-dirlinks --delete --stats --rsh='ssh -p #{port}' #{syncdir} #{user}@#{server}:#{current_path}/#{destination.to_s}"
+        system "rsync --verbose --archive --compress --keep-dirlinks --delete --stats --rsh='ssh -p #{port}' #{syncdir} #{user}@#{server}:#{current_path}/#{destination}"
       end
       logger.important "sync filesystem from local to the stage '#{stage}' finished"
     end
@@ -173,15 +173,15 @@ namespace :sync do
   # Returns username, password, database
   #
   def database_config(db)
-    database = YAML::load_file('config/database.yml')
-    return database["#{db}"]['username'], database["#{db}"]['password'], database["#{db}"]['database']
+    database = YAML.load_file('config/database.yml')
+    [database["#{db}"]['username'], database["#{db}"]['password'], database["#{db}"]['database']]
   end
 
   #
   # Returns the actual host name to sync and port
   #
   def host_and_port
-    return roles[:web].servers.first.host, ssh_options[:port] || roles[:web].servers.first.port || 22
+    [roles[:web].servers.first.host, ssh_options[:port] || roles[:web].servers.first.port || 22]
   end
 
   #
@@ -191,10 +191,10 @@ namespace :sync do
     count = fetch(:sync_backups, 5).to_i
     backup_files = capture("ls -xt #{shared_path}/sync/#{base}*").split.reverse
     if count >= backup_files.length
-      logger.important "no old backups to clean up"
+      logger.important 'no old backups to clean up'
     else
       logger.info "keeping #{count} of #{backup_files.length} sync backups"
-      delete_backups = (backup_files - backup_files.last(count)).join(" ")
+      delete_backups = (backup_files - backup_files.last(count)).join(' ')
       try_sudo "rm -rf #{delete_backups}"
     end
   end
