@@ -2,15 +2,9 @@
 <html>
 <head>
 <script type="text/javascript">
-
-  window.setTimeout(
-   function() {
-      window.location = 'itms-apps://itunes.apple.com/us/app/peck-williams/id702672553?mt=8';
-   },
-   100
-);
-   window.location="peckapp://?view=passwordReset&email=<%=@user.email%>&temp_pass=<%=@temp_pass%>";
-
+    window.open();
+    window.close();
+    window.location="peckapp://?view=passwordReset&email=<%=@user.email%>&temp_pass=<%=@temp_pass%>";
 </script>
 </head>
 </html>
