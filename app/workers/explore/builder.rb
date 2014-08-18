@@ -11,8 +11,7 @@ module Explore
     # recurrence { hourly }
 
     def perform(institution_id)
-      options = { namespace: 'peck', compress: true }
-      @cache_client = Dalli::Client.new('localhost:11211', options)
+      @cache_client = PeckDalli.client
 
       @cache_client.set("campus_explore_#{institution_id}", analyze_simple_events(institution_id))
       # analyze_athletic_events(institution_id)
