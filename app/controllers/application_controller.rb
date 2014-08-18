@@ -68,79 +68,94 @@ class ApplicationController < ActionController::Base
     model.find(id)
   end
 
+  #################################
+  #                               #
+  #       PROTECTED METHODS       #
+  #                               #
+  #################################
+
   protected
 
-    def auth
-      if params[:authentication].blank?
-        {}
-      else
-        params[:authentication]
-      end
+  def auth
+    if params[:authentication].blank?
+      {}
+    else
+      params[:authentication]
     end
+  end
 
-    def notify(the_user, the_peck)
-      logger.info "sent peck to #{the_peck.user_id}"
+  def notify(the_user, the_peck)
+    logger.info "sent peck to #{the_peck.user_id}"
 
-      apple_notifications = {}
-      google_notifications = {}
-      google_collapse_notifications = {}
+    apple_notifications = {}
+    google_notifications = {}
+    google_collapse_notifications = {}
 
-      the_user.unique_device_identifiers.each do |device|
-        # date of creation of most recent user to use this device
-        udid_id = UniqueDeviceIdentifier.where(udid: device.udid).sorted.last.id
+    the_user.unique_device_identifiers.each do |device|
+      # date of creation of most recent user to use this device
+      udid_id = UniqueDeviceIdentifier.where(udid: device.udid).sorted.last.id
 
-        # ID of most recent user to use this device
-        uid = UdidUser.where(unique_device_identifier: udid_id).sorted.last.user_id
+      # ID of most recent user to use this device
+      uid = UdidUser.where(unique_device_identifier: udid_id).sorted.last.user_id
 
-        # token for this udid
-        the_token = device.token
+      # token for this udid
+      the_token = device.token
 
-        # as long as the token is not nil and the user is the most recent user
-        if the_user.id == uid && the_token
-          if the_peck.send_push_notification
-            # collapse circle comments
-            if device.device_type == 'android' && the_peck.notification_type == 'circle_comment'
-              google_collapse_notifications[the_token] = the_peck.message
-            elsif device.device_type == 'android'
-              google_notifications[the_token] = the_peck.message
-            else
-              apple_notifications[the_token] = the_peck.message
-            end
+      # as long as the token is not nil and the user is the most recent user
+      if the_user.id == uid && the_token
+        if the_peck.send_push_notification
+          # collapse circle comments
+          if device.device_type == 'android' && the_peck.notification_type == 'circle_comment'
+            google_collapse_notifications[the_token] = the_peck.message
+          elsif device.device_type == 'android'
+            google_notifications[the_token] = the_peck.message
+          else
+            apple_notifications[the_token] = the_peck.message
           end
         end
       end
-      Communication::PushNotificationWorker.perform_async(apple_notifications, google_notifications, google_collapse_notifications, the_user.id)
     end
+    Communication::PushNotificationWorker.perform_async(apple_notifications, google_notifications, google_collapse_notifications, the_user.id)
+  end
 
-    # check existence of auth params
-    def auth_params_exist
-      if auth[:user_id].blank? || auth[:api_key].blank?
-        return false
-      else
-        return true
-      end
+  # check existence of auth params
+  def auth_params_exist
+    if auth[:user_id].blank? || auth[:api_key].blank?
+      return false
+    else
+      return true
     end
+  end
 
-    def allowed_model_instances(model, auth_params)
-      # basic authentication check
-      model.where(institution_id: auth_params[:institution_id])
-    end
+  # provides the institution_id from the authentication block
+  def auth_inst_id
+    params.require(:authentication).permit(:institution_id)
+  end
+  # provides the user_id from the authentication block
+  def auth_user_id
+    params.require(:authentication).permit(:user_id)
+  end
 
-    # returns a hash of only the search parameters that apply to the specific model being queried
-    def model_search_params(model, params)
-      search_params = []
-      params.keys.each do |key|
-        next unless model.column_names.include?(key)
-        search_params << key
-      end
-      search_params
-    end
+  def allowed_model_instances(model, auth_params)
+    # basic authentication check
+    model.where(institution_id: auth_params[:institution_id])
+  end
 
-    def android_request?
-      request.user_agent =~ /android/i
+  # returns a hash of only the search parameters that apply to the specific model being queried
+  def model_search_params(model, params)
+    search_params = []
+    params.keys.each do |key|
+      next unless model.column_names.include?(key)
+      search_params << key
     end
+    search_params
+  end
 
-    def apple_request?
-      request.user_agent =~ /iphone|ipad|ipod/i
-    end
+  def android_request?
+    request.user_agent =~ /android/i
+  end
+
+  def apple_request?
+    request.user_agent =~ /iphone|ipad|ipod/i
+  end
 end

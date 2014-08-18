@@ -46,7 +46,6 @@ class DiningOpportunitiesControllerTest < UltimateTestHelper
       assert !early_late.blank?, 'Must be a earliest start and latest end for each institution'
 
       DiningPeriod.where(day_of_week: dow).pluck(:dining_opportunity_id).each do |opp_id|
-        puts "early_late[opp_id] => #{early_late[opp_id]}"
         early = early_late[opp_id][0]
         late = early_late[opp_id][1]
 
@@ -55,8 +54,8 @@ class DiningOpportunitiesControllerTest < UltimateTestHelper
         opp_type = DiningOpportunity.find(opp_id).dining_opportunity_type
 
         # these assertions test the fixtures, not the controller, and are more trouble that they're worth
-        # assert(!early.blank?, "the following opportunity has no start: day # #{dow} for #{opp_type}")
-        # assert(!late.blank?, "the following opportunity has no end: day # #{dow} for #{opp_type}")
+        assert(!early.blank?, "the following opportunity has no start: day # #{dow} for #{opp_type}")
+        assert(!late.blank?, "the following opportunity has no end: day # #{dow} for #{opp_type}")
 
         # assert start is before end
         assert(early < late, 'earliest start must always be before latest end')
