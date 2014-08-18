@@ -1,5 +1,6 @@
 class MobileResetsController < ApplicationController
   before_action :confirm_minimal_access, except: [:apple, :android, :desktop, :confirmation]
+  before_action :the_new_pass_params
 
   def desktop
     the_id = params.delete(:id)
@@ -19,11 +20,13 @@ class MobileResetsController < ApplicationController
 
   def apple
     @user = User.find(params[:id])
+    @temp_pass = @temp_params[:password]
     #@temp_pass = params[:temp]
   end
 
   def android
     @user = User.find(params[:id])
+    @temp_pass = @temp_params[:password]
     #@temp_pass = params[:temp]
   end
 
@@ -31,6 +34,10 @@ class MobileResetsController < ApplicationController
   end
 
   private
+
+  def the_new_pass_params
+    @temp_params = params[:user]
+  end
 
   def pass_reset_params
     params.require(:user).permit(:password)
