@@ -111,7 +111,7 @@ module Api
 
           if @user.update_attributes(user_signup_params(uparams))
             active_user = User.where(email: @user.email, active: true).first
-            if active_user
+            if active_user && active_user.password_digest && active_user.password_salt
               head :unprocessable_entity
               logger.warn "tried to take the email of an already existing user"
             else
