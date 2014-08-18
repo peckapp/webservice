@@ -51,7 +51,7 @@ Rails.application.configure do
     password: 'cq2vkmzvC82uJDd3vcMj',
     authentication: 'plain',
     enable_starttls_auto: true
-    }
+  }
   # devise
   # config.action_mailer.default_url_options = { :host => 'localhost:3000' }
   # config.action_mailer.delivery_method = :smtp

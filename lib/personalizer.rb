@@ -1,5 +1,6 @@
+# personalizes the scores of the campus explore feed for a specific user
 class Personalizer
-
+  NUMBER_OF_FRIENDS = 10
   NUMBER_OF_FRIENDS = 10
   NUMBER_OF_TOP_SUBSCRIBERS = 10
   MINIMUM_SUBSCRIPTIONS = 5
@@ -9,8 +10,7 @@ class Personalizer
   MAX_FRIEND_SCORE = 40
   MIN_CIRCLES = 3
 
-  def perform(event_scores, user_id, inst_id)
-
+  def perform(event_scores = [], user_id, inst_id)
     top_circle_friends = top_friends(user_id)
     top_similar_subscribers = similar_subscribers(user_id, inst_id)
     circle_count = CircleMember.where(user_id: user_id).count

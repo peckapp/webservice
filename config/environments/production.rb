@@ -6,7 +6,8 @@ Rails.application.configure do
 
   # allows for the use of a memcache using the dalli gem
   # uses a connection pool to limit sidekiq workers connections
-  config.cache_store = :dalli_store, 'magni.peckapp.com', { :pool_size => 5 }
+  config.cache_store = :dalli_store, 'magni.peckapp.com', { pool_size: 5 } # , expires_in: 86400,
+                                                            # username: 'cacheuser', password: ENV['MEMCACHED_PASS'] }
 
   # override default memory cache store to use magni memcached server
   # not properly configured at this point

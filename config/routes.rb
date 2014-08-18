@@ -123,7 +123,9 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   if Rails.env.production?
-    root 'api#main_redirect'
+    # can perform a redirect in the production environment if desired
+    # root 'api#main_redirect'
+    root 'api#index'
   else
     root 'api#index'
   end

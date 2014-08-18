@@ -14,7 +14,7 @@ module ActiveRecordExtension
     if attrs.blank?
       # use all non-blank fields in object as parameters
       self.class.columns.each do |c|
-        val = self.read_attribute(c.name)
+        val = read_attribute(c.name)
         attrs.merge!(c.name => val) unless val.blank?
       end
     end
