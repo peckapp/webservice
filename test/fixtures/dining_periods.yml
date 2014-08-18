@@ -4,7 +4,7 @@
   dining_opportunity_id: 1
   dining_place_id: 2
   institution_id: 1
-  day_of_week: <%= n - 1 %>
+  day_of_week: <%= n % 7 %>
   start_time: <%= Time.now + n.hours %>
   end_time: <%= Time.now + n.hours + 2.hours %>
 <% end %>
@@ -16,7 +16,7 @@
   dining_opportunity_id: 2
   dining_place_id: 1
   institution_id: 1
-  day_of_week: <%= n - 8 %>
+  day_of_week: <%= n % 7 %>
   start_time: <%= Time.now + n.hours %>
   end_time: <%= Time.now + n.hours + 2.hours %>
 <% end %>
@@ -27,7 +27,7 @@
   dining_opportunity_id: 3
   dining_place_id: 2
   institution_id: 1
-  day_of_week: <%= n - 14 %>
+  day_of_week: <%= n % 7 %>
   start_time: <%= Time.now + n.hours %>
   end_time: <%= Time.now + n.hours + 2.hours %>
 <% end %>
@@ -39,7 +39,7 @@
   dining_opportunity_id: 4
   dining_place_id: 3
   institution_id: 1
-  day_of_week: <%= n - 22 %>
+  day_of_week: <%= n % 7 %>
   start_time: <%= Time.now + n.hours %>
   end_time: <%= Time.now + n.hours + 2.hours %>
 <% end %>

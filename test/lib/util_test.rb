@@ -3,12 +3,12 @@ require 'test_helper'
 class UtilTest < ActiveSupport::TestCase
   test 'date time for week day method works properly' do
     (0..6).each do |dow|
-      (10..14).each { |hr|
-        result = Util.send(:date_time_for_week_day, dow, DateTime.now.midnight + hr.hours + 30.minutes)
+      (10..14).each do |hr|
+        result = Util.send(:date_time_for_week_day, dow, Time.now.midnight + hr.hours + 30.minutes)
         assert(result.hour == hr, 'inputted hour must equal outputted')
         assert(result.min == 30, 'inputted minutes must equal outputted')
         assert(result.wday == dow, 'inputted day of week must equal outputted')
-      }
+      end
     end
 
   end

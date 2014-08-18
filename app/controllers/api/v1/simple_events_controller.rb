@@ -34,7 +34,6 @@ module Api
           @simple_events = specific_index(SimpleEvent, params)
         end
 
-
         # initialize hash mapping events to arrays of likers
         @likes_for_simple_event = {}
 

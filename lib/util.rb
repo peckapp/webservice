@@ -13,7 +13,7 @@ class Util
   # These methods deliver the proper DateTime for the specified week_day parameter coming from the controller
 
   def self.date_time_for_week_day(day_of_week, time)
-    return nil if !day_of_week.blank? && !time.blank?
+    return nil if day_of_week.blank? || time.blank?
 
     day = nearest_week_day(day_of_week)
     day.change(hour: time.hour, min: time.min)

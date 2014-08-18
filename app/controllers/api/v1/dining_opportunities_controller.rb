@@ -1,7 +1,6 @@
 module Api
   module V1
-    class DiningOpportunitiesController < ApplicationController #Api::BaseController
-
+    class DiningOpportunitiesController < ApplicationController # Api::BaseController
       # before_action :authenticate_admin_user!, :only => [:create, :update, :destroy]
       # before_action => :confirm_admin, :only => [:create, :update, :destroy]
 

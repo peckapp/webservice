@@ -4,6 +4,9 @@ module Api
     class ExploreController < ApplicationController
       respond_to :json
 
+      helper_method :auth_inst_id
+      helper_method :auth_user_id
+
       NUMBER_OF_EVENTS = 200
 
       # # for now, just returns the 5 most recent events
@@ -42,6 +45,7 @@ module Api
       # end
 
       # index page shows the personalized campus-specific explore feed
+
       def index
         dc = PeckDalli.client
         scores = dc.get("campus_explore_#{auth_inst_id}")
@@ -55,7 +59,7 @@ module Api
         end
 
         # save all events that user is attending to remove it from explore
-        user_events = EventAttendee.where(user_id: auth_inst_id, category: "simple").pluck(:event_attended)
+        user_events = EventAttendee.where(user_id: auth_inst_id, category: 'simple').pluck(:event_attended)
 
         personalizer = Personalizer.new
 
@@ -72,7 +76,7 @@ module Api
           end
         end
 
-        @explore_events = SimpleEvent.where(id: explore_ids).where.not(user_id: params[:authentication][:user_id])
+        @explore_events = SimpleEvent.where(id: explore_ids).where.not(user_id: auth_user_id)
 
         # initialize hash mapping events to arrays of likers
         @likes_for_explore_events = {}
@@ -88,16 +92,6 @@ module Api
           end
         end
       end
-    end
-
-    protected
-
-    def auth_inst_id
-      params.require(:authentication).permit(:institution_id)
-    end
-
-    def auth_user_id
-      params.require(:authentication).permit(:user_id)
     end
   end
 end
