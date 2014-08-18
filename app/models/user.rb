@@ -42,8 +42,8 @@ class User < ActiveRecord::Base
 
   validates :email, presence: true, length: { maximum: 50 }, format: { with: EMAIL_REGEX }, if: :enable_strict_validation
   validates :facebook_link, uniqueness: true, allow_nil: true
-  validates :facebook_token, uniqueness: true, allow_nil: true
-  validates :api_key, uniqueness: true, allow_nil: true
+  #validates :facebook_token, uniqueness: true, allow_nil: true
+  #validates :api_key, uniqueness: true, allow_nil: true
   validate :correct_user_types
 
   # image validations
