@@ -13,7 +13,7 @@ ActiveAdmin.register Selector do
   # end
 
   # Adds this into a dropdown in the top menu bar
-  menu parent: 'Scraping', priority: 4
+  menu parent: 'Scraping', priority: 5
 
   active_admin_importable
 
