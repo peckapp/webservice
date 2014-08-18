@@ -3,19 +3,15 @@ class DeepLinksController < ApplicationController
 
   def native_peck
     if apple_request?
-      redirect_to apple_deep_links_url(event: params[:event_id])
+      redirect_to apple_deep_links_url
     elsif android_request?
-      redirect_to android_deep_links_url(event: params[:event_id] )
-    else
-      @simple_event = SimpleEvent.find(params[:event_id])
+      redirect_to android_deep_links_url
     end
   end
 
   def apple
-    @event_id = params[:event]
   end
 
   def android
-    @event_id = params[:event]
   end
 end
