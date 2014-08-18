@@ -121,7 +121,7 @@ module Api
           end
 
           if @user.update_attributes(user_signup_params(uparams))
-             @user.authentication_token = SecureRandom.hex(30)
+             @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token
              @user.save
              auth[:authentication_token] = @user.authentication_token
 
@@ -208,7 +208,7 @@ module Api
                  head :unprocessable_entity
                  logger.warn "tried to take the email of an already existing user"
                elsif send_confirmation_email
-                 @user.authentication_token = SecureRandom.hex(30)
+                 @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token
                  @user.save
                  auth[:authentication_token] = @user.authentication_token
                  Communication::SendEmail.perform_async(@user.id, fb_link)
