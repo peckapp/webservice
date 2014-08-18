@@ -35,6 +35,10 @@ class DiningOpportunity < ActiveRecord::Base
   ##                           ##
   ###############################
 
+  def id_for_wday(wday)
+    id * (Util.date_time_for_week_day(wday).to_i % 10_000)
+  end
+
   def to_label
     dining_opportunity_type
   end
