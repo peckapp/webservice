@@ -56,11 +56,11 @@ Rails.application.configure do
   config.paperclip_defaults = {
   :storage => :s3,
   :s3_credentials => {
-    :bucket => 'peckdevelopment'
-    :access_key_id => ENV['AWS_ACCESS_KEY_ID']
-    :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
-    :url => 'peckdevelopment.s3.amazonaws.com'
-    :default_url => 'peckdevelopment.s3.amazonaws.com/missing.png'
+    :bucket => 'peckdevelopment',
+    :access_key_id => ENV['AWS_ACCESS_KEY_ID'],
+    :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY'],
+    :url => 'peckdevelopment.s3.amazonaws.com',
+    :default_url => 'peckdevelopment.s3.amazonaws.com/missing.png',
     :path => '/:class/:attachment/:id_partition/:style/:filename'
   }
 }
