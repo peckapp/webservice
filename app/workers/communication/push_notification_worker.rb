@@ -11,6 +11,7 @@ module Communication
     # notification hash is of device_token string keys related to message hash values in the Pushmeup format
     # currently only supports ios notifications
     def perform(apple_hash, google_hash, google_hash_collapsable, the_key)
+      logger.info "sending notifications with apple_hash: #{apple_hash}, and google_hash: #{google_hash}"
 
       # Define that we want persistent connection
       unless apple_hash.blank?
