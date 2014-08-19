@@ -4,7 +4,10 @@ module Api
     class FeedbackController < ApplicationController
       # allows for user submitted feedback
       def submit
-        # use an action mailer to email us the user feedback
+        user_id = params[:user_id]
+        content = params[:content]
+        category = params[:category]
+        Communication::Feedback.perform_async(user_id, content, category)
       end
     end
   end
