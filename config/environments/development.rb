@@ -52,6 +52,18 @@ Rails.application.configure do
     authentication: 'plain',
     enable_starttls_auto: true
   }
+
+  config.paperclip_defaults = {
+  :storage => :s3,
+  :s3_credentials => {
+    :bucket => 'peckdevelopment'
+    :access_key_id => ENV['AWS_ACCESS_KEY_ID']
+    :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
+    :url => 'peckdevelopment.s3.amazonaws.com'
+    :default_url => 'peckdevelopment.s3.amazonaws.com/missing.png'
+    :path => '/:class/:attachment/:id_partition/:style/:filename'
+  }
+}
   # devise
   # config.action_mailer.default_url_options = { :host => 'localhost:3000' }
   # config.action_mailer.delivery_method = :smtp
