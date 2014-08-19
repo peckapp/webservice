@@ -8,6 +8,7 @@ class DeepLinksController < ApplicationController
       redirect_to android_deep_links_url
     else
       @simple_event = SimpleEvent.find(params[:event_id])
+      @time_zone = Institution.find(@simple_event.institution_id).time_zone
     end
   end
 

@@ -36,7 +36,7 @@ class Announcement < ActiveRecord::Base
   validate :correct_announcement_types
 
   ### Event Photo Attachments ###
-  has_attached_file :image, url: '/images/announcements/:style/:basename.:extension', path: ':rails_root/public/images/announcements/:style/:basename.:extension', default_url: '/images/missing.png'
+  has_attached_file :image #, url: '/images/announcements/:style/:basename.:extension', path: ':rails_root/public/images/announcements/:style/:basename.:extension', default_url: '/images/missing.png'
   #:styles => { :medium => "300x300>", :thumb => "100x100>" }
   # validates_attachment :image, :content_type => { :content_type => "image/jpeg"}
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/

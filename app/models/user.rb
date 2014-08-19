@@ -48,9 +48,9 @@ class User < ActiveRecord::Base
 
   # image validations
   has_attached_file(:image,
-                    url: '/images/users/:style/:basename.:extension',
-                    path: ':rails_root/public/images/users/:style/:basename.:extension',
-                    default_url: '/images/missing.png',
+                    #url: '/images/users/:style/:basename.:extension',
+                    #path: ':rails_root/public/images/users/:style/:basename.:extension',
+                    #default_url: '/images/missing.png',
                     styles: {
                       thumb: '100x100#'
                     })
