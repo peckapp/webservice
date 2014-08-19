@@ -7,7 +7,8 @@ module Api
         user_id = params[:user_id]
         content = params[:content]
         category = params[:category]
-        Communication::Feedback.perform_async(user_id, content, category)
+        institution_id = params[:institution_id]
+        Communication::Feedback.perform_async(user_id, content, category, institution_id)
       end
     end
   end

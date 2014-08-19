@@ -81,8 +81,18 @@ module Api
       end
 
       def logout
+        the_udid = params[:udid]
+        the_token = params[:device_token]
+        the_device_type = params[:device_type]
+
         # find user who is logging out
         @user = User.find(session[:user_id])
+        @udid = UniqueDeviceIdentifier.where(udid: the_udid, device_type: the_device_type, token: the_token).first
+        @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
+
+        @udid.destroy
+        @user.unique_device_identifiers.destroy(@udid)
+        @udid_user.destroy
 
         # remove auth token from authentication params and database
         @user.authentication_token = nil
