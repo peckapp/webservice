@@ -36,9 +36,17 @@ class Announcement < ActiveRecord::Base
   validate :correct_announcement_types
 
   ### Event Photo Attachments ###
-  has_attached_file :image #, url: '/images/announcements/:style/:basename.:extension', path: ':rails_root/public/images/announcements/:style/:basename.:extension', default_url: '/images/missing.png'
-  #:styles => { :medium => "300x300>", :thumb => "100x100>" }
-  # validates_attachment :image, :content_type => { :content_type => "image/jpeg"}
+  has_attached_file(:image,
+                    :s3_credentials => {
+                    :bucket => 'peckdevelopment',
+                    :access_key_id => ENV['AWS_ACCESS_KEY_ID'],
+                    :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
+                    },
+                    url: '/images/announcements/:style/:basename.:extension',
+                    path: 'images/announcements/:style/:basename.:extension',
+                    default_url: '/images/missing.png',
+                    :styles => { :medium => "300x300>", :thumb => "100x100>" })
+
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
   validates_with AttachmentSizeValidator, attributes: :image, less_than: 5.megabytes
 
