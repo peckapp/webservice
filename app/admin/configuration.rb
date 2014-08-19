@@ -15,6 +15,6 @@ ActiveAdmin.register Configuration do
   # end
 
   # Adds this into a dropdown in the top menu bar
-  menu parent: 'Institutional'
+  menu parent: 'Institutional', priority: 2
 
 end

@@ -15,8 +15,8 @@ ActiveAdmin.register User do
   # Adds this into a dropdown in the top menu bar
   menu parent: 'Accounts and Social'
 
-  remove_filter :users_user_device_tokens
-  filter :user_device_tokens_users
+  # remove_filter :users_user_device_tokens
+  # filter :user_device_tokens_users
 
   sidebar 'Unique Device Identifiers', only: :show do
     table_for user.unique_device_identifiers do |t|

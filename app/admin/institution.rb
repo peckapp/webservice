@@ -14,7 +14,7 @@ ActiveAdmin.register Institution do
   # end
 
   # Adds this into a dropdown in the top menu bar
-  menu parent: 'Institutional'
+  menu parent: 'Institutional', priority: 1
 
   form do |f|
     f.inputs 'Details' do
