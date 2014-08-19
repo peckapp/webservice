@@ -30,15 +30,16 @@ set :format, :pretty
 set :pty, false
 
 # Default value for :linked_files is []
-set :linked_files, %w(config/database.yml config/environment_variables.yml config/certs/ck.pem config/initializers/sidekiq.rb)
+set :linked_files, %w(config/database.yml config/environment_variables.yml config/certs/ck.pem
+                      config/initializers/sidekiq.rb)
 
 # Default value for linked_dirs is []
 set :linked_dirs, %w(bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system public/images config/certs)
 
 # custom database sync task settings
-# set :sync_directories, ["public/assets", "public/galleries"]
-# set :sync_tables, %w(resource_types scrape_resources data_resources scrape_resources) # custom addon to 
-# set :sync_backups, 3
+set :sync_directories, %w() # nothing to sync by default. Could use this to move config files remotely in production
+set :sync_tables, %w(resource_types scrape_resources data_resources scrape_resources) # custom addon to found recipe
+set :sync_backups, 3
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }

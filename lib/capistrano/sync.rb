@@ -30,23 +30,22 @@ namespace :sync do
 
   namespace :down do
 
-    desc <<-DESC
-      Syncs the database and declared directories from the selected multi_stage environment
-      to the local development environment. This task simply calls both the 'sync:down:db' and
-      'sync:down:fs' tasks.
-    DESC
-    task :default do
-      db && fs
-    end
+    # desc <<-DESC
+    #   Syncs the database and declared directories from the selected multi_stage environment
+    #   to the local development environment. This task simply calls both the 'sync:down:db' and
+    #   'sync:down:fs' tasks.
+    # DESC
+    # task :default do
+    #   db && fs
+    # end
 
     desc <<-DESC
-      Syncs database from the selected mutli_stage environement to the local develoment environment.
+      Syncs database from the selected multi_stage environement to the local develoment environment.
       The database credentials will be read from your local config/database.yml file and a copy of the
-      dump will be kept within the shared sync directory. The amount of backups that will be kept is
+      dump will be kept within the shared sync directory. The number of backups that will be kept is
       declared in the sync_backups variable and defaults to 5.
     DESC
     task :db, roles: :db, only: { primary: true } do
-
       filename = "database.#{stage}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
       on_rollback { delete "#{shared_path}/sync/#{filename}" }
 
@@ -67,40 +66,40 @@ namespace :sync do
       logger.important "sync database from the stage '#{stage}' to local finished"
     end
 
-    desc <<-DESC
-      Sync declared directories from the selected multi_stage environment to the local development
-      environment. The synced directories must be declared as an array of Strings with the sync_directories
-      variable. The path is relative to the rails root.
-    DESC
-    task :fs, roles: :web, once: true do
-
-      server, port = host_and_port
-
-      Array(fetch(:sync_directories, [])).each do |syncdir|
-        unless File.directory? "#{syncdir}"
-          logger.info "create local '#{syncdir}' folder"
-          Dir.mkdir "#{syncdir}"
-        end
-        logger.info "sync #{syncdir} from #{server}:#{port} to local"
-        destination, base = Pathname.new(syncdir).split
-        system "rsync --verbose --archive --compress --copy-links --delete --stats --rsh='ssh -p #{port}' #{user}@#{server}:#{current_path}/#{syncdir} #{destination}"
-      end
-
-      logger.important "sync filesystem from the stage '#{stage}' to local finished"
-    end
+    # desc <<-DESC
+    #   Sync declared directories from the selected multi_stage environment to the local development
+    #   environment. The synced directories must be declared as an array of Strings with the sync_directories
+    #   variable. The path is relative to the rails root.
+    # DESC
+    # task :fs, roles: :web, once: true do
+    #
+    #   server, port = host_and_port
+    #
+    #   Array(fetch(:sync_directories, [])).each do |syncdir|
+    #     unless File.directory? "#{syncdir}"
+    #       logger.info "create local '#{syncdir}' folder"
+    #       Dir.mkdir "#{syncdir}"
+    #     end
+    #     logger.info "sync #{syncdir} from #{server}:#{port} to local"
+    #     destination, base = Pathname.new(syncdir).split
+    #     system "rsync --verbose --archive --compress --copy-links --delete --stats --rsh='ssh -p #{port}' #{user}@#{server}:#{current_path}/#{syncdir} #{destination}"
+    #   end
+    #
+    #   logger.important "sync filesystem from the stage '#{stage}' to local finished"
+    # end
 
   end
 
   namespace :up do
 
-    desc <<-DESC
-      Syncs the database and declared directories from the local development environment
-      to the selected multi_stage environment. This task simply calls both the 'sync:up:db' and
-      'sync:up:fs' tasks.
-    DESC
-    task :default do
-      db && fs
-    end
+    # desc <<-DESC
+    #   Syncs the database and declared directories from the local development environment
+    #   to the selected multi_stage environment. This task simply calls both the 'sync:up:db' and
+    #   'sync:up:fs' tasks.
+    # DESC
+    # task :default do
+    #   db && fs
+    # end
 
     desc <<-DESC
       Syncs database from the local develoment environment to the selected mutli_stage environement.
@@ -138,32 +137,32 @@ namespace :sync do
       logger.important "sync database from local to the stage '#{stage}' finished"
     end
 
-    desc <<-DESC
-      Sync declared directories from the local development environement to the selected multi_stage
-      environment. The synced directories must be declared as an array of Strings with the sync_directories
-      variable.  The path is relative to the rails root.
-    DESC
-    task :fs, roles: :web, once: true do
-
-      server, port = host_and_port
-      Array(fetch(:sync_directories, [])).each do |syncdir|
-        destination, base = Pathname.new(syncdir).split
-        if File.directory? "#{syncdir}"
-          # Make a backup
-          logger.info "backup #{syncdir}"
-          run "tar cjf #{shared_path}/sync/#{base}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.tar.bz2 #{current_path}/#{syncdir}"
-          purge_old_backups "#{base}"
-        else
-          logger.info "Create '#{syncdir}' directory"
-          run "mkdir #{current_path}/#{syncdir}"
-        end
-
-        # Sync directory up
-        logger.info "sync #{syncdir} to #{server}:#{port} from local"
-        system "rsync --verbose --archive --compress --keep-dirlinks --delete --stats --rsh='ssh -p #{port}' #{syncdir} #{user}@#{server}:#{current_path}/#{destination}"
-      end
-      logger.important "sync filesystem from local to the stage '#{stage}' finished"
-    end
+    # desc <<-DESC
+    #   Sync declared directories from the local development environement to the selected multi_stage
+    #   environment. The synced directories must be declared as an array of Strings with the sync_directories
+    #   variable.  The path is relative to the rails root.
+    # DESC
+    # task :fs, roles: :web, once: true do
+    #
+    #   server, port = host_and_port
+    #   Array(fetch(:sync_directories, [])).each do |syncdir|
+    #     destination, base = Pathname.new(syncdir).split
+    #     if File.directory? "#{syncdir}"
+    #       # Make a backup
+    #       logger.info "backup #{syncdir}"
+    #       run "tar cjf #{shared_path}/sync/#{base}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.tar.bz2 #{current_path}/#{syncdir}"
+    #       purge_old_backups "#{base}"
+    #     else
+    #       logger.info "Create '#{syncdir}' directory"
+    #       run "mkdir #{current_path}/#{syncdir}"
+    #     end
+    #
+    #     # Sync directory up
+    #     logger.info "sync #{syncdir} to #{server}:#{port} from local"
+    #     system "rsync --verbose --archive --compress --keep-dirlinks --delete --stats --rsh='ssh -p #{port}' #{syncdir} #{user}@#{server}:#{current_path}/#{destination}"
+    #   end
+    #   logger.important "sync filesystem from local to the stage '#{stage}' finished"
+    # end
 
   end
 
@@ -173,7 +172,12 @@ namespace :sync do
   # Returns username, password, database
   #
   def database_config(db)
-    database = YAML.load_file('config/database.yml')
+    env_file = "#{shared_path}/config/database.yml"
+    return unless File.exist?(env_file)
+
+    database = YAML.load_file(env_file)[Rails.env]
+    return if database.blank? # protects against empty yaml entries
+
     [database["#{db}"]['username'], database["#{db}"]['password'], database["#{db}"]['database']]
   end
 
@@ -182,6 +186,14 @@ namespace :sync do
   #
   def host_and_port
     [roles[:web].servers.first.host, ssh_options[:port] || roles[:web].servers.first.port || 22]
+  end
+
+  #
+  # Creates a space-separated string of all the table names meant to be synced by the script
+  # table names defined in config/deploy.rb
+  #
+  def sync_tables
+    Array(fetch(:sync_directories, [])).reduce('') { |a, e| a << ' ' << e }
   end
 
   #
