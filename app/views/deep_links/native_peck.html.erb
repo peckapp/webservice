@@ -11,9 +11,9 @@
   <h1><font face="tahoma"><center><%= @simple_event.title %></center></font><h1>
 
     <center><img src="http://loki.peckapp.com:3500<%=@simple_event.image.url%>" height="230" width="230"></center>
-    
-    <%= @simple_event.start_date.utc_offset %>
-    <h2><font face="tahoma"><i><center><%= "#{@simple_event.start_date.strftime('%B %e, %l:%M %p')} - #{@simple_event.end_date.strftime('%B %e, %l:%M %p %Z')}" %></center></i></font><h2>
+
+
+    <h2><font face="tahoma"><i><center><%= @simple_event.start_date.utc_offset %><%= "#{@simple_event.start_date.strftime('%B %e, %l:%M %p')} - #{@simple_event.end_date.strftime('%B %e, %l:%M %p %Z')}" %></center></i></font><h2>
 
       <p width="10"><i><font size="4" face="tahoma"><center><%= @simple_event.event_description %></center></font></i></p>
 
