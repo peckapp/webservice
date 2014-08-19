@@ -20,6 +20,10 @@ node :id do |uniq_id|
   uniq_id
 end
 
+node :opportunity_id do |uniq_id|
+  @dining_opportunities[uniq_id].id
+end
+
 node :start_time do |uniq_id|
   @service_start[uniq_id].to_f
 end
