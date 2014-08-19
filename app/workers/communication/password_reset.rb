@@ -1,7 +1,7 @@
 module Communication
   class PasswordReset
     include Sidekiq::Worker
-    sidekiq_options :retry => false
+    sidekiq_options unique: true
 
     def perform(id)
       user = User.find(id)

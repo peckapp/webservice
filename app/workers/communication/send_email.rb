@@ -1,7 +1,7 @@
 module Communication
   class SendEmail
     include Sidekiq::Worker
-    sidekiq_options :retry => false
+    sidekiq_options unique: true
 
     def perform(id, fb_link)
       user = User.find(id)

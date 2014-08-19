@@ -26,8 +26,6 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 # gem for calculating array statistics
 gem 'descriptive-statistics'
 
-gem 'aws-sdk'
-
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
 gem 'spring',        group: :development
 
@@ -57,6 +55,8 @@ gem 'active_admin_importable'
 gem 'paperclip', '~> 4.2.0'
 # allows for background job-based post-processing
 gem 'delayed_paperclip'
+# allows paperclip to interface with amazon s3
+gem 'aws-sdk'
 
 ### DATABASE INTERACTIONS
 # ransack for more powerful database queries. This branch supports only rails 4.1 https://github.com/activerecord-hackery/ransack/tree/rails-4.1
@@ -84,6 +84,8 @@ gem 'sidetiq'
 # gems for the sidekiq interface
 gem 'sinatra', require: false
 gem 'slim'
+# allows for use of unique jobs for things that shouldn't be run more than once
+gem 'sidekiq-unique-jobs'
 
 ### API
 # rabl rails for api

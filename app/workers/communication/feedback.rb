@@ -1,7 +1,7 @@
 module Communication
   class Feedback
     include Sidekiq::Worker
-    sidekiq_options :retry => false
+    sidekiq_options unique: true
 
     def perform(id, content, category, institution_id)
       user = User.find(id)
