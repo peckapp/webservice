@@ -13,9 +13,9 @@ module Explore
     def perform(institution_id)
       @cache_client = PeckDalli.client
 
-      @cache_client.set("campus_explore_#{institution_id}", analyze_simple_events(institution_id))
+      @cache_client.set("campus_simple_explore_#{institution_id}", analyze_simple_events(institution_id))
       # analyze_athletic_events(institution_id)
-      # analyze_announcements(institution_id)
+      @cache_client.set("campus_announcement_explore_#{institution_id}", analyze_announcements(institution_id))
     end
 
     protected
@@ -23,31 +23,38 @@ module Explore
     # should add something to only get a certain range of dates
 
     def analyze_simple_events(institution_id)
-      analyzer = Explore::EventAnalyzer.new
+      analyzer = Explore::Analyzer.new
       analysis_group = SimpleEvent.where(start_date: Time.now..1.month.from_now)
 
       event_scores = analysis_group.reduce([]) do |acc, e|
 
-        acc << [e.id, analyzer.perform(e.id, institution_id, 'SimpleEvent')]
+        acc << [e.id, analyzer.perform(e.id, institution_id, SimpleEvent)]
 
       end
 
       Hash[event_scores]
     end
 
+    def analyze_announcements(institution_id)
+      analyzer = Explore::Analyzer.new
+      analysis_group = Announcement.where(created_at: 1.month.ago..Time.now)
+
+      announcement_scores = analysis_group.reduce([]) do |acc, e|
+
+        acc << [e.id, analyzer.perform(e.id, institution_id, Announcement)]
+
+      end
+
+      Hash[announcement_scores]
+    end
+
     def analyze_athletic_events(institution_id)
       athletic_event_ids = AthleticEvent.where(institution_id: institution_id).pluck(:id)
       athletic_event_ids.each do |id|
         # uses general event analyzer that requires a model name
-        Explore::EventAnalyzer.perform_async(id, 'AthleticEvent')
+        Explore::EventAnalyzer.perform_async(id, AthleticEvent)
       end
     end
 
-    def analyze_announcements(institution_id)
-      announcment_ids = Announcement.where(institution_id: institution_id).pluck(:id)
-      announcment_ids.each do |id|
-        Explore::AnnouncementAnalyzer.perform_async(id)
-      end
-    end
   end
 end

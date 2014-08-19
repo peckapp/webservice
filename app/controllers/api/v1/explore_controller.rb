@@ -1,6 +1,6 @@
 module Api
   module V1
-    # this class handles the output of the explore feed, speficif to the user requesting it
+    # this class handles the output of the explore feed, specific to the user requesting it
     class ExploreController < ApplicationController
       respond_to :json
 
@@ -48,7 +48,7 @@ module Api
 
       def index
         dc = PeckDalli.client
-        scores = dc.get("campus_explore_#{auth_inst_id}")
+        scores = dc.get("campus_simple_explore_#{auth_inst_id}")
         if scores.blank?
           # trigger campus explore calculation, or perform manually.
           Explore::Builder.perform_async(auth_inst_id)

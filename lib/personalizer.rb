@@ -1,7 +1,6 @@
 # personalizes the scores of the campus explore feed for a specific user
 class Personalizer
   NUMBER_OF_FRIENDS = 10
-  NUMBER_OF_FRIENDS = 10
   NUMBER_OF_TOP_SUBSCRIBERS = 10
   MINIMUM_SUBSCRIPTIONS = 5
 
@@ -13,14 +12,9 @@ class Personalizer
   def perform(event_scores = [], user_id, inst_id)
     top_circle_friends = top_friends(user_id)
     top_similar_subscribers = similar_subscribers(user_id, inst_id)
-    circle_count = CircleMember.where(user_id: user_id).count
 
     # @user_circles gets set in top_friends method
-    if @user_circles.count >= MIN_CIRCLES
-      circle_count = @user_circles.count
-    else
-      circle_count = MIN_CIRCLES
-    end
+    circle_count = user_circle_count(@user_circles.count, MIN_CIRCLES)
 
     # weights calculator
     weights = Weights.new(inst_id)
@@ -187,5 +181,20 @@ class Personalizer
 
     # return hash of top similar subscribers
     top_subscribers.to_a
+  end
+
+  ###############################
+  ##                           ##
+  ##       HELPER METHODS      ##
+  ##                           ##
+  ###############################
+
+  # make sure top friends are scored relative to a minimum number of circles
+  def user_circle_count(current_count, min_count)
+    if current_count >= min_count
+      current_count
+    else
+      min_count
+    end
   end
 end

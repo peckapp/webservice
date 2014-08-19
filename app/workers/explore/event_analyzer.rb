@@ -70,7 +70,7 @@ module Explore
       end
 
       # sum weights
-      peck_score = weights.temporal_proximity(time_of_event) +
+      peck_score = weights.temporal_proximity(time_of_event, false) +
                    weights.attendees(attendee_count) +
                    weights.event_views(view_count) +
                    weights.event_likes(like_count) +
