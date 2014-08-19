@@ -6,11 +6,11 @@ attributes(:id, :title, :event_description, :institution_id, :user_id, :category
 node(:event_type) { 'simple' }
 
 node :image do |simple_event|
-  simple_event.image.url
+  "#{Amazon.base_url}#{simple_event.image.url}"
 end
 
 node :blurred_image do |simple_event|
-  simple_event.image.url(:blurred)
+  "#{Amazon.base_url}#{simple_event.image.url(:blurred)}"
 end
 
 node :likes do |simple_event|
