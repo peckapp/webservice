@@ -5,13 +5,13 @@
   <title>Peck</title>
   <%= favicon_link_tag 'favicon.ico'%>
 </head>
-<body background="http://localhost:3000/images/gradient.png">
+<body background="http://s3.amazonaws.com/peck_development/images/gradient.png">
   <table bgcolor="white" width="400" bordercolor="gray" align="center">
     <tr>
       <td><font face="tahoma" size=6><center><%= @simple_event.title %></center></font></td>
     </tr>
     <tr>
-      <td><center><img src="http://localhost:3000<%=@simple_event.image.url%>" height="380" width="380"></center></td>
+      <td><center><img src="<%=@simple_event.image.url%>" height="380" width="380"></center></td>
     </tr>
     <tr>
       <td><font face="tahoma" size=2.99><b><center><%= "#{@simple_event.start_date.in_time_zone(@time_zone).strftime('%B %e, %l:%M %p')} - #{@simple_event.end_date.in_time_zone(@time_zone).strftime('%B %e, %l:%M %p %Z')}" %></center></b></font></td>
@@ -26,7 +26,7 @@
       <td><center><i><font size="4" face="tahoma" color="navy">To attend, like, or comment on this event, please use a mobile device with Peck.</font></i></center></td>
     </tr>
       <tr>
-        <td><center><img src="http://loki.peckapp.com:3500/images/bird.png" height="200" width="200"></center></td>
+        <td><center><img src="http://s3.amazonaws.com/peck_development/images/bird.png" height="200" width="200"></center></td>
       </tr>
     </table>
 </body>
