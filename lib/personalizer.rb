@@ -44,7 +44,7 @@ class Personalizer
       friend_boost = 0
       top_circle_friends.each do |friend|
 
-        if attendees != nil && attendees.include?(friend[0])
+        if !attendees.nil? && attendees.include?(friend[0])
           if weights.circle_friend_boost(friend[1], circle_count) > MAX_FRIEND_SCORE
             friend_score = MAX_FRIEND_SCORE
           else
@@ -64,8 +64,8 @@ class Personalizer
       ## Scoring boost for similar subscribers
       subs_boost = 0
       top_similar_subscribers.each do |subs|
-        if attendees != nil && attendees.include?(subs[0])
-          subs_boost += MAX_SUB_BOOST/NUMBER_OF_TOP_SUBSCRIBERS
+        if !attendees.nil? && attendees.include?(subs[0])
+          subs_boost += MAX_SUB_BOOST / NUMBER_OF_TOP_SUBSCRIBERS
         end
       end
 
@@ -89,7 +89,6 @@ class Personalizer
   # number of times they appear in the circles (bonus given if the circle friend was invited
   # by the user)
   def top_friends(user_id)
-
     # all circles that specified user is part of
     @user_circles = CircleMember.where(user_id: user_id, accepted: true).pluck(:circle_id)
 
@@ -98,7 +97,7 @@ class Personalizer
 
     ranked_friends = {}
 
-    if all_circle_friends != nil
+    if !all_circle_friends.nil?
       all_circle_friends.each do |friend|
 
         if ranked_friends[friend[0]]
@@ -143,7 +142,6 @@ class Personalizer
 
   # subscribers impact on an event's peck score
   def similar_subscribers(user_id, institution_id)
-
     user_subscriptions = Subscription.where(user_id: user_id).pluck(:category, :subscribed_to)
 
     all_subscribers = Subscription.where(institution_id: institution_id).where.not(user_id: user_id).pluck(:user_id, :category, :subscribed_to).shuffle
@@ -152,7 +150,7 @@ class Personalizer
     top_subscribers = {}
 
     # should NEVER be nil but add check anyways just in case
-    if all_subscribers != nil
+    if !all_subscribers.nil?
       all_subscribers.each do |subscriber|
 
         current_sub = [subscriber[1], subscriber[2]]

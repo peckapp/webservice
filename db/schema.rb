@@ -338,6 +338,7 @@ ActiveRecord::Schema.define(version: 20140819155516) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "email_regex"
+    t.string   "time_zone"
   end
 
   add_index "institutions", ["configuration_id"], name: "index_institutions_on_configuration_id", using: :btree

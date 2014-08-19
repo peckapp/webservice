@@ -55,43 +55,43 @@ module Api
 
           # send back a status code
           response.headers['Retry-After'] = 10 # indicated a retry time of 10 seconds. could make this more dynamic
-          render status: :service_unavailable
-        end
+          render status: :service_unavailable, json: { errors: ['campus explore feed isn\'t currently cached'] }.to_json
+        else
+          # save all events that user is attending to remove it from explore
+          user_events = EventAttendee.where(user_id: auth_inst_id, category: 'simple').pluck(:event_attended)
 
-        # save all events that user is attending to remove it from explore
-        user_events = EventAttendee.where(user_id: auth_inst_id, category: 'simple').pluck(:event_attended)
+          personalizer = Personalizer.new
 
-        personalizer = Personalizer.new
+          personal_scores = personalizer.perform(scores, auth_user_id, auth_inst_id)
 
-        personal_scores = personalizer.perform(scores, auth_user_id, auth_inst_id)
-
-        explore_ids = []
-        @explore_scores = {}
-        (0...NUMBER_OF_EVENTS).each do |n|
-          next unless personal_scores[n]
-          # make sure user is not attending
-          unless user_events.include?(personal_scores[n][0])
-            explore_ids << personal_scores[n][0]
-            @explore_scores[personal_scores[n][0]] = personal_scores[n][1]
+          explore_ids = []
+          @explore_scores = {}
+          (0...NUMBER_OF_EVENTS).each do |n|
+            next unless personal_scores[n]
+            # make sure user is not attending
+            unless user_events.include?(personal_scores[n][0])
+              explore_ids << personal_scores[n][0]
+              @explore_scores[personal_scores[n][0]] = personal_scores[n][1]
+            end
           end
-        end
 
-        @explore_events = SimpleEvent.where(id: explore_ids).where.not(user_id: auth_user_id)
+          @explore_events = SimpleEvent.where(id: explore_ids).where.not(user_id: auth_user_id)
 
-        # initialize hash mapping events to arrays of likers
-        @likes_for_explore_events = {}
+          # initialize hash mapping events to arrays of likers
+          @likes_for_explore_events = {}
 
-        all_likes = Like.where(likeable_type: 'SimpleEvent', likeable_id: explore_ids).pluck(:likeable_id, :liker_id)
+          all_likes = Like.where(likeable_type: 'SimpleEvent', likeable_id: explore_ids).pluck(:likeable_id, :liker_id)
 
-        all_likes.each do |like|
+          all_likes.each do |like|
 
-          if @likes_for_explore_events[like[0]]
-            @likes_for_explore_events[like[0]] << like[1]
-          else
-            @likes_for_explore_events[like[0]] = [like[1]]
-          end
-        end
-      end
-    end
-  end
-end
+            if @likes_for_explore_events[like[0]]
+              @likes_for_explore_events[like[0]] << like[1]
+            else
+              @likes_for_explore_events[like[0]] = [like[1]]
+            end
+          end # end likes iteration
+        end # end scores blank if else
+      end # end index method
+    end # end explore controller
+  end # end v1 module
+end # end api module

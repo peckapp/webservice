@@ -14,7 +14,7 @@ ActiveAdmin.register DataResource do
   # end
 
   # Adds this into a dropdown in the top menu bar
-  menu parent: 'Scraping', priority: 3
+  menu parent: 'Scraping', priority: 4
 
   active_admin_importable do |model, hash|
     # delete things that are unique to a specific database

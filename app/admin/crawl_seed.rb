@@ -14,6 +14,6 @@ ActiveAdmin.register CrawlSeed do
   # end
 
   # Adds this into a dropdown in the top menu bar
-  menu parent: 'Scraping', priority: 5
+  menu parent: 'Scraping', priority: 6
 
 end

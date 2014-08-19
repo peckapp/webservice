@@ -61,6 +61,9 @@ GEM
     arbre (1.0.1)
       activesupport (>= 3.0.0)
     arel (5.0.1.20140414130214)
+    aws-sdk (1.51.0)
+      json (~> 1.4)
+      nokogiri (>= 1.4.4)
     bcrypt (3.1.7)
     bloomfilter-rb (2.1.1)
       redis
@@ -338,6 +341,7 @@ PLATFORMS
 DEPENDENCIES
   active_admin_importable
   activeadmin!
+  aws-sdk
   bcrypt (~> 3.1.7)
   bloomfilter-rb (~> 2.1.1)
   capistrano (~> 3.2.1)

@@ -47,6 +47,12 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :feedback do
+        collection do
+          post :submit
+        end
+      end
+      
       resources :announcements do
         member do
           patch :add_like, :unlike

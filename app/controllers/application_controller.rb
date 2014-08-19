@@ -76,13 +76,31 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  ####   AUTHENTICATION   ####
+
   def auth
     if params[:authentication].blank?
       {}
     else
-      params[:authentication]
+      params.require(:authentication).permit(:institution_id, :user_id, :api_key, :authentication_token)
     end
   end
+
+  # provides the institution_id from the authentication block
+  def auth_inst_id
+    auth[:institution_id]
+  end
+  # provides the user_id from the authentication block
+  def auth_user_id
+    auth[:user_id]
+  end
+
+  # check existence of auth params
+  def auth_params_exist
+    auth.key?(:user_id) && auth.key?(:api_key)
+  end
+
+  ####   PUSH NOTIFICATIONS   ####
 
   def notify(the_user, the_peck)
     logger.info "sent peck to #{the_peck.user_id}"
@@ -116,24 +134,6 @@ class ApplicationController < ActionController::Base
       end
     end
     Communication::PushNotificationWorker.perform_async(apple_notifications, google_notifications, google_collapse_notifications, the_user.id)
-  end
-
-  # check existence of auth params
-  def auth_params_exist
-    if auth[:user_id].blank? || auth[:api_key].blank?
-      return false
-    else
-      return true
-    end
-  end
-
-  # provides the institution_id from the authentication block
-  def auth_inst_id
-    params.require(:authentication).permit(:institution_id)
-  end
-  # provides the user_id from the authentication block
-  def auth_user_id
-    params.require(:authentication).permit(:user_id)
   end
 
   def allowed_model_instances(model, auth_params)
