@@ -112,44 +112,49 @@ namespace :sync do
     #   db && fs
     # end
 
-    # desc <<-DESC
-    #   Syncs database from the local develoment environment to the selected mutli_stage environement.
-    #   The database credentials will be read from your local config/database.yml file and a copy of the
-    #   dump will be kept within the shared sync directory. The amount of backups that will be kept is
-    #   declared in the sync_backups variable and defaults to 5.
-    # DESC
-    # task :db do
-    #   on roles(:db) do # roles: :db, only: { primary: true } do
-    #
-    #     filename = "database.#{stage}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
-    #
-    #     # on_rollback do
-    #     #   delete "#{shared_path}/sync/#{filename}"
-    #     #   system "rm -f #{filename}"
-    #     # end
-    #
-    #     # Make a remote backup before importing
-    #     username, password, database = remote_database_config(stage)
-    #     remote_file_path = "#{shared_path}/sync/#{filename}"
-    #     execute "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{remote_file_path}"
-    #
-    #     # Local DB export
-    #     run_locally do
-    #       filename = "dump.local.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
-    #       username, password, database = local_database_config('development')
-    #       execute "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{filename}"
-    #       upload filename, "#{shared_path}/sync/#{filename}"
-    #       execute "rm -f #{filename}"
-    #     end
-    #
-    #     # Remote DB import
-    #     username, password, database = database_config(stage)
-    #     execute "bzip2 -d -c #{remote_file_path} | mysql -u #{username} --password='#{password}' #{database}; rm -f #{remote_file_path}"
-    #     purge_old_backups 'database'
-    #
-    #     info "sync database from local to the stage '#{stage}' finished"
-    #   end
-    # end
+    desc <<-DESC
+      Syncs database from the local develoment environment to the selected mutli_stage environement.
+      The database credentials will be read from your local config/database.yml file and a copy of the
+      dump will be kept within the shared sync directory. The amount of backups that will be kept is
+      declared in the sync_backups variable and defaults to 5.
+    DESC
+    task :db do
+      on roles(:db) do # roles: :db, only: { primary: true } do
+
+        filename = "database.#{stage}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
+
+        # on_rollback do
+        #   delete "#{shared_path}/sync/#{filename}"
+        #   system "rm -f #{filename}"
+        # end
+
+        # Make a remote backup of ENTIRE remote database before importing
+        username, password, database = remote_database_config(stage)
+        remote_file_path = "#{shared_path}/sync/#{filename}"
+        execute "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{remote_file_path}"
+
+        # Local DB export
+        filename = "dump.local.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
+        username, password, database = local_database_config('development')
+        run_locally do
+          execute "mysqldump -u #{username} --password='#{password}' #{database} #{sync_tables} | bzip2 -9 > #{filename}"
+        end
+
+        file = File.open(filename)
+        upload! file, remote_file_path
+
+        run_locally do
+          execute "rm -f #{filename}"
+        end
+
+        # Remote DB import
+        username, password, database = remote_database_config(stage)
+        execute "bzip2 -d -c #{remote_file_path} | mysql -u #{username} --password='#{password}' #{database}"#"; rm -f #{remote_file_path}"
+        purge_old_backups 'database'
+
+        info "sync database from local to the stage '#{stage}' finished"
+      end
+    end
 
     # desc <<-DESC
     #   Sync declared directories from the local development environement to the selected multi_stage
