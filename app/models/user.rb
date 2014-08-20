@@ -128,7 +128,7 @@ class User < ActiveRecord::Base
 
   ### NOTIFICATIONS ###
   has_many :notification_views #
-  has_many :push_notifications #
+  has_many :pecks #
   #####################
 
   # for active admin

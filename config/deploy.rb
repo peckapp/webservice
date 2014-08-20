@@ -52,7 +52,7 @@ set :keep_releases, 5
 
 namespace :deploy do
 
-  desc 'Restart application'
+  desc 'Restart application by touching restart file'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
       # Your restart mechanism here, for example:
