@@ -176,7 +176,9 @@ namespace :db do
       ann.comment_count = c_count
 
       # simple event has many event views
+      ev_count = 0
       EventView.populate 5..100 do |ev|
+        ev_count += 1
         ev.user_id = 1..500
         ev.category = "announcement"
         ev.event_viewed = ann.id
@@ -186,10 +188,10 @@ namespace :db do
       end
 
       # simple event has many likes
-      Like.populate 5..ea_count do |like|
+      Like.populate 5..ev_count do |like|
         like.liker_type = "User"
         like.liker_id = 1..500
-        like.likeable_type = "SimpleEvent"
+        like.likeable_type = "Announcement"
         like.likeable_id = ann.id
         like.created_at = ann.created_at..Time.now
       end

@@ -7,49 +7,16 @@ module Api
       helper_method :auth_inst_id
       helper_method :auth_user_id
 
-      NUMBER_OF_EVENTS = 200
-
-      # # for now, just returns the 5 most recent events
-      # def index
-      #
-      #   #### Announcements ####
-      #   @announcement_positions = {}
-      #
-      #   announcement_position = 1
-      #
-      #   # announcements sorted on creation date
-      #   @announcements = specific_index(Announcement, params).sorted
-      #
-      #   @explore_announcements = []
-      #
-      #   @announcements.each do |announcement|
-      #     @announcement_positions[announcement.id] = announcement_position
-      #     @explore_announcements << announcement
-      #     announcement_position += 1
-      #     break if @explore_announcements.count == 5
-      #   end
-      #
-      #   @likes_for_explore_announcements = {}
-      #
-      #   # for each announcement
-      #   @explore_announcements.each do |announcement|
-      #     likers = []
-      #
-      #     # for each liker in the array of announcement likers, add the user's id
-      #     announcement.likers(User).each do |user|
-      #       likers << user.id
-      #     end
-      #
-      #     @likes_for_explore_announcements[announcement] = likers
-      #   end
-      # end
+      NUMBER_OF_EXPLORE_ITEMS = 200
 
       # index page shows the personalized campus-specific explore feed
 
       def index
         dc = PeckDalli.client
-        scores = dc.get("campus_simple_explore_#{auth_inst_id}")
-        if scores.blank?
+        simple_scores = dc.get("campus_simple_explore_#{auth_inst_id}")
+        announcement_scores = dc.get("campus_announcement_explore_#{auth_inst_id}")
+
+        if simple_scores.blank? || announcement_scores.blank?
           # trigger campus explore calculation, or perform manually.
           Explore::Builder.perform_async(auth_inst_id)
 
@@ -59,37 +26,96 @@ module Api
         else
           # save all events that user is attending to remove it from explore
           user_events = EventAttendee.where(user_id: auth_inst_id, category: 'simple').pluck(:event_attended)
+          user_announcements = Announcement.where(user_id: auth_inst_id).pluck(:id)
 
+          # personalize simple event and announcement scores
           personalizer = Personalizer.new
+          personal_simple_scores = personalizer.perform_events(simple_scores, auth_user_id, auth_inst_id)
+          personal_announcement_scores =  personalizer.perform_events(announcement_scores, auth_user_id, auth_inst_id)
 
-          personal_scores = personalizer.perform(scores, auth_user_id, auth_inst_id)
+          ### Scale announcement scores to z-score ###
+          ## se = simple events
+          ## ann = announcements
+          se_scores = personal_simple_scores.collect(&:last)
+          ann_scores = personal_announcement_scores.collect(&:last)
 
+          se_score_stats = DescriptiveStatistics::Stats.new(se_scores)
+          ann_score_stats = DescriptiveStatistics::Stats.new(ann_scores)
+
+          se_mean = se_score_stats.mean
+          se_std_dev = se_score_stats.standard_deviation
+          ann_mean = ann_score_stats.mean
+          ann_std_dev = ann_score_stats.standard_deviation
+
+          personal_announcement_scores.each do |ann|
+            announcement_z = (ann[1] - ann_mean) / ann_std_dev
+            ann[1] = se_mean + (announcement_z * se_std_dev)
+          end
+
+          # get top scored events/announcements
           explore_ids = []
-          @explore_scores = {}
-          (0...NUMBER_OF_EVENTS).each do |n|
-            next unless personal_scores[n]
-            # make sure user is not attending
-            unless user_events.include?(personal_scores[n][0])
-              explore_ids << personal_scores[n][0]
-              @explore_scores[personal_scores[n][0]] = personal_scores[n][1]
+          @simple_explore_scores = {}
+          @announcement_explore_scores = {}
+          ann_enumerator = personal_announcement_scores.to_enum
+          se_enumerator = personal_simple_scores.to_enum
+
+          # top scores of each explore array
+          se_score = se_enumerator.next
+          ann_score = ann_enumerator.next
+
+          while explore_ids.size < NUMBER_OF_EXPLORE_ITEMS
+            if se_score[1] > ann_score[1]
+              if ! user_events.include?(se_score[0])
+                explore_ids << ['SimpleEvent', se_score[0]]
+                @simple_explore_scores[se_score[0]] = se_score[1]
+              end
+              se_score = se_enumerator.next
+            else
+              if ! user_announcements.include?(ann_score[0])
+                explore_ids << ['Announcement', ann_score[0]]
+                @announcement_explore_scores[ann_score[0]] = ann_score[1]
+              end
+              ann_score = ann_enumerator.next
             end
           end
 
-          @explore_events = SimpleEvent.where(id: explore_ids).where.not(user_id: auth_user_id)
+          # split up announcement / simple event ids for db query
+          announcement_ids = []
+          simple_event_ids = []
+          explore_ids.each do |id|
+            if id[0] == 'SimpleEvent'
+              simple_event_ids << id[1]
+            elsif id[0] == 'Announcement'
+              announcement_ids << id[1]
+            end
+          end
+
+          # query db for the correct explore items
+          @explore_events = SimpleEvent.where(id: simple_event_ids).where.not(user_id: auth_user_id)
+          @explore_announcements = Announcement.where(id: announcement_ids).where.not(user_id: auth_user_id)
 
           # initialize hash mapping events to arrays of likers
           @likes_for_explore_events = {}
+          @likes_for_explore_announcements = {}
 
-          all_likes = Like.where(likeable_type: 'SimpleEvent', likeable_id: explore_ids).pluck(:likeable_id, :liker_id)
+          all_simple_likes = Like.where(likeable_type: 'SimpleEvent', likeable_id: simple_event_ids).pluck(:likeable_id, :liker_id)
+          all_announcement_likes = Like.where(likeable_type: 'Announcement', likeable_id: announcement_ids).pluck(:likeable_id, :liker_id)
 
-          all_likes.each do |like|
-
+          all_simple_likes.each do |like|
             if @likes_for_explore_events[like[0]]
               @likes_for_explore_events[like[0]] << like[1]
             else
               @likes_for_explore_events[like[0]] = [like[1]]
             end
           end # end likes iteration
+
+          all_announcement_likes.each do |like|
+            if @likes_for_explore_announcements[like[0]]
+              @likes_for_explore_announcements[like[0]] << like[1]
+            else
+              @likes_for_explore_announcements[like[0]] = [like[1]]
+            end
+          end # end announcement likes iteration
         end # end scores blank if else
       end # end index method
     end # end explore controller

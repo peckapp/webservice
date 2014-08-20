@@ -29,9 +29,7 @@ class Announcement < ActiveRecord::Base
   validates :title, presence: true, length: { maximum: 80 }
   validates :institution_id, presence: true, numericality: { only_integer: true }
   validates :user_id, numericality: { only_integer: true }, allow_nil: true
-  validates :department_id, numericality: { only_integer: true }, allow_nil: true
-  validates :club_id, numericality: { only_integer: true }, allow_nil: true
-  validates :circle_id, numericality: { only_integer: true }, allow_nil: true
+  validates :poster_id, numericality: { only_integer: true }, allow_nil: true
   validates :comment_count, numericality: { only_integer: true }, allow_nil: true
   validate :correct_announcement_types
 

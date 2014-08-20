@@ -2,7 +2,7 @@
 # enforces security mechanisms for everything unless specified otherwise
 class ApplicationController < ActionController::Base
   # allows all classes to inherit
-  before_action :confirm_minimal_access
+  #before_action :confirm_minimal_access
 
 
   def confirm_logged_in

@@ -1,5 +1,5 @@
-# child :@explore_events do
-collection :@explore_events
+child :@explore_events do
+# collection :@explore_events
 
   attributes :id, :title, :event_description, :institution_id, :user_id, :category, :organizer_id, :event_url, :public, :comment_count, :start_date, :end_date, :created_at, :updated_at
 
@@ -22,22 +22,26 @@ collection :@explore_events
   end
 
   node :score do |explore_event|
-    @explore_scores[explore_event.id]
+    @simple_explore_scores[explore_event.id]
   end
-# end
+end
 
-# child :@explore_announcements do
-#   attributes :id, :title, :announcement_description, :institution_id, :user_id, :department_id, :club_id, :circle_id, :public, :comment_count, :created_at, :updated_at
-#
-#   node :position do |announcement|
-#     @announcement_positions[announcement.id]
-#   end
-#
-#   node :image do |announcement|
-#     announcement.image.url
-#   end
-#
-#   node :likes do |explore_announcement|
-#     @likes_for_explore_announcements[explore_announcement]
-#   end
-# end
+child :@explore_announcements do
+  attributes :id, :title, :announcement_description, :institution_id, :user_id, :category, :poster_id, :public, :comment_count, :created_at, :updated_at
+
+  # node :position do |announcement|
+  #   @announcement_positions[announcement.id]
+  # end
+
+  node :image do |announcement|
+    announcement.image.url
+  end
+
+  node :likes do |explore_announcement|
+    @likes_for_explore_announcements[explore_announcement.id]
+  end
+
+  node :score do |explore_announcement|
+    @announcement_explore_scores[explore_announcement.id]
+  end
+end
