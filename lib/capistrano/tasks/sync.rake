@@ -59,17 +59,18 @@ namespace :sync do
         # Remote DB dump
         username, password, database = remote_database_config(stage)
         remote_file_path = "#{shared_path}/sync/#{filename}"
-        execute "touch #{file_path}; mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{remote_file_path}"
+        execute "touch #{remote_file_path}; mysqldump -u #{username} --password='#{password}' #{database} #{sync_tables} | bzip2 -9 > #{remote_file_path}"
 
         purge_old_backups 'database'
 
         # Download dump
-        download! remote_file_path, "sync/#{filename}"
+        local_file_path = "sync/#{filename}"
+        download! remote_file_path, local_file_path
 
         # Local DB import
         run_locally do
           username, password, database = local_database_config('development')
-          execute "bzip2 -d -c #{filename} | mysql -u #{username} --password='#{password}' #{database}; rm -f #{filename}"
+          execute "bzip2 -d -c #{local_file_path} | mysql -u #{username} --password='#{password}' #{database}; rm -f #{local_file_path}"
         end
 
         info "sync database from the stage '#{stage}' to local finished"
@@ -122,30 +123,31 @@ namespace :sync do
     #
     #     filename = "database.#{stage}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
     #
-    #     on_rollback do
-    #       delete "#{shared_path}/sync/#{filename}"
-    #       system "rm -f #{filename}"
-    #     end
+    #     # on_rollback do
+    #     #   delete "#{shared_path}/sync/#{filename}"
+    #     #   system "rm -f #{filename}"
+    #     # end
     #
-    #     # Make a backup before importing
-    #     username, password, database = database_config(stage)
-    #     run "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{shared_path}/sync/#{filename}" do |_channel, _stream, data|
-    #       puts data
-    #     end
+    #     # Make a remote backup before importing
+    #     username, password, database = remote_database_config(stage)
+    #     remote_file_path = "#{shared_path}/sync/#{filename}"
+    #     execute "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{remote_file_path}"
     #
     #     # Local DB export
-    #     filename = "dump.local.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
-    #     username, password, database = database_config('development')
-    #     system "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{filename}"
-    #     upload filename, "#{shared_path}/sync/#{filename}"
-    #     system "rm -f #{filename}"
+    #     run_locally do
+    #       filename = "dump.local.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
+    #       username, password, database = local_database_config('development')
+    #       execute "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{filename}"
+    #       upload filename, "#{shared_path}/sync/#{filename}"
+    #       execute "rm -f #{filename}"
+    #     end
     #
     #     # Remote DB import
     #     username, password, database = database_config(stage)
-    #     run "bzip2 -d -c #{shared_path}/sync/#{filename} | mysql -u #{username} --password='#{password}' #{database}; rm -f #{shared_path}/sync/#{filename}"
+    #     execute "bzip2 -d -c #{remote_file_path} | mysql -u #{username} --password='#{password}' #{database}; rm -f #{remote_file_path}"
     #     purge_old_backups 'database'
     #
-    #     logger.important "sync database from local to the stage '#{stage}' finished"
+    #     info "sync database from local to the stage '#{stage}' finished"
     #   end
     # end
 
@@ -184,15 +186,15 @@ namespace :sync do
   # Returns username, password, database
   #
   def remote_database_config(db)
+    info "db: #{db}"
     env_file = "#{shared_path}/config/database.yml"
 
     database_data = download! env_file
-    database = YAML.load(database_data)['database']
+    database = YAML.load(database_data)[db.to_s]
+    info "database is: #{database}"
     return if database.nil? # protects against empty yaml entries
 
-    info "database: #{database}"
-
-    [database[db]['username'], database[db]['password'], database[db]['database']]
+    [database['username'], database['password'], database['database']]
   end
 
   def local_database_config(db)
