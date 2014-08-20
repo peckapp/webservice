@@ -3,6 +3,7 @@
 module Communication
   class PushNotificationWorker
     include Sidekiq::Worker
+    sidekiq_options unique: true
 
     ### this is not an idempotent job as sidekiq specifies that it should be.
     # could separate these jobs into a single notification send, but that eliminates the possibility
