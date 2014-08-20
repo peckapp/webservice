@@ -9,7 +9,7 @@ module Api
 
       NUMBER_OF_EXPLORE_ITEMS = 200
 
-      # index page shows the personalized campus-specific explore feed
+      # index page shows the personalized user-specific explore feed
 
       def index
         dc = PeckDalli.client

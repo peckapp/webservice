@@ -10,6 +10,8 @@ module Explore
     # to be turned on once development of this functionality is complete
     # recurrence { hourly }
 
+    recurrence { hourly }
+
     def perform(institution_id)
       @cache_client = PeckDalli.client
 
