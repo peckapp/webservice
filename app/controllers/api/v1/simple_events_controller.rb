@@ -114,6 +114,7 @@ module Api
       end
       add_method_tracer :create, 'SimpleEvent/create'
 
+      #### Checks Time Conflicts. Implement in app when there is a chance ####
       def check_time_conflicts
         the_start_date = params[:start_date]
         the_end_date = params[:end_date]

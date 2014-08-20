@@ -19,8 +19,8 @@ module Api
         # create a circle member
         @circle_member = CircleMember.new(circle_member_create_params(member_create_params))
 
-        # if the circle member is not a duplicate, don't send another invite.
-        # if @circle_member.non_duplicative_save
+        # if the circle member is a duplicate, don't send another invite.
+        if @circle_member.non_duplicative_save
 
           # add the circle member to the array of circle members for the user
           user = User.find(@circle_member.user_id)
@@ -30,7 +30,7 @@ module Api
           peck = Peck.create(user_id: @circle_member.user_id, institution_id: @circle_member.institution_id, notification_type: "circle_invite", message: the_message, send_push_notification: send_push_notification, invited_by: @circle_member.invited_by, invitation: @circle_member.id, refers_to: @circle_member.circle_id)
 
           notify(user, peck)
-        # end
+        end
       end
 
       # action for when pending circle member clicks accept to the invitation.
@@ -40,6 +40,7 @@ module Api
 
         @peck = Peck.find(params[:peck_id])
 
+        # makes it so the user cannot press accept/decline on the peck again
         @peck.update_attributes(interacted: true)
       end
 
@@ -53,6 +54,7 @@ module Api
       end
 
       def destroy
+        # case where user declines on the peck
         @circle_member = CircleMember.find(params[:id])
         circle = Circle.find(@circle_member.circle_id)
         circle.circle_members.destroy(@circle_member)
@@ -63,6 +65,7 @@ module Api
       end
 
       def leave_circle
+        # case where user is in the circle but decides to leave it
         circle_member_destroy_params = params[:circle_member]
         @circle_member = CircleMember.where(:user_id => circle_member_destroy_params[:user_id]).where(:circle_id => circle_member_destroy_params[:circle_id]).first.destroy
       end

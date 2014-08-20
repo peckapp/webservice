@@ -5,6 +5,7 @@ module Api
       before_action :confirm_logged_in, :only => [:create, :update, :destroy, :add_like, :unlike]
       respond_to :json
 
+      ###### LIKES FOR ANNOUNCEMENTS NEED TO BE UPDATED TO BE LESS EXPENSIVE WITH DB CALLS ######
       def index
         @announcements = specific_index(Announcement, params)
 

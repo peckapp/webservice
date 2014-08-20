@@ -16,6 +16,7 @@ module Api
       end
 
       def create
+        # can't create a duplicate event attendee
         @event_attendee = EventAttendee.current_or_create_new(event_attendee_params)
         ea_params = params[:event_attendee]
         @peck = Peck.find_by_id(ea_params[:peck])

@@ -110,11 +110,15 @@ module Api
           user_signup_params(uparams)[:password_confirmation] = uparams[:password_confirmation]
 
           active_user = User.where(email: uparams[:email], active: true).first
+
           if active_user
+            # someone is already registered with this email and did not register with fb before this, so returns a 422
             if active_user.password_hash && active_user.password_salt
               head :unprocessable_entity
               logger.warn "tried to take the email of an already existing user"
               return
+
+              # user doesn't have a password hash or a password salt, but is active, so must've registered with fb first
             else
               @user = active_user
             end
@@ -204,14 +208,20 @@ module Api
             # Then the user has not logged in before
             @user.enable_facebook_validation = true
             if @user.update_attributes(facebook_login_params(fb_params))
+              ### Active user and is not fb registered, so trying to take someone else's email
                if active_user && send_confirmation_email
                  head :unprocessable_entity
                  logger.warn "tried to take the email of an already existing user"
+
+                 # not an active user, is not fb registered, and primary fb email
+                 # does not match the institution, so we send a confirmation email
                elsif send_confirmation_email
                  @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token
                  @user.save
                  auth[:authentication_token] = @user.authentication_token
                  Communication::SendEmail.perform_async(@user.id, fb_link)
+
+                 # primary fb email matches institution, so immediately logs in using fb credentials
                else
                  @user.update_attributes(active: true, facebook_link: fb_link, authentication_token: SecureRandom.hex(30))
                  auth[:authentication_token] = @user.authentication_token
@@ -235,6 +245,7 @@ module Api
                 @user.unique_device_identifiers << @udid
 
               else
+                # if the udid exists, update that time stamp
                 @udid.touch
 
                 @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
@@ -261,6 +272,7 @@ module Api
       def check_link
         uparams = params[:user]
         @user = User.where(facebook_link: uparams[:facebook_link]).first
+        # if there is a facebook link, then the user is fb registered, so no email needs to be sent.
         if @user && uparams[:facebook_link]
           @facebook_registered = true
         else
