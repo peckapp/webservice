@@ -149,7 +149,7 @@ namespace :sync do
 
         # Remote DB import
         username, password, database = remote_database_config(stage)
-        execute "bzip2 -d -c #{remote_file_path} | mysql -u #{username} --password='#{password}' #{database}"#"; rm -f #{remote_file_path}"
+        execute "bzip2 -d -c #{remote_file_path} | mysql -u #{username} --password='#{password}' #{database}; rm -f #{remote_file_path}"
         purge_old_backups 'database'
 
         info "sync database from local to the stage '#{stage}' finished"
@@ -196,7 +196,6 @@ namespace :sync do
 
     database_data = download! env_file
     database = YAML.load(database_data)[db.to_s]
-    info "database is: #{database}"
     return if database.nil? # protects against empty yaml entries
 
     [database['username'], database['password'], database['database']]
@@ -208,8 +207,6 @@ namespace :sync do
 
     database = YAML.load_file(env_file)[db]
     return if database.nil? # protects against empty yaml entries
-
-    # info "database config is: #{database}"
 
     [database['username'], database['password'], database['database']]
   end
