@@ -4,7 +4,7 @@ namespace :db do
     require 'populator'
     require 'faker'
 
-    [User, Subscription, Circle, CircleMember, Department, Club, AthleticTeam, SimpleEvent, Comment, EventAttendee, EventView, Like].each(&:delete_all)
+    [User, Subscription, Circle, CircleMember, Department, Club, AthleticTeam, SimpleEvent, Comment, EventAttendee, EventView, Like, Announcement].each(&:delete_all)
 
     User.populate 2000 do |user|
       user.institution_id = 1
@@ -69,6 +69,12 @@ namespace :db do
         cm.accepted = true
       end
     end
+
+    ###############################
+    ##                           ##
+    ##       SIMPLE EVENTS       ##
+    ##                           ##
+    ###############################
 
     SimpleEvent.populate 1000 do |event|
       event.title = Faker::Commerce.product_name
@@ -139,5 +145,57 @@ namespace :db do
 
     end
 
+    ###############################
+    ##                           ##
+    ##       ANNOUNCEMENTS       ##
+    ##                           ##
+    ###############################
+
+    Announcement.populate 1000 do |ann|
+      ann.title = Faker::Commerce.product_name
+      ann.announcement_description = Populator.sentences(1..3)
+      ann.institution_id = 1
+      ann.user_id = 1..500
+      ann.public = true
+      ann.category = ["club", "department"]
+      ann.poster_id = 1..50
+      ann.created_at = 1.month.ago..Time.now
+
+      # simple event has many comments
+      c_count = 0 # comment count
+      Comment.populate 2..20 do |comment|
+        c_count += 1
+        comment.category = "announcement"
+        comment.comment_from = ann.id
+        comment.user_id = 1..500
+        comment.content = Populator.sentences(1..3)
+        comment.institution_id = 1
+        comment.created_at = ann.created_at..Time.now
+      end
+
+      ann.comment_count = c_count
+
+      # simple event has many event views
+      ev_count = 0
+      EventView.populate 5..100 do |ev|
+        ev_count += 1
+        ev.user_id = 1..500
+        ev.category = "announcement"
+        ev.event_viewed = ann.id
+        ev.date_viewed = ann.created_at..Time.now
+        ev.created_at = ann.created_at..Time.now
+        ev.institution_id = 1
+      end
+
+      # simple event has many likes
+      Like.populate 5..ev_count do |like|
+        like.liker_type = "User"
+        like.liker_id = 1..500
+        like.likeable_type = "Announcement"
+        like.likeable_id = ann.id
+        like.created_at = ann.created_at..Time.now
+      end
+
+    end
   end
 end

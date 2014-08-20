@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140819133545) do
+ActiveRecord::Schema.define(version: 20140819155516) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -71,9 +71,6 @@ ActiveRecord::Schema.define(version: 20140819133545) do
     t.text     "announcement_description"
     t.integer  "institution_id",                                       null: false
     t.integer  "user_id"
-    t.integer  "department_id"
-    t.integer  "club_id"
-    t.integer  "circle_id"
     t.boolean  "public",                               default: false
     t.integer  "comment_count"
     t.boolean  "deleted",                              default: false
@@ -84,11 +81,10 @@ ActiveRecord::Schema.define(version: 20140819133545) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.integer  "default_score",                        default: 0
+    t.string   "category"
+    t.integer  "poster_id"
   end
 
-  add_index "announcements", ["circle_id"], name: "index_announcements_on_circle_id", using: :btree
-  add_index "announcements", ["club_id"], name: "index_announcements_on_club_id", using: :btree
-  add_index "announcements", ["department_id"], name: "index_announcements_on_department_id", using: :btree
   add_index "announcements", ["institution_id"], name: "index_announcements_on_institution_id", using: :btree
   add_index "announcements", ["title"], name: "index_announcements_on_title", using: :btree
   add_index "announcements", ["user_id"], name: "index_announcements_on_user_id", using: :btree
