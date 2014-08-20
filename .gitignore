@@ -54,3 +54,4 @@ config/initializers/secret_token.rb
 .rvmrc
 
 config/database.yml
+sync/

@@ -8,7 +8,7 @@ module Api
 
       def index
         dining_opps = specific_index(DiningOpportunity, params)
-        puts "dining opps: #{(dining_opps.map { |opp| opp.dining_opportunity_type }).to_a}"
+
         @dining_opportunity_event_ids = []
         @dining_opportunities = {}
         @service_start = {}
@@ -23,8 +23,6 @@ module Api
           week_days << params[:day_of_week].to_i
         end
 
-        puts "week days: #{week_days}"
-
         # return an error if no institution_id is given
         head :bad_request, location: 'missing institution_id parameter' unless params[:institution_id]
 
@@ -32,13 +30,9 @@ module Api
           # get earliest start and latest end of each dining opp
           dining_times = DiningOpportunity.earliest_start_latest_end(wd, params[:institution_id])
 
-          puts dining_times
-
           dining_opps.each do |opp|
             # uniq_ids allow for each opportunity for a date to be treated as a separate event by the apps
             uniq_id = opp.id_for_wday(wd)
-
-            puts "iteratino over opp with id: #{opp.id}"
 
             next unless dining_times[opp.id] && !dining_times[opp.id][0].blank? && !dining_times[opp.id][1].blank?
 
@@ -46,12 +40,9 @@ module Api
             @service_end[uniq_id] = dining_times[opp.id][1]
             @dining_opportunities[uniq_id] = opp
 
-            puts "creating dining opp event with id: #{uniq_id}, start: #{@service_start[uniq_id]}, end: #{@service_end[uniq_id]}, and opp: @#{opp}"
-
             @dining_opportunity_event_ids << uniq_id
           end
         end
-        puts @dining_opportunity_event_ids.count
       end
 
       def show
