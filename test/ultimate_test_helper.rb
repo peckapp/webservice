@@ -57,6 +57,25 @@ class UltimateTestHelper < ActionController::TestCase
     end
   end
 
+  test 'should_fail_getting_index' do
+    next unless is_subclass? && is_controller?
+    the_user = super_create_user
+
+    auth_params = session_create
+    auth_params.delete(:api_key)
+
+    @controller = @the_controller
+
+    # circles and circle members require logging in.
+    if is_circle_members_controller? || is_circles_controller?
+      get :index, format: :json, authentication: auth_params
+      assert_response :unauthorized, "Make sure minimal access not commented out in application controller"
+    else
+      get :index, @params_index
+      assert_response :unauthorized, "Make sure minimal access not commented out in application controller"
+    end
+  end
+
   test 'should_get_show' do
     next unless is_subclass? && is_controller?
     the_user = super_create_user

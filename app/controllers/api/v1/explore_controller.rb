@@ -63,20 +63,37 @@ module Api
           se_score = se_enumerator.next
           ann_score = ann_enumerator.next
 
+          # booleans to prevent StopIteration exception
+          some_simple_events_left = true
+          some_announcements_left = true
+
+          # check next element of each array and take the higher score
           while explore_ids.size < NUMBER_OF_EXPLORE_ITEMS
-            if se_score[1] > ann_score[1]
+            if se_score[1] > ann_score[1] && some_simple_events_left
               if ! user_events.include?(se_score[0])
                 explore_ids << ['SimpleEvent', se_score[0]]
                 @simple_explore_scores[se_score[0]] = se_score[1]
               end
-              se_score = se_enumerator.next
-            else
+
+              # make sure enumerator has a next element
+              begin
+                se_score = se_enumerator.next
+              rescue StopIteration
+                some_simple_events_left = false
+              end
+            elsif some_announcements_left
               if ! user_announcements.include?(ann_score[0])
                 explore_ids << ['Announcement', ann_score[0]]
                 @announcement_explore_scores[ann_score[0]] = ann_score[1]
               end
-              ann_score = ann_enumerator.next
+              begin
+                ann_score = ann_enumerator.next
+              rescue StopIteration
+                some_announcements_left = false
+              end
             end
+
+            break unless some_simple_events_left || some_announcements_left
           end
 
           # split up announcement / simple event ids for db query
