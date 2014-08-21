@@ -36,6 +36,8 @@ module Api
 
             next unless dining_times[opp.id] && !dining_times[opp.id][0].blank? && !dining_times[opp.id][1].blank?
 
+            # TODO: add check that a dining_opportunity actually has menu items, proabably with a method in the DiningOpportunity model
+
             @service_start[uniq_id] = dining_times[opp.id][0]
             @service_end[uniq_id] = dining_times[opp.id][1]
             @dining_opportunities[uniq_id] = opp

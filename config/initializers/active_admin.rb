@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ActiveAdmin.setup do |config|
 
   # skips the default filter in the applocation controller because ActiveAdmin uses its own authentication
@@ -200,11 +201,12 @@ ActiveAdmin.setup do |config|
   #
   # If you wanted to add a static menu item to the default menu provided:
   #
-  #   config.namespace :admin do |admin|
-  #     admin.build_menu :default do |menu|
-  #       menu.add label: "My Great Website", url: "http://www.mygreatwebsite.com", html_options: { target: :blank }
-  #     end
-  #   end
+  config.namespace :admin do |admin|
+    admin.build_menu :default do |menu|
+      menu.add label: "Sidekiq Dash", url: "/tasks", html_options: { target: :blank }, priority: 15
+      menu.add label: "Sidetiq", url: "/tasks/sidetiq", html_options: { target: :blank }, priority: 16
+    end
+  end
 
 
   # == Download Links
@@ -234,7 +236,7 @@ ActiveAdmin.setup do |config|
   # Pagination is enabled by default for all resources.
   # You can control the default per page count for all resources here.
   #
-  # config.default_per_page = 30
+  config.default_per_page = 50
 
 
   # == Filters
@@ -243,6 +245,6 @@ ActiveAdmin.setup do |config|
   # hand side with a filter for each attribute of the registered model.
   # You can enable or disable them for all resources here.
   #
-  # config.filters = true
+  config.filters = true
 
 end
