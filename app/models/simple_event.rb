@@ -14,7 +14,7 @@ class SimpleEvent < ActiveRecord::Base
   validates :user_id, numericality: { only_integer: true }, allow_nil: true
   validates :organizer_id, numericality: { only_integer: true }, allow_nil: true
   validates :comment_count, numericality: { only_integer: true }, allow_nil: true
-  validates :event_url, format: { with: URI.regexp(%w(http https)) }, allow_nil: true
+  validates :url, format: { with: URI.regexp(%w(http https)) }, allow_nil: true
   validates :start_date, presence: true
   validates :end_date, presence: true
   validates :latitude, numericality: true, allow_nil: true
@@ -101,7 +101,7 @@ class SimpleEvent < ActiveRecord::Base
 
   def correct_simple_event_types
     is_correct_type(title, String, 'string', :title)
-    is_correct_type(event_url, String, 'string', :event_url)
+    is_correct_type(url, String, 'string', :url)
     is_correct_type(start_date, Time, 'datetime', :start_date)
     is_correct_type(end_date, Time, 'datetime', :end_date)
   end

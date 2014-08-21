@@ -52,7 +52,7 @@ class NestedScraper
         # creates a model with scrape resource info set
         new_model = ts.model.new(scrape_resource_id: resource.id,
                                  institution_id: resource.institution_id,
-                                 event_url: url,
+                                 url: url,
                                  public: true)
 
         # traverse all children for a given selector

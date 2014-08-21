@@ -7,9 +7,8 @@ class UniqueDeviceIdentifier < ActiveRecord::Base
   ##                           ##
   ###############################
 
-
-  # validates :udid, :presence => true
-
+  # validates :udid, uniqueness: true
+  # validates :device_type, inclusion: { in: %w(ios android), message: "%{value} is not a valid device type from ['ios', 'android']" }
 
   ###############################
   ##                           ##
@@ -27,6 +26,10 @@ class UniqueDeviceIdentifier < ActiveRecord::Base
   ##                           ##
   ###############################
   scope :sorted, -> { order('unique_device_identifiers.updated_at ASC') }
+
+  def display_name
+    udid
+  end
 
   private
 

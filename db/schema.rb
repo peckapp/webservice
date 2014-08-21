@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140821184251) do
+ActiveRecord::Schema.define(version: 20140821195152) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -90,13 +90,13 @@ ActiveRecord::Schema.define(version: 20140821184251) do
   add_index "announcements", ["user_id"], name: "index_announcements_on_user_id", using: :btree
 
   create_table "athletic_events", force: true do |t|
-    t.integer  "institution_id",                            null: false
-    t.integer  "athletic_team_id",                          null: false
+    t.integer  "institution_id",                                null: false
+    t.integer  "athletic_team_id",                              null: false
     t.string   "opponent"
     t.float    "team_score",         limit: 24
     t.float    "opponent_score",     limit: 24
     t.string   "home_or_away"
-    t.string   "location",                                  null: false
+    t.string   "location",                                      null: false
     t.string   "result"
     t.text     "note"
     t.datetime "date_and_time"
@@ -106,6 +106,8 @@ ActiveRecord::Schema.define(version: 20140821184251) do
     t.integer  "default_score",                 default: 0
     t.string   "title"
     t.string   "description"
+    t.string   "url"
+    t.boolean  "public",                        default: false
   end
 
   add_index "athletic_events", ["athletic_team_id"], name: "index_athletic_events_on_athletic_team_id", using: :btree
@@ -470,7 +472,7 @@ ActiveRecord::Schema.define(version: 20140821184251) do
     t.text     "event_description"
     t.integer  "institution_id",                                 null: false
     t.integer  "user_id"
-    t.string   "event_url"
+    t.string   "url"
     t.boolean  "public",                         default: false
     t.integer  "comment_count"
     t.datetime "start_date",                                     null: false

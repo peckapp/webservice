@@ -20,7 +20,6 @@ module Api
       end
 
       def create
-
       end
 
       def update
@@ -34,11 +33,9 @@ module Api
 
       private
 
-        def unique_device_identifier_params
-
-          params.require(:unique_device_identifier).permit(:udid)
-
-        end
+      def unique_device_identifier_params
+        params.require(:unique_device_identifier).permit(:udid)
+      end
     end
   end
 end
