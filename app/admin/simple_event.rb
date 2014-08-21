@@ -16,4 +16,24 @@ ActiveAdmin.register SimpleEvent do
   # Adds this into a dropdown in the top menu bar
   menu parent: 'Content'
 
+  index do
+    selectable_column
+    id_column
+    column :title
+    column :event_description
+    column :location
+    column :institution
+    column :public
+    column :start_date
+    column :end_date
+    column :deleted
+    column :longitude
+    column :latitude
+    column :category
+    column :default_score
+    column :created_at
+    column :updated_at
+    actions
+  end
+
 end
