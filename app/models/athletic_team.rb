@@ -33,7 +33,7 @@ class AthleticTeam < ActiveRecord::Base
   ###############################
 
   # for active admin
-  def to_label
+  def display_name
     "#{Institution.find(institution_id)} #{sport_name}"
   end
 

@@ -42,7 +42,7 @@ class Circle < ActiveRecord::Base
   ###############################
 
   # for active admin
-  def to_label
+  def display_name
     circle_name
   end
 

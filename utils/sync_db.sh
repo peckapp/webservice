@@ -1,4 +1,5 @@
 # currently syncs the local database tables with the remote for the specified 'scrape_tables'
+# a more dangerous precursor to the capistrano sync tasks in the lib directory
 
 scrape_tables=( 'resource_types' 'scrape_resources' 'data_resources' 'scrape_resources' )
 

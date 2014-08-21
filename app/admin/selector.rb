@@ -18,6 +18,7 @@ ActiveAdmin.register Selector do
   active_admin_importable
 
   index do
+    selectable_column
     id_column
     column :info
     column :selector

@@ -54,12 +54,12 @@ module SpecificScrape
         ts = top_selectors.pop
 
         if ts.parent
-          logger.info "clicking parent selector: #{ts.parent.selector}"
+          logger.info "Clicking parent selector link: #{ts.parent.selector}"
           b.link(text: ts.parent.selector).click
           be_nice
         end
 
-        logger.info "clicking selector: #{ts.selector}"
+        # logger.info "clicking selector: #{ts.selector}"
         b.link(text: ts.selector).click
         be_nice
 
@@ -138,7 +138,8 @@ module SpecificScrape
         end
         acc # 'return' acc to continue with reduce
       end
-      logger.info "saved #{count} new out of #{rows.count} present valid menu items from opportunity with id: #{opp_id}"
+      # logger.info "saved #{count} new out of #{rows.count} present valid menu items from opportunity with id: #{opp_id}"
+      count
     end
 
     def go_back(b)

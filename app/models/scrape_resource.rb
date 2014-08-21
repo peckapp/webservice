@@ -22,7 +22,7 @@ class ScrapeResource < ActiveRecord::Base
   end
 
   # for active admin
-  def to_label
+  def display_name
     info
   end
 

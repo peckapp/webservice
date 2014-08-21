@@ -29,6 +29,7 @@ ActiveAdmin.register ScrapeResource do
   end
 
   index do
+    selectable_column
     id_column
     column :kind
     column :info

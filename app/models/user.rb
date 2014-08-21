@@ -132,7 +132,7 @@ class User < ActiveRecord::Base
   #####################
 
   # for active admin
-  def to_label
+  def display_name
     "#{first_name} #{last_name}"
   end
 

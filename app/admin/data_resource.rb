@@ -44,6 +44,7 @@ ActiveAdmin.register DataResource do
   end
 
   index do
+    selectable_column
     id_column
     column :info
     column :column_name

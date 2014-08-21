@@ -28,7 +28,7 @@ class Department < ActiveRecord::Base
   validate :correct_department_types
 
   # for active admin
-  def to_label
+  def display_name
     name
   end
 
