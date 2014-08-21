@@ -26,8 +26,8 @@ module Explore
       else
         cat_string = "simple"
         time_of = target.start_date
-        attendee_count = EventAttendee.where(category: "simple", event_attended: target.id).count
-        view_count = View.where(category: "simple", content_id: target.id).count
+        attendee_count = EventAttendee.where(category: cat_string, event_attended: target.id).count
+        view_count = View.where(category: cat_string, content_id: target.id).count
 
         target_origin = target.organizer_id
 
