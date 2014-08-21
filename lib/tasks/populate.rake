@@ -4,7 +4,7 @@ namespace :db do
     require 'populator'
     require 'faker'
 
-    [User, Subscription, Circle, CircleMember, Department, Club, AthleticTeam, SimpleEvent, Comment, EventAttendee, View, Like, Announcement].each(&:delete_all)
+    [User, Subscription, Circle, CircleMember, Department, Club, AthleticTeam, SimpleEvent, Comment, EventAttendee, View, Like, Announcement, AthleticEvent].each(&:delete_all)
 
     User.populate 2000 do |user|
       user.institution_id = 1
@@ -109,7 +109,7 @@ namespace :db do
         ea.added_by = event.user_id
         ea.category = "simple"
         ea.event_attended = event.id
-        ea.created_at = event.created_at..event.start_date
+        ea.created_at = event.created_at..Time.now
         ea.institution_id = 1
 
         # create one event view per attendee
@@ -194,6 +194,79 @@ namespace :db do
         like.likeable_type = "Announcement"
         like.likeable_id = ann.id
         like.created_at = ann.created_at..Time.now
+      end
+
+    end
+
+    ###############################
+    ##                           ##
+    ##      ATHLETIC EVENTS      ##
+    ##                           ##
+    ###############################
+
+    AthleticEvent.populate 1000 do |ae|
+      ae.institution_id = 1
+      ae.athletic_team_id = 1..50
+      ae.opponent = Faker::Company.name
+      ae.team_score = 0..10
+      ae.opponent_score = 0..10
+      ae.home_or_away = ['home', 'away']
+      ae.location = Faker::Address.street_name
+      ae.date_and_time = Time.now..1.month.from_now
+      ae.created_at = 1.month.ago..Time.now
+
+      # simple event has many comments
+      c_count = 0 # comment count
+      Comment.populate 2..20 do |comment|
+        c_count += 1
+        comment.category = 'athletic'
+        comment.comment_from = ae.id
+        comment.user_id = 1..500
+        comment.content = Populator.sentences(1..3)
+        comment.institution_id = 1
+        comment.created_at = ae.created_at..Time.now
+      end
+
+            # simple event has many attendees
+      ea_count = 0
+      EventAttendee.populate 5..50 do |ea|
+        ea_count += 1
+        ea.user_id = 1..500
+        ea.added_by = ea.user_id
+        ea.category = "athletic"
+        ea.event_attended = ae.id
+        ea.created_at = ae.created_at..Time.now
+        ea.institution_id = 1
+
+        # create one event view per attendee
+        View.populate 1 do |view|
+          view.user_id = ea.user_id
+          view.category = "athletic"
+          view.content_id = ae.id
+          view.date_viewed = ea.created_at
+          view.created_at = ea.created_at
+          view.institution_id = 1
+        end
+      end
+
+      # simple event has many event views
+      max_count = 2 * ea_count
+      View.populate 5..max_count do |ev|
+        ev.user_id = 1..500
+        ev.category = "athletic"
+        ev.content_id = ae.id
+        ev.date_viewed = ae.created_at..Time.now
+        ev.created_at = ae.created_at..Time.now
+        ev.institution_id = 1
+      end
+
+      # simple event has many likes
+      Like.populate 5..ea_count do |like|
+        like.liker_type = "User"
+        like.liker_id = 1..500
+        like.likeable_type = "AthleticEvent"
+        like.likeable_id = ae.id
+        like.created_at = ae.created_at..Time.now
       end
 
     end
