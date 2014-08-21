@@ -69,8 +69,7 @@ module Api
 
           # check next element of each array and take the higher score
           while explore_ids.size < NUMBER_OF_EXPLORE_ITEMS
-            puts explore_ids.size
-            if se_score[1] > ann_score[1] && some_simple_events_left
+            if some_simple_events_left && se_score[1] > ann_score[1] 
               unless user_events.include?(se_score[0])
                 explore_ids << ['SimpleEvent', se_score[0]]
                 @simple_explore_scores[se_score[0]] = se_score[1]
