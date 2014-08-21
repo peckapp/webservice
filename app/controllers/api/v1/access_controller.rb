@@ -30,7 +30,7 @@ module Api
           if @user.active == false
             @response = 'Please complete your registration with the confirmation we sent to your email.'
             respond_to do |format|
-              format.json { render json: @response, status: :bad_request}
+              format.json { render json: @response, status: :bad_request }
             end
           end # end if user is active
 
@@ -48,9 +48,9 @@ module Api
 
             if !@udid
               if the_token
-                @udid = UniqueDeviceIdentifier.current_or_create_new(udid: the_udid, token: the_token, device_type: the_device_type)
+                @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token, device_type: the_device_type)
               else
-                @udid = UniqueDeviceIdentifier.current_or_create_new(udid: the_udid, device_type: the_device_type)
+                @udid = UniqueDeviceIdentifier.create(udid: the_udid, device_type: the_device_type)
               end
 
               UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
