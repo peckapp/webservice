@@ -74,7 +74,7 @@ class Institution < ActiveRecord::Base
   has_many :comments
   has_many :dining_periods
   has_many :event_attendees
-  has_many :event_views
+  has_many :views
   has_many :notification_views
   # has_many :push_notifications
   has_many :subscriptions

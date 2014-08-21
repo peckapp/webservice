@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140821175941) do
+ActiveRecord::Schema.define(version: 20140821184251) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -291,19 +291,6 @@ ActiveRecord::Schema.define(version: 20140821175941) do
   add_index "event_attendees", ["event_attended"], name: "index_event_attendees_on_event_attended", using: :btree
   add_index "event_attendees", ["user_id"], name: "index_event_attendees_on_user_id", using: :btree
 
-  create_table "event_views", force: true do |t|
-    t.integer  "user_id",        null: false
-    t.string   "category",       null: false
-    t.integer  "event_viewed",   null: false
-    t.datetime "date_viewed"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "institution_id", null: false
-  end
-
-  add_index "event_views", ["event_viewed"], name: "index_event_views_on_event_viewed", using: :btree
-  add_index "event_views", ["user_id"], name: "index_event_views_on_user_id", using: :btree
-
   create_table "events_page_urls", force: true do |t|
     t.integer  "institution_id",       null: false
     t.string   "url",                  null: false
@@ -562,5 +549,18 @@ ActiveRecord::Schema.define(version: 20140821175941) do
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
   add_index "users", ["institution_id"], name: "index_users_on_institution_id", using: :btree
   add_index "users", ["last_name"], name: "index_users_on_last_name", using: :btree
+
+  create_table "views", force: true do |t|
+    t.integer  "user_id",        null: false
+    t.string   "category",       null: false
+    t.integer  "content_id",     null: false
+    t.datetime "date_viewed"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "institution_id", null: false
+  end
+
+  add_index "views", ["content_id"], name: "index_views_on_content_id", using: :btree
+  add_index "views", ["user_id"], name: "index_views_on_user_id", using: :btree
 
 end

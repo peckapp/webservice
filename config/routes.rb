@@ -37,7 +37,7 @@ Rails.application.routes.draw do
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
 
       resources(:activity_logs, :athletic_events, :athletic_teams, :clubs, :circles, :configurations,
-                :departments, :dining_opportunities, :dining_periods, :dining_places, :event_views,
+                :departments, :dining_opportunities, :dining_periods, :dining_places, :views,
                 :events_page_urls, :institutions, :locations, :menu_items, :notification_views,
                 :pecks, :unique_device_identifiers, :explore)
 
@@ -52,7 +52,7 @@ Rails.application.routes.draw do
           post :submit
         end
       end
-      
+
       resources :announcements do
         member do
           patch :add_like, :unlike

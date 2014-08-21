@@ -11,7 +11,7 @@ module Explore
         cat_string = "announcement"
         time_of = target.created_at
         attendee_count = 0
-        view_count = EventView.where(category: cat_string, event_viewed: target.id).count
+        view_count = View.where(category: cat_string, content_id: target.id).count
 
         target_origin = target.poster_id
 
@@ -19,7 +19,7 @@ module Explore
         cat_string = "athletic"
         time_of = target.start_date
         attendee_count = EventAttendee.where(category: cat_string, event_attended: target.id).count
-        view_count = EventView.where(category: cat_string, event_viewed: target.id).count
+        view_count = View.where(category: cat_string, content_id: target.id).count
 
         target_origin = target.athletic_team_id
 
@@ -27,7 +27,7 @@ module Explore
         cat_string = "simple"
         time_of = target.start_date
         attendee_count = EventAttendee.where(category: "simple", event_attended: target.id).count
-        view_count = EventView.where(category: "simple", event_viewed: target.id).count
+        view_count = View.where(category: "simple", content_id: target.id).count
 
         target_origin = target.organizer_id
 
@@ -85,7 +85,7 @@ module Explore
         time_score = weights.temporal_proximity(time_of, false)
       end
 
-      view_score = weights.event_views(view_count)
+      view_score = weights.views(view_count)
       like_score = weights.event_likes(like_count)
       comment_score = weights.comments(unique_commentors, comments)
 
