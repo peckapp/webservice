@@ -426,6 +426,18 @@ ActiveRecord::Schema.define(version: 20140821195152) do
   add_index "pecks", ["notification_type"], name: "index_pecks_on_notification_type", using: :btree
   add_index "pecks", ["user_id"], name: "index_pecks_on_user_id", using: :btree
 
+  create_table "push_notifications", force: true do |t|
+    t.integer  "user_id",           null: false
+    t.string   "notification_type", null: false
+    t.string   "response"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "institution_id",    null: false
+  end
+
+  add_index "push_notifications", ["notification_type"], name: "index_push_notifications_on_notification_type", using: :btree
+  add_index "push_notifications", ["user_id"], name: "index_push_notifications_on_user_id", using: :btree
+
   create_table "resource_types", force: true do |t|
     t.string   "info"
     t.string   "resource_name", null: false
@@ -438,6 +450,15 @@ ActiveRecord::Schema.define(version: 20140821195152) do
     t.string   "url",                null: false
     t.string   "info"
     t.integer  "scrape_resource_id", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rss_pages", force: true do |t|
+    t.integer  "institution_id",                  null: false
+    t.string   "url",                             null: false
+    t.integer  "scrape_interval", default: 1440
+    t.boolean  "paginated",       default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -526,6 +547,30 @@ ActiveRecord::Schema.define(version: 20140821195152) do
     t.string   "token"
     t.string   "device_type"
   end
+
+  create_table "unique_device_identifiers_users", id: false, force: true do |t|
+    t.integer  "unique_device_identifier_id", null: false
+    t.integer  "user_id",                     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "unique_device_identifiers_users", ["unique_device_identifier_id", "user_id"], name: "user_device_tokens_users_index", using: :btree
+
+  create_table "user_device_tokens", force: true do |t|
+    t.string   "token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_device_tokens_users", id: false, force: true do |t|
+    t.integer  "user_device_token_id", null: false
+    t.integer  "user_id",              null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_device_tokens_users", ["user_device_token_id", "user_id"], name: "user_device_tokens_users_index", using: :btree
 
   create_table "users", force: true do |t|
     t.integer  "institution_id"
