@@ -1,5 +1,4 @@
 # This class iterates over the validated ScrapeResources
-
 class ScrapeMaster
   include Sidekiq::Worker
   sidekiq_options queue: :scraping
