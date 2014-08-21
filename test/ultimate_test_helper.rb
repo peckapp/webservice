@@ -62,17 +62,22 @@ class UltimateTestHelper < ActionController::TestCase
     the_user = super_create_user
 
     auth_params = session_create
-    auth_params.delete(:api_key)
+    auth_params.delete("api_key")
+
+    the_params = @params_index
+    puts the_params
+    the_params[:authentication]["api_key"] = nil
+    puts the_params
 
     @controller = @the_controller
 
     # circles and circle members require logging in.
     if is_circle_members_controller? || is_circles_controller?
       get :index, format: :json, authentication: auth_params
-      assert_response :unauthorized, "Make sure minimal access not commented out in application controller"
+      assert_response :unauthorized, "Make sure minimal access is not commented out in application controller"
     else
-      get :index, @params_index
-      assert_response :unauthorized, "Make sure minimal access not commented out in application controller"
+      get :index, the_params
+      assert_response :unauthorized, "Make sure minimal access is not commented out in application controller"
     end
   end
 
