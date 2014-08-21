@@ -33,7 +33,7 @@ class UltimateTestHelper < ActionController::TestCase
 
     @controller = Api::V1::AccessController.new
 
-    post :create, user: { email: 'bobbyboucher@williams.edu', password: 'testingpass', udid: 'bob' }, authentication: session_create, format: :json
+    post :create, user: { email: 'bobbyboucher@williams.edu', password: 'testingpass', udid: 'bob', device_type: 'ios' }, authentication: session_create, format: :json
 
     assigns(:user)
   end
@@ -65,9 +65,9 @@ class UltimateTestHelper < ActionController::TestCase
     auth_params.delete("api_key")
 
     the_params = @params_index
-    puts the_params
+    # puts the_params
     the_params[:authentication]["api_key"] = nil
-    puts the_params
+    # puts the_params
 
     @controller = @the_controller
 

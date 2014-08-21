@@ -13,7 +13,7 @@ ActiveAdmin.register_page 'Dashboard' do
         end
         column do
           panel 'Application Status' do
-            para %(<h4>Current Statistics:</h4> #{simple_format(`iostat`)}).html_safe
+            para %(<h4>Current Statistics:</h4> #{simple_format(`which iostat && iostat`)}).html_safe
           end
         end
         column do

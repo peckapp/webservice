@@ -40,8 +40,8 @@ module Api
       def create
         if params[:udid]
           @user = User.create
-          udid = UniqueDeviceIdentifier.create(udid: params[:udid], device_type: params[:device_type])
-          UdidUser.create(unique_device_identifier_id: udid.id, user_id: @user.id)
+          udid = UniqueDeviceIdentifier.current_or_create_new(udid: params[:udid], device_type: params[:device_type])
+          UdidUser.current_or_create_new(unique_device_identifier_id: udid.id, user_id: @user.id)
           @user.unique_device_identifiers << udid
 
           logger.info "Created anonymous user with id: #{@user.id}"
