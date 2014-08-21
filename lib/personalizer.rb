@@ -93,7 +93,7 @@ class Personalizer
 
     end
 
-    new_scores = event_scores.sort_by &:last
+    new_scores = event_scores.sort_by(&:last)
     new_scores.reverse
   end
 
@@ -218,7 +218,7 @@ class Personalizer
 
     end
 
-    new_scores = announcement_scores.sort_by &:last
+    new_scores = announcement_scores.sort_by(&:last)
     new_scores.reverse
   end
 

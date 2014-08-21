@@ -41,7 +41,7 @@ class Weights
     (400 * count) / @user_count
   end
 
-  def event_views(count)
+  def views(count)
     (32 * (count**0.5)) / @user_count**0.25
   end
 

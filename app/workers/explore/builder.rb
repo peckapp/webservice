@@ -16,7 +16,7 @@ module Explore
       @cache_client = PeckDalli.client
 
       @cache_client.set("campus_simple_explore_#{institution_id}", analyze_simple_events(institution_id))
-      # analyze_athletic_events(institution_id)
+      @cache_client.set("campus_athletic_explore_#{institution_id}", analyze_athletic_events(institution_id))
       @cache_client.set("campus_announcement_explore_#{institution_id}", analyze_announcements(institution_id))
     end
 
@@ -51,12 +51,16 @@ module Explore
     end
 
     def analyze_athletic_events(institution_id)
-      athletic_event_ids = AthleticEvent.where(institution_id: institution_id).pluck(:id)
-      athletic_event_ids.each do |id|
-        # uses general event analyzer that requires a model name
-        Explore::EventAnalyzer.perform_async(id, AthleticEvent)
-      end
-    end
+      analyzer = Explore::Analyzer.new
+      analysis_group = AthleticEvent.where(created_at: Time.now..1.month.from_now)
 
+      athletic_scores = analysis_group.reduce([]) do |acc, e|
+
+        acc << [e.id, analyzer.perform(e.id, institution_id, AthleticEvent)]
+
+      end
+
+      Hash[athletic_scores]
+    end
   end
 end

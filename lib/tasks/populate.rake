@@ -4,7 +4,7 @@ namespace :db do
     require 'populator'
     require 'faker'
 
-    [User, Subscription, Circle, CircleMember, Department, Club, AthleticTeam, SimpleEvent, Comment, EventAttendee, EventView, Like, Announcement].each(&:delete_all)
+    [User, Subscription, Circle, CircleMember, Department, Club, AthleticTeam, SimpleEvent, Comment, EventAttendee, View, Like, Announcement].each(&:delete_all)
 
     User.populate 2000 do |user|
       user.institution_id = 1
@@ -113,10 +113,10 @@ namespace :db do
         ea.institution_id = 1
 
         # create one event view per attendee
-        EventView.populate 1 do |view|
+        View.populate 1 do |view|
           view.user_id = ea.user_id
           view.category = "simple"
-          view.event_viewed = event.id
+          view.content_id = event.id
           view.date_viewed = ea.created_at
           view.created_at = ea.created_at
           view.institution_id = 1
@@ -125,10 +125,10 @@ namespace :db do
 
       # simple event has many event views
       max_count = 2 * ea_count
-      EventView.populate 5..max_count do |ev|
+      View.populate 5..max_count do |ev|
         ev.user_id = 1..500
         ev.category = "simple"
-        ev.event_viewed = event.id
+        ev.content_id = event.id
         ev.date_viewed = event.created_at..Time.now
         ev.created_at = event.created_at..Time.now
         ev.institution_id = 1
@@ -177,11 +177,11 @@ namespace :db do
 
       # simple event has many event views
       ev_count = 0
-      EventView.populate 5..100 do |ev|
+      View.populate 5..100 do |ev|
         ev_count += 1
         ev.user_id = 1..500
         ev.category = "announcement"
-        ev.event_viewed = ann.id
+        ev.content_id = ann.id
         ev.date_viewed = ann.created_at..Time.now
         ev.created_at = ann.created_at..Time.now
         ev.institution_id = 1

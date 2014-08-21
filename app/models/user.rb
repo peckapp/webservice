@@ -117,8 +117,8 @@ class User < ActiveRecord::Base
   #####################################
 
   ### user viewed a specific event ###
-  # TODO: user does not currently have an event_view_id, this needs to be fixed if it is to be used
-  # belongs_to :event_view #
+  # TODO: user does not currently have an view_id, this needs to be fixed if it is to be used
+  # belongs_to :view #
   ####################################
 
   ### ACTIVITY LOG ###
