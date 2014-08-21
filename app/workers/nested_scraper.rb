@@ -14,8 +14,9 @@ class NestedScraper
   def perform(resource_id)
     resource = ScrapeResource.find(resource_id)
 
-    logger.info "Scraping nested resource #{resource.id} with info: #{resource.info}"
+    logger.info "Scraping nested resource #{resource.id} with #{resource.resource_urls.count} urls and info: #{resource.info}"
 
+    count = 0
     resource.resource_urls.each do |cur_url|
       # no dangerous security concern present here with skipped ssl verification, possible data spoofing though
       raw = RestClient::Request.execute(url: cur_url, method: :get, verify_ssl: false)
@@ -30,12 +31,15 @@ class NestedScraper
 
         # eventually should extract html and send it off for parsing in another worker while continuing with pagination
 
-        scrape_page(html, resource)
+        count += scrape_page(html, resource)
       end # end page iteration
+
     end # end resource_url iteration
+    logger.info "Nested scraper saved #{count} new valid models for resource #{resource.id} with #{resource.resource_urls.count} urls"
   end # end perform
 
   def scrape_page(html, resource)
+    count = 0
     top_selectors = Selector.where(scrape_resource_id: resource.id, top_level: true)
     top_selectors.each do |ts|
 
@@ -70,11 +74,13 @@ class NestedScraper
           end
         end # end top selector children iteration
 
-        validate_and_save(new_model)
+        # saves new model and increments count if it was inputted
+        count += 1 if validate_and_save(new_model)
 
       end # end items iteration
 
     end # end selector iteration
+    count
   end
 
   def validate_and_save(new_model)
@@ -87,7 +93,7 @@ class NestedScraper
     # validate new model using built-in model validations
     valid = new_model.valid?
     unless valid
-      logger.warn "model is initially invalid after scraping due to: #{new_model.errors.messages}"
+      logger.warn "INITIALLY invalid model after scraping: #{new_model.errors.messages}"
 
       # attempt to fix certain validation errors
       if new_model.class == SimpleEvent
@@ -97,6 +103,8 @@ class NestedScraper
         attrs[:title] = new_model.title
         attrs[:institution_id] = new_model.institution_id
         attrs[:start_date] = new_model.start_date
+      elsif new_model.class == AthleticEvent
+        logger.info 'repairing athletic event (or will be...)'
       else
         # handle other types as they come up building the scraping
       end
@@ -114,9 +122,11 @@ class NestedScraper
       else
         logger.info "Validated model of type '#{new_model.class}' already existed and was not saved"
       end
+      return result
     else
-      logger.warn "did not save invalid model with errors #{new_model.errors.messages} and model: #{new_model.inspect}\n"
+      logger.warn "failed to save model with errors #{new_model.errors.messages} and data: #{new_model.inspect}\n"
     end
+    false
   end
 
   def repair_simple_event(event)

@@ -15,11 +15,11 @@ module SpecificScrape
     def perform
       logger.info 'scraping Williams Athletic Events'
 
-      rt = ResourceType.where(model_name: 'AthleticEvent').first
-      inst = Institution.where(api_key: 'WILLIAMS').first
+      rt = ResourceType.find_by(model_name: 'AthleticEvent')
+      inst = Institution.find_by(api_key: 'WILLIAMS')
       @sr = ScrapeResource.current_or_create_new(resource_type_id: rt.id, institution_id: inst.id,
                                                  info: 'Williams Athletic Team Page', kind: 'rss', engine_type: 'nested')
-      logger.info "scrape resource: #{@sr}"
+      logger.info "Traversing Williams Athletics resource #{@sr.id} for RSS URLs with #{@sr.resource_urls.count} current"
 
       raw = RestClient.get(rooted_link(EPH_SPORTS_INDEX))
       html = Nokogiri::HTML(raw.squish)
@@ -30,19 +30,18 @@ module SpecificScrape
     def parse_url_keys(html)
       html.css('div#accordion-nav>a').each do |gender|
         category = gender.text
-        logger.info "category: #{category}"
 
         teams = next_non_blank(gender).css('li.has-submenu')
-        logger.info teams.count
+        logger.info "Traversing Williams Athletics category: #{category} with #{teams.count} teams"
+        
         teams.each do |team|
           team_name = team.css('a').first.text
-          logger.info "team_name: #{team_name}"
 
           team_links = team.css('div.secondary-links>ul>li')
+          logger.error "NO LINKS FOUND for team: #{team_name}" if team_links.blank?
           link = nil
           team_links.each do |tl|
-            # logger.info "team link: #{tl}"
-            next unless tl.to_s.match(/schedule/)
+            next unless tl.to_s.downcase.match(/schedule/)
             link = tl.css('a').first.values.first
             break
           end
@@ -54,11 +53,10 @@ module SpecificScrape
 
     # each schedule page has a table of information on all the games for that season
     def parse_schedule_page(link, team_name)
-      logger.info link
       full_link = rooted_link(link)
       full_link_rss = "#{full_link}?print=rss"
 
-      logger.info "parsing schedule with link: #{full_link}"
+      logger.info "Scraping schedule for team: #{team_name}\twith link: #{full_link}"
 
       raw = RestClient.get(full_link)
       html = Nokogiri::HTML(raw)
@@ -68,12 +66,12 @@ module SpecificScrape
         next unless url && url.match(/rss/)
 
         # checks that the scraped url is in the expected rss format based on a manual page inspection
-        logger.info "unexpected URL format: #{url} from full_link_rss: #{full_link_rss}" if url != full_link_rss
+        logger.info "unexpected URL format: #{url} from full_link_rss: #{full_link_rss}" if url.downcase != full_link_rss.downcase
 
         # creates a resource url for the current scrape resource, which can in turn be scraped by the nested scraper
         ru = ResourceUrl.new(url: url, scrape_resource_id: @sr.id)
 
-        logger.info "saved URL for #{team_name}: #{ru.inspect}" if ru.non_duplicative_save
+        logger.info "saved ResourceUrl #{ru.id} for #{team_name}" if ru.non_duplicative_save
       end
 
       # table = html.css('.schedule-content table')

@@ -48,7 +48,7 @@ ActiveAdmin.register ScrapeResource do
     f.inputs 'Details' do
       f.input :kind
       f.input :info
-      f.input :engine_type, collection: {nested: 'nested', simple: 'simple'} # one option for each type of scraping engine
+      f.input :engine_type, collection: ScrapeResource::ENGINES.map { |r| [r, r] }
       f.input :institution
       f.input :scrape_interval
       f.input :validated
@@ -67,6 +67,4 @@ ActiveAdmin.register ScrapeResource do
     end
     f.actions
   end
-
-
 end
