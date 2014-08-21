@@ -28,7 +28,7 @@ module Api
         @member_ids = {}
 
         @circles.each do |c|
-          @member_ids[c.id] = CircleMember.where("circle_id" => c.id).where("accepted" => true).pluck(:user_id)
+          @member_ids[c.id] = CircleMember.where('circle_id' => c.id).where('accepted' => true).pluck(:user_id)
         end
       end
 
@@ -50,7 +50,7 @@ module Api
           session[:api_key] = @user.api_key
         else
           head :bad_request
-          logger.warn "tried to not send a udid"
+          logger.warn 'user device tried to call create action without a udid'
         end
       end
 

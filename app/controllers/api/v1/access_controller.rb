@@ -28,11 +28,11 @@ module Api
         # if authenticated
         if @user
           if @user.active == false
-            @response = "Please complete your registration with the confirmation we sent to your email."
+            @response = 'Please complete your registration with the confirmation we sent to your email.'
             respond_to do |format|
               format.json { render json: @response, status: :bad_request}
             end
-          end
+          end # end if user is active
 
           if the_facebook_link && the_facebook_token
             @user.update_attributes(facebook_link: the_facebook_link, facebook_token: the_facebook_token)
@@ -48,15 +48,15 @@ module Api
 
             if !@udid
               if the_token
-                @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token, device_type: the_device_type)
+                @udid = UniqueDeviceIdentifier.current_or_create_new(udid: the_udid, token: the_token, device_type: the_device_type)
               else
-                @udid = UniqueDeviceIdentifier.create(udid: the_udid, device_type: the_device_type)
+                @udid = UniqueDeviceIdentifier.current_or_create_new(udid: the_udid, device_type: the_device_type)
               end
 
               UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
               @user.unique_device_identifiers << @udid
             else
-              # touch little boys
+              # touchup that timestamp
               @udid.touch
 
               @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
@@ -70,9 +70,9 @@ module Api
             logger.info "created session for user with id: #{@user.id}"
           else
             head :bad_request
-            logger.warn "tried to not send a udid"
+            logger.warn 'user device tried to call create action on access without a udid'
           end
-        else
+        else # else for: if @user
 
           # something went wrong
           head :unprocessable_entity

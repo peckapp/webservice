@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140821175941) do
+ActiveRecord::Schema.define(version: 20140821184744) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -106,6 +106,7 @@ ActiveRecord::Schema.define(version: 20140821175941) do
     t.integer  "default_score",                 default: 0
     t.string   "title"
     t.string   "description"
+    t.string   "url"
   end
 
   add_index "athletic_events", ["athletic_team_id"], name: "index_athletic_events_on_athletic_team_id", using: :btree
