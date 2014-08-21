@@ -86,34 +86,13 @@ class NestedScraper
     # will need to check for partial matches that could indicate a change in the displayed content
     # may also need to delete events that are no longer in the feed if they are determined to have been cancelled
 
-    # this structure will collect the attributes to check if the model currently exists in the databse or not
-    attrs = {}
-
     # validate new model using built-in model validations
-    valid = new_model.valid?
-    unless valid
-      logger.warn "INITIALLY invalid model after scraping: #{new_model.errors.messages}"
-
-      # attempt to fix certain validation errors
-      if new_model.class == SimpleEvent
-        logger.info 'repairing simple event'
-        repair_simple_event(new_model)
-
-        attrs[:title] = new_model.title
-        attrs[:institution_id] = new_model.institution_id
-        attrs[:start_date] = new_model.start_date
-      elsif new_model.class == AthleticEvent
-        logger.info 'repairing athletic event (or will be...)'
-      else
-        # handle other types as they come up building the scraping
-      end
-    end
+    repair_model(new_model) unless new_model.valid?
 
     # clear errors to retry validations after attempted fixes
     new_model.errors.clear
-    valid = new_model.valid?
     # perform save
-    if valid
+    if new_model.valid?
       # performs non-duplicative save
       result = new_model.non_duplicative_save
       if result
@@ -128,7 +107,24 @@ class NestedScraper
     false
   end
 
+  # hands model to its specific repair method
+  def repair_model(model)
+    logger.warn "INITIALLY invalid model after scraping: #{new_model.errors.messages}"
+
+    # attempt to fix certain validation errors
+    case new_model.class
+    when SimpleEvent
+      repair_simple_event(model)
+    when AthleticEvent
+      repair_athletic_event(model)
+    when Announcement
+    else
+      # handle other types as they come up building the scraping
+    end
+  end
+
   def repair_simple_event(event)
+    logger.info 'repairing simple event'
     err = event.errors.messages
     if err.keys.include? :end_date
       logger.warn 'setting length of event without end date arbitarily to 1 hour'
@@ -137,6 +133,10 @@ class NestedScraper
     else
       # handle other possible errors
     end
+  end
+
+  def repair_athletic_event(event)
+    logger.info 'repairing athletic event (or will be...)'
   end
 
   def next_non_blank(elem)

@@ -31,7 +31,7 @@ module Api
           # personalize simple event and announcement scores
           personalizer = Personalizer.new
           personal_simple_scores = personalizer.perform_events(simple_scores, auth_user_id, auth_inst_id)
-          personal_announcement_scores =  personalizer.perform_events(announcement_scores, auth_user_id, auth_inst_id)
+          personal_announcement_scores =  personalizer.perform_announcements(announcement_scores, auth_user_id, auth_inst_id)
 
           ### Scale announcement scores to z-score ###
           ## se = simple events
@@ -69,8 +69,9 @@ module Api
 
           # check next element of each array and take the higher score
           while explore_ids.size < NUMBER_OF_EXPLORE_ITEMS
+            puts explore_ids.size
             if se_score[1] > ann_score[1] && some_simple_events_left
-              if ! user_events.include?(se_score[0])
+              unless user_events.include?(se_score[0])
                 explore_ids << ['SimpleEvent', se_score[0]]
                 @simple_explore_scores[se_score[0]] = se_score[1]
               end
@@ -82,7 +83,7 @@ module Api
                 some_simple_events_left = false
               end
             elsif some_announcements_left
-              if ! user_announcements.include?(ann_score[0])
+              unless user_announcements.include?(ann_score[0])
                 explore_ids << ['Announcement', ann_score[0]]
                 @announcement_explore_scores[ann_score[0]] = ann_score[1]
               end
