@@ -153,7 +153,7 @@ class Personalizer
 
       ## Scoring boost for circle friends
       friend_like_score = 0
-      friend_comment = 0
+      friend_comment_score = 0
       friend_boost = 0
       top_circle_friends.each do |friend|
 
