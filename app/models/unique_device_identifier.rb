@@ -7,8 +7,8 @@ class UniqueDeviceIdentifier < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  validates :udid, uniqueness: true
-  validates :device_type, inclusion: { in: %w(ios android), message: "%{value} is not a valid device type from ['ios', 'android']" }
+  # validates :udid, uniqueness: true
+  # validates :device_type, inclusion: { in: %w(ios android), message: "%{value} is not a valid device type from ['ios', 'android']" }
 
   ###############################
   ##                           ##
