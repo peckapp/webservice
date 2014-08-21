@@ -33,7 +33,7 @@ module SpecificScrape
 
         teams = next_non_blank(gender).css('li.has-submenu')
         logger.info "Traversing Williams Athletics category: #{category} with #{teams.count} teams"
-        
+
         teams.each do |team|
           team_name = team.css('a').first.text
 

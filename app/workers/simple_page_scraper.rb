@@ -11,7 +11,7 @@ class SimplePageScraper
   def perform(resource_id)
     resource = ScrapeResource.find(resource_id)
 
-    puts "resource: #{resource.inspect}"
+    logger.info "resource: #{resource.inspect}"
 
     # no dangerous security concern present here through ssl, possible data spoofing though
     raw = RestClient::Request.execute(url: resource.url, method: :get, verify_ssl: false)
@@ -21,23 +21,23 @@ class SimplePageScraper
     # down the road, extract html and send it off for parsing while continuing with pagination crawl
 
     top_selectors = Selector.where(id: resource.id, top_level: true)
-    puts "found #{top_selectors.count} top selectors"
+    logger.info "found #{top_selectors.count} top selectors"
     top_selectors.each do |ts|
 
-      puts "top selector: #{ts.selector}"
+      logger.info "top selector: #{ts.selector}"
 
       # an array of all the top-level items for a given tag. these are nokogiri nodes
       html_items = html.css(ts.selector)
 
       html_items.each do |html_item| # iterates over Nokogiri nodeset for given css selector
 
-        puts "\ncreating new model"
+        logger.info "\ncreating new model"
         new_model = ts.model.new
 
         # traverse all children for a given selector
         ts.children.each do |cs|
 
-          puts "child selector: #{cs.selector}"
+          logger.info "child selector: #{cs.selector}"
 
           # assumes there is only one element – could iterate instead but then where would that information go?
           content_item = html_item.css(cs.selector).first
@@ -47,10 +47,10 @@ class SimplePageScraper
             if content.blank?
               content = next_non_blank(content_item).text.squish
             end
-            puts " ==> CONTENT: #{content}"
+            logger.info " ==> CONTENT: #{content}"
             new_model.assign_attributes(cs.column_name => content)
           else
-            puts ' ==> NO CONTENT FOUND'
+            logger.info ' ==> NO CONTENT FOUND'
           end
         end
 
@@ -66,7 +66,7 @@ class SimplePageScraper
 
     # check for partial matches that could indicate a change in the displayed content
 
-    puts "new_model ---> #{model.inspect}"
+    logger.info "new_model ---> #{model.inspect}"
     model.non_duplicative_save
   end
 

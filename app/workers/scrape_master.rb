@@ -15,7 +15,7 @@ class ScrapeMaster
     resources.each do |resource|
       next unless resource.validated
 
-      puts "handling validated resource: #{resource.inspect}"
+      logger.info "handling validated resource: #{resource.inspect}"
 
       case resource.engine_type
       when 'nested'

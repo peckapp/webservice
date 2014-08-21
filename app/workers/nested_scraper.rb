@@ -17,9 +17,10 @@ class NestedScraper
     logger.info "Scraping nested resource #{resource.id} with #{resource.resource_urls.count} urls and info: #{resource.info}"
 
     count = 0
-    resource.resource_urls.each do |cur_url|
+    resource.resource_urls.each do |r_url|
+      url = r_url.url
       # no dangerous security concern present here with skipped ssl verification, possible data spoofing though
-      raw = RestClient::Request.execute(url: cur_url, method: :get, verify_ssl: false)
+      raw = RestClient::Request.execute(url: url, method: :get, verify_ssl: false)
 
       html = Nokogiri::HTML(raw.squish)
 
@@ -31,20 +32,18 @@ class NestedScraper
 
         # eventually should extract html and send it off for parsing in another worker while continuing with pagination
 
-        count += scrape_page(html, resource)
+        count += scrape_page(html, url, resource)
       end # end page iteration
 
     end # end resource_url iteration
     logger.info "Nested scraper saved #{count} new valid models for resource #{resource.id} with #{resource.resource_urls.count} urls"
   end # end perform
 
-  def scrape_page(html, resource)
+  def scrape_page(html, url, resource)
     count = 0
     top_selectors = Selector.where(scrape_resource_id: resource.id, top_level: true)
+    logger.error "Scrape Resource #{resource.id} has no top_level Selectors (url: #{url})" if top_selectors.count == 0
     top_selectors.each do |ts|
-
-      logger.info "Iterating over top level selector ts: #{ts.selector}"
-
       # an array of all the top-level items for a given tag. these are nokogiri nodes
       html_items = html.css(ts.selector)
 
@@ -52,21 +51,21 @@ class NestedScraper
 
         # creates a model with scrape resource info set
         new_model = ts.model.new(scrape_resource_id: resource.id,
-                                 institution_id: resource.institution_id)
+                                 institution_id: resource.institution_id,
+                                 event_url: url,
+                                 public: true)
 
         # traverse all children for a given selector
+        logger.error "top selector #{ts.id} for resource #{resource.id} has no children" if ts.children.count == 0
         ts.children.each do |cs|
-
-          logger.info "child selector: #{cs.selector}"
+          # logger.info "child selector: #{cs.selector}"
 
           # assumes there is only one element - could iterate instead but what case is that?
           content_item = html_item.css(cs.selector).first
 
           if !content_item.blank?
             content = content_item.text.squish
-            if content.blank?
-              content = next_non_blank(content_item).text.squish
-            end
+            content = next_non_blank(content_item).text.squish if content.blank?
             # logger.info "CONTENT: #{content}"
             new_model.assign_attributes(cs.column_name => content)
           else
