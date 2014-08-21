@@ -204,18 +204,18 @@ module Api
             # Then the user has not logged in before
             @user.enable_facebook_validation = true
             if @user.update_attributes(facebook_login_params(fb_params))
-               if active_user && send_confirmation_email
-                 head :unprocessable_entity
-                 logger.warn "tried to take the email of an already existing user"
-               elsif send_confirmation_email
-                 @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token
-                 @user.save
-                 auth[:authentication_token] = @user.authentication_token
-                 Communication::SendEmail.perform_async(@user.id, fb_link)
-               else
-                 @user.update_attributes(active: true, facebook_link: fb_link, authentication_token: SecureRandom.hex(30))
-                 auth[:authentication_token] = @user.authentication_token
-               end
+              if active_user && send_confirmation_email
+                head :unprocessable_entity
+                logger.warn "tried to take the email of an already existing user"
+              elsif send_confirmation_email
+                @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token
+                @user.save
+                auth[:authentication_token] = @user.authentication_token
+                Communication::SendEmail.perform_async(@user.id, fb_link)
+              else
+                @user.update_attributes(active: true, facebook_link: fb_link, authentication_token: SecureRandom.hex(30))
+                auth[:authentication_token] = @user.authentication_token
+              end
             end
           end
 
