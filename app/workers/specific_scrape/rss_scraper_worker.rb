@@ -3,7 +3,7 @@ module SpecificScrape
   class RssScraperWorker
     include Sidekiq::Worker
     sidekiq_options queue: :scraping, retry: 5
-    
+
     include Sidetiq::Schedulable
 
     # recurrence { daily }
@@ -86,7 +86,7 @@ module SpecificScrape
             link = property.css('link').first.next.text.squish
           end
 
-          event.event_url = link if !link.blank? && link.uri?
+          event.url = link if !link.blank? && link.uri?
         end
 
       elsif name.match(/latitude|lat/)

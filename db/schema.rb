@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140821184744) do
+ActiveRecord::Schema.define(version: 20140821194536) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -484,7 +484,7 @@ ActiveRecord::Schema.define(version: 20140821184744) do
     t.text     "event_description"
     t.integer  "institution_id",                                 null: false
     t.integer  "user_id"
-    t.string   "event_url"
+    t.string   "url"
     t.boolean  "public",                         default: false
     t.integer  "comment_count"
     t.datetime "start_date",                                     null: false

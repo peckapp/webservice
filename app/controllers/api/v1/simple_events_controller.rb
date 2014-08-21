@@ -185,11 +185,11 @@ module Api
       private
 
       def simple_event_create_params(parameters)
-        parameters.permit(:title, :event_description, :institution_id, :user_id, :category, :organizer_id, :event_url, :public, :comment_count, :image, :start_date, :end_date)
+        parameters.permit(:title, :event_description, :institution_id, :user_id, :category, :organizer_id, :url, :public, :comment_count, :image, :start_date, :end_date)
       end
 
       def simple_event_params
-        params.require(:simple_event).permit(:title, :event_description, :institution_id, :user_id, :category, :organizer_id, :event_url, :public, :comment_count, :start_date, :end_date)
+        params.require(:simple_event).permit(:title, :event_description, :institution_id, :user_id, :category, :organizer_id, :url, :public, :comment_count, :start_date, :end_date)
       end
     end
   end
