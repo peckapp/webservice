@@ -33,7 +33,7 @@ class Selector < ActiveRecord::Base
     DataResource.find(data_resource_id).column_name
   end
 
-  def to_label
+  def display_name
     info
   end
 end

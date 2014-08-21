@@ -11,7 +11,7 @@ class ResourceType < ActiveRecord::Base
     Util.class_from_string(model_name)
   end
 
-  def to_label
+  def display_name
     model_name
   end
 end

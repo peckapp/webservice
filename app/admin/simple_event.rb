@@ -23,6 +23,7 @@ ActiveAdmin.register SimpleEvent do
     column :event_description
     column :location
     column :institution
+    column :user
     column :public
     column :start_date
     column :end_date

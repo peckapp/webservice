@@ -71,6 +71,9 @@ class SimpleEvent < ActiveRecord::Base
   ### scrape resource from which this was gathered ###
   belongs_to :scrape_resource #
 
+  ### The user who created the event (null if scraped) ###
+  belongs_to :user
+
   ###############################
   ##                           ##
   ##           SCOPES          ##
