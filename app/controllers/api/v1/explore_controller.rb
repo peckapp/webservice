@@ -28,7 +28,7 @@ module Api
           # personalize simple event and announcement scores
           personal_simple_scores, personal_announcement_scores, personal_athletic_scores = personalize_scores(simple_scores, announcement_scores, athletic_scores)
 
-          ### Scale announcement scores to event scores ###
+          ### Scale announcement scores to match event scores ###
           personal_announcement_scores = scale_scores_to_simple_events(personal_announcement_scores, personal_simple_scores)
 
           # get top scored events/announcements
@@ -37,60 +37,32 @@ module Api
           @announcement_explore_scores = {}
           @athletic_explore_scores = {}
 
-          # enumerators to iterate over each array AS NEEDED
-          ann_enumerator = personal_announcement_scores.to_enum
-          se_enumerator = personal_simple_scores.to_enum
-          ath_enumerator = personal_athletic_scores.to_enum
-
           # top scores of each explore array
-          se_score = se_enumerator.next
-          ann_score = ann_enumerator.next
-          ath_score = ath_enumerator.next
-
-          # booleans to prevent StopIteration exception
-          some_simple_events_left = true
-          some_announcements_left = true
-          some_athletic_events_left = true
+          se_score = personal_simple_scores.next
+          ann_score = personal_announcement_scores.next
+          ath_score = personal_athletic_scores.next
 
           # check next element of each array and take the higher score
           logger.info "\n\n --> Starting to build top explore items list <-- \n\n"
-          while explore_ids.size < NUMBER_OF_EXPLORE_ITEMS && (some_simple_events_left || some_announcements_left || some_athletic_events_left)
-            if some_simple_events_left && se_score[1] > ann_score[1] && se_score[1] > ath_score[1]
+          while explore_ids.size < NUMBER_OF_EXPLORE_ITEMS && ( !personal_simple_scores.empty? || !personal_announcement_scores.empty? || !personal_athletic_scores.empty?)
+            if !personal_simple_scores.empty? && se_score[1] > ann_score[1] && se_score[1] > ath_score[1]
+              se_score = personal_simple_scores.pop
               # check if event was organized by current user
               unless user_events.include?(se_score[0])
                 explore_ids << ['SimpleEvent', se_score[0]]
                 @simple_explore_scores[se_score[0]] = se_score[1]
               end
-
-              # make sure enumerator has a next element
-              begin
-                se_score = se_enumerator.next
-              rescue StopIteration
-                some_simple_events_left = false
-              end
-            elsif some_announcements_left && ann_score[1] > se_score[1] && ann_score[1] > ath_score[1]
+            elsif !personal_announcement_scores.empty? && ann_score[1] > se_score[1] && ann_score[1] > ath_score[1]
               # check if announcement was posted by current user
               unless user_announcements.include?(ann_score[0])
                 explore_ids << ['Announcement', ann_score[0]]
                 @announcement_explore_scores[ann_score[0]] = ann_score[1]
               end
 
-              # make sure enumerator has a next element
-              begin
-                ann_score = ann_enumerator.next
-              rescue StopIteration
-                some_announcements_left = false
-              end
-            elsif some_athletic_events_left
+            elsif !personal_athletic_scores.empty?
               explore_ids << ['AthleticEvent', ath_score[0]]
               @athletic_explore_scores[ath_score[0]] = ath_score[1]
 
-              # make sure enumerator has a next element
-              begin
-                ath_score = ath_enumerator.next
-              rescue StopIteration
-                some_athletic_events_left = false
-              end
             end
           end
 
