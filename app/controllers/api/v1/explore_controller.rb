@@ -27,6 +27,8 @@ module Api
           # personalize simple event and announcement scores
           personal_simple_scores, personal_announcement_scores, personal_athletic_scores = personalize_scores(simple_scores, announcement_scores, athletic_scores)
 
+          logger.info "\n\n --> SCORES: \n #{personal_simple_scores} \n #{personal_announcement_scores} \n #{personal_athletic_scores} <-- \n\n"
+
           ### Scale announcement scores to match event scores ###
           personal_announcement_scores = scale_scores_to_simple_events(personal_announcement_scores, personal_simple_scores)
 
