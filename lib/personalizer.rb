@@ -94,7 +94,7 @@ class Personalizer
     end
     Rails.logger.info "completed individual #{model} analysis"
     new_scores = event_scores.sort_by(&:last)
-    new_scores.reverse
+    new_scores
   end
 
   ###############################
@@ -219,7 +219,7 @@ class Personalizer
     end
     Rails.logger.info "completed individual Announcement analysis"
     new_scores = announcement_scores.sort_by(&:last)
-    new_scores.reverse
+    new_scores
   end
 
   ###############################
