@@ -6,7 +6,7 @@ namespace :db do
 
     [User, Subscription, Circle, CircleMember, Department, Club, AthleticTeam, SimpleEvent, Comment, EventAttendee, View, Like, Announcement, AthleticEvent].each(&:delete_all)
 
-    User.populate 2000 do |user|
+    User.populate 500 do |user|
       user.institution_id = 1
       user.first_name = Faker::Name.first_name
       user.last_name = Faker::Name.last_name
@@ -76,7 +76,7 @@ namespace :db do
     ##                           ##
     ###############################
 
-    SimpleEvent.populate 1000 do |event|
+    SimpleEvent.populate 20 do |event|
       event.title = Faker::Commerce.product_name
       event.event_description = Populator.sentences(1..3)
       event.institution_id = 1
@@ -151,7 +151,7 @@ namespace :db do
     ##                           ##
     ###############################
 
-    Announcement.populate 1000 do |ann|
+    Announcement.populate 15 do |ann|
       ann.title = Faker::Commerce.product_name
       ann.announcement_description = Populator.sentences(1..3)
       ann.institution_id = 1
@@ -204,7 +204,7 @@ namespace :db do
     ##                           ##
     ###############################
 
-    AthleticEvent.populate 1000 do |ae|
+    AthleticEvent.populate 30 do |ae|
       ae.institution_id = 1
       ae.athletic_team_id = 1..50
       ae.opponent = Faker::Company.name
