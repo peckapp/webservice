@@ -13,10 +13,10 @@ node :blurred_image do |athletic_event|
   athletic_event.image.url(:blurred)
 end
 
-node :likes do |athletic_event|
-  @likes_for_simple_event[athletic_event.id]
-end
-
-node :attendees do |athletic_event|
-  @attendee_ids[athletic_event.id]
-end
+# node :likes do |athletic_event|
+#   @likes_for_simple_event[athletic_event.id]
+# end
+#
+# node :attendees do |athletic_event|
+#   @attendee_ids[athletic_event.id]
+# end

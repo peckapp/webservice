@@ -19,7 +19,7 @@ module Api
 
         if simple_scores.blank? || announcement_scores.blank? || athletic_scores.blank?
           # trigger campus explore calculation, or perform manually.
-          Explore::Builder.perform_async(auth_inst_id)
+          # Explore::Builder.perform_async(auth_inst_id)
 
           # send back a status code
           response.headers['Retry-After'] = '10' # indicated a retry time of 10 seconds. could make this more dynamic
