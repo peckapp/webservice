@@ -91,7 +91,7 @@ class NestedScraper
 
               # models for foreign key content must be saved just as any other model
               validate_and_save(content_model)
-              logger.info "found content_model for selector cs.id: #{content_model.inspect}"
+              # logger.info "found content_model for selector cs.id: #{content_model.inspect}"
               new_model.assign_attributes(cs.column_name => content_model.id)
             else
               # assign the text-based content to the proper column of the model
@@ -104,7 +104,6 @@ class NestedScraper
 
         # saves new model and increments count if it was inputted
         count += 1 if validate_and_save(new_model)
-        return
       end # end items iteration
     end # end selector iteration
     count
@@ -166,12 +165,12 @@ class NestedScraper
   end
 
   def repair_athletic_event(event)
-    logger.info 'repairing athletic event'
+    # logger.info 'repairing athletic event'
     err = event.errors.messages
     err.keys.each do |key|
       case key
       when :location
-        logger.warn "Arbitrarily assigning 'Williams College' as the location for athletic event. TODO: follow links for this info"
+        # logger.warn "Arbitrarily assigning 'Williams College' as the location for athletic event. TODO: follow links for this info"
         event.location = 'Williams College'
       else
         logger.error "repair_athletic_event failed to handle key: #{key}"
@@ -180,7 +179,7 @@ class NestedScraper
   end
 
   def repair_athletic_team(team)
-    logger.info 'repairing athletic team'
+    # logger.info 'repairing athletic team'
     err = team.errors.messages
     err.keys.each do |key|
       case key
