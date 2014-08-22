@@ -29,10 +29,6 @@ end
 child :@explore_announcements do
   attributes :id, :title, :announcement_description, :institution_id, :user_id, :category, :poster_id, :public, :comment_count, :created_at, :updated_at
 
-  # node :position do |announcement|
-  #   @announcement_positions[announcement.id]
-  # end
-
   node :image do |announcement|
     announcement.image.url
   end
@@ -43,5 +39,21 @@ child :@explore_announcements do
 
   node :score do |explore_announcement|
     @announcement_explore_scores[explore_announcement.id]
+  end
+end
+
+child :@explore_athletics do
+  attributes :id, :institution_id, :athletic_team_id, :opponent, :team_score, :opponent_score, :home_or_away,:location, :result, :note, :date_and_time, :created_at, :updated_at
+
+  # node :image do |explore_ath_event|
+  #   explore_ath_event.image.url
+  # end
+
+  node :likes do |explore_ath_event|
+    @likes_for_explore_athletics[explore_ath_event.id]
+  end
+
+  node :score do |explore_ath_event|
+    @athletic_explore_scores[explore_ath_event.id]
   end
 end

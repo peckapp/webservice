@@ -1,6 +1,8 @@
 class AthleticEvent < ActiveRecord::Base
   include ModelNormalValidations
 
+  acts_as_likeable
+  
   ###############################
   ##                           ##
   ##       ASSOCIATIONS        ##
