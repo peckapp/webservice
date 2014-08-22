@@ -9,6 +9,9 @@ module SpecificScrape
     include Sidetiq::Schedulable
     recurrence { daily.hour_of_day(2) }
 
+    # leave out of new_relic apdex score
+    newrelic_ignore_apdex
+
     WILLIAMS_MENUS = 'http://nutrition.williams.edu/NetNutrition/Home.aspx'
 
     def perform
