@@ -19,10 +19,29 @@ ActiveAdmin.register AthleticEvent do
   #### THESE SHOULD NOT HAVE TO BE HERE ####
   # need to figure out root cause of errors and solve them
   remove_filter :home_or_away
-  remove_filter :start_time
-  # 
-  # index do
-  #
-  # end
+  remove_filter :date_and_time
+
+  index do
+    selectable_column
+    id_column
+    column :title
+    column :athletic_team
+    column :opponent
+    column :institution
+    column :description
+    column :location
+    column :start_time
+    column :end_time
+    column :home_or_away
+    column :result
+    column :team_score
+    column :opponent_score
+    column :note
+    column :default_score
+    column :scrape_resource
+    column :created_at
+    column :updated_at
+    actions
+  end
 
 end
