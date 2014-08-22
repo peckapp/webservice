@@ -10,7 +10,7 @@ module SpecificScrape
     # recurrence { weekly }
 
     # leave out of new_relic apdex score
-    newrelic_ignore_apdex
+    # newrelic_ignore_apdex
 
     EPH_SPORTS_ROOT = 'http://ephsports.williams.edu'
     EPH_SPORTS_INDEX = '/landing/index'

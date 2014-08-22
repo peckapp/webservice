@@ -1,3 +1,4 @@
+require 'new_relic/agent/instrumentation/controller_instrumentation'
 # a controller to display status infromation on the api
 class ApiController < ActionController::Base
   newrelic_ignore_apdex

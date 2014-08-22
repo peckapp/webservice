@@ -8,7 +8,7 @@ class ScrapeMaster
   recurrence { daily }
 
   # leave out of new_relic apdex score
-  newrelic_ignore_apdex
+  # newrelic_ignore_apdex
 
   def perform
     resources = ScrapeResource.all

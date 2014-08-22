@@ -10,7 +10,7 @@ module SpecificScrape
     recurrence { daily.hour_of_day(2) }
 
     # leave out of new_relic apdex score
-    newrelic_ignore_apdex
+    # newrelic_ignore_apdex
 
     MIDD_MENUS = 'http://menus.middlebury.edu'
     DATE_FORMAT = '%A, %B %-d, %Y'

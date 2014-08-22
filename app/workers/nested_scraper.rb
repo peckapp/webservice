@@ -8,7 +8,7 @@ class NestedScraper
   # recurrence { daily }
 
   # leave out of new_relic apdex score
-  newrelic_ignore_apdex
+  # newrelic_ignore_apdex
 
   PAGE_LIMIT = 30
 
