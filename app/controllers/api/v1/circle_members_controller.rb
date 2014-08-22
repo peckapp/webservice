@@ -19,17 +19,20 @@ module Api
         # create a circle member
         @circle_member = CircleMember.new(circle_member_create_params(member_create_params))
 
-        # if the circle member is not a duplicate, don't send another invite.
+        # if the circle member is a duplicate, don't send another invite.
         # if @circle_member.non_duplicative_save
 
-          # add the circle member to the array of circle members for the user
-          user = User.find(@circle_member.user_id)
-          user.circle_members << @circle_member
+        # add the circle member to the array of circle members for the user
+        user = User.find(@circle_member.user_id)
+        user.circle_members << @circle_member
 
-          # create the peck with these attributes
-          peck = Peck.create(user_id: @circle_member.user_id, institution_id: @circle_member.institution_id, notification_type: "circle_invite", message: the_message, send_push_notification: send_push_notification, invited_by: @circle_member.invited_by, invitation: @circle_member.id, refers_to: @circle_member.circle_id)
+        # create the peck with these attributes
+        peck = Peck.create(user_id: @circle_member.user_id, institution_id: @circle_member.institution_id,
+                           notification_type: 'circle_invite', message: the_message, send_push_notification: send_push_notification,
+                           invited_by: @circle_member.invited_by, invitation: @circle_member.id, refers_to: @circle_member.circle_id)
 
-          notify(user, peck)
+        notify(user, peck)
+
         # end
       end
 

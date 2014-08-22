@@ -19,4 +19,48 @@ class PecksControllerTest < UltimateTestHelper
   def teardown
     ActionController::Parameters.action_on_unpermitted_parameters = false
   end
+
+  test 'Peck destruction properly destroys its associated unaccepted circle member' do
+
+    the_user = super_create_user
+    auth_params = session_create
+    auth_params[:authentication_token] = the_user.authentication_token
+
+    c = CircleMember.find(1)
+    p = Peck.find(1)
+
+    # creates the proper relationship between the peck and the circle_member
+    c.update_attribute(:accepted, false)
+    p.update_attribute(:notification_type, 'circle_invite')
+    p.update_attribute(:refers_to, c.id)
+
+    @controller = Api::V1::PecksController.new
+
+    delete :destroy, format: :json, id: p.id, authentication: auth_params
+    assert_response :success
+
+    assert !CircleMember.exists?(c), 'peck should have been destroyed'
+  end
+
+  test 'Peck destruction does not destroy its associated accepted circle member' do
+
+    the_user = super_create_user
+    auth_params = session_create
+    auth_params[:authentication_token] = the_user.authentication_token
+
+    c = CircleMember.find(1)
+    p = Peck.find(1)
+
+    # creates the proper relationship between the peck and the circle_member
+    c.update_attribute(:accepted, true)
+    p.update_attribute(:notification_type, 'circle_invite')
+    p.update_attribute(:refers_to, c.id)
+
+    @controller = Api::V1::PecksController.new
+
+    delete :destroy, format: :json, id: p.id, authentication: auth_params
+    assert_response :success
+
+    assert CircleMember.exists?(c), 'peck should not have been destroyed'
+  end
 end
