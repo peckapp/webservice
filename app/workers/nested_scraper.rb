@@ -8,6 +8,11 @@ class NestedScraper
   include Sidetiq::Schedulable
 
   # recurrence { daily }
+  MALE = 'Men'
+  FEMALE = 'Women'
+  BOTH = 'Both'
+  UNMATCHED_GENDERS = { 'Softball' => FEMALE, 'Field Hockey' => FEMALE, 'Wrestling' => MALE,
+                        'Skiing' => BOTH, 'Football' => MALE, 'Baseball' => MALE }
 
   PAGE_LIMIT = 30
 
@@ -22,9 +27,8 @@ class NestedScraper
 
     count = 0
     resource.resource_urls.each do |r_url|
-      url = r_url.url
       # no dangerous security concern present here with skipped ssl verification, possible data spoofing though
-      raw = RestClient::Request.execute(url: url, method: :get, verify_ssl: false)
+      raw = RestClient::Request.execute(url: r_url.url, method: :get, verify_ssl: false)
 
       html = Nokogiri::HTML(raw.squish)
 
@@ -36,16 +40,16 @@ class NestedScraper
 
         # eventually should extract html and send it off for parsing in another worker while continuing with pagination
 
-        count += scrape_page(html, url, resource) || 0
+        count += scrape_page(html, r_url, resource) || 0
       end # end page iteration
     end # end resource_url iteration
     logger.info "Nested scraper saved #{count} new valid models for resource #{resource.id} with #{resource.resource_urls.count} urls"
   end # end perform
 
-  def scrape_page(html, url, resource)
+  def scrape_page(html, r_url, resource)
     count = 0
     top_selectors = Selector.where(scrape_resource_id: resource.id, top_level: true)
-    logger.error "Scrape Resource #{resource.id} has no top_level Selectors (url: #{url})" if top_selectors.count == 0
+    logger.error "Scrape Resource #{resource.id} has no top_level Selectors (url: #{r_url.url})" if top_selectors.count == 0
     top_selectors.each do |ts|
       # an array of all the top-level items for a given tag. these are nokogiri nodes
       html_items = html.css(ts.selector)
@@ -55,7 +59,7 @@ class NestedScraper
         # creates a model with scrape resource info set
         new_model = ts.model.new(scrape_resource_id: resource.id,
                                  institution_id: resource.institution_id,
-                                 url: url,
+                                 url: r_url.url,
                                  public: true)
 
         # traverse all children for a given selector
@@ -75,15 +79,23 @@ class NestedScraper
             content = content_item.text.squish
             content = next_non_blank(content_item).text.squish if content.blank?
             if cs.foreign_key?
-              logger.info "handling foreign key for selector: #{cs.inspect}"
+              # logger.info "handling foreign key for selector: #{cs.inspect}"
+
               # finds the current model matching the single found parameter or creates a new one
               foreign_resource = cs.foreign_data_resource
               next unless foreign_resource
+
+              # for now, completed ignore scraped value for foreign key because the only use case is athletic events which can be parsed from it.
+              # this is a shitty hack that needs to be rectified ASAP. Handling foreign keys probably requires a
+              # re-write because they go far beyond the original design and purpose of this class.
+              content = r_url.scraped_value # unless content.match(/^[A-Za-z ']*$/)
+
               content_model = foreign_resource.minimal_current_or_new(content)
               content_model[:institution_id] = resource.institution_id
+
               # models for foreign key content must be saved just as any other model
               validate_and_save(content_model)
-              logger.info "found content_model for selector: #{content_model.inspect}"
+              logger.info "found content_model for selector cs.id: #{content_model.inspect}"
               new_model.assign_attributes(cs.column_name => content_model.id)
             else
               new_model.assign_attributes(cs.column_name => content)
@@ -95,7 +107,7 @@ class NestedScraper
 
         # saves new model and increments count if it was inputted
         count += 1 if validate_and_save(new_model)
-
+        return
       end # end items iteration
     end # end selector iteration
     count
@@ -167,11 +179,11 @@ class NestedScraper
       when :sport_name
         # could use some work, may not apply to every case
         sport = team.simple_name.match(/ .*/).to_s.squish
-        logger.info "UNABLE TO MATCH SPORT: #{team.simple_name}" if sport.blank?
+        # sport = @r_url.scraped_value.match(/ .*/).to_s.squish if sport.blank?
         team.sport_name = sport
       when :gender
         gender = team.simple_name.match(/(M|m)en|(W|w)omen/).to_s
-        logger.info "UNABLE TO MATCH GENDER: #{team.simple_name}" if gender.blank?
+        # gender = @r_url.scraped_value.match(/(M|m)en|(W|w)omen/).to_s if gender.blank?
         team.gender = gender
       else
         logger.error "repair_athletic_team failed to handle key: #{key}"
