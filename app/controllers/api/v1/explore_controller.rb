@@ -20,6 +20,7 @@ module Api
         if simple_scores.blank? || announcement_scores.blank? || athletic_scores.blank?
           run_builder
         else
+          return
           # save all events that user is attending to remove it from explore
           user_events = EventAttendee.where(user_id: auth_inst_id, category: 'simple').pluck(:event_attended)
           user_announcements = Announcement.where(user_id: auth_inst_id).pluck(:id)
