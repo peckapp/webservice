@@ -23,15 +23,15 @@ class SimpleEvent < ActiveRecord::Base
 
   ### Event Photo Attachments ###
   has_attached_file(:image,
-                    :s3_credentials => {
-                      :bucket => 'peck_development',
-                      :access_key_id => ENV['AWS_ACCESS_KEY_ID'],
-                      :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
+                    s3_credentials: {
+                      bucket: 'peck_development',
+                      access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+                      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
                     },
-                    #path: ':rails_root/public/images/simple_events/:style/:basename.:extension',
-                    :url => '/images/simple_events/:style/:basename.:extension',
-                    :default_url => '/images/missing.png',
-                    :path => 'images/simple_events/:style/:basename.:extension',
+                    # path: ':rails_root/public/images/simple_events/:style/:basename.:extension',
+                    url: '/images/simple_events/:style/:basename.:extension',
+                    default_url: '/images/missing.png',
+                    path: 'images/simple_events/:style/:basename.:extension',
                     styles: {
                       detail: '100X100#',
                       blurred: {

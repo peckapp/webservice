@@ -63,7 +63,7 @@ ActiveAdmin.register AthleticEvent do
       f.input :note
       f.input :default_score
       f.input :scrape_resource
-      # need to add photo authoring
+      f.input :image, as: :file, hint: f.template.image_tag(f.object.image.url(:thumb))
     end
     f.actions         # adds the 'Submit' and 'Cancel' buttons
   end

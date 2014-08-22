@@ -26,6 +26,8 @@ class AthleticEvent < ActiveRecord::Base
   validates :institution_id, presence: true, numericality: { only_integer: true }
   validates :athletic_team_id, presence: true, numericality: { only_integer: true }
   validates :location, presence: true
+  validates :start_time, presence: true
+  validates :end_time, presence: true
   validates :team_score, numericality: true, allow_nil: true
   validates :opponent_score, numericality: true, allow_nil: true
   validates :home_or_away, format: { with: LETTERS_REGEX }, allow_nil: true
