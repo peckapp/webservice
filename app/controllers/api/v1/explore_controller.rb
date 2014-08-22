@@ -44,6 +44,7 @@ module Api
           # check next element of each array and take the higher score
           logger.info "\n\n --> Starting to build top explore items list <-- \n\n"
           while explore_ids.size < NUMBER_OF_EXPLORE_ITEMS && ( !personal_simple_scores.empty? || !personal_announcement_scores.empty? || !personal_athletic_scores.empty? )
+            logger.info "\n\n --> INSIDE WHILE LOOP!!! <-- \n\n"
             se_score ||= [0, 0]
             ann_score ||= [0, 0]
             ath_score ||= [0, 0]
