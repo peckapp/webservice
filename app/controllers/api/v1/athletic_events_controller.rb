@@ -1,15 +1,29 @@
 module Api
   module V1
-    class AthleticEventsController < ApplicationController #Api::BaseController
-
-      before_action :confirm_logged_in, :only => [:create, :update, :destroy]
+    class AthleticEventsController < ApplicationController
+      before_action :confirm_logged_in, only: [:create, :update, :destroy]
 
       respond_to :json
 
       def index
         @athletic_events = specific_index(AthleticEvent, params)
 
-        @attendee_ids = EventAttendee.where(user_id: params[:user_id], category: 'athletic').pluck(:event_attended)
+        # event attendees
+        @attendee_ids = {}
+
+        all_attendees = Hash[EventAttendee.where('category' => 'athletic').pluck(:event_attended, :user_id)]
+
+        @athletic_events.each do |event|
+
+          attendee_ids = []
+
+          all_attendees.each do |att|
+            next unless att[0] == event.id
+            attendee_ids << att[1]
+          end
+
+          @attendee_ids[event.id] = attendee_ids
+        end
 
         # athletic_subscription_ids = Subscription.where(user_id: params[:user_id], category: 'athletic').pluck(:subscribed_to)
       end
@@ -33,9 +47,10 @@ module Api
 
       private
 
-        def athletic_event_params
-          params.require(:athletic_event).permit(:institution_id, :athletic_team_id, :opponent, :team_score, :opponent_score, :home_or_away,:location, :result, :note, :start_time)
-        end
+      def athletic_event_params
+        params.require(:athletic_event).permit(:institution_id, :athletic_team_id, :opponent, :team_score,
+                                               :opponent_score, :home_or_away, :location, :result, :note, :start_time)
+      end
     end
   end
 end
