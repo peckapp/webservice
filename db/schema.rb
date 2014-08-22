@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140822011510) do
+ActiveRecord::Schema.define(version: 20140822045318) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -108,6 +108,10 @@ ActiveRecord::Schema.define(version: 20140822011510) do
     t.string   "description"
     t.string   "url"
     t.boolean  "public",                        default: false
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
   end
 
   add_index "athletic_events", ["athletic_team_id"], name: "index_athletic_events_on_athletic_team_id", using: :btree
