@@ -22,7 +22,7 @@ module Api
           Explore::Builder.perform_async(auth_inst_id)
 
           # send back a status code
-          response.headers['Retry-After'] = 10 # indicated a retry time of 10 seconds. could make this more dynamic
+          response.headers['Retry-After'] = '10' # indicated a retry time of 10 seconds. could make this more dynamic
           render status: :service_unavailable, json: { errors: ['campus explore feed isn\'t currently cached'] }.to_json
         else
           # save all events that user is attending to remove it from explore
