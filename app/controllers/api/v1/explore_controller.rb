@@ -27,7 +27,7 @@ module Api
           # personalize simple event and announcement scores
           personal_simple_scores, personal_announcement_scores, personal_athletic_scores = personalize_scores(simple_scores, announcement_scores, athletic_scores)
 
-          logger.info "\n\n --> SCORES: \n #{personal_simple_scores} \n #{personal_announcement_scores} \n #{personal_athletic_scores} <-- \n\n"
+          # logger.info "\n\n --> SCORES: \n #{personal_simple_scores} \n #{personal_announcement_scores} \n #{personal_athletic_scores} <-- \n\n"
 
           ### Scale announcement scores to match event scores ###
           personal_announcement_scores = scale_scores_to_simple_events(personal_announcement_scores, personal_simple_scores)
@@ -44,7 +44,7 @@ module Api
           ath_score = personal_athletic_scores.pop
 
           # check next element of each array and take the higher score
-          logger.info "\n\n --> Starting to build top explore items list <-- \n\n"
+          # logger.info "\n\n --> Starting to build top explore items list <-- \n\n"
           ### run until the arrays are all empty ###
           until personal_simple_scores.empty? && personal_announcement_scores.empty? && personal_athletic_scores.empty?
 
@@ -89,19 +89,19 @@ module Api
 
               # get next highest score in array
               ath_score = personal_athletic_scores.pop
-              logger.info "\n\n --> ATH_SCORES: #{ath_score} <-- \n\n"
+              # logger.info "\n\n --> ATH_SCORES: #{ath_score} <-- \n\n"
             end
             break if explore_ids.size >= NUMBER_OF_EXPLORE_ITEMS
           end
 
-          logger.info "\n\n --> Finished building top explore items list <-- \n\n"
+          # logger.info "\n\n --> Finished building top explore items list <-- \n\n"
 
           # split up announcement / simple event ids for db query
           announcement_ids = []
           simple_event_ids = []
           athletic_event_ids = []
 
-          logger.info "\n\n --> Starting sorting explore items by type <-- \n\n"
+          # logger.info "\n\n --> Starting sorting explore items by type <-- \n\n"
           explore_ids.each do |id|
             if id[0] == 'SimpleEvent'
               simple_event_ids << id[1]
@@ -111,7 +111,7 @@ module Api
               athletic_event_ids << id[1]
             end
           end
-          logger.info "\n\n --> Finished sorting explore items by type <-- \n\n"
+          # logger.info "\n\n --> Finished sorting explore items by type <-- \n\n"
 
           # query db for the correct explore items
           @explore_events = SimpleEvent.where(id: simple_event_ids).where.not(user_id: auth_user_id)
