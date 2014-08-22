@@ -17,7 +17,8 @@ class Personalizer
   ##                           ##
   ###############################
 
-  def perform_events(event_scores = [], user_id, inst_id)
+  def perform_events(model, event_scores = [], user_id, inst_id)
+    Rails.logger.info "--> Starting #{model} personalization <--"
     top_circle_friends = top_friends(user_id)
     top_similar_subscribers = similar_subscribers(user_id, inst_id)
 
@@ -45,10 +46,9 @@ class Personalizer
     end
 
     # get all values for the manual booster scores now to avoid making too many db calls later
-    boosters = Hash[SimpleEvent.where(id: event_ids).pluck(:id, :default_score)]
-
+    boosters = Hash[model.where(id: event_ids).pluck(:id, :default_score)]
+    Rails.logger.info "starting individual #{model} analysis"
     event_scores.each do |event|
-
       attendees = attendees_for_event[event[0]]
 
       ## Scoring boost for circle friends
@@ -92,7 +92,7 @@ class Personalizer
       end
 
     end
-
+    Rails.logger.info "completed individual #{model} analysis"
     new_scores = event_scores.sort_by(&:last)
     new_scores.reverse
   end
@@ -104,6 +104,7 @@ class Personalizer
   ###############################
 
   def perform_announcements(announcement_scores = [], user_id, inst_id)
+    Rails.logger.info '--> Starting Announcement personalization <--'
     # save top circle friends and top subs friends
     top_circle_friends = top_friends(user_id)
     top_similar_subscribers = similar_subscribers(user_id, inst_id)
@@ -122,7 +123,7 @@ class Personalizer
     announcement_scores.each { |ann| announcement_ids << ann[0] }
 
     # associate each announcement to its likers
-    all_likers = Like.where(likeable_type: "Announcement").pluck(:likeable_id, :liker_id)
+    all_likers = Like.where(likeable_type: 'Announcement').pluck(:likeable_id, :liker_id)
     all_likers.each do |like|
       if likers_for_announcement[like[0]]
         likers_for_announcement[like[0]] << like[1]
@@ -132,9 +133,9 @@ class Personalizer
     end
 
     # associate each announcement to its commentors
-    all_commenters = Comment.where(category: "announcement").pluck(:comment_from, :user_id)
+    all_commenters = Comment.where(category: 'announcement').pluck(:comment_from, :user_id)
     all_commenters.each do |comment|
-      if commenters_for_announcement[comment[0]] && ! commenters_for_announcement[comment[0]].include?(comment[1])
+      if commenters_for_announcement[comment[0]] && !commenters_for_announcement[comment[0]].include?(comment[1])
         commenters_for_announcement[comment[0]] << comment[1]
       else
         commenters_for_announcement[comment[0]] = [comment[1]]
@@ -143,7 +144,7 @@ class Personalizer
 
     # get all default scores for announcements in range
     boosters = Hash[Announcement.where(id: announcement_ids).pluck(:id, :default_score)]
-
+    Rails.logger.info 'started individual Announcement analysis'
     # personalize score for each announcement
     announcement_scores.each do |ann|
 
@@ -156,7 +157,6 @@ class Personalizer
       friend_comment_score = 0
       friend_boost = 0
       top_circle_friends.each do |friend|
-
         # likers scoring boost
         if !likers.nil? && likers.include?(friend[0])
           if weights.circle_friend_boost(friend[1], circle_count) > MAX_FRIEND_SCORE
@@ -217,7 +217,7 @@ class Personalizer
       end
 
     end
-
+    Rails.logger.info "completed individual Announcement analysis"
     new_scores = announcement_scores.sort_by(&:last)
     new_scores.reverse
   end

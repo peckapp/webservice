@@ -18,12 +18,7 @@ module Api
         athletic_scores = dc.get("campus_athletic_explore_#{auth_inst_id}")
 
         if true || simple_scores.blank? || announcement_scores.blank? || athletic_scores.blank?
-          # trigger campus explore calculation, or perform manually.
-          Explore::Builder.perform_async(auth_inst_id)
-
-          # send back a status code
-          response.headers['Retry-After'] = '10' # indicated a retry time of 10 seconds. could make this more dynamic
-          render status: :service_unavailable, json: { errors: ['campus explore feed isn\'t currently cached'] }.to_json
+          run_builder
         else
           return
           # save all events that user is attending to remove it from explore
@@ -31,30 +26,10 @@ module Api
           user_announcements = Announcement.where(user_id: auth_inst_id).pluck(:id)
 
           # personalize simple event and announcement scores
-          personalizer = Personalizer.new
-          personal_simple_scores = personalizer.perform_events(simple_scores, auth_user_id, auth_inst_id)
-          personal_announcement_scores =  personalizer.perform_announcements(announcement_scores, auth_user_id, auth_inst_id)
-          personal_athletic_scores = personalizer.perform_events(athletic_scores, auth_user_id, auth_inst_id)
+          personal_simple_scores, personal_announcement_scores, personal_athletic_scores = personalize_scores(simple_scores, announcement_scores, athletic_scores)
 
-          ### Scale announcement scores to z-score ###
-          ## se = simple events
-          ## ann = announcements
-          se_scores = personal_simple_scores.collect(&:last)
-          ann_scores = personal_announcement_scores.collect(&:last)
-
-          se_score_stats = DescriptiveStatistics::Stats.new(se_scores)
-          ann_score_stats = DescriptiveStatistics::Stats.new(ann_scores)
-
-          se_mean = se_score_stats.mean
-          se_std_dev = se_score_stats.standard_deviation
-          ann_mean = ann_score_stats.mean
-          ann_std_dev = ann_score_stats.standard_deviation
-
-          # scaling every announcement score to the simple event scores
-          personal_announcement_scores.each do |ann|
-            announcement_z = (ann[1] - ann_mean) / ann_std_dev
-            ann[1] = se_mean + (announcement_z * se_std_dev)
-          end
+          ### Scale announcement scores to event scores ###
+          personal_announcement_scores = scale_scores_to_simple_events(personal_announcement_scores, personal_simple_scores)
 
           # get top scored events/announcements
           explore_ids = []
@@ -78,7 +53,7 @@ module Api
           some_athletic_events_left = true
 
           # check next element of each array and take the higher score
-          while explore_ids.size < NUMBER_OF_EXPLORE_ITEMS
+          while explore_ids.size < NUMBER_OF_EXPLORE_ITEMS && (some_simple_events_left || some_announcements_left || some_athletic_events_left)
             if some_simple_events_left && se_score[1] > ann_score[1] && se_score[1] > ath_score[1]
               # check if event was organized by current user
               unless user_events.include?(se_score[0])
@@ -116,8 +91,6 @@ module Api
                 some_athletic_events_left = false
               end
             end
-
-            break unless some_simple_events_left || some_announcements_left || some_athletic_events_left
           end
 
           # split up announcement / simple event ids for db query
@@ -139,40 +112,71 @@ module Api
           @explore_announcements = Announcement.where(id: announcement_ids).where.not(user_id: auth_user_id)
           @explore_athletics = AthleticEvent.where(id: athletic_event_ids)
 
-          # initialize hash mapping events to arrays of likers
-          @likes_for_explore_events = {}
-          @likes_for_explore_announcements = {}
-          @likes_for_explore_athletics = {}
-
-          all_simple_likes = Like.where(likeable_type: 'SimpleEvent', likeable_id: simple_event_ids).pluck(:likeable_id, :liker_id)
-          all_announcement_likes = Like.where(likeable_type: 'Announcement', likeable_id: announcement_ids).pluck(:likeable_id, :liker_id)
-          all_athletic_likes = Like.where(likeable_type: 'AthleticEvent', likeable_id: athletic_event_ids).pluck(:likeable_id, :liker_id)
-
-          all_simple_likes.each do |like|
-            if @likes_for_explore_events[like[0]]
-              @likes_for_explore_events[like[0]] << like[1]
-            else
-              @likes_for_explore_events[like[0]] = [like[1]]
-            end
-          end # end likes iteration
-
-          all_announcement_likes.each do |like|
-            if @likes_for_explore_announcements[like[0]]
-              @likes_for_explore_announcements[like[0]] << like[1]
-            else
-              @likes_for_explore_announcements[like[0]] = [like[1]]
-            end
-          end # end announcement likes iteration
-
-          all_athletic_likes.each do |like|
-            if @likes_for_explore_athletics[like[0]]
-              @likes_for_explore_athletics[like[0]] << like[1]
-            else
-              @likes_for_explore_athletics[like[0]] = [like[1]]
-            end
-          end # end announcement likes iteration
+          # split up likes
+          @likes_for_explore_events = get_likes_for_type('SimpleEvent', simple_event_ids)
+          @likes_for_explore_announcements = get_likes_for_type('Announcement', announcement_ids)
+          @likes_for_explore_athletics = get_likes_for_type('AthleticEvent', athletic_event_ids)
         end # end scores blank if else
       end # end index method
+
+      private
+
+      def run_builder
+        # trigger campus explore calculation, or perform manually.
+        Explore::Builder.perform_async(auth_inst_id)
+
+        # send back a status code
+        response.headers['Retry-After'] = 10 # indicated a retry time of 10 seconds. could make this more dynamic
+        render status: :service_unavailable, json: { errors: ['campus explore feed isn\'t currently cached'] }.to_json
+      end # end run_builder method
+
+      def personalize_scores(simple_scores, announcement_scores, athletic_scores)
+        personalizer = Personalizer.new
+        personal_simple_scores = personalizer.perform_events(SimpleEvent, simple_scores, auth_user_id, auth_inst_id)
+        personal_announcement_scores =  personalizer.perform_announcements(announcement_scores, auth_user_id, auth_inst_id)
+        personal_athletic_scores = personalizer.perform_events(AthleticEvent, athletic_scores, auth_user_id, auth_inst_id)
+
+        [personal_simple_scores, personal_announcement_scores, personal_athletic_scores]
+      end # end personalize_scores
+
+      def scale_scores_to_simple_events(scale_these, to_these)
+        ## se = simple events
+        ## ann = announcements
+        ann_scores = scale_these.collect(&:last)
+        se_scores = to_these.collect(&:last)
+
+        ann_score_stats = DescriptiveStatistics::Stats.new(ann_scores)
+        se_score_stats = DescriptiveStatistics::Stats.new(se_scores)
+
+        ann_mean = ann_score_stats.mean
+        ann_std_dev = ann_score_stats.standard_deviation
+        se_mean = se_score_stats.mean
+        se_std_dev = se_score_stats.standard_deviation
+
+        # scaling every announcement score to the simple event scores
+        scale_these.each do |ann|
+          announcement_z = (ann[1] - ann_mean) / ann_std_dev
+          ann[1] = se_mean + (announcement_z * se_std_dev)
+        end
+
+        scale_these
+      end # end scale_scores_to_simple_events
+
+      def get_likes_for_type(type, ids)
+        likes_for_this_type = {}
+
+        all_likes = Like.where(likeable_type: type, likeable_id: ids).pluck(:likeable_id, :liker_id)
+
+        all_likes.each do |like|
+          if likes_for_this_type[like[0]]
+            likes_for_this_type[like[0]] << like[1]
+          else
+            likes_for_this_type[like[0]] = [like[1]]
+          end
+        end
+
+        likes_for_this_type
+      end # end get_likes method
     end # end explore controller
   end # end v1 module
 end # end api module
