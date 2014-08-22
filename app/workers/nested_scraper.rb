@@ -86,8 +86,8 @@ class NestedScraper
               next unless foreign_resource
 
               # for now, completed ignore scraped value for foreign key because the only use case is athletic events which can be parsed from it.
-              # this is a shitty hack that needs to be rectified ASAP. Handling foreign keys probably requires a
-              # re-write because they go far beyond the original design and purpose of this class.
+              # this is a shitty hack that needs to be rectified before moving on. Handling foreign keys probably
+              # requires a re-write because they go far beyond the original design and purpose of this class.
               content = r_url.scraped_value # unless content.match(/^[A-Za-z ']*$/)
 
               content_model = foreign_resource.minimal_current_or_new(content)
@@ -98,6 +98,7 @@ class NestedScraper
               logger.info "found content_model for selector cs.id: #{content_model.inspect}"
               new_model.assign_attributes(cs.column_name => content_model.id)
             else
+              # assign the text-based content to the proper column of the model
               new_model.assign_attributes(cs.column_name => content)
             end
           else
@@ -133,6 +134,7 @@ class NestedScraper
       end
       return result
     else
+      # logger.info new_model.date_and_time.class
       logger.warn "failed to save model with errors #{new_model.errors.messages} and data: #{new_model.inspect}\n"
     end
     false
@@ -168,7 +170,17 @@ class NestedScraper
   end
 
   def repair_athletic_event(event)
-    logger.info 'repairing athletic event (or will be...)'
+    logger.info 'repairing athletic event'
+    err = event.errors.messages
+    err.keys.each do |key|
+      case key
+      when :location
+        logger.warn "Arbitrarily assigning 'Williams College' as the location for athletic event. TODO: follow links for this info"
+        event.location = 'Williams College'
+      else
+        logger.error "repair_athletic_event failed to handle key: #{key}"
+      end
+    end
   end
 
   def repair_athletic_team(team)
