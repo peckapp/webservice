@@ -9,7 +9,9 @@ module Api
       def index
         @athletic_events = specific_index(AthleticEvent, params)
 
-        athletic_subscription_ids = Subscription.where(user_id: params[:user_id], category: 'athletic').pluck(:subscribed_to)
+        @attendee_ids = EventAttendee.where(user_id: params[:user_id], category: 'athletic').pluck(:event_attended)
+
+        # athletic_subscription_ids = Subscription.where(user_id: params[:user_id], category: 'athletic').pluck(:subscribed_to)
       end
 
       def show
