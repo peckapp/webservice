@@ -40,7 +40,7 @@ module Api
 
         all_attendees.each do |att|
           next unless att[0] == @athletic_event.id
-          attendee_ids << att[1]
+          @attendee_ids << att[1]
         end
       end
 
