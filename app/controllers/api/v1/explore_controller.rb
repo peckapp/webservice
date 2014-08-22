@@ -17,7 +17,7 @@ module Api
         announcement_scores = dc.get("campus_announcement_explore_#{auth_inst_id}")
         athletic_scores = dc.get("campus_athletic_explore_#{auth_inst_id}")
 
-        if true || simple_scores.blank? || announcement_scores.blank? || athletic_scores.blank?
+        if simple_scores.blank? || announcement_scores.blank? || athletic_scores.blank?
           run_builder
         else
           return
@@ -53,6 +53,7 @@ module Api
           some_athletic_events_left = true
 
           # check next element of each array and take the higher score
+          Rails.logger.info "\n\n --> Starting to build top explore items list <-- \n\n"
           while explore_ids.size < NUMBER_OF_EXPLORE_ITEMS && (some_simple_events_left || some_announcements_left || some_athletic_events_left)
             if some_simple_events_left && se_score[1] > ann_score[1] && se_score[1] > ath_score[1]
               # check if event was organized by current user
@@ -93,10 +94,14 @@ module Api
             end
           end
 
+          Rails.logger.info "\n\n --> Finished building top explore items list <-- \n\n"
+
           # split up announcement / simple event ids for db query
           announcement_ids = []
           simple_event_ids = []
           athletic_event_ids = []
+
+          Rails.logger.info "\n\n --> Starting sorting explore items by type <-- \n\n"
           explore_ids.each do |id|
             if id[0] == 'SimpleEvent'
               simple_event_ids << id[1]
@@ -106,6 +111,7 @@ module Api
               athletic_event_ids << id[1]
             end
           end
+          Rails.logger.info "\n\n --> Finished sorting explore items by type <-- \n\n"
 
           # query db for the correct explore items
           @explore_events = SimpleEvent.where(id: simple_event_ids).where.not(user_id: auth_user_id)
