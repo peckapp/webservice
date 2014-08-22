@@ -49,6 +49,8 @@ gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'country-select'
 # allows for data to be uploaded, useful for transferring scraping settings
 gem 'active_admin_importable'
+# allows for a better date time picker
+gem 'just-datetime-picker'
 
 ### FILE MANAGEMENT
 # Paperclip for handling larger files, mostly user-uploaded images: https://github.com/thoughtbot/paperclip

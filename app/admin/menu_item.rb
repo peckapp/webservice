@@ -32,5 +32,4 @@ ActiveAdmin.register MenuItem do
     column :updated_at
     actions
   end
-
 end
