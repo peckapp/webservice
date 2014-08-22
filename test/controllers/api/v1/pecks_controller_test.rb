@@ -8,10 +8,10 @@ class PecksControllerTest < UltimateTestHelper
     @params_index = { format: :json, authentication: session_create }
     @params_show = { id: 12, institution_id: 3, notification_type: 'bob', format: :json, authentication: session_create }
     @params_create = { invited_by: 1, invitation: 2, user_id: 1, institution_id: 3, notification_type: 'circle_comment', message: 'hello' }
-    @params_update = { user_id: 5 }
+    # @params_update = { user_id: 5 }
     @model_type = :peck
     @model = Peck
-    @class == PecksControllerTest
+    @class = PecksControllerTest
     @id = 11
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end

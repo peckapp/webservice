@@ -137,7 +137,7 @@ class UltimateTestHelper < ActionController::TestCase
   end
 
   test 'should_patch_update' do
-    next unless is_subclass? && is_controller? && is_pecks_controller?
+    next unless is_subclass? && is_controller? && !is_pecks_controller?
     the_user = super_create_user
 
     auth_params = session_create
