@@ -2,7 +2,7 @@ ActiveAdmin.register Selector do
   # See permitted parameters documentation:
   # https://github.com/gregbell/active_admin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
-  permit_params :info, :selector, :top_level, :parent_id, :data_resource_id, :scrape_resource_id
+  permit_params :info, :selector, :top_level, :parent_id, :data_resource_id, :foreign_data_resource_id, :scrape_resource_id
   #
   # or
   #
@@ -25,6 +25,8 @@ ActiveAdmin.register Selector do
     column :top_level
     column :parent
     column :data_resource
+    column :foreign_key?
+    column :foreign_data_resource
     column :scrape_resource
     column :created_at
     column :updated_at
@@ -39,10 +41,11 @@ ActiveAdmin.register Selector do
       row :parent
       row :scrape_resource
       row :data_resource
+      row :foreign_data_resource
     end
     ### TODO: DOESNT CURRENTLY WORK, NEED TO FIGURE OUT HOW TO GET CHILDREN IN ATTRIBUTES TABLE
     panel 'Children' do # builds an input field for specified attributes
-      selector.children.each do |cs|
+      selector.children.each do |_cs|
         attributes_table do
           row :info
           row :selector
@@ -68,6 +71,7 @@ ActiveAdmin.register Selector do
                                 collection: Hash[ScrapeResource.all.map { |sr| ["#{sr.info} => #{sr.url}", sr.id] }]
       f.input :data_resource, as: :select,
                               collection: Hash[DataResource.all.map { |dr| ["#{dr.info} => #{dr.column_name}", dr.id] }]
+      f.input :foreign_data_resource, collection: Hash[DataResource.where(foreign_key: false).map { |dr| ["#{dr.info} => #{dr.column_name}", dr.id] }]
     end
     f.inputs 'Children' do # builds an input field for specified attributes
       f.has_many :children do |j|

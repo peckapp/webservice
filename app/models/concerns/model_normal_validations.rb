@@ -2,7 +2,7 @@ module ModelNormalValidations
   extend ActiveSupport::Concern
 
   LETTERS_REGEX = /\A[a-zA-Z]+\z/
-  # URL_REGEX = /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(:[0-9]{1,5})?(\/.*‌​)?$/ix
+  # URL_REGEX = /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(:[0-9]{1,5})?(\/.*)?$/ix
   # include ActionView::Helpers
 
   private

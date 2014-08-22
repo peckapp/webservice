@@ -19,6 +19,12 @@ class DataResource < ActiveRecord::Base
   ##                           ##
   ###############################
 
+  # performs a current_or_create_new operation for just this resource's model and column_name with the given value
+  def minimal_current_or_new(value)
+    puts "finding model with #{column_name} => #{value}"
+    model.current_or_new(column_name => value)
+  end
+
   # model can be nil if it doesn't exist
   def model
     ResourceType.find(resource_type_id).model
