@@ -6,11 +6,9 @@ class NestedScraper
   sidekiq_options queue: :scraping, retry: 5
 
   # recurrence { daily }
-  MALE = 'Men'
-  FEMALE = 'Women'
-  BOTH = 'Both'
-  UNMATCHED_GENDERS = { 'Softball' => FEMALE, 'Field Hockey' => FEMALE, 'Wrestling' => MALE,
-                        'Skiing' => BOTH, 'Football' => MALE, 'Baseball' => MALE }
+
+  # leave out of new_relic apdex score
+  newrelic_ignore_apdex
 
   PAGE_LIMIT = 30
 
@@ -188,12 +186,9 @@ class NestedScraper
       case key
       when :sport_name
         # could use some work, may not apply to every case
-        sport = team.simple_name.match(/ .*/).to_s.squish
-        # sport = @r_url.scraped_value.match(/ .*/).to_s.squish if sport.blank?
         team.sport_name = sport
       when :gender
         gender = team.simple_name.match(/(M|m)en|(W|w)omen/).to_s
-        # gender = @r_url.scraped_value.match(/(M|m)en|(W|w)omen/).to_s if gender.blank?
         team.gender = gender
       else
         logger.error "repair_athletic_team failed to handle key: #{key}"

@@ -7,7 +7,10 @@ module SpecificScrape
     sidekiq_options queue: :scraping, retry: 5
 
     include Sidetiq::Schedulable
-    # recurrence { daily.hour_of_day(2) }
+    # recurrence { weekly }
+
+    # leave out of new_relic apdex score
+    newrelic_ignore_apdex
 
     EPH_SPORTS_ROOT = 'http://ephsports.williams.edu'
     EPH_SPORTS_INDEX = '/landing/index'
