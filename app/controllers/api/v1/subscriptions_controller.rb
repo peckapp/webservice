@@ -22,19 +22,19 @@ module Api
           @subscriptions << this_subscription
 
           # increment subscription count of corresponding dept/club/team
-          if parameters[:category] == "department"
+          if parameters[:category] == 'department'
             dept = Department.find(parameters[:subscribed_to])
-            if dept.subscriber_count == nil
+            if dept.subscriber_count.nil?
               dept.subscriber_count = 1
             else
               dept.subscriber_count += 1
             end
             dept.save
-          elsif parameters[:category] == "club"
+          elsif parameters[:category] == 'club'
             club = Club.find(parameters[:subscribed_to])
             club.subscriber_count += 1
             club.save
-          else
+          elsif parameters[:category] == 'athletic'
             team = AthleticTeam.find(parameters[:subscribed_to])
             team.subscriber_count += 1
             team.save
@@ -49,37 +49,37 @@ module Api
 
       # possible fix, make the array sent in a dictionary so that it won't be a string.
       def destroy
-          @subscriptions = []
+        @subscriptions = []
 
-          # query parameter with the ids of all the necessarily deleted subscriptions
-          subscription_id_string = params[:subscription][:subscriptions]
+        # query parameter with the ids of all the necessarily deleted subscriptions
+        subscription_id_string = params[:subscription][:subscriptions]
 
-          # converts the query parameter string into an array. Query parameter gets sent like this "[1,2,3]"
-          all_ids = subscription_id_string[subscription_id_string.index("[") + 1, subscription_id_string.index("]") - 1].split(",")
+        # converts the query parameter string into an array. Query parameter gets sent like this "[1,2,3]"
+        all_ids = subscription_id_string[subscription_id_string.index("[") + 1, subscription_id_string.index("]") - 1].split(",")
 
-          # for each id in the array of ids, find the Subscription with that id, add it to the array of deleted subscriptions
-          # for the view, and then destroy the subscription
-          all_ids.each do |id|
-            this_subscription = Subscription.find(id)
-            @subscriptions << this_subscription
+        # for each id in the array of ids, find the Subscription with that id, add it to the array of deleted subscriptions
+        # for the view, and then destroy the subscription
+        all_ids.each do |id|
+          this_subscription = Subscription.find(id)
+          @subscriptions << this_subscription
 
-            # decrement subscription count of corresponding dept/club/team
-            if this_subscription.category == "department"
-              dept = Department.find(this_subscription.subscribed_to)
-              dept.subscriber_count -= 1
-              dept.save
-            elsif this_subscription.category == "club"
-              club = Club.find(this_subscription.subscribed_to)
-              club.subscriber_count -= 1
-              club.save
-            else
-              team = AthleticTeam.find(this_subscription.subscribed_to)
-              team.subscriber_count -= 1
-              team.save
-            end
-
-            this_subscription.destroy
+          # decrement subscription count of corresponding dept/club/team
+          if this_subscription.category == "department"
+            dept = Department.find(this_subscription.subscribed_to)
+            dept.subscriber_count -= 1
+            dept.save
+          elsif this_subscription.category == "club"
+            club = Club.find(this_subscription.subscribed_to)
+            club.subscriber_count -= 1
+            club.save
+          else
+            team = AthleticTeam.find(this_subscription.subscribed_to)
+            team.subscriber_count -= 1
+            team.save
           end
+
+          this_subscription.destroy
+        end
       end
 
       private

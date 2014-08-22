@@ -133,10 +133,11 @@ namespace :sync do
         remote_file_path = "#{shared_path}/sync/#{filename}"
         execute "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{remote_file_path}"
 
-        # Local DB export
-        filename = "dump.local.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
-        username, password, database = local_database_config('development')
         run_locally do
+          # Local DB export
+          filename = "dump.local.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
+          username, password, database = local_database_config('development')
+          puts 'running dump locally'
           execute "mysqldump -u #{username} --password='#{password}' #{database} #{sync_tables} | bzip2 -9 > #{filename}"
         end
 
@@ -227,7 +228,7 @@ namespace :sync do
   # table names defined in config/deploy.rb
   #
   def sync_tables
-    Array(fetch(:sync_directories, [])).reduce('') { |a, e| a << ' ' << e }
+    Array(fetch(:sync_tables)).reduce('') { |a, e| a << ' ' << e }
   end
 
   #

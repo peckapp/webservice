@@ -20,7 +20,14 @@ module Api
       end
 
       def destroy
-        @peck = Peck.find(params[:id]).destroy
+        @peck = Peck.find(params[:id])
+
+        if @peck.notification_type == 'circle_invite'
+          member = CircleMember.find(@peck.refers_to)
+          member.destroy unless member.accepted
+        end
+
+        @peck.destroy
       end
 
       private

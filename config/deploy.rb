@@ -38,7 +38,7 @@ set :linked_dirs, %w(bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public
 
 # custom database sync task settings
 set :sync_directories, %w() # nothing to sync by default. Could use this to move config files remotely in production
-set :sync_tables, %w(resource_types scrape_resources data_resources scrape_resources) # custom addon to found recipe
+set :sync_tables, %w(resource_types scrape_resources data_resources selectors) # custom addon to found recipe
 set :sync_backups, 3
 
 # Default value for default_env is {}

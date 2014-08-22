@@ -212,7 +212,7 @@ namespace :db do
       ae.opponent_score = 0..10
       ae.home_or_away = ['home', 'away']
       ae.location = Faker::Address.street_name
-      ae.date_and_time = Time.now..1.month.from_now
+      ae.start_time = Time.now..1.month.from_now
       ae.created_at = 1.month.ago..Time.now
 
       # simple event has many comments

@@ -8,6 +8,10 @@ module Api
 
       def index
         @athletic_events = specific_index(AthleticEvent, params)
+
+        @attendee_ids = EventAttendee.where(user_id: params[:user_id], category: 'athletic').pluck(:event_attended)
+
+        # athletic_subscription_ids = Subscription.where(user_id: params[:user_id], category: 'athletic').pluck(:subscribed_to)
       end
 
       def show
@@ -30,7 +34,7 @@ module Api
       private
 
         def athletic_event_params
-          params.require(:athletic_event).permit(:institution_id, :athletic_team_id, :opponent, :team_score, :opponent_score, :home_or_away,:location, :result, :note, :date_and_time)
+          params.require(:athletic_event).permit(:institution_id, :athletic_team_id, :opponent, :team_score, :opponent_score, :home_or_away,:location, :result, :note, :start_time)
         end
     end
   end

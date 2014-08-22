@@ -316,7 +316,7 @@ module Api
         end
 
         def user_update_params
-          params.require(:user).permit(:first_name, :last_name, :blurb, :facebook_link, :institution_id)
+          params.require(:user).permit(:first_name, :last_name, :email, :blurb, :facebook_link, :active, :institution_id)
         end
 
         def facebook_login_params(parameters)

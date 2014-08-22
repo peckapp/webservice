@@ -17,7 +17,7 @@ module Explore
 
       elsif model == AthleticEvent
         cat_string = "athletic"
-        time_of = target.date_and_time
+        time_of = target.start_time
         attendee_count = EventAttendee.where(category: cat_string, event_attended: target.id).count
         view_count = View.where(category: cat_string, content_id: target.id).count
 

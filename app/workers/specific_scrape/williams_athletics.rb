@@ -7,7 +7,10 @@ module SpecificScrape
     sidekiq_options queue: :scraping, retry: 5
 
     include Sidetiq::Schedulable
-    # recurrence { daily.hour_of_day(2) }
+    # recurrence { weekly }
+
+    # leave out of new_relic apdex score
+    # newrelic_ignore_apdex
 
     EPH_SPORTS_ROOT = 'http://ephsports.williams.edu'
     EPH_SPORTS_INDEX = '/landing/index'
@@ -29,7 +32,7 @@ module SpecificScrape
     # stores all the URLS from the homepage of the athletics department
     def parse_url_keys(html)
       html.css('div#accordion-nav>a').each do |gender|
-        category = gender.text
+        category = gender.text.match(/.*? /).to_s.squish
 
         teams = next_non_blank(gender).css('li.has-submenu')
         logger.info "Traversing Williams Athletics category: #{category} with #{teams.count} teams"
@@ -46,13 +49,13 @@ module SpecificScrape
             break
           end
           sleep 0.5 + rand / 2
-          parse_schedule_page(link, team_name) if link
+          parse_schedule_page(link, category, team_name) if link
         end
       end
     end
 
     # each schedule page has a table of information on all the games for that season
-    def parse_schedule_page(link, team_name)
+    def parse_schedule_page(link, category, team_name)
       full_link = rooted_link(link)
       full_link_rss = "#{full_link}?print=rss"
 
@@ -69,7 +72,8 @@ module SpecificScrape
         logger.info "unexpected URL format: #{url} from full_link_rss: #{full_link_rss}" if url.downcase != full_link_rss.downcase
 
         # creates a resource url for the current scrape resource, which can in turn be scraped by the nested scraper
-        ru = ResourceUrl.new(url: url, scrape_resource_id: @sr.id)
+        team_name = "#{category} #{team_name}" unless team_name.match(/(M|m)en|(W|w)omen/)
+        ru = ResourceUrl.new(url: url, scrape_resource_id: @sr.id, validated: true, scraped_value: team_name)
 
         logger.info "saved ResourceUrl #{ru.id} for #{team_name}" if ru.non_duplicative_save
       end
