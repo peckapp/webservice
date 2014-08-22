@@ -18,5 +18,5 @@ end
 # end
 
 node :attendees do
-  @attendee_ids[@athletic_event.id]
+  @attendee_ids
 end

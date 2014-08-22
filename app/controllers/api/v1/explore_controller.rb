@@ -53,7 +53,7 @@ module Api
           some_athletic_events_left = true
 
           # check next element of each array and take the higher score
-          Rails.logger.info "\n\n --> Starting to build top explore items list <-- \n\n"
+          logger.info "\n\n --> Starting to build top explore items list <-- \n\n"
           while explore_ids.size < NUMBER_OF_EXPLORE_ITEMS && (some_simple_events_left || some_announcements_left || some_athletic_events_left)
             if some_simple_events_left && se_score[1] > ann_score[1] && se_score[1] > ath_score[1]
               # check if event was organized by current user
@@ -94,7 +94,7 @@ module Api
             end
           end
 
-          Rails.logger.info "\n\n --> Finished building top explore items list <-- \n\n"
+          logger.info "\n\n --> Finished building top explore items list <-- \n\n"
 
           # split up announcement / simple event ids for db query
           announcement_ids = []
