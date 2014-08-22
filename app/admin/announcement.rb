@@ -33,7 +33,7 @@ ActiveAdmin.register Announcement do
       f.input :category
       f.input :default_score
       f.input :scrape_resource
-      f.input :image, as: :file, hint: f.template.image_tag(f.object.image.url(:thumb))
+      f.input :image, as: :file, hint: f.template.image_tag(f.object.image.url(:detail))
     end
     f.actions         # adds the 'Submit' and 'Cancel' buttons
   end
