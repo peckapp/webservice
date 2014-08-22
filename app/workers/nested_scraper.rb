@@ -5,8 +5,6 @@ class NestedScraper
   include Sidekiq::Worker
   sidekiq_options queue: :scraping, retry: 5
 
-  include Sidetiq::Schedulable
-
   # recurrence { daily }
   MALE = 'Men'
   FEMALE = 'Women'
