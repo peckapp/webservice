@@ -34,7 +34,7 @@ class AthleticTeam < ActiveRecord::Base
 
   # for active admin
   def display_name
-    "#{Institution.find(institution_id)} #{sport_name}"
+    "#{Institution.find(institution_id).name} #{gender}'s #{sport_name}"
   end
 
   private

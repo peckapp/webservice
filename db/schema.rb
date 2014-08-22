@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140822045318) do
+ActiveRecord::Schema.define(version: 20140822160604) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -99,7 +99,7 @@ ActiveRecord::Schema.define(version: 20140822045318) do
     t.string   "location",                                      null: false
     t.string   "result"
     t.text     "note"
-    t.datetime "date_and_time"
+    t.datetime "start_time"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "scrape_resource_id"
@@ -112,13 +112,14 @@ ActiveRecord::Schema.define(version: 20140822045318) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
+    t.datetime "end_time"
   end
 
   add_index "athletic_events", ["athletic_team_id"], name: "index_athletic_events_on_athletic_team_id", using: :btree
-  add_index "athletic_events", ["date_and_time"], name: "index_athletic_events_on_date_and_time", using: :btree
   add_index "athletic_events", ["institution_id"], name: "index_athletic_events_on_institution_id", using: :btree
   add_index "athletic_events", ["location"], name: "index_athletic_events_on_location", using: :btree
   add_index "athletic_events", ["opponent"], name: "index_athletic_events_on_opponent", using: :btree
+  add_index "athletic_events", ["start_time"], name: "index_athletic_events_on_start_time", using: :btree
 
   create_table "athletic_teams", force: true do |t|
     t.integer  "institution_id",               null: false

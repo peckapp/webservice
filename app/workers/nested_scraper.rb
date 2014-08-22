@@ -130,7 +130,7 @@ class NestedScraper
       end
       return result
     else
-      # logger.info new_model.date_and_time.class
+      # logger.info new_model.start_time.class
       logger.warn "failed to save model with errors #{new_model.errors.messages} and data: #{new_model.inspect}\n"
     end
     false

@@ -43,7 +43,7 @@ child :@explore_announcements do
 end
 
 child :@explore_athletics do
-  attributes :id, :institution_id, :athletic_team_id, :opponent, :team_score, :opponent_score, :home_or_away,:location, :result, :note, :date_and_time, :created_at, :updated_at
+  attributes :id, :institution_id, :athletic_team_id, :opponent, :team_score, :opponent_score, :home_or_away,:location, :result, :note, :start_time, :created_at, :updated_at
 
   # node :image do |explore_ath_event|
   #   explore_ath_event.image.url

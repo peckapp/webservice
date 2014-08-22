@@ -133,23 +133,24 @@ namespace :sync do
         remote_file_path = "#{shared_path}/sync/#{filename}"
         execute "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{remote_file_path}"
 
-        # Local DB export
-        filename = "dump.local.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
-        username, password, database = local_database_config('development')
         run_locally do
-          execute "mysqldump -u #{username} --password='#{password}' #{database} #{sync_tables} > #{filename}"#"| bzip2 -9 > #{filename}"
+          # Local DB export
+          filename = "dump.local.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
+          username, password, database = local_database_config('development')
+          puts 'running dump locally'
+          execute "mysqldump -u #{username} --password='#{password}' #{database} #{sync_tables} | bzip2 -9 > #{filename}"
         end
 
         file = File.open(filename)
-        # upload! file, remote_file_path
+        upload! file, remote_file_path
 
         run_locally do
-          # execute "rm -f #{filename}"
+          execute "rm -f #{filename}"
         end
 
         # Remote DB import
-        # username, password, database = remote_database_config(stage)
-        # execute "bzip2 -d -c #{remote_file_path} | mysql -u #{username} --password='#{password}' #{database}; rm -f #{remote_file_path}"
+        username, password, database = remote_database_config(stage)
+        execute "bzip2 -d -c #{remote_file_path} | mysql -u #{username} --password='#{password}' #{database}; rm -f #{remote_file_path}"
         purge_old_backups 'database'
 
         info "sync database from local to the stage '#{stage}' finished"
@@ -227,7 +228,7 @@ namespace :sync do
   # table names defined in config/deploy.rb
   #
   def sync_tables
-    Array(fetch(:sync_directories)).reduce('') { |a, e| a << ' ' << e }
+    Array(fetch(:sync_tables)).reduce('') { |a, e| a << ' ' << e }
   end
 
   #

@@ -19,6 +19,10 @@ ActiveAdmin.register AthleticEvent do
   #### THESE SHOULD NOT HAVE TO BE HERE ####
   # need to figure out root cause of errors and solve them
   remove_filter :home_or_away
-  remove_filter :date_and_time
+  remove_filter :start_time
+  # 
+  # index do
+  #
+  # end
 
 end

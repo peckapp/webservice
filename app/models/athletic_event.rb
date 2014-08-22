@@ -70,6 +70,6 @@ class AthleticEvent < ActiveRecord::Base
     is_correct_type(home_or_away, String, 'string', :home_or_away)
     is_correct_type(location, String, 'string', :location)
     is_correct_type(result, String, 'string', :result)
-    # is_correct_type(date_and_time, DateTime, 'datetime', :date_and_time)
+    # is_correct_type(start_time, DateTime, 'datetime', :start_time)
   end
 end
