@@ -1,7 +1,6 @@
 child :@explore_events do
-# collection :@explore_events
-
-  attributes :id, :title, :event_description, :institution_id, :user_id, :category, :organizer_id, :url, :public, :comment_count, :start_date, :end_date, :created_at, :updated_at
+  attributes :id, :title, :event_description, :institution_id, :user_id, :category, :organizer_id, :url, :public,
+             :comment_count, :start_date, :end_date, :created_at, :updated_at
 
   # node :position do |event|
   #   @event_positions[event.id]
@@ -27,7 +26,8 @@ child :@explore_events do
 end
 
 child :@explore_announcements do
-  attributes :id, :title, :announcement_description, :institution_id, :user_id, :category, :poster_id, :public, :comment_count, :created_at, :updated_at
+  attributes :id, :title, :announcement_description, :institution_id, :user_id, :category, :poster_id, :public,
+             :comment_count, :created_at, :updated_at
 
   node :image do |announcement|
     announcement.image.url
@@ -43,7 +43,8 @@ child :@explore_announcements do
 end
 
 child :@explore_athletics do
-  attributes :id, :institution_id, :athletic_team_id, :opponent, :team_score, :opponent_score, :home_or_away,:location, :result, :note, :start_time, :created_at, :updated_at
+  attributes :id, :institution_id, :athletic_team_id, :opponent, :team_score, :opponent_score, :home_or_away,
+             :location, :result, :note, :start_time, :end_time, :title, :description, :created_at, :updated_at
 
   # node :image do |explore_ath_event|
   #   explore_ath_event.image.url
