@@ -1,8 +1,33 @@
-# Peck Webservice API Protocols
+# Protocol documentation
 
-This file is intended to serve as documentation for the API.
+High level overviews of the basic authentication and other protocols for interfacing with the webservice
 
-### 
+## REST Routing
+
+Restful routes are built in as a default to most of the controllers in the webservice.
+
+### Index:
+
+GET api/simple_events
+
+### Show:
+
+GET api/simple_events/:id
+
+### Create:
+
+POST api/simple_events
+
+### Update:
+
+PATCH api/simple_events/:id
+
+### Destroy:
+
+DELETE api/simple_events/:id
+
+
+### Login Scenarios
 
 1. Public action for user not logged in.
   - Retrieve session info for user id. Query database if nil.
@@ -22,20 +47,6 @@ This file is intended to serve as documentation for the API.
   - Destroy session
   - Clear authentication token from database.
 
-## REST Routing
-
-### Index:
-
-GET api/simple_events
-
-### Show:
-
-GET api/simple_events/:id
-
-### Create:
-
-POST api/simple_events
-
 #### NOTES ON CREATE USER:
 - Check if current user device token (UDT) already has a registered user associated to it
   - UDT is in the DB:
@@ -50,11 +61,3 @@ POST api/simple_events
         - Otherwise: create new annonymous user (with new ID)
   - UDT is not in the DB:
     - create new anonymous user
-
-### Update:
-
-PATCH api/simple_events/:id
-
-### Destroy:
-
-DELETE api/simple_events/:id

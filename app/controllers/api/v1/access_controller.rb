@@ -107,9 +107,10 @@ module Api
       end
 
       private
-        def authentication_params(user_params)
-          user_params.permit(:email, :password)
-        end
+      
+      def authentication_params(user_params)
+        user_params.permit(:email, :password)
+      end
     end
   end
 end
