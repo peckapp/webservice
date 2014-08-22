@@ -20,7 +20,6 @@ module Api
         if simple_scores.blank? || announcement_scores.blank? || athletic_scores.blank?
           run_builder
         else
-          return
           # save all events that user is attending to remove it from explore
           user_events = EventAttendee.where(user_id: auth_inst_id, category: 'simple').pluck(:event_attended)
           user_announcements = Announcement.where(user_id: auth_inst_id).pluck(:id)
@@ -38,31 +37,55 @@ module Api
           @athletic_explore_scores = {}
 
           # top scores of each explore array
-          se_score = personal_simple_scores.next
-          ann_score = personal_announcement_scores.next
-          ath_score = personal_athletic_scores.next
+          se_score = personal_simple_scores.pop
+          ann_score = personal_announcement_scores.pop
+          ath_score = personal_athletic_scores.pop
 
           # check next element of each array and take the higher score
           logger.info "\n\n --> Starting to build top explore items list <-- \n\n"
-          while explore_ids.size < NUMBER_OF_EXPLORE_ITEMS && ( !personal_simple_scores.empty? || !personal_announcement_scores.empty? || !personal_athletic_scores.empty?)
-            if !personal_simple_scores.empty? && se_score[1] > ann_score[1] && se_score[1] > ath_score[1]
-              se_score = personal_simple_scores.pop
+          while explore_ids.size < NUMBER_OF_EXPLORE_ITEMS && ( !personal_simple_scores.empty? || !personal_announcement_scores.empty? || !personal_athletic_scores.empty? )
+            logger.info "\n\n --> INSIDE WHILE LOOP!!! <-- \n\n"
+            se_score ||= [0, 0]
+            ann_score ||= [0, 0]
+            ath_score ||= [0, 0]
+            logger.info "\n\n --> SCORES: #{se_score}, #{ann_score}, #{ath_score} <-- \n\n"
+
+            # 3 cases:
+            # - simple event has highest score (se_score[1] >= ann_score[1] && se_score[1] >= ath_score[1])
+            # - announcement has highest score (ann_score[1] >= se_score[1] && ann_score[1] >= ath_score[1])
+            # - athletic event has highest score (ath_score[1] >= se_score[1] && ath_score[1] >= ann_score[1])
+            if !personal_simple_scores.empty? && se_score[1] >= ann_score[1] && se_score[1] >= ath_score[1]
               # check if event was organized by current user
               unless user_events.include?(se_score[0])
+                logger.info "\n\n --> Adding SIMPLE EVENT to explore ids <-- \n\n"
                 explore_ids << ['SimpleEvent', se_score[0]]
                 @simple_explore_scores[se_score[0]] = se_score[1]
               end
-            elsif !personal_announcement_scores.empty? && ann_score[1] > se_score[1] && ann_score[1] > ath_score[1]
+
+              # get next highest score in array
+              se_score = personal_simple_scores.pop
+              logger.info "\n\n --> SE_SCORE: #{se_score} <-- \n\n"
+            elsif !personal_announcement_scores.empty? && ann_score[1] >= se_score[1] && ann_score[1] >= ath_score[1]
+              logger.info "\n\n --> Adding ANNOUNCEMENT to explore ids <-- \n\n"
               # check if announcement was posted by current user
               unless user_announcements.include?(ann_score[0])
                 explore_ids << ['Announcement', ann_score[0]]
                 @announcement_explore_scores[ann_score[0]] = ann_score[1]
               end
 
+              # get next highest score in array
+              ann_score = personal_announcement_scores.pop
+              logger.info "\n\n --> ANN_SCORE: #{ann_score} <-- \n\n"
             elsif !personal_athletic_scores.empty?
+              logger.info "\n\n --> Adding ATHLETIC EVENT to explore ids <-- \n\n"
               explore_ids << ['AthleticEvent', ath_score[0]]
               @athletic_explore_scores[ath_score[0]] = ath_score[1]
 
+              # get next highest score in array
+              ath_score = personal_athletic_scores.pop
+              logger.info "\n\n --> ATH_SCORES: #{ath_score} <-- \n\n"
+            else
+              logger.info "\n\n --> Didn't do anything!! <-- \n\n"
             end
           end
 
