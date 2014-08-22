@@ -20,7 +20,10 @@ module Api
       end
 
       def destroy
-        @peck = Peck.find(params[:id]).destroy
+        @peck = Peck.find(params[:id])
+
+
+        @peck.destroy
       end
 
       private

@@ -13,11 +13,11 @@ module Explore
     recurrence { hourly }
 
     def perform(institution_id)
-      @cache_client = PeckDalli.client
-
-      @cache_client.set("campus_athletic_explore_#{institution_id}", analyze_athletic_events(institution_id))
-      @cache_client.set("campus_simple_explore_#{institution_id}", analyze_simple_events(institution_id))
-      @cache_client.set("campus_announcement_explore_#{institution_id}", analyze_announcements(institution_id))
+      # @cache_client = PeckDalli.client
+      #
+      # @cache_client.set("campus_athletic_explore_#{institution_id}", analyze_athletic_events(institution_id))
+      # @cache_client.set("campus_simple_explore_#{institution_id}", analyze_simple_events(institution_id))
+      # @cache_client.set("campus_announcement_explore_#{institution_id}", analyze_announcements(institution_id))
     end
 
     protected
