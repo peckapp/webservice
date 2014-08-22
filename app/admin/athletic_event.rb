@@ -3,7 +3,8 @@ ActiveAdmin.register AthleticEvent do
   # See permitted parameters documentation:
   # https://github.com/gregbell/active_admin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
-  # permit_params :list, :of, :attributes, :on, :model
+  permit_params :institution_id, :athletic_team_id, :scrape_resource_id, :opponent, :team_score, :opponent_score,
+                :home_or_away, :location, :result, :note, :default_score, :title, :description, :end_time
   #
   # or
   #
