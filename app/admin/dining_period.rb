@@ -17,6 +17,7 @@ ActiveAdmin.register DiningPeriod do
   menu parent: 'Dining'
 
   index do
+    selectable_column
     id_column
     column :dining_place
     column :dining_opportunity

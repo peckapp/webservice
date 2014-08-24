@@ -26,6 +26,7 @@ ActiveAdmin.register User do
   end
 
   index do
+    selectable_column
     id_column
     column :institution
     column :first_name

@@ -30,12 +30,12 @@ ActiveAdmin.register DataResource do
   # some hackery to get a hash of column names with their model associated with the actual column name
   # if we are able to use javascript for selector options, just the top line will be needed to get models to columns
   mc = Hash[ResourceType.all.map { |rt| rt.model }.map { |m| [m, m.columns.map { |c| c.name }] }]
-  names = mc.keys.reduce([]) { |a, k| a << mc[k].reduce([]) { |a2, v| a2 << [k.name, v] } }.flatten(1)
+  names = mc.keys.reduce([]) { |a, k| a << mc[k].reduce([]) { |b, v| b << [k.name, v] } }.flatten(1)
 
   form do |f|
     f.semantic_errors # shows errors on :base
     f.inputs 'Details' do         # builds an input field for every attribute
-      f.input :resource_type, collection: Hash[ResourceType.all.map { |rt| ["#{rt.info} => '#{rt.model_name}'", rt.id] }]
+      f.input :resource_type, collection: Hash[ResourceType.all.map { |rt| [rt.model_name, rt.id] }]
       f.input :column_name, collection: Hash[names.map { |m, c| ["#{m} => #{c}", c] }]
       f.input :foreign_key, as: :radio
       f.input :info
@@ -44,6 +44,7 @@ ActiveAdmin.register DataResource do
   end
 
   index do
+    selectable_column
     id_column
     column :info
     column :column_name

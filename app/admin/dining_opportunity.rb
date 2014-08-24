@@ -17,6 +17,7 @@ ActiveAdmin.register DiningOpportunity do
   menu parent: 'Dining'
 
   index do
+    selectable_column
     id_column
     column :dining_opportunity_type
     column :institution

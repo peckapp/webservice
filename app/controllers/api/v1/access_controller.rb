@@ -34,11 +34,11 @@ module Api
 
           # User's have to click on the confirmation email to actually login.
           if @user.active == false
-            @response = "Please complete your registration with the confirmation we sent to your email."
+            @response = 'Please complete your registration with the confirmation we sent to your email.'
             respond_to do |format|
-              format.json { render json: @response, status: :bad_request}
+              format.json { render json: @response, status: :bad_request }
             end
-          end
+          end # end if user is active
 
           # if the user is trying to log in and has a fb link and fb token, then add to the user's attributes
           if the_facebook_link && the_facebook_token
@@ -64,7 +64,8 @@ module Api
               UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
               @user.unique_device_identifiers << @udid
             else
-              # otherwise, update the time stamp of the udid
+              # touchup that timestamp
+
               @udid.touch
 
               @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
@@ -80,9 +81,9 @@ module Api
           else
             # no udid is not okay because mobile devices are the only devices using peck.
             head :bad_request
-            logger.warn "tried to not send a udid"
+            logger.warn 'user device tried to call create action on access without a udid'
           end
-        else
+        else # else for: if @user
 
           # something went wrong: authentication failed so email and password don't match
           head :unprocessable_entity
@@ -120,9 +121,10 @@ module Api
       end
 
       private
-        def authentication_params(user_params)
-          user_params.permit(:email, :password)
-        end
+
+      def authentication_params(user_params)
+        user_params.permit(:email, :password)
+      end
     end
   end
 end

@@ -17,7 +17,7 @@ require 'pathname'
 #
 namespace :sync do
 
-  after 'deploy:setup', 'sync:setup'
+  # after 'deploy:setup', 'sync:setup'
 
   desc <<-DESC
     Creates the sync dir in shared path. The sync directory is used to keep
@@ -25,7 +25,12 @@ namespace :sync do
     be called on 'deploy:setup'
   DESC
   task :setup do
-    run "cd #{shared_path}; mkdir sync"
+    on roles(:db) do
+      execute "cd #{shared_path}; mkdir -p sync"
+    end
+    run_locally do
+      execute 'mkdir -p sync'
+    end
   end
 
   namespace :down do
@@ -45,25 +50,31 @@ namespace :sync do
       dump will be kept within the shared sync directory. The number of backups that will be kept is
       declared in the sync_backups variable and defaults to 5.
     DESC
-    task :db, roles: :db, only: { primary: true } do
-      filename = "database.#{stage}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
-      on_rollback { delete "#{shared_path}/sync/#{filename}" }
+    task :db do
+      on roles(:db) do # only: { primary: true } do
+        stage = fetch(:stage, 'development')
+        filename = "database.#{stage}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
+        # on_rollback { delete "#{shared_path}/sync/#{filename}" } # not supported in capistrano 3
 
-      # Remote DB dump
-      username, password, database = database_config(stage)
-      run "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{shared_path}/sync/#{filename}" do |_channel, _stream, data|
-        puts data
+        # Remote DB dump
+        username, password, database = remote_database_config(stage)
+        remote_file_path = "#{shared_path}/sync/#{filename}"
+        execute "touch #{remote_file_path}; mysqldump -u #{username} --password='#{password}' #{database} #{sync_tables} | bzip2 -9 > #{remote_file_path}"
+
+        purge_old_backups 'database'
+
+        # Download dump
+        local_file_path = "sync/#{filename}"
+        download! remote_file_path, local_file_path
+
+        # Local DB import
+        run_locally do
+          username, password, database = local_database_config('development')
+          execute "bzip2 -d -c #{local_file_path} | mysql -u #{username} --password='#{password}' #{database}; rm -f #{local_file_path}"
+        end
+
+        info "sync database from the stage '#{stage}' to local finished"
       end
-      purge_old_backups 'database'
-
-      # Download dump
-      download "#{shared_path}/sync/#{filename}", filename
-
-      # Local DB import
-      username, password, database = database_config('development')
-      system "bzip2 -d -c #{filename} | mysql -u #{username} --password='#{password}' #{database}; rm -f #{filename}"
-
-      logger.important "sync database from the stage '#{stage}' to local finished"
     end
 
     # desc <<-DESC
@@ -107,34 +118,43 @@ namespace :sync do
       dump will be kept within the shared sync directory. The amount of backups that will be kept is
       declared in the sync_backups variable and defaults to 5.
     DESC
-    task :db, roles: :db, only: { primary: true } do
+    task :db do
+      on roles(:db) do # roles: :db, only: { primary: true } do
 
-      filename = "database.#{stage}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
+        filename = "database.#{stage}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
 
-      on_rollback do
-        delete "#{shared_path}/sync/#{filename}"
-        system "rm -f #{filename}"
+        # on_rollback do
+        #   delete "#{shared_path}/sync/#{filename}"
+        #   system "rm -f #{filename}"
+        # end
+
+        # Make a remote backup of ENTIRE remote database before importing
+        username, password, database = remote_database_config(stage)
+        remote_file_path = "#{shared_path}/sync/#{filename}"
+        execute "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{remote_file_path}"
+
+        run_locally do
+          # Local DB export
+          filename = "dump.local.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
+          username, password, database = local_database_config('development')
+          puts 'running dump locally'
+          execute "mysqldump -u #{username} --password='#{password}' #{database} #{sync_tables} | bzip2 -9 > #{filename}"
+        end
+
+        file = File.open(filename)
+        upload! file, remote_file_path
+
+        run_locally do
+          execute "rm -f #{filename}"
+        end
+
+        # Remote DB import
+        username, password, database = remote_database_config(stage)
+        execute "bzip2 -d -c #{remote_file_path} | mysql -u #{username} --password='#{password}' #{database}; rm -f #{remote_file_path}"
+        purge_old_backups 'database'
+
+        info "sync database from local to the stage '#{stage}' finished"
       end
-
-      # Make a backup before importing
-      username, password, database = database_config(stage)
-      run "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{shared_path}/sync/#{filename}" do |_channel, _stream, data|
-        puts data
-      end
-
-      # Local DB export
-      filename = "dump.local.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
-      username, password, database = database_config('development')
-      system "mysqldump -u #{username} --password='#{password}' #{database} | bzip2 -9 > #{filename}"
-      upload filename, "#{shared_path}/sync/#{filename}"
-      system "rm -f #{filename}"
-
-      # Remote DB import
-      username, password, database = database_config(stage)
-      run "bzip2 -d -c #{shared_path}/sync/#{filename} | mysql -u #{username} --password='#{password}' #{database}; rm -f #{shared_path}/sync/#{filename}"
-      purge_old_backups 'database'
-
-      logger.important "sync database from local to the stage '#{stage}' finished"
     end
 
     # desc <<-DESC
@@ -171,14 +191,29 @@ namespace :sync do
   # +db+ the name of the environment to get the credentials for
   # Returns username, password, database
   #
-  def database_config(db)
+  def remote_database_config(db)
+    info "db: #{db}"
     env_file = "#{shared_path}/config/database.yml"
+
+    database_data = download! env_file
+    database = YAML.load(database_data)[db.to_s]
+    return if database.nil? # protects against empty yaml entries
+
+    [database['username'], database['password'], database['database']]
+  end
+
+  def local_database_config(db)
+    env_file = 'config/database.yml'
     return unless File.exist?(env_file)
 
-    database = YAML.load_file(env_file)[Rails.env]
-    return if database.blank? # protects against empty yaml entries
+    database = YAML.load_file(env_file)[db]
+    return if database.nil? # protects against empty yaml entries
 
-    [database["#{db}"]['username'], database["#{db}"]['password'], database["#{db}"]['database']]
+    [database['username'], database['password'], database['database']]
+  end
+
+  def stage
+    fetch(:stage)
   end
 
   #
@@ -193,7 +228,7 @@ namespace :sync do
   # table names defined in config/deploy.rb
   #
   def sync_tables
-    Array(fetch(:sync_directories, [])).reduce('') { |a, e| a << ' ' << e }
+    Array(fetch(:sync_tables)).reduce('') { |a, e| a << ' ' << e }
   end
 
   #
@@ -203,11 +238,11 @@ namespace :sync do
     count = fetch(:sync_backups, 5).to_i
     backup_files = capture("ls -xt #{shared_path}/sync/#{base}*").split.reverse
     if count >= backup_files.length
-      logger.important 'no old backups to clean up'
+      warn 'no old backups to clean up'
     else
-      logger.info "keeping #{count} of #{backup_files.length} sync backups"
+      info "keeping #{count} of #{backup_files.length} sync backups"
       delete_backups = (backup_files - backup_files.last(count)).join(' ')
-      try_sudo "rm -rf #{delete_backups}"
+      execute "rm -rf #{delete_backups}"
     end
   end
 

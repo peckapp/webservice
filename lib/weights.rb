@@ -17,8 +17,13 @@ class Weights
     @user_count = active_users(inst_id)
   end
 
-  def temporal_proximity(time)
-    tdist = time - Time.now
+  def temporal_proximity(time, backwards)
+    if backwards
+      tdist = Time.now - time
+    else
+      tdist = time - Time.now
+    end
+
     if tdist < 24.hours
       # until the end of the day, constant full score
       FULL_SCORE
@@ -36,7 +41,7 @@ class Weights
     (400 * count) / @user_count
   end
 
-  def event_views(count)
+  def views(count)
     (32 * (count**0.5)) / @user_count**0.25
   end
 

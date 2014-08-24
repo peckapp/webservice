@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   # allows all classes to inherit
   before_action :confirm_minimal_access
 
-
   def confirm_logged_in
     # user is found by session id
     user = User.find(session[:user_id])

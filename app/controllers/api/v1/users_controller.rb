@@ -28,7 +28,7 @@ module Api
         @member_ids = {}
 
         @circles.each do |c|
-          @member_ids[c.id] = CircleMember.where("circle_id" => c.id).where("accepted" => true).pluck(:user_id)
+          @member_ids[c.id] = CircleMember.where('circle_id' => c.id).where('accepted' => true).pluck(:user_id)
         end
       end
 
@@ -40,8 +40,8 @@ module Api
       def create
         if params[:udid]
           @user = User.create
-          udid = UniqueDeviceIdentifier.create(udid: params[:udid], device_type: params[:device_type])
-          UdidUser.create(unique_device_identifier_id: udid.id, user_id: @user.id)
+          udid = UniqueDeviceIdentifier.current_or_create_new(udid: params[:udid], device_type: params[:device_type])
+          UdidUser.current_or_create_new(unique_device_identifier_id: udid.id, user_id: @user.id)
           @user.unique_device_identifiers << udid
 
           logger.info "Created anonymous user with id: #{@user.id}"
@@ -50,7 +50,7 @@ module Api
           session[:api_key] = @user.api_key
         else
           head :bad_request
-          logger.warn "tried to not send a udid"
+          logger.warn 'user device tried to call create action without a udid'
         end
       end
 
@@ -208,6 +208,7 @@ module Api
             # Then the user has not logged in before
             @user.enable_facebook_validation = true
             if @user.update_attributes(facebook_login_params(fb_params))
+
               ### Active user and is not fb registered, so trying to take someone else's email
                if active_user && send_confirmation_email
                  head :unprocessable_entity
@@ -328,7 +329,7 @@ module Api
         end
 
         def user_update_params
-          params.require(:user).permit(:first_name, :last_name, :blurb, :facebook_link, :institution_id)
+          params.require(:user).permit(:first_name, :last_name, :email, :blurb, :facebook_link, :active, :institution_id)
         end
 
         def facebook_login_params(parameters)

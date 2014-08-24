@@ -33,7 +33,7 @@ class UltimateTestHelper < ActionController::TestCase
 
     @controller = Api::V1::AccessController.new
 
-    post :create, user: { email: 'bobbyboucher@williams.edu', password: 'testingpass', udid: 'bob' }, authentication: session_create, format: :json
+    post :create, user: { email: 'bobbyboucher@williams.edu', password: 'testingpass', udid: 'bob', device_type: 'ios' }, authentication: session_create, format: :json
 
     assigns(:user)
   end
@@ -54,6 +54,30 @@ class UltimateTestHelper < ActionController::TestCase
     else
       get :index, @params_index
       assert_response :success
+    end
+  end
+
+  test 'should_fail_getting_index' do
+    next unless is_subclass? && is_controller?
+    the_user = super_create_user
+
+    auth_params = session_create
+    auth_params.delete("api_key")
+
+    the_params = @params_index
+    # puts the_params
+    the_params[:authentication]["api_key"] = nil
+    # puts the_params
+
+    @controller = @the_controller
+
+    # circles and circle members require logging in.
+    if is_circle_members_controller? || is_circles_controller?
+      get :index, format: :json, authentication: auth_params
+      assert_response :unauthorized, "Make sure minimal access is not commented out in application controller"
+    else
+      get :index, the_params
+      assert_response :unauthorized, "Make sure minimal access is not commented out in application controller"
     end
   end
 
@@ -113,7 +137,7 @@ class UltimateTestHelper < ActionController::TestCase
   end
 
   test 'should_patch_update' do
-    next unless is_subclass? && is_controller? && is_pecks_controller?
+    next unless is_subclass? && is_controller? && !is_pecks_controller?
     the_user = super_create_user
 
     auth_params = session_create

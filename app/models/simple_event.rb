@@ -14,7 +14,7 @@ class SimpleEvent < ActiveRecord::Base
   validates :user_id, numericality: { only_integer: true }, allow_nil: true
   validates :organizer_id, numericality: { only_integer: true }, allow_nil: true
   validates :comment_count, numericality: { only_integer: true }, allow_nil: true
-  validates :event_url, format: { with: URI.regexp(%w(http https)) }, allow_nil: true
+  validates :url, format: { with: URI.regexp(%w(http https)) }, allow_nil: true
   validates :start_date, presence: true
   validates :end_date, presence: true
   validates :latitude, numericality: true, allow_nil: true
@@ -23,15 +23,15 @@ class SimpleEvent < ActiveRecord::Base
 
   ### Event Photo Attachments ###
   has_attached_file(:image,
-                    :s3_credentials => {
-                      :bucket => 'peck_development',
-                      :access_key_id => ENV['AWS_ACCESS_KEY_ID'],
-                      :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
+                    s3_credentials: {
+                      bucket: 'peck_development',
+                      access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+                      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
                     },
-                    #path: ':rails_root/public/images/simple_events/:style/:basename.:extension',
-                    :url => '/images/simple_events/:style/:basename.:extension',
-                    :default_url => '/images/missing.png',
-                    :path => 'images/simple_events/:style/:basename.:extension',
+                    # path: ':rails_root/public/images/simple_events/:style/:basename.:extension',
+                    url: '/images/simple_events/:style/:basename.:extension',
+                    default_url: '/images/missing.png',
+                    path: 'images/simple_events/:style/:basename.:extension',
                     styles: {
                       detail: '100X100#',
                       blurred: {
@@ -71,6 +71,9 @@ class SimpleEvent < ActiveRecord::Base
   ### scrape resource from which this was gathered ###
   belongs_to :scrape_resource #
 
+  ### The user who created the event (null if scraped) ###
+  belongs_to :user
+
   ###############################
   ##                           ##
   ##           SCOPES          ##
@@ -98,7 +101,7 @@ class SimpleEvent < ActiveRecord::Base
 
   def correct_simple_event_types
     is_correct_type(title, String, 'string', :title)
-    is_correct_type(event_url, String, 'string', :event_url)
+    is_correct_type(url, String, 'string', :url)
     is_correct_type(start_date, Time, 'datetime', :start_date)
     is_correct_type(end_date, Time, 'datetime', :end_date)
   end

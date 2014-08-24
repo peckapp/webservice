@@ -1,39 +1,42 @@
 # personalizes the scores of the campus explore feed for a specific user
 class Personalizer
   NUMBER_OF_FRIENDS = 10
-  NUMBER_OF_FRIENDS = 10
   NUMBER_OF_TOP_SUBSCRIBERS = 10
   MINIMUM_SUBSCRIPTIONS = 5
 
-  MAX_FRIENDS_BOOST = 200
-  MAX_SUB_BOOST = 200
+  MAX_EVENTS_FRIENDS_BOOST = 200
+  MAX_EVENTS_SUB_BOOST = 200
+  MAX_ANNOUNCEMENTS_FRIENDS_BOOST = 300
+  MAX_ANNOUNCEMENTS_SUB_BOOST = 300
   MAX_FRIEND_SCORE = 40
   MIN_CIRCLES = 3
 
-  def perform(event_scores = [], user_id, inst_id)
+  ###############################
+  ##                           ##
+  ##          EVENTS           ##
+  ##                           ##
+  ###############################
+
+  def perform_events(model, event_scores = [], user_id, inst_id)
+    Rails.logger.info "--> Starting #{model} personalization <--"
     top_circle_friends = top_friends(user_id)
     top_similar_subscribers = similar_subscribers(user_id, inst_id)
-    circle_count = CircleMember.where(user_id: user_id).count
 
     # @user_circles gets set in top_friends method
-    if @user_circles.count >= MIN_CIRCLES
-      circle_count = @user_circles.count
-    else
-      circle_count = MIN_CIRCLES
-    end
+    circle_count = user_circle_count(@user_circles.count, MIN_CIRCLES)
 
     # weights calculator
     weights = Weights.new(inst_id)
 
     # all attendees saved to avoid a database call for every event
+    ###############################################
+    ## NEED TO HANDLE EVENT CATEGORY DONT FORGET ##
     event_ids = []
     attendees_for_event = {}
     event_scores.each { |event| event_ids << event[0] }
+
+    # associate each event to its attendees
     all_attendees = EventAttendee.where(event_attended: event_ids).pluck(:event_attended, :user_id)
-
-    # get all values for the manual booster scores now to avoid making too many db calls later
-    boosters = Hash[SimpleEvent.where(id: event_ids).pluck(:id, :default_score)]
-
     all_attendees.each do |att|
       if attendees_for_event[att[0]]
         attendees_for_event[att[0]] << att[1]
@@ -42,11 +45,14 @@ class Personalizer
       end
     end
 
+    # get all values for the manual booster scores now to avoid making too many db calls later
+    boosters = Hash[model.where(id: event_ids).pluck(:id, :default_score)]
+    Rails.logger.info "starting individual #{model} analysis"
     event_scores.each do |event|
-
       attendees = attendees_for_event[event[0]]
 
       ## Scoring boost for circle friends
+      friend_score = 0
       friend_boost = 0
       top_circle_friends.each do |friend|
 
@@ -61,8 +67,8 @@ class Personalizer
         end
       end
 
-      if friend_boost > MAX_FRIENDS_BOOST
-        event_scores[event[0]] += MAX_FRIEND_BOOST
+      if friend_boost > MAX_EVENTS_FRIENDS_BOOST
+        event_scores[event[0]] += MAX_EVENTS_FRIEND_BOOST
       else
         event_scores[event[0]] += friend_boost
       end
@@ -71,7 +77,7 @@ class Personalizer
       subs_boost = 0
       top_similar_subscribers.each do |subs|
         if !attendees.nil? && attendees.include?(subs[0])
-          subs_boost += MAX_SUB_BOOST / NUMBER_OF_TOP_SUBSCRIBERS
+          subs_boost += MAX_EVENTS_SUB_BOOST / NUMBER_OF_TOP_SUBSCRIBERS
         end
       end
 
@@ -86,10 +92,141 @@ class Personalizer
       end
 
     end
-
-    new_scores = event_scores.sort_by &:last
-    new_scores.reverse
+    Rails.logger.info "completed individual #{model} analysis"
+    new_scores = event_scores.sort_by(&:last)
+    new_scores
   end
+
+  ###############################
+  ##                           ##
+  ##       ANNOUNCEMENTS       ##
+  ##                           ##
+  ###############################
+
+  def perform_announcements(announcement_scores = [], user_id, inst_id)
+    Rails.logger.info '--> Starting Announcement personalization <--'
+    # save top circle friends and top subs friends
+    top_circle_friends = top_friends(user_id)
+    top_similar_subscribers = similar_subscribers(user_id, inst_id)
+
+    # @user_circles gets set in top_friends method
+    circle_count = user_circle_count(@user_circles.count, MIN_CIRCLES)
+
+    # weights calculator
+    weights = Weights.new(inst_id)
+
+    # array/hashes for storing ids, likers, and commenters
+    announcement_ids = []
+    likers_for_announcement = {}
+    commenters_for_announcement = {}
+
+    announcement_scores.each { |ann| announcement_ids << ann[0] }
+
+    # associate each announcement to its likers
+    all_likers = Like.where(likeable_type: 'Announcement').pluck(:likeable_id, :liker_id)
+    all_likers.each do |like|
+      if likers_for_announcement[like[0]]
+        likers_for_announcement[like[0]] << like[1]
+      else
+        likers_for_announcement[like[0]] = [like[1]]
+      end
+    end
+
+    # associate each announcement to its commentors
+    all_commenters = Comment.where(category: 'announcement').pluck(:comment_from, :user_id)
+    all_commenters.each do |comment|
+      if commenters_for_announcement[comment[0]] && !commenters_for_announcement[comment[0]].include?(comment[1])
+        commenters_for_announcement[comment[0]] << comment[1]
+      else
+        commenters_for_announcement[comment[0]] = [comment[1]]
+      end
+    end
+
+    # get all default scores for announcements in range
+    boosters = Hash[Announcement.where(id: announcement_ids).pluck(:id, :default_score)]
+    Rails.logger.info 'started individual Announcement analysis'
+    # personalize score for each announcement
+    announcement_scores.each do |ann|
+
+      # fetch likers and commenters for this announcement
+      likers = likers_for_announcement[ann[0]]
+      commenters = commenters_for_announcement[ann[0]]
+
+      ## Scoring boost for circle friends
+      friend_like_score = 0
+      friend_comment_score = 0
+      friend_boost = 0
+      top_circle_friends.each do |friend|
+        # likers scoring boost
+        if !likers.nil? && likers.include?(friend[0])
+          if weights.circle_friend_boost(friend[1], circle_count) > MAX_FRIEND_SCORE
+            friend_like_score = MAX_FRIEND_SCORE
+          else
+            friend_like_score = weights.circle_friend_boost(friend[1], circle_count)
+          end
+
+          friend_boost += friend_like_score
+        end
+
+        # commenters scoring boost
+        if !commenters.nil? && commenters.include?(friend[0])
+          if weights.circle_friend_boost(friend[1], circle_count) > MAX_FRIEND_SCORE
+            friend_comment_score = MAX_FRIEND_SCORE
+          else
+            friend_comment_score = weights.circle_friend_boost(friend[1], circle_count)
+          end
+
+          friend_boost += friend_comment_score
+        end
+      end # end of top circle friends loop
+
+      # place cap on top friends booster
+      if friend_boost > MAX_ANNOUNCEMENTS_FRIENDS_BOOST
+        announcement_scores[ann[0]] += MAX_ANNOUNCEMENTS_FRIEND_BOOST
+      else
+        announcement_scores[ann[0]] += friend_boost
+      end
+
+      ## Scoring boost for similar subscribers
+      subs_boost = 0
+      top_similar_subscribers.each do |subs|
+        # boost for likes
+        if !likers.nil? && likers.include?(subs[0])
+          subs_boost += MAX_ANNOUNCEMENTS_SUB_BOOST / NUMBER_OF_TOP_SUBSCRIBERS
+        end
+
+        # boost for commenters
+        if !commenters.nil? && commenters.include?(subs[0])
+          subs_boost += MAX_ANNOUNCEMENTS_SUB_BOOST / NUMBER_OF_TOP_SUBSCRIBERS
+        end
+      end # end of subscribers loop
+
+      # place cap on subscriptions booster
+      if friend_boost > MAX_ANNOUNCEMENTS_SUB_BOOST
+        announcement_scores[ann[0]] += MAX_ANNOUNCEMENTS_SUB_BOOST
+      else
+        announcement_scores[ann[0]] += subs_boost
+      end
+
+      # random booster
+      announcement_scores[ann[0]] += weights.random_booster
+
+      # default score
+      if boosters[ann[0]]
+        announcement_scores[ann[0]] += boosters[ann[0]]
+      end
+
+    end
+    Rails.logger.info "completed individual Announcement analysis"
+    new_scores = announcement_scores.sort_by(&:last)
+    new_scores
+  end
+
+  ###############################
+  ##                           ##
+  ##    FRIENDS/SUBSCRIBERS    ##
+  ##                           ##
+  ###############################
 
   # returns an array of tuples of friends who appear most in a user's circles with the
   # number of times they appear in the circles (bonus given if the circle friend was invited
@@ -185,5 +322,20 @@ class Personalizer
 
     # return hash of top similar subscribers
     top_subscribers.to_a
+  end
+
+  ###############################
+  ##                           ##
+  ##       HELPER METHODS      ##
+  ##                           ##
+  ###############################
+
+  # make sure top friends are scored relative to a minimum number of circles
+  def user_circle_count(current_count, min_count)
+    if current_count >= min_count
+      current_count
+    else
+      min_count
+    end
   end
 end

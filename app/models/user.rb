@@ -117,8 +117,8 @@ class User < ActiveRecord::Base
   #####################################
 
   ### user viewed a specific event ###
-  # TODO: user does not currently have an event_view_id, this needs to be fixed if it is to be used
-  # belongs_to :event_view #
+  # TODO: user does not currently have an view_id, this needs to be fixed if it is to be used
+  # belongs_to :view #
   ####################################
 
   ### ACTIVITY LOG ###
@@ -128,11 +128,11 @@ class User < ActiveRecord::Base
 
   ### NOTIFICATIONS ###
   has_many :notification_views #
-  has_many :push_notifications #
+  has_many :pecks #
   #####################
 
   # for active admin
-  def to_label
+  def display_name
     "#{first_name} #{last_name}"
   end
 

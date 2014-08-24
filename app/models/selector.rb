@@ -17,6 +17,11 @@ class Selector < ActiveRecord::Base
   ### Each Data Resource indicates which column the object is associated with, or if it is a top-level model
   belongs_to :data_resource
 
+  ### Each Selector may have a foreign key as its main DataResource
+  ### thus necessitaiting this key, which allows the scraper to convert the text relating
+  ### to a row in another table into an actual integer value (key) relating to that row
+  belongs_to :foreign_data_resource, foreign_key: :foreign_data_resource_id, class_name: 'DataResource'
+
   ### Selectors can be nested through references to parent selectors that contain them
   # this relates directly to the html parsing that will occur during scraping
   has_many :children, class_name: 'Selector', foreign_key: 'parent_id'
@@ -33,7 +38,11 @@ class Selector < ActiveRecord::Base
     DataResource.find(data_resource_id).column_name
   end
 
-  def to_label
+  def foreign_key?
+    DataResource.find(data_resource_id).foreign_key if data_resource_id
+  end
+
+  def display_name
     info
   end
 end

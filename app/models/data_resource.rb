@@ -1,9 +1,6 @@
 class DataResource < ActiveRecord::Base
   ### VALIDATIONS ###
-  validates_associated :scrape_resources
-  validates_associated :data_resources
-
-  validates :column_name, inclusion: { in: %w(small medium large), message: "%{value} is not a valid size" }
+  validates :column_name, presence: true # , inclusion: { in: %w(small medium large), message: "%{value} is not a valid size" }
 
   ###############################
   ##                           ##
@@ -22,12 +19,17 @@ class DataResource < ActiveRecord::Base
   ##                           ##
   ###############################
 
+  # performs a current_or_create_new operation for just this resource's model and column_name with the given value
+  def minimal_current_or_new(value)
+    model.current_or_new(column_name => value)
+  end
+
   # model can be nil if it doesn't exist
   def model
     ResourceType.find(resource_type_id).model
   end
 
-  def to_label
+  def display_name
     info
   end
 end

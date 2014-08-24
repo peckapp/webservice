@@ -19,6 +19,7 @@ ActiveAdmin.register MenuItem do
   menu parent: 'Dining'
 
   index do
+    selectable_column
     id_column
     column :name
     column :category
@@ -31,5 +32,4 @@ ActiveAdmin.register MenuItem do
     column :updated_at
     actions
   end
-
 end

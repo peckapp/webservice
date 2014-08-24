@@ -35,13 +35,13 @@ class ActiveRecordExtensionTest < ActionController::TestCase
     assert event.non_duplicative_save(event)
   end
 
-  test "current or create new for preexisting object"
+  test "current or create new for preexisting object" do
     menu_item = MenuItem.find(1)
     result = MenuItem.current_or_create_new(menu_item.attributes)
     assert_equal(menu_item, result)
   end
 
-  test "current or create new for non-existant object"
+  test "current or create new for non-existant object" do
     menu_item = self.random_menu_item
     result = MenuItem.current_or_create_new(menu_item.attributes)
     assert_not result.blank?

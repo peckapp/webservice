@@ -1,6 +1,9 @@
+# has many (1+) urls with content of the same format that is scraped repeatedly by the system
 class ScrapeResource < ActiveRecord::Base
+  ENGINES = %w(nested simple custom)
+
   ### VALIDATIONS ###
-  validates :engine_type, inclusion: { in: %w(nested simple), message: "%{value} is not an available engine" }
+  validates :engine_type, inclusion: { in: ENGINES, message: '%{value} is not an available engine' }
 
   # this is the only point in the scraping data network where it is connected to an institution_ids
   belongs_to :institution
@@ -22,7 +25,7 @@ class ScrapeResource < ActiveRecord::Base
   end
 
   # for active admin
-  def to_label
+  def display_name
     info
   end
 

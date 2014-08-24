@@ -1,7 +1,7 @@
 module Api
   module V1
-    class CircleMembersController < ApplicationController #Api::BaseController
-
+    # individual circle members are created and retrieved through this controller
+    class CircleMembersController < ApplicationController # Api::BaseController
       before_action :confirm_logged_in
 
       # give circle admin power?
@@ -14,6 +14,7 @@ module Api
       def create
         member_create_params = params[:circle_member]
         the_message = member_create_params.delete(:message)
+        # TODO: this doesn't seem like something that the end user should be returning - change this?
         send_push_notification = member_create_params.delete(:send_push_notification)
 
         # create a circle member
@@ -21,15 +22,19 @@ module Api
 
         # if the circle member is a duplicate, don't send another invite.
         if @circle_member.non_duplicative_save
-
           # add the circle member to the array of circle members for the user
           user = User.find(@circle_member.user_id)
           user.circle_members << @circle_member
 
           # create the peck with these attributes
-          peck = Peck.create(user_id: @circle_member.user_id, institution_id: @circle_member.institution_id, notification_type: "circle_invite", message: the_message, send_push_notification: send_push_notification, invited_by: @circle_member.invited_by, invitation: @circle_member.id, refers_to: @circle_member.circle_id)
+          peck =
+          Peck.create(user_id: @circle_member.user_id, institution_id: @circle_member.institution_id,
+          notification_type: 'circle_invite', message: the_message, send_push_notification: send_push_notification,
+          invited_by: @circle_member.invited_by, invitation: @circle_member.id, refers_to: @circle_member.circle_id)
 
           notify(user, peck)
+        else
+          render status: :found
         end
       end
 

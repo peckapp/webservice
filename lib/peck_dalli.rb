@@ -8,7 +8,7 @@ class PeckDalli
     elsif Rails.env.staging?
       # should be different from production
       return nil # Dalli::Client.new('magni.peckapp.com:11211', options)
-    elsif Rails.env.development?
+    elsif Rails.env.development? || Rails.env.test?
       return Dalli::Client.new('localhost:11211', options)
     end
   end

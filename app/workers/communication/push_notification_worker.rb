@@ -3,6 +3,7 @@
 module Communication
   class PushNotificationWorker
     include Sidekiq::Worker
+    sidekiq_options unique: true
 
     ### this is not an idempotent job as sidekiq specifies that it should be.
     # could separate these jobs into a single notification send, but that eliminates the possibility
@@ -11,7 +12,7 @@ module Communication
     # notification hash is of device_token string keys related to message hash values in the Pushmeup format
     # currently only supports ios notifications
     def perform(apple_hash, google_hash, google_hash_collapsable, the_key)
-      logger.info "sending notifications with apple_hash: #{apple_hash}, and google_hash: #{google_hash}"
+      logger.info "sending notifications to #{apple_hash.keys.count} apple devices and #{google_hash.keys.count} google devices"
 
       # Define that we want persistent connection
       unless apple_hash.blank?

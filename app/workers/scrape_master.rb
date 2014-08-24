@@ -1,5 +1,4 @@
 # This class iterates over the validated ScrapeResources
-
 class ScrapeMaster
   include Sidekiq::Worker
   sidekiq_options queue: :scraping
@@ -8,6 +7,9 @@ class ScrapeMaster
 
   recurrence { daily }
 
+  # leave out of new_relic apdex score
+  # newrelic_ignore_apdex
+
   def perform
     resources = ScrapeResource.all
 
@@ -15,7 +17,7 @@ class ScrapeMaster
     resources.each do |resource|
       next unless resource.validated
 
-      puts "handling validated resource: #{resource.inspect}"
+      logger.info "handling validated resource: #{resource.inspect}"
 
       case resource.engine_type
       when 'nested'

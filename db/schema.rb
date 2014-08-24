@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140819133545) do
+ActiveRecord::Schema.define(version: 20140822172719) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -71,9 +71,6 @@ ActiveRecord::Schema.define(version: 20140819133545) do
     t.text     "announcement_description"
     t.integer  "institution_id",                                       null: false
     t.integer  "user_id"
-    t.integer  "department_id"
-    t.integer  "club_id"
-    t.integer  "circle_id"
     t.boolean  "public",                               default: false
     t.integer  "comment_count"
     t.boolean  "deleted",                              default: false
@@ -84,37 +81,45 @@ ActiveRecord::Schema.define(version: 20140819133545) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.integer  "default_score",                        default: 0
+    t.string   "category"
+    t.integer  "poster_id"
   end
 
-  add_index "announcements", ["circle_id"], name: "index_announcements_on_circle_id", using: :btree
-  add_index "announcements", ["club_id"], name: "index_announcements_on_club_id", using: :btree
-  add_index "announcements", ["department_id"], name: "index_announcements_on_department_id", using: :btree
   add_index "announcements", ["institution_id"], name: "index_announcements_on_institution_id", using: :btree
   add_index "announcements", ["title"], name: "index_announcements_on_title", using: :btree
   add_index "announcements", ["user_id"], name: "index_announcements_on_user_id", using: :btree
 
   create_table "athletic_events", force: true do |t|
-    t.integer  "institution_id",                            null: false
-    t.integer  "athletic_team_id",                          null: false
+    t.integer  "institution_id",                                null: false
+    t.integer  "athletic_team_id",                              null: false
     t.string   "opponent"
     t.float    "team_score",         limit: 24
     t.float    "opponent_score",     limit: 24
     t.string   "home_or_away"
-    t.string   "location",                                  null: false
+    t.string   "location",                                      null: false
     t.string   "result"
     t.text     "note"
-    t.datetime "date_and_time"
+    t.datetime "start_time"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "scrape_resource_id"
     t.integer  "default_score",                 default: 0
+    t.string   "title"
+    t.string   "description"
+    t.string   "url"
+    t.boolean  "public",                        default: false
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+    t.datetime "end_time"
   end
 
   add_index "athletic_events", ["athletic_team_id"], name: "index_athletic_events_on_athletic_team_id", using: :btree
-  add_index "athletic_events", ["date_and_time"], name: "index_athletic_events_on_date_and_time", using: :btree
   add_index "athletic_events", ["institution_id"], name: "index_athletic_events_on_institution_id", using: :btree
   add_index "athletic_events", ["location"], name: "index_athletic_events_on_location", using: :btree
   add_index "athletic_events", ["opponent"], name: "index_athletic_events_on_opponent", using: :btree
+  add_index "athletic_events", ["start_time"], name: "index_athletic_events_on_start_time", using: :btree
 
   create_table "athletic_teams", force: true do |t|
     t.integer  "institution_id",               null: false
@@ -125,6 +130,7 @@ ActiveRecord::Schema.define(version: 20140819133545) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "subscriber_count", default: 0
+    t.string   "simple_name"
   end
 
   add_index "athletic_teams", ["gender"], name: "index_athletic_teams_on_gender", using: :btree
@@ -211,7 +217,7 @@ ActiveRecord::Schema.define(version: 20140819133545) do
     t.string   "info"
     t.string   "url"
     t.string   "regex"
-    t.boolean  "active"
+    t.boolean  "active",         default: false
     t.integer  "institution_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -219,11 +225,11 @@ ActiveRecord::Schema.define(version: 20140819133545) do
 
   create_table "data_resources", force: true do |t|
     t.string   "info"
-    t.string   "column_name",      null: false
-    t.integer  "resource_type_id", null: false
+    t.string   "column_name",                      null: false
+    t.integer  "resource_type_id",                 null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "foreign_key"
+    t.boolean  "foreign_key",      default: false
   end
 
   create_table "departments", force: true do |t|
@@ -292,19 +298,6 @@ ActiveRecord::Schema.define(version: 20140819133545) do
   add_index "event_attendees", ["added_by"], name: "index_event_attendees_on_added_by", using: :btree
   add_index "event_attendees", ["event_attended"], name: "index_event_attendees_on_event_attended", using: :btree
   add_index "event_attendees", ["user_id"], name: "index_event_attendees_on_user_id", using: :btree
-
-  create_table "event_views", force: true do |t|
-    t.integer  "user_id",        null: false
-    t.string   "category",       null: false
-    t.integer  "event_viewed",   null: false
-    t.datetime "date_viewed"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "institution_id", null: false
-  end
-
-  add_index "event_views", ["event_viewed"], name: "index_event_views_on_event_viewed", using: :btree
-  add_index "event_views", ["user_id"], name: "index_event_views_on_user_id", using: :btree
 
   create_table "events_page_urls", force: true do |t|
     t.integer  "institution_id",       null: false
@@ -448,11 +441,13 @@ ActiveRecord::Schema.define(version: 20140819133545) do
   end
 
   create_table "resource_urls", force: true do |t|
-    t.string   "url",                null: false
+    t.string   "url",                                null: false
     t.string   "info"
-    t.integer  "scrape_resource_id", null: false
+    t.integer  "scrape_resource_id",                 null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "validated",          default: false
+    t.string   "scraped_value"
   end
 
   create_table "scrape_resources", force: true do |t|
@@ -471,13 +466,14 @@ ActiveRecord::Schema.define(version: 20140819133545) do
 
   create_table "selectors", force: true do |t|
     t.string   "info"
-    t.string   "selector",                           null: false
-    t.boolean  "top_level",          default: false
+    t.string   "selector",                                 null: false
+    t.boolean  "top_level",                default: false
     t.integer  "parent_id"
     t.integer  "data_resource_id"
-    t.integer  "scrape_resource_id",                 null: false
+    t.integer  "scrape_resource_id",                       null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "foreign_data_resource_id"
   end
 
   create_table "simple_events", force: true do |t|
@@ -485,7 +481,7 @@ ActiveRecord::Schema.define(version: 20140819133545) do
     t.text     "event_description"
     t.integer  "institution_id",                                 null: false
     t.integer  "user_id"
-    t.string   "event_url"
+    t.string   "url"
     t.boolean  "public",                         default: false
     t.integer  "comment_count"
     t.datetime "start_date",                                     null: false
@@ -503,6 +499,7 @@ ActiveRecord::Schema.define(version: 20140819133545) do
     t.string   "category"
     t.integer  "organizer_id"
     t.integer  "default_score",                  default: 0
+    t.string   "location"
   end
 
   add_index "simple_events", ["institution_id"], name: "index_simple_events_on_institution_id", using: :btree
@@ -564,5 +561,18 @@ ActiveRecord::Schema.define(version: 20140819133545) do
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
   add_index "users", ["institution_id"], name: "index_users_on_institution_id", using: :btree
   add_index "users", ["last_name"], name: "index_users_on_last_name", using: :btree
+
+  create_table "views", force: true do |t|
+    t.integer  "user_id",        null: false
+    t.string   "category",       null: false
+    t.integer  "content_id",     null: false
+    t.datetime "date_viewed"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "institution_id", null: false
+  end
+
+  add_index "views", ["content_id"], name: "index_views_on_content_id", using: :btree
+  add_index "views", ["user_id"], name: "index_views_on_user_id", using: :btree
 
 end
