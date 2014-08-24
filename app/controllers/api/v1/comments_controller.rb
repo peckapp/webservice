@@ -67,8 +67,8 @@ module Api
 
       def add_like
         @comment = Comment.find(params[:id])
+        liker = User.find(params[:liker])
         if params[:liker].to_i == auth[:user_id].to_i
-          liker = User.find(params[:liker])
           liker.like!(@comment)
 
           @likers = @comment.likers(User)
@@ -78,6 +78,19 @@ module Api
             @likes << user.id
           end
         end
+
+        user = User.find(@comment.user_id)
+
+        #### Creates a Peck notification for likes ####
+        place = ""
+        if @comment.category = 'circles'
+           place = Circle.find(@comment.comment_from).circle_name
+        elsif @comment.category = 'simple'
+           place = SimpleEvent.find(@comment.comment_from).title
+        else
+           place = Announcement.find(@comment.comment_from).title
+        end
+        Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "comment_like", message: "#{liker.first_name} likes your comment in #{place}.")
       end
 
       def unlike

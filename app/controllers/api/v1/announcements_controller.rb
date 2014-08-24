@@ -67,8 +67,8 @@ module Api
         @announcement = Announcement.find(params[:id])
 
         # liker must have same id as the user id of authentication params
+        liker = User.find(params[:liker])
         if params[:liker].to_i == auth[:user_id].to_i
-          liker = User.find(params[:liker])
 
           # above user is added to the set of likers of this announcement
           liker.like!(@announcement)
@@ -80,6 +80,12 @@ module Api
             @likes << user.id
           end
         end
+
+        #### Creates a Peck notification for likes ####
+
+        # pecks for likes on an announcement
+        user = User.find(@announcement.user_id)
+        Peck.create(user_id: user.id, institution_id: user.institution_id, notification_type: "announcement_like", message: "#{liker.first_name} likes your announcement: #{@announcement.title}.")
       end
 
       # method for unliking announcements
