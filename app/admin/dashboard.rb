@@ -7,8 +7,11 @@ ActiveAdmin.register_page 'Dashboard' do
       columns do
         column do
           panel 'Deployment Information' do
-            link = link_to(`git rev-parse --short HEAD`, "https://github.com/peckapp/webservice/commit/#{`git rev-parse HEAD`}")
-            para %(<h4>Currently deployed:</h4> <br/> <b> #{`git log -1 --pretty=%B`} </b> , #{link}).html_safe
+            c = PeckDalli.client
+            para c.stats.pretty_print_inspect
+            c.close
+            # link = link_to(`git rev-parse --short HEAD`, "https://github.com/peckapp/webservice/commit/#{`git rev-parse HEAD`}")
+            # para %(<h4>Currently deployed:</h4> <br/> <b> #{`git log -1 --pretty=%B`} </b> , #{link}).html_safe
           end
         end
         column do
