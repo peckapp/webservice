@@ -90,9 +90,8 @@ class UltimateTestHelper < ActionController::TestCase
 
     @controller = @the_controller
     @params_show.keys.each do |attribute|
-      unless @attributes.include? attribute
-        assert(false, 'Attribute not found in database table.')
-      end
+      next if @attributes.include? attribute
+      assert(false, 'Attribute not found in database table.')
     end
 
     # circles and circle members require logging in.
@@ -109,6 +108,7 @@ class UltimateTestHelper < ActionController::TestCase
 
   test 'should_post_create' do
     next unless is_subclass? && is_controller?
+    next if institutions_controller?
     the_user = super_create_user
 
     auth_params = session_create
@@ -138,6 +138,7 @@ class UltimateTestHelper < ActionController::TestCase
 
   test 'should_patch_update' do
     next unless is_subclass? && is_controller? && !is_pecks_controller?
+    next if institutions_controller?
     the_user = super_create_user
 
     auth_params = session_create
@@ -167,6 +168,7 @@ class UltimateTestHelper < ActionController::TestCase
 
   test 'should_delete_destroy' do
     next unless is_subclass? && is_controller?
+    next if institutions_controller?
     the_user = super_create_user
 
     auth_params = session_create
@@ -213,6 +215,10 @@ class UltimateTestHelper < ActionController::TestCase
 
   def is_users_controller?
     @class && @class == UsersControllerTest
+  end
+
+  def institutions_controller?
+    @class && @class == InstitutionsControllerTest
   end
 
   def is_controller?

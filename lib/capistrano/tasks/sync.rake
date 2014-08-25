@@ -25,7 +25,7 @@ namespace :sync do
     be called on 'deploy:setup'
   DESC
   task :setup do
-    on roles(:db) do
+    on roles(:db, primary: true) do
       execute "cd #{shared_path}; mkdir -p sync"
     end
     run_locally do
@@ -51,7 +51,7 @@ namespace :sync do
       declared in the sync_backups variable and defaults to 5.
     DESC
     task :db do
-      on roles(:db) do # only: { primary: true } do
+      on roles(:db, primary: true) do # only: { primary: true } do
         stage = fetch(:stage, 'development')
         filename = "database.#{stage}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
         # on_rollback { delete "#{shared_path}/sync/#{filename}" } # not supported in capistrano 3
@@ -119,7 +119,7 @@ namespace :sync do
       declared in the sync_backups variable and defaults to 5.
     DESC
     task :db do
-      on roles(:db) do # roles: :db, only: { primary: true } do
+      on roles(:db, primary: true) do # roles: :db, only: { primary: true } do
 
         filename = "database.#{stage}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
 

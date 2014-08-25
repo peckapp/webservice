@@ -11,6 +11,7 @@ class InstitutionsControllerTest < UltimateTestHelper
     @params_update = { name: 'Sample Institution' }
     @model_type = :institution
     @model = Institution
+    @class = InstitutionsControllerTest
     @id = 1
     ActionController::Parameters.action_on_unpermitted_parameters = :raise
   end
