@@ -185,6 +185,7 @@ class NestedScraper
       case key
       when :sport_name
         # could use some work, may not apply to every case
+        sport = team.match(/ .*/).to_s.squish
         team.sport_name = sport
       when :gender
         gender = team.simple_name.match(/(M|m)en|(W|w)omen/).to_s
