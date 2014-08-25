@@ -4,7 +4,7 @@ ActiveAdmin.register Institution do
   # https://github.com/gregbell/active_admin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
   permit_params :name, :street_address, :city, :state, :country, :gps_longitude, :gps_latitude, :range,
-                :configuration_id, :api_key, :email_regex
+                :configuration_id, :api_key, :email_regex, :public
   #
   # or
   #
@@ -29,6 +29,7 @@ ActiveAdmin.register Institution do
       f.input :range
       f.input :configuration_id
       f.input :email_regex
+      f.input :public, as: :radio
       f.input :api_key
     end
     f.actions

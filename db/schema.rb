@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140822172719) do
+ActiveRecord::Schema.define(version: 20140825154939) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -137,6 +137,13 @@ ActiveRecord::Schema.define(version: 20140822172719) do
   add_index "athletic_teams", ["institution_id"], name: "index_athletic_teams_on_institution_id", using: :btree
   add_index "athletic_teams", ["sport_name"], name: "index_athletic_teams_on_sport_name", using: :btree
 
+  create_table "attendees_users", id: false, force: true do |t|
+    t.integer "event_attendee_id", null: false
+    t.integer "user_id",           null: false
+  end
+
+  add_index "attendees_users", ["event_attendee_id", "user_id"], name: "index_attendees_users_on_event_attendee_id_and_user_id", using: :btree
+
   create_table "circle_members", force: true do |t|
     t.integer  "circle_id",                      null: false
     t.integer  "user_id",                        null: false
@@ -151,6 +158,13 @@ ActiveRecord::Schema.define(version: 20140822172719) do
   add_index "circle_members", ["circle_id"], name: "index_circle_members_on_circle_id", using: :btree
   add_index "circle_members", ["invited_by"], name: "index_circle_members_on_invited_by", using: :btree
   add_index "circle_members", ["user_id"], name: "index_circle_members_on_user_id", using: :btree
+
+  create_table "circle_members_users", id: false, force: true do |t|
+    t.integer "user_id",          null: false
+    t.integer "circle_member_id", null: false
+  end
+
+  add_index "circle_members_users", ["user_id", "circle_member_id"], name: "circle_members_users_index", using: :btree
 
   create_table "circles", force: true do |t|
     t.integer  "institution_id", null: false
@@ -308,11 +322,11 @@ ActiveRecord::Schema.define(version: 20140822172719) do
   add_index "follows", ["follower_id", "follower_type"], name: "fk_follows", using: :btree
 
   create_table "institutions", force: true do |t|
-    t.string   "name",                        null: false
+    t.string   "name",                                       null: false
     t.string   "street_address"
-    t.string   "city",                        null: false
-    t.string   "state",                       null: false
-    t.string   "country",                     null: false
+    t.string   "city",                                       null: false
+    t.string   "state",                                      null: false
+    t.string   "country",                                    null: false
     t.float    "gps_longitude",    limit: 24
     t.float    "gps_latitude",     limit: 24
     t.float    "range",            limit: 24
@@ -322,10 +336,18 @@ ActiveRecord::Schema.define(version: 20140822172719) do
     t.datetime "updated_at"
     t.string   "email_regex"
     t.string   "time_zone"
+    t.boolean  "public",                      default: true
   end
 
   add_index "institutions", ["configuration_id"], name: "index_institutions_on_configuration_id", using: :btree
   add_index "institutions", ["name"], name: "index_institutions_on_name", using: :btree
+
+  create_table "inviters_users", id: false, force: true do |t|
+    t.integer "event_attendee_id", null: false
+    t.integer "user_id",           null: false
+  end
+
+  add_index "inviters_users", ["event_attendee_id", "user_id"], name: "index_inviters_users_on_event_attendee_id_and_user_id", using: :btree
 
   create_table "likes", force: true do |t|
     t.string   "liker_type"
