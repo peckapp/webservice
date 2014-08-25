@@ -27,9 +27,10 @@ module Api
           user.circle_members << @circle_member
 
           # create the peck with these attributes
-          peck = Peck.create(user_id: @circle_member.user_id, institution_id: @circle_member.institution_id,
-                             notification_type: 'circle_invite', message: the_message, send_push_notification: send_push_notification,
-                             invited_by: @circle_member.invited_by, invitation: @circle_member.id, refers_to: @circle_member.circle_id)
+          peck =
+          Peck.create(user_id: @circle_member.user_id, institution_id: @circle_member.institution_id,
+          notification_type: 'circle_invite', message: the_message, send_push_notification: send_push_notification,
+          invited_by: @circle_member.invited_by, invitation: @circle_member.id, refers_to: @circle_member.circle_id)
 
           notify(user, peck)
         else
@@ -44,6 +45,7 @@ module Api
 
         @peck = Peck.find(params[:peck_id])
 
+        # makes it so the user cannot press accept/decline on the peck again
         @peck.update_attributes(interacted: true)
       end
 
@@ -57,6 +59,7 @@ module Api
       end
 
       def destroy
+        # case where user declines on the peck
         @circle_member = CircleMember.find(params[:id])
         circle = Circle.find(@circle_member.circle_id)
         circle.circle_members.destroy(@circle_member)
@@ -67,6 +70,7 @@ module Api
       end
 
       def leave_circle
+        # case where user is in the circle but decides to leave it
         circle_member_destroy_params = params[:circle_member]
         @circle_member = CircleMember.where(:user_id => circle_member_destroy_params[:user_id]).where(:circle_id => circle_member_destroy_params[:circle_id]).first.destroy
       end
