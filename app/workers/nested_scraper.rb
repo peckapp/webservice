@@ -172,6 +172,9 @@ class NestedScraper
       when :location
         # logger.warn "Arbitrarily assigning 'Williams College' as the location for athletic event. TODO: follow links for this info"
         event.location = 'Williams College'
+      when :end_time
+        # logger.warn "Arbitrarily assigning end_time to a length of 1 hour. TODO: follow links for this info"
+        event.end_time = event.start_time + 1.hours
       else
         logger.error "repair_athletic_event failed to handle key: #{key}"
       end
