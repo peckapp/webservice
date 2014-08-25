@@ -119,7 +119,7 @@ namespace :sync do
       declared in the sync_backups variable and defaults to 5.
     DESC
     task :db do
-      on primary :db do # roles: :db, only: { primary: true } do
+      on primary :db do
 
         filename = "database.#{stage}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
 
@@ -157,32 +157,40 @@ namespace :sync do
       end
     end
 
-    # desc <<-DESC
-    #   Sync declared directories from the local development environement to the selected multi_stage
-    #   environment. The synced directories must be declared as an array of Strings with the sync_directories
-    #   variable.  The path is relative to the rails root.
-    # DESC
-    # task :fs, roles: :web, once: true do
-    #
-    #   server, port = host_and_port
-    #   Array(fetch(:sync_directories, [])).each do |syncdir|
-    #     destination, base = Pathname.new(syncdir).split
-    #     if File.directory? "#{syncdir}"
-    #       # Make a backup
-    #       logger.info "backup #{syncdir}"
-    #       run "tar cjf #{shared_path}/sync/#{base}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.tar.bz2 #{current_path}/#{syncdir}"
-    #       purge_old_backups "#{base}"
-    #     else
-    #       logger.info "Create '#{syncdir}' directory"
-    #       run "mkdir #{current_path}/#{syncdir}"
-    #     end
-    #
-    #     # Sync directory up
-    #     logger.info "sync #{syncdir} to #{server}:#{port} from local"
-    #     system "rsync --verbose --archive --compress --keep-dirlinks --delete --stats --rsh='ssh -p #{port}' #{syncdir} #{user}@#{server}:#{current_path}/#{destination}"
-    #   end
-    #   logger.important "sync filesystem from local to the stage '#{stage}' finished"
-    # end
+    desc <<-DESC
+      Sync declared directories from the local development environement to the selected multi_stage
+      environment. The synced directories must be declared as an array of Strings with the sync_directories
+      variable.  The path is relative to the rails root.
+    DESC
+    task :fs do
+      on roles(:web), once: true do
+        unless stage == :production
+          error "fs sync currently only configured for production, unable to handle: #{stage}"
+          next
+        end
+
+        server, port = host_and_port
+        Array(fetch(:sync_directories, [])).each do |syncdir|
+          destination, base = Pathname.new(syncdir).split
+          if File.directory? "#{syncdir}"
+            # Make a backup
+            info "backup #{syncdir}"
+            execute "tar cjf #{shared_path}/sync/#{base}.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.tar.bz2 #{current_path}/#{syncdir}"
+            purge_old_backups "#{base}"
+          else
+            info "Create '#{syncdir}' directory"
+            execute "mkdir #{current_path}/#{syncdir}"
+          end
+
+          run_locally do
+            # Sync directory up
+            logger.info "sync #{syncdir} to #{server}:#{port} from local"
+            execute "rsync --verbose --archive --compress --keep-dirlinks --delete --stats --rsh='ssh -p #{port}' #{syncdir} #{user}@#{server}:#{current_path}/#{destination}"
+          end
+        end
+        logger.important "sync filesystem from local to the stage '#{stage}' finished"
+      end
+    end
 
   end
 

@@ -125,7 +125,7 @@ class NestedScraper
       if result
         logger.info "Saved validated model of type '#{new_model.class}' with id: #{new_model.id}\n"
       else
-        logger.info "Validated model of type '#{new_model.class}' already existed and was not saved"
+        # logger.info "Validated model of type '#{new_model.class}' already existed and was not saved"
       end
       return result
     else

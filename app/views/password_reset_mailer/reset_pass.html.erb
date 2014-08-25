@@ -13,7 +13,8 @@
     </p>
 
     <p>
-      Click <%= link_to "here", desktop_mobile_resets_url(host: "loki.peckapp.com:3500", id: @id, user: {password: @temp_password}) %> to confirm resetting your password to your temporary password.
+      <% host_name = Rails.env.production? ? "https://yggdrasil.peckapp.com" : "http://loki.peckapp.com:3500" %>
+      Click <%= link_to "here", desktop_mobile_resets_url(host: host_name, id: @id, user: {password: @temp_password}) %> to confirm resetting your password to your temporary password.
     </p>
   </body>
 </html>

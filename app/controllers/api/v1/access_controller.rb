@@ -51,7 +51,7 @@ module Api
 
           if the_udid
             # Send UDID when you log in.
-            @udid = UniqueDeviceIdentifier.where(udid: the_udid, device_type: the_device_type, token: the_token).first
+            @udid = UniqueDeviceIdentifier.find_by(udid: the_udid, device_type: the_device_type, token: the_token)
 
             # the case where the udid given the values from params is nonexistant
             if !@udid

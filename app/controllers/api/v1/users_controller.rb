@@ -86,7 +86,7 @@ module Api
           session[:api_key] = @user.api_key
         else
           head :bad_request
-          logger.warn "tried to not send a udid"
+          logger.warn 'tried to not send a udid'
         end
       end
 
@@ -125,43 +125,43 @@ module Api
           end
 
           if @user.update_attributes(user_signup_params(uparams))
-             @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token
-             @user.save
-             auth[:authentication_token] = @user.authentication_token
+            @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token
+            @user.save
+            auth[:authentication_token] = @user.authentication_token
 
             if the_udid
               # check if udid/device token is provided
-               @udid = UniqueDeviceIdentifier.where(udid: the_udid, token: the_token, device_type: the_device_type).first
+              @udid = UniqueDeviceIdentifier.where(udid: the_udid, token: the_token, device_type: the_device_type).first
 
-               if ! @udid
-                 if the_token
-                   @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token, device_type: the_device_type)
-                 else
-                   @udid = UniqueDeviceIdentifier.create(udid: the_udid, device_type: the_device_type)
-                 end
+              if !@udid
+                if the_token
+                  @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token, device_type: the_device_type)
+                else
+                  @udid = UniqueDeviceIdentifier.create(udid: the_udid, device_type: the_device_type)
+                end
 
-                 UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
-                 @user.unique_device_identifiers << @udid
-               else
-                 @udid.touch
+                UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+                @user.unique_device_identifiers << @udid
+              else
+                @udid.touch
 
-                 @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
-                 if @udid_user
-                      # update the timestamp if the udid_user already exists
-                    @udid_user.touch
-                 else
-                    @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
-                 end
-               end
-             the_id = @user.id
-             Communication::SendEmail.perform_async(the_id, nil)
-             else
-               head :bad_request
-               logger.warn "tried to not send a udid"
-             end
-           else
-             logger.warn "attempted to super_create user with id: #{@user.id} with invalid authentication sign_up_params"
-           end
+                @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
+                if @udid_user
+                  # update the timestamp if the udid_user already exists
+                  @udid_user.touch
+                else
+                  @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
+                end
+              end
+              the_id = @user.id
+              Communication::SendEmail.perform_async(the_id, nil)
+            else
+              head :bad_request
+              logger.warn "tried to not send a udid"
+            end
+          else
+            logger.warn "attempted to super_create user with id: #{@user.id} with invalid authentication sign_up_params"
+          end
         else
           logger.warn "attempted to super_create user with non-existant id: #{@user.id}"
         end
@@ -210,23 +210,23 @@ module Api
             if @user.update_attributes(facebook_login_params(fb_params))
 
               ### Active user and is not fb registered, so trying to take someone else's email
-               if active_user && send_confirmation_email
-                 head :unprocessable_entity
-                 logger.warn "tried to take the email of an already existing user"
+              if active_user && send_confirmation_email
+                head :unprocessable_entity
+                logger.warn 'tried to take the email of an already existing user'
 
-                 # not an active user, is not fb registered, and primary fb email
-                 # does not match the institution, so we send a confirmation email
-               elsif send_confirmation_email
-                 @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token
-                 @user.save
-                 auth[:authentication_token] = @user.authentication_token
-                 Communication::SendEmail.perform_async(@user.id, fb_link)
+                # not an active user, is not fb registered, and primary fb email
+                # does not match the institution, so we send a confirmation email
+              elsif send_confirmation_email
+                @user.authentication_token = SecureRandom.hex(30) unless @user.authentication_token
+                @user.save
+                auth[:authentication_token] = @user.authentication_token
+                Communication::SendEmail.perform_async(@user.id, fb_link)
 
-                 # primary fb email matches institution, so immediately logs in using fb credentials
-               else
-                 @user.update_attributes(active: true, facebook_link: fb_link, authentication_token: SecureRandom.hex(30))
-                 auth[:authentication_token] = @user.authentication_token
-               end
+                # primary fb email matches institution, so immediately logs in using fb credentials
+              else
+                @user.update_attributes(active: true, facebook_link: fb_link, authentication_token: SecureRandom.hex(30))
+                auth[:authentication_token] = @user.authentication_token
+              end
             end
           end
 
@@ -259,7 +259,7 @@ module Api
               end
             else
               head :bad_request
-              logger.warn "tried to not send a udid"
+              logger.warn 'tried to not send a udid'
             end
             logger.info "super_created user with id: #{@user.id}"
           else
@@ -315,7 +315,18 @@ module Api
         end
       end
 
+      def update_device_token
+        if params[:id].to_i == auth[:user_id].to_i
+          @user = User.find(params[:id])
+          @user.update_attributes(update_device_token_params)
+          render status: :accepted
+        else
+          head :unauthorized
+        end
+      end
+
       def destroy
+        # allow users to destroy only themselves
         if params[:id].to_i == auth[:user_id].to_i
           @user = User.find(params[:id]).destroy
         else
@@ -324,21 +335,26 @@ module Api
       end
 
       private
-        def user_signup_params(parameters)
-          parameters.permit(:first_name, :last_name, :email, :password, :password_confirmation, :blurb, :institution_id)
-        end
 
-        def user_update_params
-          params.require(:user).permit(:first_name, :last_name, :email, :blurb, :facebook_link, :active, :institution_id)
-        end
+      def user_signup_params(parameters)
+        parameters.permit(:first_name, :last_name, :email, :password, :password_confirmation, :blurb, :institution_id)
+      end
 
-        def facebook_login_params(parameters)
-          parameters.permit(:first_name, :last_name, :email, :facebook_token, :institution_id)
-        end
+      def user_update_params
+        params.require(:user).permit(:first_name, :last_name, :email, :blurb, :facebook_link, :active, :institution_id)
+      end
 
-        def password_update_params
-          params.require(:user).require(:new_password).permit(:password, :password_confirmation)
-        end
+      def facebook_login_params(parameters)
+        parameters.permit(:first_name, :last_name, :email, :facebook_token, :institution_id)
+      end
+
+      def password_update_params
+        params.require(:user).require(:new_password).permit(:password, :password_confirmation)
+      end
+
+      def update_device_token_params
+        params.require(:user).permit(:device_token)
+      end
     end
   end
 end
