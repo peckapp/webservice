@@ -10,7 +10,7 @@ module Explore
     def perform(institution_id)
       @cache_client = PeckDalli.client
 
-      logger.info "starting explore builder with cache client stats: #{@cache_client}"
+      logger.info "starting explore builder for institution #{institution_id}"
 
       @cache_client.set("campus_athletic_explore_#{institution_id}", analyze_athletic_events(institution_id))
       @cache_client.set("campus_simple_explore_#{institution_id}", analyze_simple_events(institution_id))

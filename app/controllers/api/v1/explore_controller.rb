@@ -17,9 +17,14 @@ module Api
         announcement_scores = dc.get("campus_announcement_explore_#{auth_inst_id}")
         athletic_scores = dc.get("campus_athletic_explore_#{auth_inst_id}")
 
-        if simple_scores.blank? || announcement_scores.blank? || athletic_scores.blank?
+        if simple_scores.blank? && announcement_scores.blank? && athletic_scores.blank?
           run_builder
         else
+          # if one of them is blank, run them all anyway. shouldn't really ever need to happen in production
+          if simple_scores.blank? || announcement_scores.blank? || athletic_scores.blank?
+            run_builder
+          end
+
           # save all events that user is attending to remove it from explore
           user_events = EventAttendee.where(user_id: auth_inst_id, category: 'simple').pluck(:event_attended)
           user_announcements = Announcement.where(user_id: auth_inst_id).pluck(:id)
