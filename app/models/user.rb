@@ -133,7 +133,7 @@ class User < ActiveRecord::Base
 
   # for active admin
   def display_name
-    "#{first_name} #{last_name}"
+    user.email.blank? ? user.id : "#{first_name} #{last_name}"
   end
 
   ###############################
