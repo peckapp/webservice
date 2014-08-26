@@ -184,6 +184,7 @@ module Api
 
         @user = User.find(params[:id])
 
+        ### Handles email matching with specified institution ###
         if @user && params[:id].to_i == auth[:user_id].to_i
 
           # if the user already has an email that matches with their facebook college email
@@ -230,12 +231,13 @@ module Api
             end
           end
 
+          ### Handles device identification ###
           if @user.authentication_token
 
             if the_udid
               # check if udid/device token is provided
-              @udid = UniqueDeviceIdentifier.where(udid: the_udid, token: the_token, device_type: the_device_type).first
-              if ! @udid
+              @udid = UniqueDeviceIdentifier.find_by(udid: the_udid)
+              if !@udid
                 if the_token
                   @udid = UniqueDeviceIdentifier.create(udid: the_udid, token: the_token, device_type: the_device_type)
                 else
