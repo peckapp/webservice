@@ -38,4 +38,26 @@ ActiveAdmin.register User do
     column :updated_at
     actions
   end
+
+  show do
+    attributes_table do # builds an input field for specified attributes
+      row :id
+      row :active
+      row :institution
+      row :first_name
+      row :last_name
+      row :email
+      row :blurb
+      row :facebook_link
+      row :facebook_token
+      row :api_key
+      row :authentication_token
+      row :password_hash
+      row :password_salt
+      row :image, as: :file, hint: f.template.image_tag(f.object.image.url(:detail))
+      row :created_at
+      row :updated_at
+    end
+  end
+
 end

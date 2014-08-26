@@ -20,8 +20,8 @@ ActiveAdmin.register UdidUser do
   index do
     selectable_column
     id_column
-    column :user
     column :unique_device_identifier
+    column :user
     column :created_at
     column :updated_at
     actions
