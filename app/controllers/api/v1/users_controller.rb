@@ -241,7 +241,7 @@ module Api
                 else
                   @udid = UniqueDeviceIdentifier.create(udid: the_udid, device_type: the_device_type)
                 end
-
+                logger.error "UniqueDeviceIdentifier creation failed: #{@udid.errors.messages}" unless @udid.errors.messages.blank?
                 UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
                 @user.unique_device_identifiers << @udid
 
