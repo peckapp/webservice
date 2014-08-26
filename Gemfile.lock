@@ -287,6 +287,8 @@ GEM
       celluloid (>= 0.14.1)
       ice_cube (~> 0.12.0)
       sidekiq (>= 2.16.0)
+    silencer (0.6.0)
+      railties (>= 3)
     sinatra (1.4.5)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -389,6 +391,7 @@ DEPENDENCIES
   sidekiq
   sidekiq-unique-jobs
   sidetiq
+  silencer
   sinatra
   slim
   socialization

@@ -1,8 +1,5 @@
 require File.expand_path('../boot', __FILE__)
 
-# logger to replace standard middleware that can be silenced for specific items
-require File.dirname(__FILE__) + '/../lib/quiet_logger.rb'
-
 require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
@@ -41,7 +38,7 @@ module Webservice
     config.force_ssl = false
 
     # swaps out the standard middleware logger for a silenceable one that is a simple subclass
-    config.middleware.swap Rails::Rack::Logger, QuietLogger, silenced: %w(/api)
+    config.middleware.swap Rails::Rack::Logger, Silencer::Logger, get: ['/api']
 
     # loads environment variables from rails-specfiic yml file
     config.before_configuration do

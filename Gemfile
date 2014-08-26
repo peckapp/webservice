@@ -103,6 +103,8 @@ gem 'devise', '~> 3.2.4'
 # used by the cocaine dependency of Paperclip to allow high-memory requirement
 # operations to be performed without forking, *hopefully* eliminating some out of memory errors
 gem 'posix-spawn'
+# allows for logs to be silenced, helpful for new relic polling calls
+gem 'silencer'
 
 ### HOSTED SERVER MONITORING
 gem 'newrelic_rpm'
