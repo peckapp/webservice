@@ -54,7 +54,9 @@ ActiveAdmin.register User do
       row :authentication_token
       row :password_hash
       row :password_salt
-      row :image, as: :file, hint: f.template.image_tag(f.object.image.url(:detail))
+      row :image do
+        image_tag(user.image.url(:detail))
+      end
       row :created_at
       row :updated_at
     end

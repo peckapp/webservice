@@ -41,8 +41,9 @@ module Api
         if params[:udid]
           @user = User.create
           udid = UniqueDeviceIdentifier.current_or_create_new(udid: params[:udid], device_type: params[:device_type])
+          # only one of thse calls is necessary, creates duplicates otherwise
           UdidUser.create(unique_device_identifier_id: udid.id, user_id: @user.id)
-          @user.unique_device_identifiers << udid
+          # @user.unique_device_identifiers << udid
 
           logger.info "Created anonymous user with id: #{@user.id}"
 
