@@ -23,6 +23,9 @@ class ScrapeMaster
       when 'nested'
         logger.info "handling scrape resource: #{resource.info} with nested scrape engine"
         handle_nested(resource)
+      when 'nested_traverse'
+        logger.info "handling scrape resource: #{resource.info} with nested traverse scrape engine"
+        handle_nested_traverse(resource)
       when 'simple'
         logger.info "handling scrape resource: #{resource.info} with simple scrape engine"
         handle_simple(resource)
@@ -35,6 +38,10 @@ class ScrapeMaster
 
   def handle_nested(resource)
     NestedScraper.perform_async(resource.id)
+  end
+
+  def handle_nested_traverse(resource)
+    NestedTraverseScraper.perform_async(resource.id)
   end
 
   def handle_simple(resource)

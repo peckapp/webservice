@@ -2,11 +2,15 @@
 # follow a nested structure with parent selectors that refer to child selectors
 # parent selectors contain a block of html
 class Selector < ActiveRecord::Base
-  TYPES = %w(content link)
+  TYPES = %w(content foreign_key link)
 
   validates_associated :scrape_resource
   validates_associated :data_resource
   validates :content_type, inclusion: { in: TYPES, message: '%{value} is not an available content type' }
+  validates :content_type, format: { with: /\Aforeign_key\z/, message: 'foreign key has improper content type' },
+                           if: :foreign_key?
+  validates :data_resource_id, presence: true, if: :content?
+
   # validates that parent_id must be nil for top level opbjects
   validate do |selector|
     if top_level && !parent_id.blank?
@@ -43,6 +47,10 @@ class Selector < ActiveRecord::Base
 
   def foreign_key?
     DataResource.find(data_resource_id).foreign_key if data_resource_id
+  end
+
+  def content?
+    content_type == 'content'
   end
 
   def display_name

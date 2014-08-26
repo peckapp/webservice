@@ -38,85 +38,102 @@ class NestedTraverseScraper
   ##############################################
 
   def index_page_scrape(html, r_url, resource)
-    count = 0
-    top_selectors = Selector.where(scrape_resource_id: resource.id, top_level: true)
-    logger.error "Scrape Resource #{resource.id} has no top_level Selectors (url: #{r_url.url})" if top_selectors.count == 0
-    top_selectors.each do |ts|
+    count = Selector.where(scrape_resource_id: resource.id, top_level: true).reduce(0) do |acc, ts|
       # an array of all the top-level items for a given tag. these are nokogiri nodes
       blocks = html.css(ts.selector)
 
       blocks.each do |block| # iterates over Nokogiri nodeset for given css selector
 
-        # creates a model with scrape resource info set
+        # creates a model with default scrape resource info set
         new_model = ts.model.new(scrape_resource_id: resource.id,
-                                 institution_id: resource.institution_id,
                                  url: r_url.url,
+                                 institution_id: resource.institution_id,
                                  public: true)
 
         iterate_children(ts, block, new_model)
 
         # saves new model and increments count if it was inputted
-        count += 1 if validate_and_save(new_model)
+        acc + 1 if validate_and_save(new_model)
       end # end items iteration
     end # end selector iteration
     count
   end
 
+  # builds up the data for the model defined by the structure of the top selector and its child selectors
   # traverse all children for a given top selector
   def iterate_children(ts, block, new_model)
-    logger.error "top selector #{ts.id} for resource #{resource.id} has no children" if ts.children.count == 0
     ts.children.each do |cs|
-      # logger.info "child selector: #{cs.selector}"
-
       # assumes there is only one element - could iterate instead but what case would that be?
-      content_item = block.css(cs.selector).first
+      element = block.css(cs.selector).first
 
-      if !content_item.blank?
-        unless cs.data_resource_id
-          logger.error "no data resource for selector #{cs.id} with found content"
-          next
-        end
-
-        content = content_item.text.squish
-        content = next_non_blank(content_item).text.squish if content.blank?
-        if cs.foreign_key?
-          # logger.info "handling foreign key for selector: #{cs.inspect}"
-
-          # finds the current model matching the single found parameter or creates a new one
-          foreign_resource = cs.foreign_data_resource
-          next unless foreign_resource
-
-          # for now, completed ignore scraped value for foreign key because the only use case is athletic events which can be parsed from it.
-          # this is a shitty hack that needs to be rectified before moving on. Handling foreign keys probably
-          # requires a re-write because they go far beyond the original design and purpose of this class.
-          content = r_url.scraped_value # unless content.match(/^[A-Za-z ']*$/)
-
-          content_model = foreign_resource.minimal_current_or_new(content)
-          content_model[:institution_id] = resource.institution_id
-
-          # models for foreign key content must be saved just as any other model
-          validate_and_save(content_model)
-          # logger.info "found content_model for selector cs.id: #{content_model.inspect}"
-          new_model.assign_attributes(cs.column_name => content_model.id)
-        else
-          # assign the text-based content to the proper column of the model
-          new_model.assign_attributes(cs.column_name => content)
-        end
-      else
-        logger.warn "NO CONTENT FOUND for top selector: #{ts.selector} and child selector: #{cs.selector}"
-      end
+      handle_element(cs, element, new_model)
     end # end top selector children iteration
-  end
+  end # end iterate_children method
 
   ###############################################
   ###  Scraping the detail page for an event  ###
   ###############################################
 
-  def detail_page_scrape
+  def detail_page_scrape(cs, url, new_model)
+    raw = RestClient::Request.execute(url: url, method: :get, verify_ssl: false)
 
+    html = Nokogiri::HTML(raw.squish)
+
+    # this page is itself a child, so its children are grandchildren
+    # for each grandchild, update the model with the value
+    cs.children.each do |gcs|
+      element = html.css(gcs.selector).first
+
+      handle_element(gcs, element, new_model)
+    end
+  end # end detail_page_scrape method
+
+  ##############################################
+  ###  Handling completed or partial models  ###
+  ##############################################
+
+  def handle_element(cs, element, new_model)
+    case cs.content_type
+    when 'content'
+      if element.blank?
+        logger.warn "MISSING ELEMENT for top selector: #{ts.selector} and child selector: #{cs.selector}"
+        next
+      end
+      handle_content_element(cs, element, new_model)
+    when 'foreign_key'
+      handle_foreign_key_element(cs, element, new_model)
+    when 'link'
+      url = element.text
+      detail_page_scrape(cs, url, new_model)
+    else
+      logger.error "UNKNOWN CONTENT TYPE for child selector #{cs.id}: #{cs.selector}"
+    end # end content_type case statement
   end
 
-  ### Handling completed or partial models ###
+  # parses a simple content element where the text ust has to be assigned to the model attribute
+  def handle_content_element(cs, element, new_model)
+    # assumes content is the text at this element
+    content = element.text.squish
+    # handles parsing issues with malformed HTML where content isn't captured by the selector (williams rss links)
+    content = next_non_blank(element).text.squish if content.blank?
+
+    # assign the text-based content to the proper column of the model
+    new_model.assign_attributes(cs.column_name => content)
+  end
+
+  # parses an element corresponding to a foreign key by finding the matching model and assigning the ID
+  def handle_foreign_key_element(cs, element, new_model)
+    # finds the current model matching the single found parameter or creates a new one
+    foreign_resource = cs.foreign_data_resource
+
+    content_model = foreign_resource.minimal_current_or_new(element.text)
+    content_model[:institution_id] = resource.institution_id
+
+    # models for foreign key content must be saved just as any other model, if they existed previously nothing happens
+    validate_and_save(content_model)
+    # logger.info "found content_model for selector cs.id: #{content_model.inspect}"
+    new_model.assign_attributes(cs.column_name => content_model.id)
+  end
 
   def validate_and_save(new_model)
     # will need to check for partial matches that could indicate a change in the displayed content

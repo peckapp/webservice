@@ -1,6 +1,6 @@
 # has many (1+) urls with content of the same format that is scraped repeatedly by the system
 class ScrapeResource < ActiveRecord::Base
-  ENGINES = %w(nested simple custom)
+  ENGINES = %w(nested nested_traverse simple custom)
 
   ### VALIDATIONS ###
   validates :engine_type, inclusion: { in: ENGINES, message: '%{value} is not an available engine' }
