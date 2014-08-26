@@ -7,14 +7,17 @@ module Explore
     include Sidetiq::Schedulable
     recurrence { hourly }
 
-    def perform(institution_id)
+    # ideally would add an optional method parameter to specify an institution_id, but not necessary for now
+    def perform
       @cache_client = PeckDalli.client
 
-      logger.info "starting explore builder for institution #{institution_id}"
+      Institution.all.pluck(:id).each do |inst_id|
+        logger.info "starting explore builder for institution #{inst_id}"
 
-      @cache_client.set("campus_athletic_explore_#{institution_id}", analyze_athletic_events(institution_id))
-      @cache_client.set("campus_simple_explore_#{institution_id}", analyze_simple_events(institution_id))
-      @cache_client.set("campus_announcement_explore_#{institution_id}", analyze_announcements(institution_id))
+        @cache_client.set("campus_athletic_explore_#{inst_id}", analyze_athletic_events(inst_id))
+        @cache_client.set("campus_simple_explore_#{inst_id}", analyze_simple_events(inst_id))
+        @cache_client.set("campus_announcement_explore_#{inst_id}", analyze_announcements(inst_id))
+      end
     end
 
     protected
