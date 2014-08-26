@@ -17,4 +17,14 @@ ActiveAdmin.register UdidUser do
   # Adds this into a dropdown in the top menu bar
   menu parent: 'Accounts and Social'
 
+  index do
+    selectable_column
+    id_column
+    column :user
+    column :unique_device_identifier
+    column :created_at
+    column :updated_at
+    actions
+  end
+
 end

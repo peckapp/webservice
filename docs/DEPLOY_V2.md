@@ -48,6 +48,7 @@ As the great tree in norse mythology that connected the worlds unto each other, 
   - `gem install --no-ri --no-rdoc unicorn`
 - additional setup
   - `yum install -y mysql mysql-devel`
+  - `yum install -y ImageMagick`
 - GlusterFS: http://www.sohailriaz.com/glusterfs-howto-on-centos-6-x/
 - add server to Capistrano deploy file
 - on local: `cap production deploy`
@@ -72,3 +73,4 @@ As the great tree in norse mythology that connected the worlds unto each other, 
 #### Magni
 - **MySQL Port:** tbd
 - **Redis Port:** 7347
+- Install latest stable Redis version: https://gist.github.com/nghuuphuoc/7801123

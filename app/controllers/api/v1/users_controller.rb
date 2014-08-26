@@ -251,7 +251,7 @@ module Api
                 # if the udid exists, update that time stamp
                 @udid.touch
 
-                @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
+                @udid_user = UdidUser.find_by(unique_device_identifier_id: @udid.id, user_id: @user.id)
                 if @udid_user
                     # update the timestamp if the udid_user already exists
                   @udid_user.touch
