@@ -44,7 +44,7 @@ module Explore
         acc << [e.id, analyzer.perform(e.id, institution_id, Announcement)]
 
       end
-      logger.info "Explore Builder analyzed announcements with #{event_scores.count} scores calculated"
+      logger.info "Explore Builder analyzed announcements with #{announcement_scores.count} scores calculated"
       Hash[announcement_scores]
     end
 
@@ -57,7 +57,7 @@ module Explore
         acc << [e.id, analyzer.perform(e.id, institution_id, AthleticEvent)]
 
       end
-      logger.info "Explore Builder analyzed athletic events with #{event_scores.count} scores calculated"
+      logger.info "Explore Builder analyzed athletic events with #{athletic_scores.count} scores calculated"
       Hash[athletic_scores]
     end
   end
