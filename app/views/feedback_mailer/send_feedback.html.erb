@@ -4,8 +4,13 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
+    <p>
+      <%= "User #{@user.id}: #{@user.first_name} #{@user.last_name}" %>
+    </p>
     <p>
       <%= "Institution: #{@institution}" %>
+    </p>
+    <p>
       <%= "Body: #{@content}" %>
     </p>
   </body>

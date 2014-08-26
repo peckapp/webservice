@@ -5,9 +5,9 @@ class FeedbackMailer < ActionMailer::Base
     @content = content
     @institution = Institution.find(institution_id).name
     if @user.email
-      mail(to: "support@peckapp.com", from: "#{@user.first_name} #{@user.last_name} <#{@user.email}>", subject: "Feedback: #{category}")
+      mail(to: "support@peckapp.com", from: "#{@user.first_name} #{@user.last_name} <#{@user.email}>", subject: "Feedback: #{category} - #{@institution}")
     else
-      mail(to: "support@peckapp.com", from: "Anonymous User <anthoney@peckapp.com>", subject: "Feedback: #{category}")
+      mail(to: "support@peckapp.com", from: "Anonymous User <noreply@peckapp.com>", subject: "Feedback: #{category} - #{@institution}")
     end
   end
 end
