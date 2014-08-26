@@ -1,5 +1,8 @@
 require File.expand_path('../boot', __FILE__)
 
+# logger to replace standard middleware that can be silenced for specific items
+require File.dirname(__FILE__) + '/../lib/quiet_logger.rb'
+
 require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
@@ -16,7 +19,7 @@ module Webservice
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    # loads code in lib directory
+    # loads all code in lib directory, may want to itemize this at some point if lib directory gets bloated
     config.autoload_paths  << Rails.root.join('lib') # += %W(#{config.root}/lib)
 
     # sets up a cache store, accessed with 'Rails.cache'
@@ -34,8 +37,11 @@ module Webservice
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    # default doesn't need SSL, change this manualy in specific environments
+    # default doesn't need SSL, change this manually in specific environments
     config.force_ssl = false
+
+    # swaps out the standard middleware logger for a silenceable one that is a simple subclass
+    config.middleware.swap Rails::Rack::Logger, QuietLogger, silenced: %w(/api)
 
     # loads environment variables from rails-specfiic yml file
     config.before_configuration do
