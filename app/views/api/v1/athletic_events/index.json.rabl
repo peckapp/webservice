@@ -5,6 +5,10 @@ attributes :id, :institution_id, :athletic_team_id, :opponent, :team_score, :opp
 
 node(:event_type) { 'athletic' }
 
+node :team_name do |athletic_event|
+  AthleticTeam.find(athletic_event.athletic_team_id)
+end
+
 node :image do |athletic_event|
   athletic_event.image.url
 end

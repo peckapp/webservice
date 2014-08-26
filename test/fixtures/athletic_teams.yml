@@ -22,7 +22,7 @@
   gender: "male"
 <% end %>
 
-<% (11..15).each do |n| %>
+<% (11..20).each do |n| %>
  athletic_team_<%= n %>:
   id: <%= n %>
   institution_id: 2

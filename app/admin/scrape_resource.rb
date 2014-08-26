@@ -68,11 +68,9 @@ ActiveAdmin.register ScrapeResource do
     f.actions
   end
 
-  sidebar 'Resource URLs', only: :show do
+  sidebar 'Resource Urls', only: :show do
     table_for scrape_resource.resource_urls do |t|
       t.column('URL') { |ru| ru.url }
-      t.column('Validated') { |ru| ru.validated }
-      t.column('Scraped Value') { |ru| ru.scraped_value }
     end
   end
 end
