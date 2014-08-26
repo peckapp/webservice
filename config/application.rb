@@ -40,7 +40,7 @@ module Webservice
     config.force_ssl = false
 
     # swaps out the standard middleware logger for a silenceable one that is a simple subclass
-    config.middleware.swap Rails::Rack::Logger, Silencer::Logger, get: ['/api']
+    config.middleware.swap Rails::Rack::Logger, Silencer::Logger, silence: ['/api']
 
     # loads environment variables from rails-specfiic yml file
     config.before_configuration do

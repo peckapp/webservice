@@ -28,17 +28,23 @@ module Api
       end
 
       def update_token
-        @unique_device_identifier = UniqueDeviceIdentifier.find_by(udid: unique_device_identifier_params[:udid])
-        if @unique_device_identifier
-          @unique_device_identifier.update_attributes(token: unique_device_identifier_params[:token])
-          if @unique_device_identifier.save
+        udid = unique_device_identifier_params[:udid]
+        token = unique_device_identifier_params[:token]
+
+        if UniqueDeviceIdentifier.exists?(udid: udid, token: token)
+          # token and UDID pair already exists, no action necessary
+          head :accepted
+        else
+          # get the updated token object from one matching either parameter
+          @unique_device_identifier = UniqueDeviceIdentifier.updated_udid_token_pair(udid, token)
+          if @unique_device_identifier.nil?
+            head :not_found
+          elsif @unique_device_identifier.save
             head :accepted
           else
-            logger.error "errors updating unique_device_identifier: #{@unique_device_identifier.errors.messages}"
+            logger.error "error updating token on unique_device_identifier: #{@unique_device_identifier.errors.messages}"
             head :bad_request
           end
-        else
-          head :not_found
         end
       end
 

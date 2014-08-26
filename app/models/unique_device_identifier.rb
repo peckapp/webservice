@@ -32,6 +32,17 @@ class UniqueDeviceIdentifier < ActiveRecord::Base
     udid
   end
 
+  # finds a udi matching either parameter and updates the other parameter to match. returns an updated but unsaved object
+  def self.updated_udid_token_pair(udid, token)
+    udi = nil
+    if (udi = UniqueDeviceIdentifier.find_by(token: token))
+      udi.update_attributes(udid: udid)
+    elsif (udi = UniqueDeviceIdentifier.find_by(udid: udid))
+      udi.update_attributes(token: token)
+    end
+    udi
+  end
+
   private
 
   def correct_unique_device_identifier_types

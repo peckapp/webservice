@@ -9,6 +9,7 @@
 <% (1..5).each do |n| %>
  unique_device_identifier_<%= n %>:
   udid: <%= "udid_#{n}" %>
+  token: <%= "token_#{n}" %>
   device_type: ios
   id: <%= n %>
 <% end %>
@@ -17,6 +18,7 @@
 <% (6..10).each do |n| %>
  unique_device_identifier_<%= n %>:
   udid: <%= "udid_#{n}" %>
+  token: <%= "token_#{n}" %>
   device_type: android
   id: <%= n %>
 <% end %>

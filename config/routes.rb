@@ -39,7 +39,7 @@ Rails.application.routes.draw do
       resources(:activity_logs, :athletic_events, :athletic_teams, :clubs, :circles, :configurations,
                 :departments, :dining_opportunities, :dining_periods, :dining_places, :views,
                 :events_page_urls, :institutions, :locations, :menu_items, :notification_views,
-                :pecks, :explore)
+                :pecks, :explore, :unique_device_identifiers)
 
       resources :access, only: [:create] do
         collection do
@@ -108,8 +108,6 @@ Rails.application.routes.draw do
           get :check_link, :reset_password
         end
       end
-
-      resource :unique_device_identifiers
 
       # custom route for updating the device token associated with a udid
       patch 'unique_device_identifiers/update_token', to: 'unique_device_identifiers#update_token'
