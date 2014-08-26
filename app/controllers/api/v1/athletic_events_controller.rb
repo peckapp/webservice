@@ -6,12 +6,48 @@ module Api
       respond_to :json
 
       def index
+        if params[:user_id]
+          # events you're attending
+          event_attended_ids = EventAttendee.where(user_id: params[:user_id], category: 'athletic').pluck(:event_attended)
+
+          # club subscriptions
+          subscription_ids = Subscription.where(user_id: params[:user_id], category: 'athletic').pluck(:subscribed_to)
+
+          all_ids = (event_attended_ids + subscription_ids).uniq
+
+          @athletic_events = AthleticEvent.where(id: all_ids)
+        else
+          # this will add only created events IF user id is provided
+          # otherwise all events will be added
+          @athletic_events = specific_index(AthleticEvent, params)
+        end
+
+        # initialize hash mapping events to arrays of likers
+        @likes_for_athletic_event = {}
+
+        # get ids of all comments
+        athletic_event_ids = @athletic_events.pluck(:id)
+
+        all_likes = Like.where(likeable_type: 'AthleticEvent').where(likeable_id: athletic_event_ids).pluck(:likeable_id, :liker_id)
+
+        @athletic_events.each do |event|
+
+          liker_ids = []
+
+          all_likes.each do |like|
+            liker_ids << like[1] if like[0] == event.id
+          end
+
+          @likes_for_athletic_event[event.id] = liker_ids
+        end
+
+        ### Event attendees ###
+
         @athletic_events = specific_index(AthleticEvent, params)
 
-        # event attendees
         @attendee_ids = {}
 
-        all_attendees = EventAttendee.where('category' => 'athletic').pluck(:event_attended, :user_id)
+        all_attendees = EventAttendee.where(category: 'athletic').pluck(:event_attended, :user_id)
 
         @athletic_events.each do |event|
 
@@ -24,8 +60,6 @@ module Api
 
           @attendee_ids[event.id] = attendee_ids
         end
-
-        # athletic_subscription_ids = Subscription.where(user_id: params[:user_id], category: 'athletic').pluck(:subscribed_to)
       end
 
       def show

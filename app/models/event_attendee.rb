@@ -25,6 +25,7 @@ class EventAttendee < ActiveRecord::Base
   validates :user_id, presence: true, numericality: { only_integer: true }
   validates :added_by, presence: true, numericality: { only_integer: true }
   validates :category, presence: true, format: { with: LETTERS_REGEX }
+  validates :category, inclusion: { in: %w(simple athletic), message: '%{value} is not an available category' }
   validates :event_attended, presence: true, numericality: { only_integer: true }
   validates :institution_id, presence: true, numericality: { only_integer: true }
   validate :correct_event_attendee_types

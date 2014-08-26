@@ -6,7 +6,8 @@ attributes :id, :institution_id, :athletic_team_id, :opponent, :team_score, :opp
 node(:event_type) { 'athletic' }
 
 node :team_name do |athletic_event|
-  AthleticTeam.find(athletic_event.athletic_team_id)
+  # gives the simple name which includes the gender
+  AthleticTeam.find(athletic_event.athletic_team_id).simple_name
 end
 
 node :image do |athletic_event|
@@ -17,9 +18,9 @@ node :blurred_image do |athletic_event|
   athletic_event.image.url(:blurred)
 end
 
-# node :likes do |athletic_event|
-#   @likes_for_simple_event[athletic_event.id]
-# end
+node :likes do |athletic_event|
+  @likes_for_athletic_event[athletic_event.id]
+end
 
 node :attendees do |athletic_event|
   @attendee_ids[athletic_event.id]

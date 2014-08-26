@@ -1,9 +1,8 @@
 module Api
   module V1
-    class EventAttendeesController < ApplicationController #Api::BaseController
-
+    class EventAttendeesController < ApplicationController
       # before_action :authenticate_admin_user!, :only => [:create, :update, :destroy]
-      before_action :confirm_logged_in, :only => [:create, :update, :destroy]
+      before_action :confirm_logged_in, only: [:create, :update, :destroy]
 
       respond_to :json
 
@@ -34,7 +33,7 @@ module Api
 
       def destroy
         event_attendee_destroy_params = params[:event_attendee]
-        @event_attendee = EventAttendee.where(:user_id => event_attendee_destroy_params[:user_id]).where(:event_attended =>  event_attendee_destroy_params[:event_attended]).where(:category => event_attendee_destroy_params[:category]).first.destroy
+        @event_attendee = EventAttendee.where(user_id: event_attendee_destroy_params[:user_id]).where(event_attended: event_attendee_destroy_params[:event_attended]).where(category: event_attendee_destroy_params[:category]).first.destroy
       end
 
       private
