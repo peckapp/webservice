@@ -7,7 +7,8 @@ class UdidUser < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  # validates :udid, :presence => true
+  validates :unique_device_identifier_id, presence: true
+  validates :user_id, presence: true
 
   ###############################
   ##                           ##
@@ -24,6 +25,4 @@ class UdidUser < ActiveRecord::Base
   ##                           ##
   ###############################
   scope :sorted, -> { order('udid_users.updated_at ASC') }
-  private
-
 end
