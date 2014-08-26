@@ -2,8 +2,11 @@
 # follow a nested structure with parent selectors that refer to child selectors
 # parent selectors contain a block of html
 class Selector < ActiveRecord::Base
+  TYPES = %w(content link)
+
   validates_associated :scrape_resource
   validates_associated :data_resource
+  validates :content_type, inclusion: { in: TYPES, message: '%{value} is not an available content type' }
   # validates that parent_id must be nil for top level opbjects
   validate do |selector|
     if top_level && !parent_id.blank?

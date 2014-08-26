@@ -2,7 +2,8 @@ ActiveAdmin.register Selector do
   # See permitted parameters documentation:
   # https://github.com/gregbell/active_admin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
-  permit_params :info, :selector, :top_level, :parent_id, :data_resource_id, :foreign_data_resource_id, :scrape_resource_id
+  permit_params :info, :selector, :top_level, :parent_id, :data_resource_id, :foreign_data_resource_id,
+                :scrape_resource_id, :content_type
   #
   # or
   #
@@ -24,8 +25,8 @@ ActiveAdmin.register Selector do
     column :selector
     column :top_level
     column :parent
+    column :content_type
     column :data_resource
-    column :foreign_key?
     column :foreign_data_resource
     column :scrape_resource
     column :created_at
@@ -39,6 +40,7 @@ ActiveAdmin.register Selector do
       row :selector
       row :top_level
       row :parent
+      row :content_type
       row :scrape_resource
       row :data_resource
       row :foreign_data_resource
@@ -67,6 +69,8 @@ ActiveAdmin.register Selector do
       # showing all
       f.input :parent, as: :select, label: 'Parent Selector',
                        collection: Hash[Selector.all.map { |s| ["#{s.top_level ? 'TL ' : '-> ' } #{s.info}: #{s.selector}", s.id] }]
+      f.input :content_type, as: :select,
+                             collection: Hash[Selector.TYPES.map { |t| [t, t] }]
       f.input :scrape_resource, as: :select,
                                 collection: Hash[ScrapeResource.all.map { |sr| ["#{sr.info} => #{sr.url}", sr.id] }]
       f.input :data_resource, as: :select,

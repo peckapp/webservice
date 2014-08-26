@@ -1,6 +1,8 @@
 class Peck < ActiveRecord::Base
   include ModelNormalValidations
 
+  PECK_CATEGORIES = %w(circle_invite circle_comment event_invite event_comment)
+
   ###############################
   ##                           ##
   ##        VALIDATIONS        ##
@@ -9,7 +11,7 @@ class Peck < ActiveRecord::Base
 
   validates :user_id, presence: true, numericality: { only_integer: true }
   validates :notification_type, presence: true
-  validates :notification_type, inclusion: { in: %w(circle_invite circle_comment event_invite event_comment), message: '%{value} is not an available type' }
+  validates :notification_type, inclusion: { in: PECK_CATEGORIES, message: '%{value} is not an available type' }
   validates :invitation, numericality: { only_integer: true }, allow_nil: true
   validates :institution_id, presence: true, numericality: { only_integer: true }
   validate :correct_peck_types

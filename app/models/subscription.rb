@@ -1,6 +1,8 @@
 class Subscription < ActiveRecord::Base
   include ModelNormalValidations
 
+  SUBSCRIPTION_CATEGORIES = %w(department club athletic)
+
   ###############################
   ##                           ##
   ##        VALIDATIONS        ##
@@ -9,7 +11,7 @@ class Subscription < ActiveRecord::Base
 
   validates :user_id, presence: true, numericality: { only_integer: true }
   validates :category, presence: true
-  validates :category, inclusion: { in: %w(department club athletic), message: '%{value} is not an available category' }
+  validates :category, inclusion: { in: SUBSCRIPTION_CATEGORIES, message: '%{value} is not an available category' }
   validates :subscribed_to, presence: true, numericality: { only_integer: true }
   validates :institution_id, presence: true, numericality: { only_integer: true }
   validate :correct_subscription_types
