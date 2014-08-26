@@ -46,7 +46,7 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
 
   def super_create_user
     # super create user
-    patch '/api/users/1/super_create', user: { first_name: 'John', last_name: 'Doe', email: 'jdoe@williams.edu', password: 'testingabcd', password_confirmation: 'testingabcd', udid: 'bobby' }, authentication: { user_id: 1, institution_id: 1, api_key: User.find(1).api_key }, format: :json
+    patch '/api/users/1/super_create', user: { first_name: 'John', last_name: 'Doe', email: 'jdoe@williams.edu', password: 'testingabcd', password_confirmation: 'testingabcd', udid: 'bobby', device_type: 'ios' }, authentication: { user_id: 1, institution_id: 1, api_key: User.find(1).api_key }, format: :json
     user = assigns(:user)
     assert_response :success, 'no response from database'
     assert_not_nil user, 'user was not super created properly'
@@ -59,7 +59,7 @@ class SessionFlowsTest < ActionDispatch::IntegrationTest
 
   def super_create_fail
     # super create user
-    patch '/api/users/2/super_create', user: { first_name: 'John', last_name: 'Doe', email: 'jdoe1@williams.edu', password: 'anothertest', password_confirmation: 'wrongpassword' }, authentication: { user_id: 2, institution_id: 1, api_key: User.find(1).api_key }, format: :json
+    patch '/api/users/2/super_create', user: { first_name: 'John', last_name: 'Doe', email: 'jdoe1@williams.edu', password: 'anothertest', password_confirmation: 'wrongpassword', udid: 'bobby', device_type: 'ios' }, authentication: { user_id: 2, institution_id: 1, api_key: User.find(1).api_key }, format: :json
     user = assigns(:user)
     assert_response :unauthorized, 'authorized somehow'
     assert_nil user

@@ -50,8 +50,8 @@ module Api
           auth[:authentication_token] = @user.authentication_token
 
           if the_udid
-            # Send UDID when you log in.
-            @udid = UniqueDeviceIdentifier.find_by(udid: the_udid, device_type: the_device_type, token: the_token)
+            # Send UDID when you log in. all current ones contain a device_type, and if the token is different the stored one will be discarded
+            @udid = UniqueDeviceIdentifier.find_by(udid: the_udid)
 
             # the case where the udid given the values from params is nonexistant
             if !@udid
@@ -61,19 +61,22 @@ module Api
                 @udid = UniqueDeviceIdentifier.create(udid: the_udid, device_type: the_device_type)
               end
 
+              # create the entry in the join table
               UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
               @user.unique_device_identifiers << @udid
             else
+              @udid.update_attributes(token: the_token)
               # touchup that timestamp
-
               @udid.touch
+              @udid.save
 
-              @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
+              @udid_user = UdidUser.find_by(unique_device_identifier_id: @udid.id, user_id: @user.id)
               if @udid_user
 
                 # update the timestamp if the udid_user already exists
                 @udid_user.touch
               else
+                logger.error "forced to create a join table entry for unique_device_identifier: #{@udid.id} and user: #{@user.id} when one should already have existed"
                 @udid_user = UdidUser.create(unique_device_identifier_id: @udid.id, user_id: @user.id)
               end
             end
@@ -111,9 +114,7 @@ module Api
         @user.authentication_token = nil
 
         # user's fb token is no longer in the database if they log out for security reasons.
-        if @user.facebook_token
-          @user.facebook_token = nil
-        end
+        @user.facebook_token = nil if @user.facebook_token
 
         @user.save
 

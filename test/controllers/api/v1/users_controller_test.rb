@@ -8,7 +8,7 @@ class UsersControllerTest < UltimateTestHelper
     @params_index = { format: :json, authentication: session_create }
     @params_show = { id: 10, institution_id: 1, format: :json, authentication: session_create }
     @params_update = { first_name: 'John', active: false }
-    @params_super_create = { first_name: 'John', last_name: 'Doe', email: 'jdoe@williams.edu', password: 'testagain', password_confirmation: 'testagain', udid: 'hello' }
+    @params_super_create = { first_name: 'John', last_name: 'Doe', email: 'jdoe@williams.edu', password: 'testagain', password_confirmation: 'testagain', udid: 'hello', device_type: 'ios' }
     @model_type = :user
     @model = User
     @class = UsersControllerTest

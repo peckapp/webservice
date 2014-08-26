@@ -33,7 +33,7 @@ class UltimateTestHelper < ActionController::TestCase
 
     @controller = Api::V1::AccessController.new
 
-    post :create, user: { email: 'bobbyboucher@williams.edu', password: 'testingpass', udid: 'bob', device_type: 'ios' }, authentication: session_create, format: :json
+    post :create, user: { email: 'bobbyboucher@williams.edu', password: 'testingpass', udid: SecureRandom.hex(40), device_type: 'ios' }, authentication: session_create, format: :json
 
     assigns(:user)
   end
@@ -125,7 +125,7 @@ class UltimateTestHelper < ActionController::TestCase
 
       # anonymous user creation
     elsif is_users_controller?
-      post :create, udid: 'hello', format: :json, authentication: session_create
+      post :create, udid: 'hello', device_type: 'ios', format: :json, authentication: session_create
       user = assigns(:user)
       assert_not_nil user.id
       assert_not_nil user.api_key

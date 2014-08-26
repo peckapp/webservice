@@ -39,7 +39,7 @@ Rails.application.routes.draw do
       resources(:activity_logs, :athletic_events, :athletic_teams, :clubs, :circles, :configurations,
                 :departments, :dining_opportunities, :dining_periods, :dining_places, :views,
                 :events_page_urls, :institutions, :locations, :menu_items, :notification_views,
-                :pecks, :unique_device_identifiers, :explore)
+                :pecks, :explore)
 
       resources :access, only: [:create] do
         collection do
@@ -106,6 +106,12 @@ Rails.application.routes.draw do
         collection do
           post :user_for_udid
           get :check_link, :reset_password
+        end
+      end
+
+      resources :unique_device_identifiers do
+        member do
+          patch :update_token
         end
       end
     end

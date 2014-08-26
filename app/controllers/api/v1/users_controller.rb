@@ -315,16 +315,6 @@ module Api
         end
       end
 
-      def update_device_token
-        if params[:id].to_i == auth[:user_id].to_i
-          @user = User.find(params[:id])
-          @user.update_attributes(update_device_token_params)
-          render status: :accepted
-        else
-          head :unauthorized
-        end
-      end
-
       def destroy
         # allow users to destroy only themselves
         if params[:id].to_i == auth[:user_id].to_i
@@ -350,10 +340,6 @@ module Api
 
       def password_update_params
         params.require(:user).require(:new_password).permit(:password, :password_confirmation)
-      end
-
-      def update_device_token_params
-        params.require(:user).permit(:device_token)
       end
     end
   end
