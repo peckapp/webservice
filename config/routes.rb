@@ -109,9 +109,8 @@ Rails.application.routes.draw do
         end
       end
 
-
       resource :unique_device_identifiers
-      
+
       # custom route for updating the device token associated with a udid
       patch 'unique_device_identifiers/update_token', to: 'unique_device_identifiers#update_token'
 

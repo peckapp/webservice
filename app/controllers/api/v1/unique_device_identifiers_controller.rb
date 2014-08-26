@@ -34,6 +34,7 @@ module Api
           if @unique_device_identifier.save
             head :accepted
           else
+            logger.error "errors updating unique_device_identifier: #{@unique_device_identifier.errors.messages}"
             head :bad_request
           end
         else

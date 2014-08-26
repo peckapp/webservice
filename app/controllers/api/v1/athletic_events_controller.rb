@@ -43,8 +43,6 @@ module Api
 
         ### Event attendees ###
 
-        @athletic_events = specific_index(AthleticEvent, params)
-
         @attendee_ids = {}
 
         all_attendees = EventAttendee.where(category: 'athletic').pluck(:event_attended, :user_id)

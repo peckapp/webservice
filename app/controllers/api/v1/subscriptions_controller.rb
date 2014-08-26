@@ -1,7 +1,6 @@
 module Api
   module V1
-    class SubscriptionsController < ApplicationController #Api::BaseController
-
+    class SubscriptionsController < ApplicationController
       # before_action => :confirm_admin, :only => [:create, :update, :destroy]
 
       respond_to :json
