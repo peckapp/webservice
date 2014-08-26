@@ -103,8 +103,8 @@ module Api
         @user = User.find(session[:user_id])
 
         # Case where a user logs out, so he/she should not be the most recent user and thus should not receive push notifs.
-        @udid = UniqueDeviceIdentifier.where(udid: the_udid, device_type: the_device_type, token: the_token).first
-        @udid_user = UdidUser.where(unique_device_identifier_id: @udid.id, user_id: @user.id).first
+        @udid = UniqueDeviceIdentifier.find_by(udid: the_udid)
+        @udid_user = UdidUser.find_by(unique_device_identifier_id: @udid.id, user_id: @user.id)
 
         @udid.destroy
         @user.unique_device_identifiers.destroy(@udid)
