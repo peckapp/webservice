@@ -110,9 +110,7 @@ Rails.application.routes.draw do
       end
 
       resources :unique_device_identifiers do
-        member do
-          patch :update_token
-        end
+        patch :update_token
       end
     end
 
