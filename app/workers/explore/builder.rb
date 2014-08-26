@@ -5,15 +5,12 @@ module Explore
     include Sidekiq::Worker
 
     include Sidetiq::Schedulable
-
-    require 'dalli'
-    # to be turned on once development of this functionality is complete
-    # recurrence { hourly }
-
     recurrence { hourly }
 
     def perform(institution_id)
       @cache_client = PeckDalli.client
+
+      logger.info "starting explore builder with cache client stats: #{@cache_client}"
 
       @cache_client.set("campus_athletic_explore_#{institution_id}", analyze_athletic_events(institution_id))
       @cache_client.set("campus_simple_explore_#{institution_id}", analyze_simple_events(institution_id))
@@ -22,7 +19,8 @@ module Explore
 
     protected
 
-    # should add something to only get a certain range of dates
+    ### TODO: These currently explicitly create instances of the analyzer class
+    ###       should utilize the concurrent nature of sidekiq more fully by using analyzer asynchronously
 
     def analyze_simple_events(institution_id)
       analyzer = Explore::Analyzer.new
@@ -33,7 +31,7 @@ module Explore
         acc << [e.id, analyzer.perform(e.id, institution_id, SimpleEvent)]
 
       end
-
+      logger.info "Explore Builder analyzed simple events with #{event_scores.count} scores calculated"
       Hash[event_scores]
     end
 
@@ -46,7 +44,7 @@ module Explore
         acc << [e.id, analyzer.perform(e.id, institution_id, Announcement)]
 
       end
-
+      logger.info "Explore Builder analyzed announcements with #{event_scores.count} scores calculated"
       Hash[announcement_scores]
     end
 
@@ -59,7 +57,7 @@ module Explore
         acc << [e.id, analyzer.perform(e.id, institution_id, AthleticEvent)]
 
       end
-
+      logger.info "Explore Builder analyzed athletic events with #{event_scores.count} scores calculated"
       Hash[athletic_scores]
     end
   end
