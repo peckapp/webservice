@@ -1,3 +1,5 @@
+### Now considered depreated legacy code due to the improved version on the NestedTraverseScraper ###
+
 # a worker using database information to scrape structured data off of websites
 # correctly handles rss feeds in any format, but untested elsewhere
 # relies on a nested structure of the html content

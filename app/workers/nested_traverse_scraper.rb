@@ -151,7 +151,7 @@ class NestedTraverseScraper
     # may also need to delete events that are no longer in the feed if they are determined to have been cancelled
 
     # if model is invalid using built-in validations, attempt to repair it
-    Reparator.repair_model(new_model) unless new_model.valid?
+    Reparator.repair_model(new_model, logger) unless new_model.valid?
 
     # clear errors to retry validations after attempted fixes
     new_model.errors.clear
@@ -162,7 +162,7 @@ class NestedTraverseScraper
         logger.info "Saved validated model of type '#{new_model.class}' with id: #{new_model.id}\n"
         return true
       else
-        logger.info "Validated model of type '#{new_model.class}' already existed and was not saved"
+        # logger.info "Validated model of type '#{new_model.class}' already existed and was not saved"
       end
     else
       # logger.info new_model.start_time.class

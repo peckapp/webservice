@@ -53,6 +53,10 @@ ActiveAdmin.register SimpleEvent do
       row :longitude
       row :latitude
       row :category
+      row :image_file_name
+      row :image_url do
+        simple_event.image.url
+      end
       row :image do
         image_tag(simple_event.image.url(:detail))
       end
