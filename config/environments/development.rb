@@ -40,22 +40,6 @@ Rails.application.configure do
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
-  config.action_mailer.perform_deliveries = true
-  config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    address: 'smtp.sendgrid.net',
-    port: 587,
-    domain: 'peckapp.com',
-    user_name: 'atsou',
-    password: 'cq2vkmzvC82uJDd3vcMj',
-    authentication: 'plain',
-    enable_starttls_auto: true
-  }
-
-  config.paperclip_defaults = {
-  :storage => :s3
-}
   # devise
   # config.action_mailer.default_url_options = { :host => 'localhost:3000' }
   # config.action_mailer.delivery_method = :smtp

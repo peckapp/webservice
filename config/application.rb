@@ -57,5 +57,24 @@ module Webservice
         end # end ! yaml_for_env.blank?
       end # end if File.exists?
     end # end config.before_configuration
+
+    # paperclip should use amazon S3 in all environments
+    config.paperclip_defaults = {
+      storage: :s3
+    }
+
+    # sendgrid action mailer settings
+    config.action_mailer.perform_deliveries = true
+    config.action_mailer.raise_delivery_errors = true
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: 'smtp.sendgrid.net',
+      port: 587,
+      domain: 'peckapp.com',
+      user_name: 'atsou',
+      password: 'cq2vkmzvC82uJDd3vcMj',
+      authentication: 'plain',
+      enable_starttls_auto: true
+    }
   end
 end
