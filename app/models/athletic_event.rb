@@ -69,7 +69,12 @@ class AthleticEvent < ActiveRecord::Base
   ##                           ##
   ###############################
 
+  def user_subscribed
+
+  end
+
   private
+
   def correct_athletic_event_types
     is_correct_type(opponent, String, 'string', :opponent)
     is_correct_type(home_or_away, String, 'string', :home_or_away)

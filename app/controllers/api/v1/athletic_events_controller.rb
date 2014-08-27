@@ -12,8 +12,10 @@ module Api
 
           # club subscriptions
           subscription_ids = Subscription.where(user_id: params[:user_id], category: 'athletic').pluck(:subscribed_to)
+          subscribed_event_ids = AthleticEvent.where(athletic_team_id: subscription_ids)
 
-          all_ids = (event_attended_ids + subscription_ids).uniq
+          # need to get all events in one query because ActiveRecord associations seemingly cannot be joined
+          all_ids = (event_attended_ids + subscribed_event_ids).uniq
 
           @athletic_events = AthleticEvent.where(id: all_ids)
         else
@@ -57,6 +59,15 @@ module Api
           end
 
           @attendee_ids[event.id] = attendee_ids
+        end
+
+        # creates a hash of event ids to their corresponding team names
+        @team_names_for_ids = {}
+
+        teams_hash = Hash[AthleticTeam.all.map { |t| [t.id, t.simple_name] }]
+
+        @athletic_events.each do |event|
+          @team_names_for_ids[event.id] = teams_hash[event.athletic_team_id]
         end
       end
 

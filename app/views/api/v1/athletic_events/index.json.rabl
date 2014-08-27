@@ -7,7 +7,7 @@ node(:event_type) { 'athletic' }
 
 node :team_name do |athletic_event|
   # gives the simple name which includes the gender
-  AthleticTeam.find(athletic_event.athletic_team_id).simple_name
+  @team_names_for_ids[athletic_event.id]
 end
 
 node :image do |athletic_event|

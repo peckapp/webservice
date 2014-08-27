@@ -27,6 +27,7 @@ module Api
           dept_subscription_ids = Subscription.where(user_id: params[:user_id], category: 'department').pluck(:subscribed_to)
           dept_event_ids = SimpleEvent.where(category: 'department', organizer_id: dept_subscription_ids).pluck(:id)
 
+          # need to get all events in one query because ActiveRecord associations seemingly cannot be joined
           all_ids = (created_ids + events_attended_ids + club_event_ids + dept_event_ids).uniq
 
           @simple_events = SimpleEvent.where(id: all_ids)
