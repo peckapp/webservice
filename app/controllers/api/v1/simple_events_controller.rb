@@ -17,15 +17,17 @@ module Api
           created_ids = specific_index(SimpleEvent, params).pluck(:id)
 
           # events you're attending
-          events_attended_ids = EventAttendee.where(user_id: params[:user_id], category: "simple").pluck(:event_attended)
+          events_attended_ids = EventAttendee.where(user_id: params[:user_id], category: 'simple').pluck(:event_attended)
 
           # club subscriptions
-          club_subscription_ids = Subscription.where(user_id: params[:user_id], category: "club").pluck(:subscribed_to)
+          club_subscription_ids = Subscription.where(user_id: params[:user_id], category: 'club').pluck(:subscribed_to)
+          club_event_ids = SimpleEvent.where(category: 'club', organizer_id: club_subscription_ids).pluck(:id)
 
           # department subscriptions
-          dept_subscription_ids = Subscription.where(user_id: params[:user_id], category: "department").pluck(:subscribed_to)
+          dept_subscription_ids = Subscription.where(user_id: params[:user_id], category: 'department').pluck(:subscribed_to)
+          dept_event_ids = SimpleEvent.where(category: 'department', organizer_id: dept_subscription_ids).pluck(:id)
 
-          all_ids = (created_ids + events_attended_ids + club_subscription_ids + dept_subscription_ids).uniq
+          all_ids = (created_ids + events_attended_ids + club_event_ids + dept_event_ids).uniq
 
           @simple_events = SimpleEvent.where(id: all_ids)
         else

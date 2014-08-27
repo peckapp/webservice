@@ -24,6 +24,8 @@ ActiveAdmin.register SimpleEvent do
     column :event_description
     column :location
     column :institution
+    column :organizer_id
+    column :category
     column :user
     column :public
     column :start_date
@@ -31,7 +33,6 @@ ActiveAdmin.register SimpleEvent do
     column :deleted
     column :longitude
     column :latitude
-    column :category
     column :default_score
     column :scrape_resource
     column :created_at

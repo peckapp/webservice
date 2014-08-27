@@ -1,6 +1,13 @@
+# model relating a piece of data to a specific attribute of a resource_type
 class DataResource < ActiveRecord::Base
+  DATA_TYPES = %w(text url date image key)
+
   ### VALIDATIONS ###
-  validates :column_name, presence: true # , inclusion: { in: %w(small medium large), message: "%{value} is not a valid size" }
+  validates :resource_type_id, presence: true
+  validates :column_name, presence: true
+                          # inclusion: { in: self.resource_type.model.column_names, message: '%{value} is not a valid column' }
+  validates :data_type, presence: true,
+                        inclusion: { in: DATA_TYPES, message: '%{value} is not a valid data type' }
 
   ###############################
   ##                           ##

@@ -114,10 +114,19 @@ class NestedTraverseScraper
       logger.warn "MISSING ELEMENT for top selector: #{ts.selector} and child selector: #{cs.selector}"
       return
     end
-    # assumes content is the text at this element
-    content = element.text.squish
-    # handles parsing issues with malformed HTML where content isn't captured by the selector (williams rss links)
-    content = next_non_blank(element).text.squish if content.blank?
+
+    content = nil
+    case cs.data_resource.data_type
+    when 'text', 'url', 'date'
+      # assumes content is the text at this element
+      content = element.text.squish
+      # handles parsing issues with malformed HTML where content isn't captured by the selector (williams rss links)
+      content = next_non_blank(element).text.squish if content.blank?
+    when 'image'
+      logger.info "saving image with url: #{element['url']}"
+      content = URI.parse(element['url'])
+    else
+    end
 
     # assign the text-based content to the proper column of the model
     new_model.assign_attributes(cs.column_name => content)
@@ -140,6 +149,8 @@ class NestedTraverseScraper
     validate_and_save(content_model)
     # logger.info "found content_model for selector cs.id: #{content_model.inspect}"
     new_model.assign_attributes(cs.column_name => content_model.id)
+    # category must always be assigned to indicate which foreign resource type is related
+    new_model.assign_attributes(category: foreign_resource.resource_type.resource_name)
   end
 
   #############################################
@@ -157,18 +168,24 @@ class NestedTraverseScraper
     new_model.errors.clear
     # perform save
     if new_model.valid?
-      # performs non-duplicative save
-      if new_model.non_duplicative_save
-        logger.info "Saved validated model of type '#{new_model.class}' with id: #{new_model.id}\n"
-        return true
-      else
-        # logger.info "Validated model of type '#{new_model.class}' already existed and was not saved"
-      end
+      idempotent_save(new_model)
     else
       # logger.info new_model.start_time.class
       logger.warn "failed to save model with errors #{new_model.errors.messages} and data: #{new_model.inspect}\n"
     end
     false
+  end
+
+  def idempotent_save(new_model)
+    # TODO: need better duplicate protection
+
+    # performs non-duplicative save
+    if new_model.non_duplicative_save
+      logger.info "Saved validated model of type '#{new_model.class}' with id: #{new_model.id}\n"
+      return true
+    else
+      # logger.info "Validated model of type '#{new_model.class}' already existed and was not saved"
+    end
   end
 
   def next_non_blank(elem)
