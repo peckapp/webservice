@@ -111,7 +111,7 @@ class NestedTraverseScraper
   # parses a simple content element where the text ust has to be assigned to the model attribute
   def handle_content_element(cs, element, new_model)
     if element.blank?
-      logger.warn "MISSING ELEMENT for top selector: #{ts.selector} and child selector: #{cs.selector}"
+      logger.warn "MISSING ELEMENT for child selector: #{cs.selector}"
       return
     end
 
