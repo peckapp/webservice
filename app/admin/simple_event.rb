@@ -39,6 +39,30 @@ ActiveAdmin.register SimpleEvent do
     actions
   end
 
+  show do
+    attributes_table do
+      row :title
+      row :event_description
+      row :location
+      row :institution
+      row :user
+      row :public
+      row :start_date
+      row :end_date
+      row :deleted
+      row :longitude
+      row :latitude
+      row :category
+      row :image do
+        image_tag(simple_event.image.url(:detail))
+      end
+      row :default_score
+      row :scrape_resource
+      row :created_at
+      row :updated_at
+    end
+  end
+
   form do |f|
     f.semantic_errors # shows errors on :base
     f.inputs 'Details' do         # builds an input field for every attribute

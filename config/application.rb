@@ -42,6 +42,9 @@ module Webservice
     # swaps out the standard middleware logger for a silenceable one that is a simple subclass
     config.middleware.swap Rails::Rack::Logger, Silencer::Logger, silence: ['/api']
 
+    # filters sensitive parameters out of the logs
+    config.filter_parameters << :authentication_token << :api_key << :token
+
     # loads environment variables from rails-specfiic yml file
     config.before_configuration do
       env_file = Rails.root.join('config', 'environment_variables.yml').to_s

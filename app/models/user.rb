@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   validates :facebook_token, presence: true, if: :enable_facebook_validation
   validates :first_name, presence: true, if: :enable_facebook_validation
   validates :last_name, presence: true, if: :enable_facebook_validation
-  validates :email, presence: true, length: {maximum: 50}, format: { with: EMAIL_REGEX }, if: :enable_facebook_validation
+  validates :email, presence: true, length: { maximum: 50 }, format: { with: EMAIL_REGEX }, if: :enable_facebook_validation
   ######################
 
   ### Super Create ###
@@ -42,16 +42,16 @@ class User < ActiveRecord::Base
 
   validates :email, presence: true, length: { maximum: 50 }, format: { with: EMAIL_REGEX }, if: :enable_strict_validation
   validates :facebook_link, uniqueness: true, allow_nil: true
-  #validates :facebook_token, uniqueness: true, allow_nil: true
-  #validates :api_key, uniqueness: true, allow_nil: true
+  # validates :facebook_token, uniqueness: true, allow_nil: true
+  # validates :api_key, uniqueness: true, allow_nil: true
   validate :correct_user_types
 
   # image validations
   has_attached_file(:image,
-                    :s3_credentials => {
-                      :bucket => 'peck_development',
-                      :access_key_id => ENV['AWS_ACCESS_KEY_ID'],
-                      :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
+                    s3_credentials: {
+                      bucket: ENV['AWS_BUCKET_NAME'],
+                      access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+                      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
                     },
                     url: '/images/users/:style/:basename.:extension',
                     path: 'images/users/:style/:basename.:extension',

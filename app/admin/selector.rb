@@ -70,7 +70,7 @@ ActiveAdmin.register Selector do
       f.input :parent, as: :select, label: 'Parent Selector',
                        collection: Hash[Selector.all.map { |s| ["#{s.top_level ? 'TL ' : '-> ' } #{s.info}: #{s.selector}", s.id] }]
       f.input :content_type, as: :select,
-                             collection: Hash[Selector.TYPES.map { |t| [t, t] }]
+                             collection: Hash[Selector::TYPES.map { |t| [t, t] }]
       f.input :scrape_resource, as: :select,
                                 collection: Hash[ScrapeResource.all.map { |sr| ["#{sr.info} => #{sr.url}", sr.id] }]
       f.input :data_resource, as: :select,

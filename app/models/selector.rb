@@ -9,6 +9,7 @@ class Selector < ActiveRecord::Base
   validates :content_type, inclusion: { in: TYPES, message: '%{value} is not an available content type' }
   validates :content_type, format: { with: /\Aforeign_key\z/, message: 'foreign key has improper content type' },
                            if: :foreign_key?
+  validates :foreign_data_resource_id, presence: { message: 'must select a foreign data resource' }, if: :foreign_key?
   validates :data_resource_id, presence: true, if: :content?
 
   # validates that parent_id must be nil for top level opbjects

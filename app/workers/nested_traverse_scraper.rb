@@ -21,7 +21,7 @@ class NestedTraverseScraper
     resource = ScrapeResource.find(resource_id)
     logger.info "Scraping nested resource #{resource.id}: '#{resource.info}' with #{resource.resource_urls.count} urls"
 
-    count = resource.resource_urls.reduct(0) do |acc, r_url|
+    count = resource.resource_urls.reduce(0) do |acc, r_url|
       # no dangerous security concern present here with skipped ssl verification, possible data spoofing though
       raw = RestClient::Request.execute(url: r_url.url, method: :get, verify_ssl: false)
 
@@ -43,6 +43,7 @@ class NestedTraverseScraper
       blocks = html.css(ts.selector)
 
       blocks.each do |block| # iterates over Nokogiri nodeset for given css selector
+        # logger.info "scraping index page with block: #{block}"
 
         # creates a model with default scrape resource info set
         new_model = ts.model.new(scrape_resource_id: resource.id,
@@ -89,21 +90,18 @@ class NestedTraverseScraper
   end # end detail_page_scrape method
 
   ##############################################
-  ###  Handling completed or partial models  ###
+  ###  Handling new data for partial models  ###
   ##############################################
 
   def handle_element(cs, element, new_model)
     case cs.content_type
     when 'content'
-      if element.blank?
-        logger.warn "MISSING ELEMENT for top selector: #{ts.selector} and child selector: #{cs.selector}"
-        next
-      end
       handle_content_element(cs, element, new_model)
     when 'foreign_key'
       handle_foreign_key_element(cs, element, new_model)
     when 'link'
-      url = element.text
+      # handles parsing issues with malformed HTML where content isn't captured by the selector (williams rss links)
+      url = element.text.blank? ? next_non_blank(element).text : element.text
       detail_page_scrape(cs, url, new_model)
     else
       logger.error "UNKNOWN CONTENT TYPE for child selector #{cs.id}: #{cs.selector}"
@@ -112,6 +110,10 @@ class NestedTraverseScraper
 
   # parses a simple content element where the text ust has to be assigned to the model attribute
   def handle_content_element(cs, element, new_model)
+    if element.blank?
+      logger.warn "MISSING ELEMENT for top selector: #{ts.selector} and child selector: #{cs.selector}"
+      return
+    end
     # assumes content is the text at this element
     content = element.text.squish
     # handles parsing issues with malformed HTML where content isn't captured by the selector (williams rss links)
@@ -126,14 +128,23 @@ class NestedTraverseScraper
     # finds the current model matching the single found parameter or creates a new one
     foreign_resource = cs.foreign_data_resource
 
+    if element.nil?
+      logger.info 'NIL ELEMENT'
+      return
+    end
+
     content_model = foreign_resource.minimal_current_or_new(element.text)
-    content_model[:institution_id] = resource.institution_id
+    content_model[:institution_id] = cs.scrape_resource.institution_id
 
     # models for foreign key content must be saved just as any other model, if they existed previously nothing happens
     validate_and_save(content_model)
     # logger.info "found content_model for selector cs.id: #{content_model.inspect}"
     new_model.assign_attributes(cs.column_name => content_model.id)
   end
+
+  #############################################
+  ###  Final validations to scraped models  ###
+  #############################################
 
   def validate_and_save(new_model)
     # will need to check for partial matches that could indicate a change in the displayed content
@@ -148,8 +159,10 @@ class NestedTraverseScraper
     if new_model.valid?
       # performs non-duplicative save
       if new_model.non_duplicative_save
-        # logger.info "Saved validated model of type '#{new_model.class}' with id: #{new_model.id}\n"
+        logger.info "Saved validated model of type '#{new_model.class}' with id: #{new_model.id}\n"
         return true
+      else
+        logger.info "Validated model of type '#{new_model.class}' already existed and was not saved"
       end
     else
       # logger.info new_model.start_time.class
@@ -161,5 +174,9 @@ class NestedTraverseScraper
   def next_non_blank(elem)
     elem = elem.next while elem.text.blank?
     elem
+  end
+
+  def be_nice
+    sleep 1.0 + rand
   end
 end

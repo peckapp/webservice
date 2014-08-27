@@ -37,7 +37,7 @@ class AthleticEvent < ActiveRecord::Base
   # basically identical to simple_events, should consolidate these options for the homepage into one place if possible
   has_attached_file(:image,
                     s3_credentials: {
-                      bucket: 'peck_development',
+                      bucket: ENV['AWS_BUCKET_NAME'],
                       access_key_id: ENV['AWS_ACCESS_KEY_ID'],
                       secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
                     },

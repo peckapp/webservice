@@ -35,15 +35,15 @@ class Announcement < ActiveRecord::Base
 
   ### Event Photo Attachments ###
   has_attached_file(:image,
-                    :s3_credentials => {
-                    :bucket => 'peck_development',
-                    :access_key_id => ENV['AWS_ACCESS_KEY_ID'],
-                    :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
+                    s3_credentials: {
+                      bucket: ENV['AWS_BUCKET_NAME'],
+                      access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+                      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
                     },
                     url: '/images/announcements/:style/:basename.:extension',
                     path: 'images/announcements/:style/:basename.:extension',
                     default_url: '/images/missing.png',
-                    :styles => { :medium => "300x300>", :thumb => "100x100>" })
+                    styles: { medium: '300x300>', thumb: '100x100>' })
 
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
   validates_with AttachmentSizeValidator, attributes: :image, less_than: 5.megabytes
