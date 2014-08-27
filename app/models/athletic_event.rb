@@ -1,6 +1,9 @@
 class AthleticEvent < ActiveRecord::Base
   include ModelNormalValidations
 
+  # used by the scraping workers to determine model uniqueness
+  CRUCIAL_ATTRS = %w(institution_id athletic_team_id start_time)
+
   acts_as_likeable
 
   ###############################

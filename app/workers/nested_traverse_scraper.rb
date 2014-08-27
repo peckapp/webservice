@@ -178,13 +178,22 @@ class NestedTraverseScraper
 
   def idempotent_save(new_model)
     # TODO: need better duplicate protection
+    if defined? new_model.class::CRUCIAL_ATTRS
+      crucial_params = Hash[new_model.class::CRUCIAL_ATTRS.map { |a| [a, new_model[a]] }]
+      alternates = new_model.class.where(crucial_params)
+      unless alternates.blank?
+        logger.info "Alternates for model of type '#{new_model.class}' with matching crucial params already existed"
+        return
+      end
+      # TODO: add code here to handle updating the found alternates with the new information if applicable
+    end
 
-    # performs non-duplicative save
+    # default relying on solely non-duplicative save
     if new_model.non_duplicative_save
       logger.info "Saved validated model of type '#{new_model.class}' with id: #{new_model.id}\n"
       return true
     else
-      # logger.info "Validated model of type '#{new_model.class}' already existed and was not saved"
+      logger.info "Validated model of type '#{new_model.class}' already existed and was not saved"
     end
   end
 

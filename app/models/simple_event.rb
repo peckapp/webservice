@@ -1,6 +1,9 @@
 class SimpleEvent < ActiveRecord::Base
   include ModelNormalValidations
 
+  # used by the scraping workers to determine model uniqueness
+  CRUCIAL_ATTRS = %w(title institution_id start_date)
+
   acts_as_likeable
 
   ###############################
