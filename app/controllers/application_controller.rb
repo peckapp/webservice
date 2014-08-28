@@ -18,6 +18,7 @@ class ApplicationController < ActionController::Base
 
   def confirm_minimal_access
     if auth_params_exist
+      NewRelic::Agent.add_custom_parameters(user_id: auth[:user_id], institution_id: auth[:institution_id])
       # check validity of existing session: params not nil and are equal to the current session's
       if session[:user_id] && session[:api_key] && session[:user_id] == auth[:user_id] && session[:api_key] == auth[:api_key]
         return true
@@ -46,6 +47,8 @@ class ApplicationController < ActionController::Base
   end
 
   def specific_index(model, params_hash)
+    NewRelic::Agent.add_custom_parameters(model: model.name)
+
     search_params = model_search_params(model, params_hash)
 
     # uses authentication institution_id to get initial set
