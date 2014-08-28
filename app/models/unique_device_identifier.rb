@@ -12,8 +12,7 @@ class UniqueDeviceIdentifier < ActiveRecord::Base
   validates :udid, presence: true, uniqueness: true
   validates :device_type, presence: true
   validates :device_type, inclusion: { in: DEVICE_TYPES, message: '%{value} is not a valid device type' }
-  validates :token, allow_nil: true
-
+  
   ###############################
   ##                           ##
   ##        ASSOCIATIONS       ##
