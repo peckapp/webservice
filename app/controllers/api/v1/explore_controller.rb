@@ -155,9 +155,9 @@ module Api
         se_score_stats = DescriptiveStatistics::Stats.new(se_scores)
 
         ann_mean = ann_score_stats.mean
-        ann_std_dev = ann_score_stats.standard_deviation
+        ann_std_dev = ann_score_stats.standard_deviation || 1
         se_mean = se_score_stats.mean
-        se_std_dev = se_score_stats.standard_deviation
+        se_std_dev = se_score_stats.standard_deviation || 1
 
         # scaling every announcement score to the simple event scores
         scale_these.each do |ann|

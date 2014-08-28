@@ -39,8 +39,10 @@ class UniqueDeviceIdentifier < ActiveRecord::Base
   def self.updated_udid_token_pair(udid, token)
     udi = nil
     if (udi = UniqueDeviceIdentifier.find_by(token: token))
+      logger.info 'found UniqueDeviceIdentifier by token'
       udi.update_attributes(udid: udid)
     elsif (udi = UniqueDeviceIdentifier.find_by(udid: udid))
+      logger.info 'found UniqueDeviceIdentifier by udid'
       udi.update_attributes(token: token)
     end
     udi

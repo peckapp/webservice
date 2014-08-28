@@ -49,12 +49,11 @@ As the great tree in norse mythology that connected the worlds unto each other, 
 - additional setup
   - `yum install -y mysql mysql-devel`
   - `yum install -y ImageMagick`
-- GlusterFS: http://www.sohailriaz.com/glusterfs-howto-on-centos-6-x/
+  - `yum install -y xorg-x11-server-Xvfb firefox`
 - add server to Capistrano deploy file
 - on local: `cap production deploy`
 
 #### Eir
-- running centos 7. to be decommissioned, has full cpu usage issues with unicorn for some reason.
 
 #### Ran
 
