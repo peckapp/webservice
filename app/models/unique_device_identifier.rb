@@ -12,7 +12,7 @@ class UniqueDeviceIdentifier < ActiveRecord::Base
   validates :udid, presence: true, uniqueness: true
   validates :device_type, presence: true
   validates :device_type, inclusion: { in: DEVICE_TYPES, message: '%{value} is not a valid device type' }
-  validates :token, uniqueness: true, unless: 'token.nil?'
+  validates :token, allow_nil: true
 
   ###############################
   ##                           ##
@@ -38,12 +38,10 @@ class UniqueDeviceIdentifier < ActiveRecord::Base
   # finds a udi matching either parameter and updates the other parameter to match. returns an updated but unsaved object
   def self.updated_udid_token_pair(udid, token)
     udi = nil
-    if (udi = UniqueDeviceIdentifier.find_by(token: token))
-      logger.info 'found UniqueDeviceIdentifier by token'
-      udi.update_attributes(udid: udid)
-    elsif (udi = UniqueDeviceIdentifier.find_by(udid: udid))
-      logger.info 'found UniqueDeviceIdentifier by udid'
+    if (udi = UniqueDeviceIdentifier.find_by(udid: udid))
       udi.update_attributes(token: token)
+    elsif (udi = UniqueDeviceIdentifier.find_by(token: token))
+      udi.update_attributes(udid: udid)
     end
     udi
   end
