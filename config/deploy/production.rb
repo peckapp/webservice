@@ -49,12 +49,3 @@ set :ssh_options, {
 #     auth_methods: %w(publickey password)
 #     # password: 'please use keys'
 #   }
-
-### Unicorn deployment
-# may move to config/deploy.rb if we move away from passenger in development server
-after 'deploy:publishing', 'deploy:restart'
-namespace :deploy do
-  task :restart do
-    invoke 'unicorn:reload'
-  end
-end
