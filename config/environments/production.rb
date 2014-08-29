@@ -1,6 +1,10 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  APNS.host = 'gateway.push.apple.com'
+  APNS.port = 2195
+  APNS.pem = Rails.root.join('config/certs/ck.pem')
+
   # Code is not reloaded between requests.
   config.cache_classes = true
 
