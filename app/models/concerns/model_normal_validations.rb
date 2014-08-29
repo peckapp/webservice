@@ -6,9 +6,9 @@ module ModelNormalValidations
   # include ActionView::Helpers
 
   private
+
   def is_correct_type(parameter, type, type_string_format, symbol)
-    unless parameter.nil?
-      errors.add(symbol, "must be a #{type_string_format}") unless parameter.is_a? type
-    end
+    return if parameter.nil?
+    errors.add(symbol, "must be a #{type_string_format}") unless parameter.is_a? type
   end
 end
