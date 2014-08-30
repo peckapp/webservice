@@ -41,7 +41,7 @@ module ActiveRecordExtension
   module ClassMethods
     # returns an object matching specified attributes, or creates one with them if none exist
     def current_or_create_new(*attrs)
-      fail "attempted to perform model interaction with inapplicable class: #{self.table_name}" unless superclass == ActiveRecord::Base
+      fail "attempted to perform model interaction with inapplicable table: #{table_name} and superclass: #{superclass}" unless superclass == ActiveRecord::Base
 
       attrs = attrs.extract_options!
       result = where(attrs).first
@@ -54,7 +54,7 @@ module ActiveRecordExtension
     end
 
     def current_or_new(*attrs)
-      fail "attempted to perform model interaction with inapplicable class: #{self.table_name}" unless superclass == ActiveRecord::Base
+      fail "attempted to perform model interaction with inapplicable class: #{table_name} and superclass: #{superclass}" unless superclass == ActiveRecord::Base
 
       attrs = attrs.extract_options!
       result = where(attrs).first

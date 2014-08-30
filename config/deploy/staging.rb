@@ -1,3 +1,6 @@
+# sets the rails_env value for this stage. normally inferred, but capistrano3-unicorn requires it to be explicit
+set :rails_env, 'staging'
+
 # Simple Role Syntax
 # ==================
 # Supports bulk-adding hosts to roles, the primary server in each group
