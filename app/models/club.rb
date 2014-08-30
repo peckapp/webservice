@@ -1,5 +1,9 @@
-class Club < ActiveRecord::Base
+# student clubs and groups at an institution
+class Club < ImageContentModel
   include ModelNormalValidations
+
+  # necessary for ImageContentModel superclass
+  @image_path_root = 'clubs'
 
   ###############################
   ##                           ##

@@ -1,5 +1,9 @@
-class Department < ActiveRecord::Base
+# academic departments at an institution
+class Department < ImageContentModel
   include ModelNormalValidations
+
+  # necessary for ImageContentModel superclass
+  @image_path_root = 'departments'
 
   ###############################
   ##                           ##
