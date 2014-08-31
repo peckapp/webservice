@@ -24,6 +24,10 @@ class SimpleEvent < ActiveRecord::Base
   validates :longitude, numericality: true, allow_nil: true
   validate :correct_simple_event_types
 
+  # if the event isn't user created, it must have a organizer with a category
+  validates :organizer_id, presence: { message: 'can\'t be blank for scraped event' }, if: 'user_id.nil?'
+  validates :category, presence: { message: 'can\'t be blank for scraped event' }, if: 'user_id.nil?'
+
   ### Event Photo Attachments ###
   has_attached_file(:image,
                     s3_credentials: {

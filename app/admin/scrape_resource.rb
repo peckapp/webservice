@@ -17,6 +17,13 @@ ActiveAdmin.register ScrapeResource do
   # Adds this into a dropdown in the top menu bar
   menu parent: 'Scraping', priority: 2
 
+  # sidebar 'ResourceUrls', only: :show do
+  #   table_for scrape_resource.resource_urls do |ru|
+  #     t.column('Url') { |ru| ru.url }
+  #     t.column('Scraped Value') { |ru| ru.scraped_value }
+  #   end
+  # end
+
   active_admin_importable do |model, hash|
     # delete things that are unique to a specific database
     hash.delete(:id)

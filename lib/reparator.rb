@@ -12,7 +12,7 @@ module Reparator
     elsif model.class ==  AthleticTeam
       repair_athletic_team(model, logger)
     else
-      Rails.logger.info "Attempted to repair model of class #{model.class} without a handler"
+      logger.info "Attempted to repair model of class #{model.class} without a handler"
       # handle other types as they come up building the scraping
     end
   end
@@ -20,7 +20,7 @@ module Reparator
   protected
 
   def self.repair_simple_event(event, logger)
-    # Rails.logger.info 'repairing simple event'
+    # logger.info 'repairing simple event'
     err = event.errors.messages
     if err.keys.include? :end_date
       logger.warn 'setting length of event without end date arbitarily to 1 hour'

@@ -22,6 +22,8 @@ class NestedTraverseScraper
     logger.info "Scraping nested resource #{resource.id}: '#{resource.info}' with #{resource.resource_urls.count} urls"
 
     count = resource.resource_urls.reduce(0) do |acc, r_url|
+      be_nice # wait time between page loads
+
       # no dangerous security concern present here with skipped ssl verification, possible data spoofing though
       raw = RestClient::Request.execute(url: r_url.url, method: :get, verify_ssl: false)
 
@@ -76,6 +78,8 @@ class NestedTraverseScraper
   ###############################################
 
   def detail_page_scrape(cs, url, new_model)
+    be_nice # wait time between page loads
+
     raw = RestClient::Request.execute(url: url, method: :get, verify_ssl: false)
 
     html = Nokogiri::HTML(raw.squish)
@@ -196,6 +200,10 @@ class NestedTraverseScraper
       logger.info "Validated model of type '#{new_model.class}' already existed and was not saved"
     end
   end
+
+  #################################
+  ###  Helpful utility methods  ###
+  #################################
 
   def next_non_blank(elem)
     elem = elem.next while elem.text.blank?
