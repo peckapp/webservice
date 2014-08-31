@@ -29,7 +29,10 @@ ActiveAdmin.register DataResource do
 
   # some hackery to get a hash of column names with their model associated with the actual column name
   # if we are able to use javascript for selector options, just the top line will be needed to get models to columns
-  mc = Hash[ResourceType.all.map { |rt| rt.model }.map { |m| [m, m.column_names.flatten.uniq] }]
+  mc = Hash[ResourceType.all.map { |rt| rt.model }.map do |m|
+    [m, m.column_names.flatten.uniq +
+        ((defined? m.attachment_definitions) ? m.attachment_definitions.keys.map { |k| k.to_s } : [])]
+  end]
   names = mc.keys.reduce([]) { |a, k| a << mc[k].reduce([]) { |b, v| b << [k.name, v.to_s] } }.flatten(1)
 
   form do |f|
