@@ -21,7 +21,8 @@ module SpecificScrape
       rt = ResourceType.find_by(model_name: 'AthleticEvent')
       inst = Institution.find_by(api_key: 'WILLIAMS')
       @sr = ScrapeResource.current_or_create_new(resource_type_id: rt.id, institution_id: inst.id,
-                                                 info: 'Williams Athletic RSS Team Page', kind: 'rss', engine_type: 'nested')
+                                                 info: 'Williams Athletic RSS Team Page', kind: 'rss',
+                                                 engine_type: 'nested')
       logger.info "Traversing Williams Athletics resource #{@sr.id} for RSS URLs with #{@sr.resource_urls.count} current"
 
       raw = RestClient.get(rooted_link(EPH_SPORTS_INDEX))
@@ -40,7 +41,8 @@ module SpecificScrape
         teams.each do |team|
           team_name = team.css('a').first.text
 
-          team_photo_url = rooted_link(team.css('div.secondary-links>img').first.attr('src'))
+          team_img = team.css('div.secondary-links>img').first
+          team_photo_url = rooted_link(team_img.attr('src')) if team_img
 
           team_links = team.css('div.secondary-links>ul>li')
           logger.error "NO LINKS FOUND for team: #{team_name}" if team_links.blank?
@@ -77,7 +79,7 @@ module SpecificScrape
         team_name = "#{category} #{team_name}" unless team_name.match(/(M|m)en|(W|w)omen/)
         ateam = AthleticTeam.current_or_create_new(simple_name: team_name)
         ateam.image = URI.parse(team_photo_url)
-        logger.info "saved AthleticTeam #{ateam.id} for #{team_name}" if ateam.non_duplicative_save
+        logger.info "saved AthleticTeam #{ateam.id} with image: #{ateam.image} for #{team_name}" if ateam.non_duplicative_save
 
         ru = ResourceUrl.new(url: url, scrape_resource_id: @sr.id, validated: true, scraped_value: team_name)
 
