@@ -8,12 +8,12 @@ class ApplicationController < ActionController::Base
     # user is found by session id
     user = User.find(session[:user_id])
     # the auth token must be present
-    if auth[:authentication_token] && auth[:authentication_token] == user.authentication_token && user.active
+    if user && auth[:authentication_token] && (auth[:authentication_token] == user.authentication_token) && user.active
       return true
-    else
-      head :unauthorized
-      return false
     end
+    logger.warn "confirm_logged_in failed for active(#{user.active}) user #{session[:user_id]} with invalid authentication_token: #{auth[:authentication_token]}"
+    head :unauthorized
+    false
   end
 
   def confirm_minimal_access
@@ -25,7 +25,9 @@ class ApplicationController < ActionController::Base
       else
         # otherwise attempts to create session for that user
         user = User.find(auth[:user_id])
-        unless user.blank?
+        if user.blank?
+          logger.warn "Attempted to confirm minimal access for non-existent user with id: [#{user.id}] and api key: [#{user.api_key}]"
+        else
           # checks validity of api_key
           if user.api_key == auth[:api_key]
 
