@@ -14,7 +14,8 @@ node :image do |athletic_event|
   if athletic_event.image.url.match(/missing/)
     @team_images_for_ids[athletic_event.id].url
   else
-    athletic_event.image.url
+    'nope'
+    # athletic_event.image.url
   end
 end
 
@@ -22,7 +23,8 @@ node :blurred_image do |athletic_event|
   if athletic_event.image.url.match(/missing/)
     @team_images_for_ids[athletic_event.id].url(:blurred)
   else
-    athletic_event.image.url(:blurred)
+    'nope'
+    # athletic_event.image.url(:blurred)
   end
 end
 
