@@ -1,9 +1,10 @@
 module Api
   module V1
-    class PecksController < ApplicationController #Api::BaseController
-
+    # controller for peck notifications
+    class PecksController < ApplicationController
       # before_action :authenticate_admin_user!
       # before_action :confirm_admin
+      before_action :confirm_logged_in
 
       respond_to :json
 
@@ -31,13 +32,14 @@ module Api
       end
 
       private
-        def peck_create_params
-          params.require(:peck).permit(:user_id, :institution_id, :notification_type, :message, :send_push_notification, :invited_by, :invitation)
-        end
 
-        def peck_update_params
-          params.require(:peck).permit(:user_id, :institution_id, :notification_type, :message, :send_push_notification, :invited_by, :invitation, :interacted)
-        end
+      def peck_create_params
+        params.require(:peck).permit(:user_id, :institution_id, :notification_type, :message, :send_push_notification, :invited_by, :invitation)
+      end
+
+      def peck_update_params
+        params.require(:peck).permit(:user_id, :institution_id, :notification_type, :message, :send_push_notification, :invited_by, :invitation, :interacted)
+      end
     end
   end
 end

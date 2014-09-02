@@ -11,11 +11,19 @@ node :team_name do |athletic_event|
 end
 
 node :image do |athletic_event|
-  athletic_event.image.url
+  if athletic_event.image.url.match(/missing/)
+    @team_images_for_ids[athletic_event.id].url
+  else
+    athletic_event.image.url
+  end
 end
 
 node :blurred_image do |athletic_event|
-  athletic_event.image.url(:blurred)
+  if athletic_event.image.url.match(/missing/)
+    @team_images_for_ids[athletic_event.id].url(:blurred)
+  else
+    athletic_event.image.url(:blurred)
+  end
 end
 
 node :likes do |athletic_event|
