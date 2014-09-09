@@ -6,7 +6,7 @@ attributes(:id, :title, :event_description, :institution_id, :user_id, :category
 node(:event_type) { 'simple' }
 
 node :image do |simple_event|
-  simple_event.image.url
+  simple_event.image.url(:home)
 end
 
 node :blurred_image do |simple_event|

@@ -12,9 +12,9 @@ end
 
 node :image do |athletic_event|
   if athletic_event.image.url.match(/missing/)
-    @team_images_for_ids[athletic_event.id].url
+    @team_images_for_ids[athletic_event.id].url(:home)
   else
-    athletic_event.image.url
+    athletic_event.image.url(:home)
   end
 end
 
