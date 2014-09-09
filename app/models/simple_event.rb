@@ -1,4 +1,4 @@
-class SimpleEvent < ActiveRecord::Base
+class SimpleEvent < ImageContentModel
   include ModelNormalValidations
 
   # used by the scraping workers to determine model uniqueness
@@ -29,30 +29,8 @@ class SimpleEvent < ActiveRecord::Base
   validates :category, presence: { message: 'can\'t be blank for scraped event' }, if: 'user_id.nil?'
 
   ### Event Photo Attachments ###
-  has_attached_file(:image,
-                    s3_credentials: {
-                      bucket: ENV['AWS_BUCKET_NAME'],
-                      access_key_id: ENV['AWS_ACCESS_KEY_ID'],
-                      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
-                    },
-                    # path: ':rails_root/public/images/simple_events/:style/:basename.:extension',
-                    url: '/images/simple_events/:style/:basename.:extension',
-                    default_url: '/images/missing.png',
-                    path: 'images/simple_events/:style/:basename.:extension',
-                    styles: {
-                      detail: '100X100#',
-                      blurred: {
-                        size: '640x256',
-                        offset: '+0+0',
-                        raduis_sigma: '9x4',
-                        tint: '40',
-                        processors: [:blur]
-                      }
-                    })
-
-  # validates_attachment :image, :content_type => { :content_type => "image/jpeg"}
-  validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
-  validates_with AttachmentSizeValidator, attributes: :image, less_than: 5.megabytes
+  # necessary for ImageContentModel superclass
+  self.has_attached_file_with_root 'simple_events'
 
   ###############################
   ##                           ##

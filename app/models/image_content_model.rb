@@ -29,7 +29,8 @@ class ImageContentModel < ActiveRecord::Base
                           raduis_sigma: '9x4',
                           tint: '40',
                           processors: [:blur]
-                        }
+                        },
+                        home: '640X640#'
                       })
 
     # validates_attachment :image, :content_type => { :content_type => "image/jpeg"}
