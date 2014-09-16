@@ -26,7 +26,7 @@ set :deploy_to, '/home/deployer/apps/webservice_development'
 # server 'thor.peckapp.com', user: 'deploy', roles: %w{web app db}
 server 'loki.peckapp.com', user: 'deployer', roles: %w(web app db)
 # new loki
-server '107.170.32.240', user: 'deployer', roles: %w(web app db)
+server 'loki2.peckapp.com', user: 'deployer', roles: %w(web app db)
 
 # Custom SSH Options
 # ==================
