@@ -9,7 +9,7 @@ child :@explore_events do
   node(:event_type) { 'simple' }
 
   node :image do |simple_event|
-    simple_event.image.url
+    simple_event.image.url(:home)
   end
 
   node :blurred_image do |simple_event|
@@ -30,7 +30,7 @@ child :@explore_announcements do
              :comment_count, :created_at, :updated_at
 
   node :image do |announcement|
-    announcement.image.url
+    announcement.image.url(:home)
   end
 
   node :likes do |explore_announcement|
@@ -49,6 +49,10 @@ child :@explore_athletics do
   # node :image do |explore_ath_event|
   #   explore_ath_event.image.url
   # end
+
+  node :image do |athletic_event|
+    athletic_event.backed_image.url(:home)
+  end
 
   node :likes do |explore_ath_event|
     @likes_for_explore_athletics[explore_ath_event.id]

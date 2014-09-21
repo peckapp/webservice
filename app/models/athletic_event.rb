@@ -49,6 +49,11 @@ class AthleticEvent < ImageContentModel
   def user_subscribed
   end
 
+  # provides the image for the actual model, or if none exists, the image for the associated team.
+  def backed_image
+    image.url.match(/missing.png/) ? AthleticTeam.find(athletic_team_id).image : image
+  end
+
   private
 
   def correct_athletic_event_types
