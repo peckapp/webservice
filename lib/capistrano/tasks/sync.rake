@@ -131,13 +131,14 @@ namespace :sync do
         # Make a remote backup of ENTIRE remote database before importing
         username, password, database, host = remote_database_config(stage)
         remote_file_path = "#{shared_path}/sync/#{filename}"
+        info 'backing up remote database'
         execute "mysqldump -u #{username} --password='#{password}' #{database} -h #{host || 'localhost'} | bzip2 -9 > #{remote_file_path}"
 
         run_locally do
           # Local DB export
           filename = "dump.local.#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.sql.bz2"
           username, password, database = local_database_config('development')
-          puts 'running dump locally'
+          info 'dumping local database'
           execute "mysqldump -u #{username} --password='#{password}' #{database} #{sync_tables} | bzip2 -9 > #{filename}"
         end
 
@@ -150,6 +151,7 @@ namespace :sync do
 
         # Remote DB import
         username, password, database, host = remote_database_config(stage)
+        info 'loading in dump to remote database'
         execute "bzip2 -d -c #{remote_file_path} | mysql -u #{username} --password='#{password}' -h #{host || 'localhost'} #{database}; rm -f #{remote_file_path}"
         purge_old_backups 'database'
 

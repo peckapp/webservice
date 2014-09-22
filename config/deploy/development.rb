@@ -11,7 +11,6 @@ set :rails_env, 'development'
 # role :web, %w{deploy@thor.peckapp.com}
 # role :db,  %w{deploy@thor.peckapp.com}
 
-
 # Default deploy_to directory is /var/www/my_app
 # set :deploy_to, '/var/www/webservice_development'
 set :deploy_to, '/home/deployer/apps/webservice_development'
@@ -26,7 +25,7 @@ set :deploy_to, '/home/deployer/apps/webservice_development'
 # server 'thor.peckapp.com', user: 'deploy', roles: %w{web app db}
 server 'loki.peckapp.com', user: 'deployer', roles: %w(web app db)
 # new loki
-server 'loki2.peckapp.com', user: 'deployer', roles: %w(web app db)
+# server 'loki2.peckapp.com', user: 'deployer', roles: %w(web app db)
 
 # Custom SSH Options
 # ==================
