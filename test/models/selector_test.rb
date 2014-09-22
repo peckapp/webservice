@@ -37,7 +37,7 @@ class SelectorTest < ActiveSupport::TestCase
   test 'model returns a valid object' do
     Selector.all.each do |selector|
       assert_not_nil selector.model, 'model for selector should not be nil'
-      assert_equal(ActiveRecord::Base, selector.model.superclass, 'model returned by selector must be a subclass of ActiveRecord::Base')
+      assert(ActiveRecord::Base.descendants.include?(selector.model), 'model returned by selector must be a descendent of ActiveRecord::Base')
     end
   end
 end

@@ -91,7 +91,7 @@ module SpecificScrape
       end # end top selector iteration
     end
 
-    # scrapes dates using built-in css selectors since these are the same for each page
+    # scrapes dates using built-in css selectors since these are the same for each menu item page
     def scrape_dates(b, place_id, inst_id, sr_id)
       logger.info "scraping dates for #{b.tds(css: 'tr .cbo_nn_menuCell').count} cells"
       # iterates over the cells for each day

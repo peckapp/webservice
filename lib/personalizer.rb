@@ -55,16 +55,15 @@ class Personalizer
       friend_score = 0
       friend_boost = 0
       top_circle_friends.each do |friend|
+        next unless !attendees.nil? && attendees.include?(friend[0])
 
-        if !attendees.nil? && attendees.include?(friend[0])
-          if weights.circle_friend_boost(friend[1], circle_count) > MAX_FRIEND_SCORE
-            friend_score = MAX_FRIEND_SCORE
-          else
-            friend_score = weights.circle_friend_boost(friend[1], circle_count)
-          end
-
-          friend_boost += friend_score
+        if weights.circle_friend_boost(friend[1], circle_count) > MAX_FRIEND_SCORE
+          friend_score = MAX_FRIEND_SCORE
+        else
+          friend_score = weights.circle_friend_boost(friend[1], circle_count)
         end
+
+        friend_boost += friend_score
       end
 
       if friend_boost > MAX_EVENTS_FRIENDS_BOOST
