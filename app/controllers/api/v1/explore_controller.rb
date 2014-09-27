@@ -25,6 +25,13 @@ module Api
           return
         end
 
+        # if campus explore is built, prepare a personalized version
+        prepare_personal_explore(simple_scores, announcement_scores, athletic_scores)
+      end # end index method
+
+      private
+
+      def prepare_personal_explore(simple_scores, announcement_scores, athletic_scores)
         #### Normal Explore operations ####
 
         # save all events that user is attending to remove it from explore
@@ -48,11 +55,12 @@ module Api
         ann_score = personal_announcement_scores.pop
         ath_score = personal_athletic_scores.pop
 
-        # check next element of each array and take the higher score
         # build top explore items list
+        # check next element of each array and take the higher score
         ### run until the arrays are all empty ###
         until personal_simple_scores.empty? && personal_announcement_scores.empty? && personal_athletic_scores.empty?
 
+          # default comparison values for when arrays start becoming emptied
           se_score ||= [0, 0]
           ann_score ||= [0, 0]
           ath_score ||= [0, 0]
@@ -115,9 +123,7 @@ module Api
         @likes_for_explore_events = get_likes_for_type('SimpleEvent', simple_event_ids)
         @likes_for_explore_announcements = get_likes_for_type('Announcement', announcement_ids)
         @likes_for_explore_athletics = get_likes_for_type('AthleticEvent', athletic_event_ids)
-      end # end index method
-
-      private
+      end
 
       def run_builder
         # trigger campus explore calculation, or perform manually.
@@ -130,9 +136,12 @@ module Api
 
       def personalize_scores(simple_scores, announcement_scores, athletic_scores)
         personalizer = Personalizer.new
-        personal_simple_scores = personalizer.perform_events(SimpleEvent, simple_scores, auth_user_id, auth_inst_id)
-        personal_announcement_scores =  personalizer.perform_announcements(announcement_scores, auth_user_id, auth_inst_id)
-        personal_athletic_scores = personalizer.perform_events(AthleticEvent, athletic_scores, auth_user_id, auth_inst_id)
+        personal_simple_scores = personalizer.perform_events(SimpleEvent, simple_scores,
+                                                             auth_user_id, auth_inst_id)
+        personal_announcement_scores =  personalizer.perform_announcements(announcement_scores,
+                                                                           auth_user_id, auth_inst_id)
+        personal_athletic_scores = personalizer.perform_events(AthleticEvent, athletic_scores,
+                                                               auth_user_id, auth_inst_id)
 
         [personal_simple_scores, personal_announcement_scores, personal_athletic_scores]
       end # end personalize_scores

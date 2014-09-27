@@ -11,6 +11,11 @@ class Personalizer
   MAX_FRIEND_SCORE = 40
   MIN_CIRCLES = 3
 
+  INITIAL_FRIEND_SCORE = 1
+  RECURRING_FRIEND_SCORE = 1.5
+
+  SINGLE_SUBSCRIBER_SCORE = 1
+
   ###############################
   ##                           ##
   ##          EVENTS           ##
@@ -75,9 +80,9 @@ class Personalizer
       ## Scoring boost for similar subscribers
       subs_boost = 0
       top_similar_subscribers.each do |subs|
-        if !attendees.nil? && attendees.include?(subs[0])
-          subs_boost += MAX_EVENTS_SUB_BOOST / NUMBER_OF_TOP_SUBSCRIBERS
-        end
+        next if attendees.nil? || !attendees.include?(subs[0])
+
+        subs_boost += MAX_EVENTS_SUB_BOOST / NUMBER_OF_TOP_SUBSCRIBERS
       end
 
       event_scores[event[0]] += subs_boost
@@ -85,9 +90,8 @@ class Personalizer
       # random booster
       event_scores[event[0]] += weights.random_booster
 
-      # default score
-      if boosters[event[0]]
-        event_scores[event[0]] += boosters[event[0]]
+      # default score or 0 if nwot specified
+      event_scores[event[0]] += boosters[event[0]] || 0
       end
 
     end
@@ -115,31 +119,16 @@ class Personalizer
     weights = Weights.new(inst_id)
 
     # array/hashes for storing ids, likers, and commenters
-    announcement_ids = []
-    likers_for_announcement = {}
+    announcement_ids = announcement_scores.map { |ann| ann[0] }
     commenters_for_announcement = {}
-
-    announcement_scores.each { |ann| announcement_ids << ann[0] }
 
     # associate each announcement to its likers
     all_likers = Like.where(likeable_type: 'Announcement').pluck(:likeable_id, :liker_id)
-    all_likers.each do |like|
-      if likers_for_announcement[like[0]]
-        likers_for_announcement[like[0]] << like[1]
-      else
-        likers_for_announcement[like[0]] = [like[1]]
-      end
-    end
+    likers_for_announcement = all_likers.reduce(Hash.new([])) { |acc, like| acc[like[0]] << like[1] }
 
     # associate each announcement to its commentors
     all_commenters = Comment.where(category: 'announcement').pluck(:comment_from, :user_id)
-    all_commenters.each do |comment|
-      if commenters_for_announcement[comment[0]] && !commenters_for_announcement[comment[0]].include?(comment[1])
-        commenters_for_announcement[comment[0]] << comment[1]
-      else
-        commenters_for_announcement[comment[0]] = [comment[1]]
-      end
-    end
+    commenters_for_announcement = all_commenters.reduce(Hash.new([])) { |acc, comment| acc[comment[0]] << comment[1] }
 
     # get all default scores for announcements in range
     boosters = Hash[Announcement.where(id: announcement_ids).pluck(:id, :default_score)]
@@ -157,7 +146,7 @@ class Personalizer
       friend_boost = 0
       top_circle_friends.each do |friend|
         # likers scoring boost
-        if !likers.nil? && likers.include?(friend[0])
+        if likers.any? && likers.include?(friend[0])
           if weights.circle_friend_boost(friend[1], circle_count) > MAX_FRIEND_SCORE
             friend_like_score = MAX_FRIEND_SCORE
           else
@@ -168,7 +157,7 @@ class Personalizer
         end
 
         # commenters scoring boost
-        if !commenters.nil? && commenters.include?(friend[0])
+        if commenters.any? && commenters.include?(friend[0])
           if weights.circle_friend_boost(friend[1], circle_count) > MAX_FRIEND_SCORE
             friend_comment_score = MAX_FRIEND_SCORE
           else
@@ -190,12 +179,12 @@ class Personalizer
       subs_boost = 0
       top_similar_subscribers.each do |subs|
         # boost for likes
-        if !likers.nil? && likers.include?(subs[0])
+        if likers.any? && likers.include?(subs[0])
           subs_boost += MAX_ANNOUNCEMENTS_SUB_BOOST / NUMBER_OF_TOP_SUBSCRIBERS
         end
 
         # boost for commenters
-        if !commenters.nil? && commenters.include?(subs[0])
+        if commenters.any? && commenters.include?(subs[0])
           subs_boost += MAX_ANNOUNCEMENTS_SUB_BOOST / NUMBER_OF_TOP_SUBSCRIBERS
         end
       end # end of subscribers loop
@@ -210,13 +199,11 @@ class Personalizer
       # random booster
       announcement_scores[ann[0]] += weights.random_booster
 
-      # default score
-      if boosters[ann[0]]
-        announcement_scores[ann[0]] += boosters[ann[0]]
-      end
+      # add default score or nothing
+      announcement_scores[ann[0]] += boosters[ann[0]] || 0
 
     end
-    Rails.logger.info "completed individual Announcement analysis"
+    Rails.logger.info 'completed individual Announcement analysis'
     new_scores = announcement_scores.sort_by(&:last)
     new_scores
   end
@@ -237,86 +224,90 @@ class Personalizer
     # array of all members of user_circles (including repeats)
     all_circle_friends = CircleMember.where(circle_id: @user_circles).where.not(user_id: user_id).pluck(:user_id, :invited_by)
 
-    ranked_friends = {}
+    # ranked_friends = {}
 
-    if !all_circle_friends.nil?
-      all_circle_friends.each do |friend|
-
-        if ranked_friends[friend[0]]
-          if ranked_friends[friend[1]] == user_id
-            ranked_friends[friend[0]] += 1.5
-          else
-            ranked_friends[friend[0]] += 1
-          end
-        else
-          if ranked_friends[friend[1]] == user_id
-            ranked_friends[friend[0]] = 1.5
-          else
-            ranked_friends[friend[0]] = 1
-          end
-        end
-
-      end
-    else
+    if all_circle_friends.nil?
       # no friends, return empty array
       return []
     end
+
+    ranked_friends = all_circle_friends.reduce(Hash.new(0)) do |acc, friend|
+      # friend has been seen already
+      if acc[friend[1]] == user_id
+        acc[friend[0]] += RECURRING_FRIEND_SCORE
+      else
+        acc[friend[0]] += INITIAL_FRIEND_SCORE
+      end
+    end
+
+    # all_circle_friends.each do |friend|
+    #   if ranked_friends[friend[0]]
+    #     if ranked_friends[friend[1]] == user_id
+    #       ranked_friends[friend[0]] += 1.5
+    #     else
+    #       ranked_friends[friend[0]] += 1
+    #     end
+    #   else
+    #     if ranked_friends[friend[1]] == user_id
+    #       ranked_friends[friend[0]] = 1.5
+    #     else
+    #       ranked_friends[friend[0]] = 1
+    #     end
+    #   end
+    # end
 
     # sort hash from small to big and reverse order
     ordered = ranked_friends.sort_by &:last
     ranked_friend_array = ordered.reverse
 
     # top n friends array where n = NUMBER OF FRIENDS
-    top_friends = []
-    if ranked_friend_array.size < NUMBER_OF_FRIENDS
-      (0...ranked_friend_array.size).each do |n|
-        top_friends << ranked_friend_array[n]
-      end
-    else
-      (0...NUMBER_OF_FRIENDS).each do |n|
-        top_friends << ranked_friend_array[n]
-      end
-    end
+    # array of tuples with user ID and how many times they appear
+    ranked_friend_array[0..NUMBER_OF_FRIENDS]
 
+    # top_friends = []
+    # if ranked_friend_array.size < NUMBER_OF_FRIENDS
+    #   (0...ranked_friend_array.size).each do |n|
+    #     top_friends << ranked_friend_array[n]
+    #   end
+    # else
+    #   (0...NUMBER_OF_FRIENDS).each do |n|
+    #     top_friends << ranked_friend_array[n]
+    #   end
+    # end
     # return array of tuples with user ID and how many times they appear
-    top_friends
+    # top_friends
   end
 
   # subscribers impact on an event's peck score
   def similar_subscribers(user_id, institution_id)
-    user_subscriptions = Subscription.where(user_id: user_id).pluck(:category, :subscribed_to)
-
     all_subscribers = Subscription.where(institution_id: institution_id).where.not(user_id: user_id).pluck(:user_id, :category, :subscribed_to).shuffle
+    # should NEVER be nil but add check anyways just in case
+    return [] if all_subscribers.nil?
 
     similar_subscribers = {}
     top_subscribers = {}
 
-    # should NEVER be nil but add check anyways just in case
-    if !all_subscribers.nil?
-      all_subscribers.each do |subscriber|
+    user_subscriptions = Subscription.where(user_id: user_id).pluck(:category, :subscribed_to)
 
-        current_sub = [subscriber[1], subscriber[2]]
-        if user_subscriptions.include? current_sub
+    all_subscribers.each do |subscriber|
+      current_sub = [subscriber[1], subscriber[2]]
+      next unless user_subscriptions.include? current_sub
 
-          # increment number of subscriptions in common
-          if similar_subscribers[subscriber[0]]
-            similar_subscribers[subscriber[0]] += 1
-          else
-            similar_subscribers[subscriber[0]] = 1
-          end
-
-          # if they have the minimum number of subscriptions in common
-          if similar_subscribers[subscriber[0]] >= MINIMUM_SUBSCRIPTIONS
-            top_subscribers[subscriber[0]] = similar_subscribers[subscriber[0]]
-          end
-
-          if top_subscribers.size >= NUMBER_OF_TOP_SUBSCRIBERS
-            return top_subscribers.to_a
-          end
-        end
+      # increment number of subscriptions in common
+      if similar_subscribers[subscriber[0]]
+        similar_subscribers[subscriber[0]] += SINGLE_SUBSCRIBER_SCORE
+      else
+        similar_subscribers[subscriber[0]] = SINGLE_SUBSCRIBER_SCORE
       end
-    else
-      return []
+
+      # if they have the minimum number of subscriptions in common
+      if similar_subscribers[subscriber[0]] >= MINIMUM_SUBSCRIPTIONS
+        top_subscribers[subscriber[0]] = similar_subscribers[subscriber[0]]
+      end
+
+      if top_subscribers.size >= NUMBER_OF_TOP_SUBSCRIBERS
+        return top_subscribers.to_a
+      end
     end
 
     # return hash of top similar subscribers
