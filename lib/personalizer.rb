@@ -92,7 +92,6 @@ class Personalizer
 
       # default score or 0 if nwot specified
       event_scores[event[0]] += boosters[event[0]] || 0
-      end
 
     end
     Rails.logger.info "completed individual #{model} analysis"
@@ -120,7 +119,6 @@ class Personalizer
 
     # array/hashes for storing ids, likers, and commenters
     announcement_ids = announcement_scores.map { |ann| ann[0] }
-    commenters_for_announcement = {}
 
     # associate each announcement to its likers
     all_likers = Like.where(likeable_type: 'Announcement').pluck(:likeable_id, :liker_id)
@@ -240,22 +238,6 @@ class Personalizer
       end
     end
 
-    # all_circle_friends.each do |friend|
-    #   if ranked_friends[friend[0]]
-    #     if ranked_friends[friend[1]] == user_id
-    #       ranked_friends[friend[0]] += 1.5
-    #     else
-    #       ranked_friends[friend[0]] += 1
-    #     end
-    #   else
-    #     if ranked_friends[friend[1]] == user_id
-    #       ranked_friends[friend[0]] = 1.5
-    #     else
-    #       ranked_friends[friend[0]] = 1
-    #     end
-    #   end
-    # end
-
     # sort hash from small to big and reverse order
     ordered = ranked_friends.sort_by &:last
     ranked_friend_array = ordered.reverse
@@ -263,19 +245,6 @@ class Personalizer
     # top n friends array where n = NUMBER OF FRIENDS
     # array of tuples with user ID and how many times they appear
     ranked_friend_array[0..NUMBER_OF_FRIENDS]
-
-    # top_friends = []
-    # if ranked_friend_array.size < NUMBER_OF_FRIENDS
-    #   (0...ranked_friend_array.size).each do |n|
-    #     top_friends << ranked_friend_array[n]
-    #   end
-    # else
-    #   (0...NUMBER_OF_FRIENDS).each do |n|
-    #     top_friends << ranked_friend_array[n]
-    #   end
-    # end
-    # return array of tuples with user ID and how many times they appear
-    # top_friends
   end
 
   # subscribers impact on an event's peck score
@@ -322,10 +291,8 @@ class Personalizer
 
   # make sure top friends are scored relative to a minimum number of circles
   def user_circle_count(current_count, min_count)
-    if current_count >= min_count
-      current_count
-    else
-      min_count
-    end
+    return current_count if current_count >= min_count
+
+    min_count
   end
 end
