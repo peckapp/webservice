@@ -36,9 +36,6 @@ module Api
 
         # personalize simple event and announcement scores
         personal_simple_scores, personal_announcement_scores, personal_athletic_scores = personalize_scores(simple_scores, announcement_scores, athletic_scores)
-        puts "simple_scores: #{simple_scores}"
-        puts
-        puts "personal_simple_scores: #{personal_simple_scores}"
 
         ### Scale announcement scores to match event scores ###
         personal_announcement_scores = scale_scores_to_simple_events(personal_announcement_scores, personal_simple_scores)
@@ -62,14 +59,10 @@ module Api
           end
         end
 
-        logger.info "in explore, for user_id: #{auth_user_id} found #{simple_event_ids.uniq.count} simple, #{announcement_ids.uniq.count} anns, #{athletic_event_ids.uniq.count} aths"
-
         # query db for the correct explore items
         @explore_events = SimpleEvent.where(id: simple_event_ids) # .where.not(user_id: auth_user_id)
         @explore_announcements = Announcement.where( id: announcement_ids) # .where.not(user_id: auth_user_id)
         @explore_athletics = AthleticEvent.where(id: athletic_event_ids)
-
-        logger.info "in explore, instance variables for user_id: #{auth_user_id} found #{@explore_events.count} simple, #{@explore_announcements.count} anns, #{@explore_athletics.count} aths"
 
         # split up likes
         @likes_for_explore_events = get_likes_for_type('SimpleEvent', simple_event_ids)
