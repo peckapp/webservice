@@ -42,12 +42,9 @@ class Personalizer
 
     # associate each event to its attendees
     all_attendees = EventAttendee.where(event_attended: event_ids).pluck(:event_attended, :user_id)
-    all_attendees.each do |att|
-      if attendees_for_event[att[0]]
-        attendees_for_event[att[0]] << att[1]
-      else
-        attendees_for_event[att[0]] = [att[1]]
-      end
+    attendees_for_event = all_attendees.reduce(Hash.new([])) do |acc, att|
+      acc[att[0]] ||= []
+      acc[att[0]] << att[1]
     end
 
     # get all values for the manual booster scores now to avoid making too many db calls later
@@ -78,11 +75,10 @@ class Personalizer
       end
 
       ## Scoring boost for similar subscribers
-      subs_boost = 0
-      top_similar_subscribers.each do |subs|
-        next if attendees.nil? || !attendees.include?(subs[0])
+      subs_boost = top_similar_subscribers.reduce(0) do |a, e|
+        next if attendees.nil? || !attendees.include?(e[0])
 
-        subs_boost += MAX_EVENTS_SUB_BOOST / NUMBER_OF_TOP_SUBSCRIBERS
+        a + MAX_EVENTS_SUB_BOOST / NUMBER_OF_TOP_SUBSCRIBERS
       end
 
       event_scores[event[0]] += subs_boost

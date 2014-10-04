@@ -127,7 +127,7 @@ class NestedTraverseScraper
       # handles parsing issues with malformed HTML where content isn't captured by the selector (williams rss links)
       content = next_non_blank(element).text.squish if content.blank?
     when 'image'
-      logger.info "saving image with url: #{element['url']}"
+      # logger.info "saving image with url: #{element['url']}"
       content = URI.parse(element['url'])
     else
     end
@@ -142,7 +142,7 @@ class NestedTraverseScraper
     foreign_resource = cs.foreign_data_resource
 
     if element.nil?
-      logger.info 'NIL ELEMENT'
+      logger.info 'NIL ELEMENT for foreign key'
       return
     end
 

@@ -32,71 +32,19 @@ module Api
       private
 
       def prepare_personal_explore(simple_scores, announcement_scores, athletic_scores)
-        #### Normal Explore operations ####
-
-        # save all events that user is attending to remove it from explore
-        user_events = EventAttendee.where(user_id: auth_inst_id, category: 'simple').pluck(:event_attended)
-        user_announcements = Announcement.where(user_id: auth_inst_id).pluck(:id)
+        #### Normal Explore operations with Personalization ####
 
         # personalize simple event and announcement scores
         personal_simple_scores, personal_announcement_scores, personal_athletic_scores = personalize_scores(simple_scores, announcement_scores, athletic_scores)
+        puts "simple_scores: #{simple_scores}"
+        puts
+        puts "personal_simple_scores: #{personal_simple_scores}"
 
         ### Scale announcement scores to match event scores ###
         personal_announcement_scores = scale_scores_to_simple_events(personal_announcement_scores, personal_simple_scores)
 
-        # get top scored events/announcements
-        explore_ids = []
-        @simple_explore_scores = {}
-        @announcement_explore_scores = {}
-        @athletic_explore_scores = {}
-
-        # top scores of each explore array
-        se_score = personal_simple_scores.pop
-        ann_score = personal_announcement_scores.pop
-        ath_score = personal_athletic_scores.pop
-
-        # build top explore items list
-        # check next element of each array and take the higher score
-        ### run until the arrays are all empty ###
-        until personal_simple_scores.empty? && personal_announcement_scores.empty? && personal_athletic_scores.empty?
-
-          # default comparison values for when arrays start becoming emptied
-          se_score ||= [0, 0]
-          ann_score ||= [0, 0]
-          ath_score ||= [0, 0]
-
-          if se_score[1] >= ann_score[1] && se_score[1] >= ath_score[1]
-            #### simple event has highest score ####
-            # check if event was organized by current user
-            unless user_events.include?(se_score[0])
-              explore_ids << ['SimpleEvent', se_score[0]]
-              @simple_explore_scores[se_score[0]] = se_score[1]
-            end
-
-            # get next highest score in array
-            se_score = personal_simple_scores.pop
-
-          elsif ann_score[1] >= ath_score[1]
-            ####  announcement has highest score ####
-            # check if announcement was posted by current user
-            unless user_announcements.include?(ann_score[0])
-              explore_ids << ['Announcement', ann_score[0]]
-              @announcement_explore_scores[ann_score[0]] = ann_score[1]
-            end
-
-            # get next highest score in array
-            ann_score = personal_announcement_scores.pop
-
-          else
-            #### athletic event has highest score ####
-            explore_ids << ['AthleticEvent', ath_score[0]]
-            @athletic_explore_scores[ath_score[0]] = ath_score[1]
-
-            # get next highest score in array
-            ath_score = personal_athletic_scores.pop
-          end
-          break if explore_ids.size >= NUMBER_OF_EXPLORE_ITEMS
-        end
+        ### Generates the hashes containing the score for each event type, returns list of tuples of explore ids ###
+        explore_ids = generate_scores(personal_simple_scores, personal_announcement_scores, personal_athletic_scores)
 
         # split up announcement / simple event ids for db query
         announcement_ids = []
@@ -114,15 +62,81 @@ module Api
           end
         end
 
+        logger.info "in explore, for user_id: #{auth_user_id} found #{simple_event_ids.uniq.count} simple, #{announcement_ids.uniq.count} anns, #{athletic_event_ids.uniq.count} aths"
+
         # query db for the correct explore items
-        @explore_events = SimpleEvent.where(id: simple_event_ids).where.not(user_id: auth_user_id)
-        @explore_announcements = Announcement.where(id: announcement_ids).where.not(user_id: auth_user_id)
+        @explore_events = SimpleEvent.where(id: simple_event_ids) # .where.not(user_id: auth_user_id)
+        @explore_announcements = Announcement.where( id: announcement_ids) # .where.not(user_id: auth_user_id)
         @explore_athletics = AthleticEvent.where(id: athletic_event_ids)
+
+        logger.info "in explore, instance variables for user_id: #{auth_user_id} found #{@explore_events.count} simple, #{@explore_announcements.count} anns, #{@explore_athletics.count} aths"
 
         # split up likes
         @likes_for_explore_events = get_likes_for_type('SimpleEvent', simple_event_ids)
         @likes_for_explore_announcements = get_likes_for_type('Announcement', announcement_ids)
         @likes_for_explore_athletics = get_likes_for_type('AthleticEvent', athletic_event_ids)
+      end
+
+      # build top explore items list
+      def generate_scores(simple_scores, announcement_scores, athletic_scores)
+        # save all events that user is attending to remove it from explore
+        user_events = EventAttendee.where(user_id: auth_inst_id, category: 'simple').pluck(:event_attended)
+        user_announcements = Announcement.where(user_id: auth_inst_id).pluck(:id)
+
+        # get top scored events/announcements
+        explore_ids = []
+        @simple_explore_scores = {}
+        @announcement_explore_scores = {}
+        @athletic_explore_scores = {}
+
+        # top scores of each explore array
+        se_score = simple_scores.pop
+        ann_score = announcement_scores.pop
+        ath_score = athletic_scores.pop
+
+        # check next element of each array and take the higher score
+        ### runs until the arrays are all empty ###
+        until simple_scores.empty? && announcement_scores.empty? && athletic_scores.empty?
+
+          # default comparison values for when arrays start becoming emptied
+          se_score ||= [0, 0]
+          ann_score ||= [0, 0]
+          ath_score ||= [0, 0]
+
+          if se_score[1] >= ann_score[1] && se_score[1] >= ath_score[1]
+            #### simple event has highest score ####
+            # check if event was organized by current user
+            unless user_events.include?(se_score[0])
+              explore_ids << ['SimpleEvent', se_score[0]]
+              @simple_explore_scores[se_score[0]] = se_score[1]
+            end
+
+            # get next highest score in array
+            se_score = simple_scores.pop
+
+          elsif ann_score[1] >= ath_score[1]
+            ####  announcement has highest score ####
+            # check if announcement was posted by current user
+            unless user_announcements.include?(ann_score[0])
+              explore_ids << ['Announcement', ann_score[0]]
+              @announcement_explore_scores[ann_score[0]] = ann_score[1]
+            end
+
+            # get next highest score in array
+            ann_score = announcement_scores.pop
+
+          else
+            #### athletic event has highest score ####
+            explore_ids << ['AthleticEvent', ath_score[0]]
+            @athletic_explore_scores[ath_score[0]] = ath_score[1]
+
+            # get next highest score in array
+            ath_score = athletic_scores.pop
+          end
+          break if explore_ids.size >= NUMBER_OF_EXPLORE_ITEMS
+        end
+
+        explore_ids
       end
 
       def run_builder
@@ -149,8 +163,8 @@ module Api
       def scale_scores_to_simple_events(scale_these, to_these)
         ## se = simple events
         ## ann = announcements
-        ann_scores = scale_these.collect(&:last)
-        se_scores = to_these.collect(&:last)
+        ann_scores = scale_these.map(&:last)
+        se_scores = to_these.map(&:last)
 
         ann_score_stats = DescriptiveStatistics::Stats.new(ann_scores)
         se_score_stats = DescriptiveStatistics::Stats.new(se_scores)

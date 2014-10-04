@@ -24,7 +24,9 @@ class UltimateTestHelper < ActionController::TestCase
   def super_create_user
     @controller = Api::V1::UsersController.new
 
-    patch :super_create, id: 3, user: { first_name: 'Ju', last_name: 'Dr', email: 'bobbyboucher@williams.edu', password: 'testingpass', password_confirmation: 'testingpass' }, authentication: session_create, format: :json
+    patch :super_create, id: 3, user: { first_name: 'Ju', last_name: 'Dr', email: 'bobbyboucher@williams.edu',
+                                        password: 'testingpass', password_confirmation: 'testingpass' },
+                         authentication: session_create, format: :json
     user = assigns(:user)
     auth_token = user.authentication_token
 
@@ -39,7 +41,8 @@ class UltimateTestHelper < ActionController::TestCase
   end
 
   test 'should_get_index' do
-    next unless is_subclass? && is_controller?
+    next unless subclass? && controller?
+    next if pecks_controller? # TODO: need a test for this using user-specific authentication
     the_user = super_create_user
 
     auth_params = session_create
@@ -48,7 +51,7 @@ class UltimateTestHelper < ActionController::TestCase
     @controller = @the_controller
 
     # circles and circle members require logging in.
-    if is_circle_members_controller? || is_circles_controller?
+    if circle_members_controller? || circles_controller?
       get :index, format: :json, authentication: auth_params
       assert_response :success
     else
@@ -58,31 +61,32 @@ class UltimateTestHelper < ActionController::TestCase
   end
 
   test 'should_fail_getting_index' do
-    next unless is_subclass? && is_controller?
+    next unless subclass? && controller?
     the_user = super_create_user
 
     auth_params = session_create
-    auth_params.delete("api_key")
+    auth_params.delete('api_key')
 
     the_params = @params_index
     # puts the_params
-    the_params[:authentication]["api_key"] = nil
+    the_params[:authentication]['api_key'] = nil
     # puts the_params
 
     @controller = @the_controller
 
     # circles and circle members require logging in.
-    if is_circle_members_controller? || is_circles_controller?
+    if circle_members_controller? || circles_controller?
       get :index, format: :json, authentication: auth_params
-      assert_response :unauthorized, "Make sure minimal access is not commented out in application controller"
+      assert_response :unauthorized, 'Make sure minimal access is not commented out in application controller'
     else
       get :index, the_params
-      assert_response :unauthorized, "Make sure minimal access is not commented out in application controller"
+      assert_response :unauthorized, 'Make sure minimal access is not commented out in application controller'
     end
   end
 
   test 'should_get_show' do
-    next unless is_subclass? && is_controller?
+    next unless subclass? && controller?
+    next if pecks_controller? # TODO: need a test for this using user-specific authentication
     the_user = super_create_user
 
     auth_params = session_create
@@ -95,7 +99,7 @@ class UltimateTestHelper < ActionController::TestCase
     end
 
     # circles and circle members require logging in.
-    if is_circle_members_controller? || is_circles_controller?
+    if circle_members_controller? || circles_controller?
       get :show, format: :json, id: @id, authentication: auth_params
       assert_response :success
       assert_not_nil @model.find(@id)
@@ -107,7 +111,7 @@ class UltimateTestHelper < ActionController::TestCase
   end
 
   test 'should_post_create' do
-    next unless is_subclass? && is_controller?
+    next unless subclass? && controller?
     next if institutions_controller?
     the_user = super_create_user
 
@@ -116,7 +120,7 @@ class UltimateTestHelper < ActionController::TestCase
 
     @controller = @the_controller
 
-    if is_subscriptions_controller?
+    if subscriptions_controller?
       post :create, subscriptions: @params_create, authentication: auth_params, format: :json
       assert_response :success
       assigns(:subscriptions).each do |sub|
@@ -124,7 +128,7 @@ class UltimateTestHelper < ActionController::TestCase
       end
 
       # anonymous user creation
-    elsif is_users_controller?
+    elsif users_controller?
       post :create, udid: 'hello', device_type: 'ios', format: :json, authentication: session_create
       user = assigns(:user)
       assert_not_nil user.id
@@ -137,7 +141,7 @@ class UltimateTestHelper < ActionController::TestCase
   end
 
   test 'should_patch_update' do
-    next unless is_subclass? && is_controller? && !is_pecks_controller?
+    next unless subclass? && controller? && !pecks_controller?
     next if institutions_controller?
     the_user = super_create_user
 
@@ -152,7 +156,7 @@ class UltimateTestHelper < ActionController::TestCase
   end
 
   test 'should_patch_accept' do
-    next unless is_subclass? && is_controller? && is_circle_members_controller?
+    next unless subclass? && controller? && circle_members_controller?
     the_user = super_create_user
 
     auth_params = session_create
@@ -167,7 +171,7 @@ class UltimateTestHelper < ActionController::TestCase
   end
 
   test 'should_delete_destroy' do
-    next unless is_subclass? && is_controller?
+    next unless subclass? && controller?
     next if institutions_controller?
     the_user = super_create_user
 
@@ -176,10 +180,10 @@ class UltimateTestHelper < ActionController::TestCase
 
     @controller = @the_controller
 
-    if is_subscriptions_controller? || is_event_attendees_controller?
+    if subscriptions_controller? || event_attendees_controller?
       delete :destroy, :format => :json, :authentication => auth_params, @model_type => @params_delete
       assert_response :success
-    elsif is_circle_members_controller?
+    elsif circle_members_controller?
       delete :leave_circle, :format => :json, :authentication => auth_params, @model_type => @params_delete
       assert_response :success
     else
@@ -189,31 +193,32 @@ class UltimateTestHelper < ActionController::TestCase
   end
 
   private
-  def is_subclass?
+
+  def subclass?
     self.class.superclass == UltimateTestHelper
   end
 
-  def is_pecks_controller?
+  def pecks_controller?
     @class && @class == PecksControllerTest
   end
 
-  def is_circles_controller?
+  def circles_controller?
     @class && @class == CirclesControllerTest
   end
 
-  def is_circle_members_controller?
+  def circle_members_controller?
     @class && @class == CircleMembersControllerTest
   end
 
-  def is_event_attendees_controller?
+  def event_attendees_controller?
     @class && @class == EventAttendeesControllerTest
   end
 
-  def is_subscriptions_controller?
+  def subscriptions_controller?
     @class && @class == SubscriptionsControllerTest
   end
 
-  def is_users_controller?
+  def users_controller?
     @class && @class == UsersControllerTest
   end
 
@@ -221,7 +226,7 @@ class UltimateTestHelper < ActionController::TestCase
     @class && @class == InstitutionsControllerTest
   end
 
-  def is_controller?
+  def controller?
     defined? @the_controller
   end
 end

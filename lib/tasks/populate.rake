@@ -1,10 +1,14 @@
 namespace :db do
-  desc "Erase and fill database"
-  task :populate => :environment do
+  desc 'Erase and fill database'
+  task populate: :environment do
     require 'populator'
     require 'faker'
 
-    [User, Subscription, Circle, CircleMember, Department, Club, AthleticTeam, SimpleEvent, Comment, EventAttendee, View, Like, Announcement, AthleticEvent].each(&:delete_all)
+    content_models = [User, Subscription, Circle, CircleMember, Department,
+                      Club, AthleticTeam, SimpleEvent, Comment, EventAttendee,
+                      View, Like, Announcement, AthleticEvent]
+
+    content_models.each(&:delete_all)
 
     User.populate 500 do |user|
       user.institution_id = 1
@@ -16,7 +20,7 @@ namespace :db do
 
       Subscription.populate 15..40 do |subscription|
         subscription.user_id = user.id
-        subscription.category = ["athletic", "club", "department"]
+        subscription.category = %w(athletic club department)
         subscription.subscribed_to = 1..50
         subscription.created_at = 2.years.ago..Time.now
         subscription.institution_id = 1
@@ -40,7 +44,7 @@ namespace :db do
     AthleticTeam.populate 25 do |team|
       team.institution_id = 1
       team.sport_name = Populator.words(1).titleize
-      team.gender = "women"
+      team.gender = 'women'
       team.head_coach = Faker::Name.name
       team.created_at = 2.years.ago..Time.now
     end
@@ -48,7 +52,7 @@ namespace :db do
     AthleticTeam.populate 25 do |team|
       team.institution_id = 1
       team.sport_name = Populator.words(1).titleize
-      team.gender = "men"
+      team.gender = 'men'
       team.head_coach = Faker::Name.name
       team.created_at = 2.years.ago..Time.now
     end
@@ -81,7 +85,7 @@ namespace :db do
       event.event_description = Populator.sentences(1..3)
       event.institution_id = 1
       event.user_id = 1..500
-      event.category = ["club", "department"]
+      event.category = %w(club department)
       event.organizer_id = 1..50
       event.created_at = 3.days.ago..Time.now
       event.start_date = Time.now..1.month.from_now
@@ -91,7 +95,7 @@ namespace :db do
       c_count = 0 # comment count
       Comment.populate 2..20 do |comment|
         c_count += 1
-        comment.category = "simple"
+        comment.category = 'simple'
         comment.comment_from = event.id
         comment.user_id = 1..500
         comment.content = Populator.sentences(1..3)
@@ -107,7 +111,7 @@ namespace :db do
         ea_count += 1
         ea.user_id = 1..500
         ea.added_by = event.user_id
-        ea.category = "simple"
+        ea.category = 'simple'
         ea.event_attended = event.id
         ea.created_at = event.created_at..Time.now
         ea.institution_id = 1
@@ -115,7 +119,7 @@ namespace :db do
         # create one event view per attendee
         View.populate 1 do |view|
           view.user_id = ea.user_id
-          view.category = "simple"
+          view.category = 'simple'
           view.content_id = event.id
           view.date_viewed = ea.created_at
           view.created_at = ea.created_at
@@ -127,7 +131,7 @@ namespace :db do
       max_count = 2 * ea_count
       View.populate 5..max_count do |ev|
         ev.user_id = 1..500
-        ev.category = "simple"
+        ev.category = 'simple'
         ev.content_id = event.id
         ev.date_viewed = event.created_at..Time.now
         ev.created_at = event.created_at..Time.now
@@ -136,9 +140,9 @@ namespace :db do
 
       # simple event has many likes
       Like.populate 5..ea_count do |like|
-        like.liker_type = "User"
+        like.liker_type = 'User'
         like.liker_id = 1..500
-        like.likeable_type = "SimpleEvent"
+        like.likeable_type = 'SimpleEvent'
         like.likeable_id = event.id
         like.created_at = event.created_at..Time.now
       end
@@ -157,7 +161,7 @@ namespace :db do
       ann.institution_id = 1
       ann.user_id = 1..500
       ann.public = true
-      ann.category = ["club", "department"]
+      ann.category = %w(club department)
       ann.poster_id = 1..50
       ann.created_at = 1.month.ago..Time.now
 
@@ -165,7 +169,7 @@ namespace :db do
       c_count = 0 # comment count
       Comment.populate 2..20 do |comment|
         c_count += 1
-        comment.category = "announcement"
+        comment.category = 'announcement'
         comment.comment_from = ann.id
         comment.user_id = 1..500
         comment.content = Populator.sentences(1..3)
@@ -180,7 +184,7 @@ namespace :db do
       View.populate 5..100 do |ev|
         ev_count += 1
         ev.user_id = 1..500
-        ev.category = "announcement"
+        ev.category = 'announcement'
         ev.content_id = ann.id
         ev.date_viewed = ann.created_at..Time.now
         ev.created_at = ann.created_at..Time.now
@@ -189,9 +193,9 @@ namespace :db do
 
       # simple event has many likes
       Like.populate 5..ev_count do |like|
-        like.liker_type = "User"
+        like.liker_type = 'User'
         like.liker_id = 1..500
-        like.likeable_type = "Announcement"
+        like.likeable_type = 'Announcement'
         like.likeable_id = ann.id
         like.created_at = ann.created_at..Time.now
       end
@@ -210,7 +214,7 @@ namespace :db do
       ae.opponent = Faker::Company.name
       ae.team_score = 0..10
       ae.opponent_score = 0..10
-      ae.home_or_away = ['home', 'away']
+      ae.home_or_away = %w(home away)
       ae.location = Faker::Address.street_name
       ae.start_time = Time.now..1.month.from_now
       ae.created_at = 1.month.ago..Time.now
@@ -227,13 +231,13 @@ namespace :db do
         comment.created_at = ae.created_at..Time.now
       end
 
-            # simple event has many attendees
+      # simple event has many attendees
       ea_count = 0
       EventAttendee.populate 5..50 do |ea|
         ea_count += 1
         ea.user_id = 1..500
         ea.added_by = ea.user_id
-        ea.category = "athletic"
+        ea.category = 'athletic'
         ea.event_attended = ae.id
         ea.created_at = ae.created_at..Time.now
         ea.institution_id = 1
@@ -241,7 +245,7 @@ namespace :db do
         # create one event view per attendee
         View.populate 1 do |view|
           view.user_id = ea.user_id
-          view.category = "athletic"
+          view.category = 'athletic'
           view.content_id = ae.id
           view.date_viewed = ea.created_at
           view.created_at = ea.created_at
@@ -253,7 +257,7 @@ namespace :db do
       max_count = 2 * ea_count
       View.populate 5..max_count do |ev|
         ev.user_id = 1..500
-        ev.category = "athletic"
+        ev.category = 'athletic'
         ev.content_id = ae.id
         ev.date_viewed = ae.created_at..Time.now
         ev.created_at = ae.created_at..Time.now
@@ -262,9 +266,9 @@ namespace :db do
 
       # simple event has many likes
       Like.populate 5..ea_count do |like|
-        like.liker_type = "User"
+        like.liker_type = 'User'
         like.liker_id = 1..500
-        like.likeable_type = "AthleticEvent"
+        like.likeable_type = 'AthleticEvent'
         like.likeable_id = ae.id
         like.created_at = ae.created_at..Time.now
       end
