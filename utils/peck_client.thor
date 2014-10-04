@@ -10,12 +10,12 @@ require 'active_support/core_ext/hash'
 # not a part of the rails framework, runs as a stand-alone
 class PeckClient < Thor
   # need a way to customize these through the command line
-  # SSL = true
-  # PECK_URL = 'yggdrasil.peckapp.com'
-  # PECK_PORT = 443
-  SSL = false
-  PECK_URL = 'loki.peckapp.com'
-  PECK_PORT = 3500
+  SSL = true
+  PECK_URL = 'yggdrasil.peckapp.com'
+  PECK_PORT = 443
+  # SSL = false
+  # PECK_URL = 'loki.peckapp.com'
+  # PECK_PORT = 3500
 
   # requires these parameters as part of thor superclass
   def initialize(a, b, c)
@@ -27,6 +27,7 @@ class PeckClient < Thor
       puts 'super creating user'
       super_create_user_action
     rescue => error
+      puts "destroying user on error: #{error}"
       destroy_user_action
       raise error
     end
@@ -34,12 +35,18 @@ class PeckClient < Thor
 
   desc 'run_all TIMES', 'Runs all currently implemented queries the specified number of TIMES'
   def run_all(times = 1)
-    (0..times.to_i).each do
-      events_action
-      explore_action
-      circles_action
+    begin
+      (0..times.to_i).each do
+        puts '=> running events_action'
+        events_action
+        puts '=> running explore_action'
+        explore_action
+        puts '=> running circles_action'
+        circles_action
+      end
+    ensure
+      destroy_user_action
     end
-    destroy_user_action
   end
 
   desc 'events', 'Retreives all the simple events from the server'
@@ -93,7 +100,7 @@ class PeckClient < Thor
     end
 
     def create_user_action
-      response_str = RestClient::Request.execute(method: :post, url: paramsURL('/api/users'), verify_ssl: false)
+      response_str = RestClient::Request.execute(method: :post, url: paramsURL('/api/users', udid: '1234abcd'), verify_ssl: false)
       verify_response('create_user', response_str)
       response = JSON.parse(response_str)
       @user = User.new(response['user'])
@@ -103,16 +110,18 @@ class PeckClient < Thor
     def super_create_user_action
       params = { id: @user.id, first_name: 'Johnny', last_name: 'Appleseed', password: 'applz4life',
                  password_confirmation: 'applz4life', blurb: "I'm not a real person, just testing!",
-                 email: "jappleseed#{rand(1000)}@test.edu", institution_id: 1 }
+                 email: "jappleseed#{rand(1000)}@test.edu", institution_id: 1, udid: '1234abcd',
+                 device_type: 'ios' }
       response_str = RestClient::Request.execute(method: :patch, url: paramsURL("/api/users/#{@user.id}/super_create"), payload: { user: params }, verify_ssl: false)
       # puts response_str
       verify_response('super_create_user', response_str)
       response = JSON.parse(response_str)
       @user.update(response['user'])
-      puts "Super created user: #{@user.to_s}"
+      puts "Super created user: #{@user}"
     end
 
     def destroy_user_action
+      return unless @user
       response_str = RestClient::Request.execute(method: :delete, url: paramsURL("/api/users/#{@user.id}", authentication: auth_block), verify_ssl: false)
       verify_response('destroy_user', response_str)
       JSON.parse(response_str)

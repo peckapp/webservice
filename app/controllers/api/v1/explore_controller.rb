@@ -61,7 +61,7 @@ module Api
 
         # query db for the correct explore items
         @explore_events = SimpleEvent.where(id: simple_event_ids) # .where.not(user_id: auth_user_id)
-        @explore_announcements = Announcement.where( id: announcement_ids) # .where.not(user_id: auth_user_id)
+        @explore_announcements = Announcement.where(id: announcement_ids) # .where.not(user_id: auth_user_id)
         @explore_athletics = AthleticEvent.where(id: athletic_event_ids)
 
         # split up likes

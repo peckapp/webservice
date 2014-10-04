@@ -8,44 +8,48 @@ class ApplicationController < ActionController::Base
     # user is found by session id
     user = User.find(session[:user_id])
     # the auth token must be present
-    if user && auth[:authentication_token] && (auth[:authentication_token] == user.authentication_token) && user.active
+    if user && auth[:authentication_token] &&
+      (auth[:authentication_token] == user.authentication_token) &&
+      (!Institution.find(user.institution_id).public || user.active) # for testing, allow inactive users for non-public institutions
       return true
     end
-    logger.warn "confirm_logged_in failed for active(#{user.active}) user #{session[:user_id]} with invalid authentication_token: #{auth[:authentication_token]}"
+    logger.warn "confirm_logged_in failed for active(#{user.active}) user #{session[:user_id]} with authentication_token: #{auth[:authentication_token]}"
     head :unauthorized
     false
   end
 
   def confirm_minimal_access
-    if auth_params_exist
-      NewRelic::Agent.add_custom_parameters(user_id: auth[:user_id], institution_id: auth[:institution_id])
-      # check validity of existing session: params not nil and are equal to the current session's
-      if session[:user_id] && session[:api_key] && session[:user_id] == auth[:user_id] && session[:api_key] == auth[:api_key]
-        return true
-      else
-        # otherwise attempts to create session for that user
-        user = User.find(auth[:user_id])
-        if user.blank?
-          logger.warn "Attempted to confirm minimal access for non-existent user with id: [#{user.id}] and api key: [#{user.api_key}]"
-        else
-          # checks validity of api_key
-          if user.api_key == auth[:api_key]
-
-            # create session for existing user
-            session[:user_id] = user.id
-            session[:api_key] = user.api_key
-            return true
-          else
-            # Invalid api key
-            logger.warn "Attempted to confirm minimal access for user id: [#{user.id}] with invalid api key: [#{user.api_key}]"
-          end
-        end
-      end
+    unless auth_params_exist
       head :unauthorized
       return false
-    else
-      head :unauthorized
     end
+
+    NewRelic::Agent.add_custom_parameters(user_id: auth[:user_id], institution_id: auth[:institution_id])
+    # check validity of existing session: params not nil and are equal to the current session's
+    if session[:user_id] && session[:api_key] && session[:user_id] == auth[:user_id] && session[:api_key] == auth[:api_key]
+      return true
+    end
+
+    # otherwise attempts to create session for that user
+    user = User.find(auth[:user_id])
+    if user.blank?
+      logger.warn "Attempted to confirm minimal access for non-existent user with id: [#{user.id}] and api key: [#{user.api_key}]"
+    else
+      # checks validity of api_key
+      if user.api_key == auth[:api_key]
+
+        # create session for existing user
+        session[:user_id] = user.id
+        session[:api_key] = user.api_key
+        return true
+      else
+        # Invalid api key
+        logger.warn "Attempted to confirm minimal access for user id: [#{user.id}] with invalid api key: [#{user.api_key}]"
+      end
+    end
+
+    head :unauthorized
+    false
   end
 
   def specific_index(model, params_hash)
