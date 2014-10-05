@@ -13,6 +13,10 @@ class ApplicationController < ActionController::Base
       (!Institution.find(user.institution_id).public || user.active) # for testing, allow inactive users for non-public institutions
       return true
     end
+    unless user.active
+      # proper behavior here is to let the user know that they still need to confirm their account through email
+      # TODO: need better error handling here for this, especially on the app side.
+    end
     logger.warn "confirm_logged_in failed for active(#{user.active}) user #{session[:user_id]} with authentication_token: #{auth[:authentication_token]}"
     head :unauthorized
     false
@@ -31,23 +35,9 @@ class ApplicationController < ActionController::Base
     end
 
     # otherwise attempts to create session for that user
-    user = User.find(auth[:user_id])
-    if user.blank?
-      logger.warn "Attempted to confirm minimal access for non-existent user with id: [#{user.id}] and api key: [#{user.api_key}]"
-    else
-      # checks validity of api_key
-      if user.api_key == auth[:api_key]
+    return true if create_session
 
-        # create session for existing user
-        session[:user_id] = user.id
-        session[:api_key] = user.api_key
-        return true
-      else
-        # Invalid api key
-        logger.warn "Attempted to confirm minimal access for user id: [#{user.id}] with invalid api key: [#{user.api_key}]"
-      end
-    end
-
+    # default result of failed authentication
     head :unauthorized
     false
   end
@@ -84,7 +74,9 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  ############################
   ####   AUTHENTICATION   ####
+  ############################
 
   def auth
     if params[:authentication].blank?
@@ -108,11 +100,34 @@ class ApplicationController < ActionController::Base
     auth.key?(:user_id) && auth.key?(:api_key)
   end
 
+  def create_session
+    user = User.find(auth[:user_id])
+    if user.blank?
+      # logs an error logging in
+      logger.warn "Failed attempt to confirm minimal access for non-existent user with id: [#{user.id}] and api key: [#{user.api_key}]"
+    else
+      # checks validity of api_key
+      if user.api_key == auth[:api_key]
+
+        # create session for existing user
+        session[:user_id] = user.id
+        session[:api_key] = user.api_key
+        return true
+      else # Invalid api key
+        logger.warn "Failed attempt to confirm minimal access for user id: [#{user.id}] with invalid api key: [#{user.api_key}]"
+      end
+    end
+    false
+  end
+
+  ################################
   ####   PUSH NOTIFICATIONS   ####
+  ################################
 
   def notify(the_user, the_peck)
     logger.info "sent peck to #{the_peck.user_id}"
 
+    # hashes that are send to the background Communication::PushNotificationWorker
     apple_notifications = {}
     google_notifications = {}
     google_collapse_notifications = {}
@@ -127,21 +142,24 @@ class ApplicationController < ActionController::Base
       # token for this udid
       the_token = device.token
 
-      # as long as the token is not nil and the user is the most recent user
-      if the_user.id == uid && the_token
-        if the_peck.send_push_notification
-          # collapse circle comments
-          if device.device_type == 'android' && the_peck.notification_type == 'circle_comment'
-            google_collapse_notifications[the_token] = the_peck.message
-          elsif device.device_type == 'android'
-            google_notifications[the_token] = the_peck.message
-          else
-            apple_notifications[the_token] = the_peck.message
-          end
-        end
+      # ck that the token is not nil and the user is the most recent user
+      next unless the_token && the_user.id == uid
+      # check whether the peck requires a push notification
+      next unless the_peck.send_push_notification
+      # collapse circle comments
+      if device.device_type == 'android' && the_peck.notification_type == 'circle_comment'
+        google_collapse_notifications[the_token] = the_peck.message
+      elsif device.device_type == 'android'
+        google_notifications[the_token] = the_peck.message
+      else
+        apple_notifications[the_token] = the_peck.message
       end
     end
-    Communication::PushNotificationWorker.perform_async(apple_notifications, google_notifications, google_collapse_notifications, the_user.id)
+    # begin background processing
+    Communication::PushNotificationWorker.perform_async(apple_notifications,
+                                                        google_notifications,
+                                                        google_collapse_notifications,
+                                                        the_user.id)
   end
 
   def allowed_model_instances(model, auth_params)

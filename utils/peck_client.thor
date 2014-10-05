@@ -10,12 +10,12 @@ require 'active_support/core_ext/hash'
 # not a part of the rails framework, runs as a stand-alone
 class PeckClient < Thor
   # need a way to customize these through the command line
-  SSL = true
-  PECK_URL = 'yggdrasil.peckapp.com'
-  PECK_PORT = 443
-  # SSL = false
-  # PECK_URL = 'loki.peckapp.com'
-  # PECK_PORT = 3500
+  # SSL = true
+  # PECK_URL = 'yggdrasil.peckapp.com'
+  # PECK_PORT = 443
+  SSL = false
+  PECK_URL = 'loki.peckapp.com'
+  PECK_PORT = 3500
 
   # requires these parameters as part of thor superclass
   def initialize(a, b, c)
@@ -34,9 +34,9 @@ class PeckClient < Thor
   end
 
   desc 'run_all TIMES', 'Runs all currently implemented queries the specified number of TIMES'
-  def run_all(times = 1)
+  def run_all(iterations = 1)
     begin
-      (0..times.to_i).each do
+      iterations.times do
         puts '=> running events_action'
         events_action
         puts '=> running explore_action'
@@ -81,8 +81,10 @@ class PeckClient < Thor
     end
 
     def explore_action
-      items = get_and_verify('/api/explore', 'explore_events')
-      puts "retreived #{items ? items.length : '0'} explore items from the server"
+      items = get_and_verify('/api/explore')
+      items.each do |k, v|
+        puts "retrieved #{v.count} explore items for key: #{k}"
+      end
     end
 
     def circles_action
@@ -104,7 +106,7 @@ class PeckClient < Thor
       verify_response('create_user', response_str)
       response = JSON.parse(response_str)
       @user = User.new(response['user'])
-      puts "Created Peck Client with user: #{@user}"
+      puts "Created Peck Client with user"
     end
 
     def super_create_user_action
@@ -117,7 +119,7 @@ class PeckClient < Thor
       verify_response('super_create_user', response_str)
       response = JSON.parse(response_str)
       @user.update(response['user'])
-      puts "Super created user: #{@user}"
+      puts "Super created user with id: #{@user.id}"
     end
 
     def destroy_user_action
@@ -127,10 +129,11 @@ class PeckClient < Thor
       JSON.parse(response_str)
     end
 
-    def get_and_verify(uri, param)
+    def get_and_verify(uri, param = '')
       response = RestClient::Request.execute(method: :get, url: paramsURL(uri), verify_ssl: false)
       verify_response(param, response)
-      JSON.parse(response)[param]
+      return JSON.parse(response)[param] unless param == ''
+      JSON.parse(response)
     end
 
     def auth_block

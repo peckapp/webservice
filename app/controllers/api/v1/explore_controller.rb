@@ -17,7 +17,7 @@ module Api
         announcement_scores = dc.get("campus_announcement_explore_#{auth_inst_id}")
         athletic_scores = dc.get("campus_athletic_explore_#{auth_inst_id}")
 
-        # runs the builder and returns if the cache is empty
+        # runs the builder and returns a 502 if the cache is empty
         if simple_scores.blank? && announcement_scores.blank? && athletic_scores.blank?
           run_builder
 
