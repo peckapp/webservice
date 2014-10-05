@@ -30,7 +30,7 @@ class SimpleEvent < ImageContentModel
 
   ### Event Photo Attachments ###
   # necessary for ImageContentModel superclass
-  self.has_attached_file_with_root 'simple_events'
+  self.attach_file_with_root 'simple_events'
 
   ###############################
   ##                           ##

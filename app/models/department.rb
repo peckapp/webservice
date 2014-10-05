@@ -3,7 +3,7 @@ class Department < ImageContentModel
   include ModelNormalValidations
 
   # necessary for ImageContentModel superclass
-  self.has_attached_file_with_root 'departments'
+  self.attach_file_with_root 'departments'
 
   ###############################
   ##                           ##

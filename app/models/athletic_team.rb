@@ -3,7 +3,7 @@ class AthleticTeam < ImageContentModel
   include ModelNormalValidations
 
   # necessary for ImageContentModel superclass
-  self.has_attached_file_with_root 'athletic_teams'
+  self.attach_file_with_root 'athletic_teams'
 
   ###############################
   ##                           ##
