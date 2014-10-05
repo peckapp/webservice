@@ -42,7 +42,7 @@ class Personalizer
 
     # associate each event to its attendees
     all_attendees = EventAttendee.where(event_attended: event_ids).pluck(:event_attended, :user_id)
-    attendees_for_event = all_attendees.reduce(Hash.new([])) do |acc, att|
+    attendees_for_event = all_attendees.reduce({}) do |acc, att|
       acc[att[0]] ||= []
       acc[att[0]] << att[1]
     end
@@ -86,7 +86,7 @@ class Personalizer
       # random booster
       event_scores[event[0]] += weights.random_booster
 
-      # default score or 0 if nwot specified
+      # default score or 0 if not specified
       event_scores[event[0]] += boosters[event[0]] || 0
 
     end
@@ -225,7 +225,8 @@ class Personalizer
       return []
     end
 
-    ranked_friends = all_circle_friends.reduce(Hash.new(0)) do |acc, friend|
+    ranked_friends = all_circle_friends.reduce({}) do |acc, friend|
+      acc[friend[0]] ||= 0
       # friend has been seen already
       if acc[friend[1]] == user_id
         acc[friend[0]] += RECURRING_FRIEND_SCORE
