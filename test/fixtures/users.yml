@@ -6,17 +6,23 @@
 #
 
 # public users from institution 1
-<% (1..10).each do |n| %>
+<% (1..100).each do |n| %>
  user_<%= n %>:
   id: <%= n %>
+  first_name: <%= "first#{n}" %>
+  last_name: <%= "last#{n}" %>
+  email: <%= "first#{n}.last#{n}@inst1.edu" %>
   institution_id: 1
   api_key: <%= SecureRandom.hex(25) %>
 <% end %>
 
 # public users from institution 2
-<% (11..20).each do |n| %>
+<% (101..200).each do |n| %>
  user_<%= n %>:
   id: <%= n %>
+  first_name: <%= "first#{n}" %>
+  last_name: <%= "last#{n}" %>
+  email: <%= "first#{n}.last#{n}@inst2.edu" %>
   institution_id: 2
   api_key: <%= SecureRandom.hex(25) %>
 <% end %>

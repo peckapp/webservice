@@ -6,14 +6,17 @@
 #
 
 # circle members from institution 1, circle 1
-<% (1..5).each do |n| %>
- circle_member_<%= n %>:
-  id: <%= n %>
-  circle_id: 1
-  user_id: <%= n %>
-  invited_by: 1
-  institution_id: 1
-  date_added: 2007-12-04 00:00:00
+<% (1..5).each do |c| %>
+  <% (1..20).each do |n| %>
+   circle_member_<%= 10*n+c %>:
+    id: <%= 10*n+c %>
+    circle_id: <%= c %>
+    user_id: <%= n %>
+    invited_by: <%= n + 2 %>
+    institution_id: 1
+    accepted: true
+    date_added: 2007-12-04 00:00:00
+  <% end %>
 <% end %>
 
 # circle members from institution 2, circle 2
@@ -23,28 +26,31 @@
   circle_id: 2
   user_id: <%= n %>
   institution_id: 2
+  accepted: true
   invited_by: 2
   date_added: 2007-12-04 00:00:00
 <% end %>
 
-#  circle members from institution 3, circle 3
-<% (11..15).each do |n| %>
- circle_member_<%= n %>:
-  id: <%= n %>
-  circle_id: 3
-  user_id: <%= n %>
-  invited_by: 3
-  institution_id: 3
-  date_added: 2007-12-04 00:00:00
-<% end %>
+# no circle fixtures exist for institutions 3 and 4
 
-# circle members from institution 4, circle 4
-<% (16..20).each do |n| %>
- circle_member_<%= n %>:
-  id: <%= n %>
-  circle_id: 4
-  user_id: <%= n %>
-  institution_id: 4
-  invited_by: 4
-  date_added: 2007-12-04 00:00:00
-<% end %>
+# #  circle members from institution 3, circle 3
+# <% (11..15).each do |n| %>
+#  circle_member_<%= n %>:
+#   id: <%= n %>
+#   circle_id: 3
+#   user_id: <%= n %>
+#   invited_by: 3
+#   institution_id: 3
+#   date_added: 2007-12-04 00:00:00
+# <% end %>
+#
+# # circle members from institution 4, circle 4
+# <% (16..20).each do |n| %>
+#  circle_member_<%= n %>:
+#   id: <%= n %>
+#   circle_id: 4
+#   user_id: <%= n %>
+#   institution_id: 4
+#   invited_by: 4
+#   date_added: 2007-12-04 00:00:00
+# <% end %>
