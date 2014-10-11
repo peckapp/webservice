@@ -57,7 +57,7 @@ namespace :deploy do
     on roles(:app), in: :sequence, wait: 5 do
       # Your restart mechanism here, for example:
       # execute :touch, release_path.join('tmp/restart.txt')
-      execute :touch, File.join(current_path, 'tmp', 'restart.txt')
+      execute :touch, File.join(current_path, 'tmp', 'restart.txt') # legacy for passenger, no longer needed
 
       ### Unicorn-specific deployment
       invoke 'unicorn:reload'
@@ -75,8 +75,18 @@ namespace :deploy do
     end
   end
 
+  # ensures that the database is migrated if necessary
   after :updated, :migrate
 
+  # compiles new paperclip styles
+  after :compile_assets, :build_missing_paperclip_styles
+
+  desc "build missing paperclip styles"
+  task :build_missing_paperclip_styles do
+    on roles(:app) do
+      execute "cd #{current_path}; RAILS_ENV=production bundle exec rake paperclip:refresh:missing_styles"
+    end
+  end
 end
 
 namespace :load do
@@ -84,7 +94,6 @@ namespace :load do
     set :conditionally_migrate, fetch(:conditionally_migrate, false)
     set :migration_role, fetch(:migration_role, :db)
   end
-
 end
 
 # send notification to new relic of deployment

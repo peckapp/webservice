@@ -2,7 +2,8 @@ class AthleticEvent < ImageContentModel
   include ModelNormalValidations
 
   # used by the scraping workers to determine model uniqueness
-  CRUCIAL_ATTRS = %w(institution_id athletic_team_id start_time)
+  CRUCIAL_ATTRS = %w(institution_id)
+  MATCH_ATTRS = %w(title description athletic_team_id start_time)
 
   acts_as_likeable
 

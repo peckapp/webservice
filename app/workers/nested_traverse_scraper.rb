@@ -182,14 +182,15 @@ class NestedTraverseScraper
 
   def idempotent_save(new_model)
     # TODO: need better duplicate protection
-    if defined? new_model.class::CRUCIAL_ATTRS
-      crucial_params = Hash[new_model.class::CRUCIAL_ATTRS.map { |a| [a, new_model[a]] }]
-      alternates = new_model.class.where(crucial_params)
-      unless alternates.blank?
-        logger.info "Alternates for model of type '#{new_model.class}' with matching crucial params already existed"
+    crucial_params = model_crucial_params(new_model)
+    match_params = model_match_params(new_model)
+    unless crucial_params.nil? || match_params.nil? # should always execute this body
+      match = closest_partial_match(new_model, crucial_params, match_params)
+      if match # either a complete match was found, or no match was found at all
+        logger.info "Updating matching model of type '#{new_model.class}' with id: #{new_model.id}\n"
+        update_matching_model(match, new_model)
         return
       end
-      # TODO: add code here to handle updating the found alternates with the new information if applicable
     end
 
     # default relying on solely non-duplicative save
@@ -199,6 +200,27 @@ class NestedTraverseScraper
     else
       logger.info "Validated model of type '#{new_model.class}' already existed and was not saved"
     end
+  end
+
+  # uses match parameters until a singluar match is found
+  def closest_match(new_model, crucial_params, match_params)
+    matches = new_model.class.where(crucial_params.merge(col => val))
+    return unless matches.any?
+    # TODO: add code here to handle updating the found alternates with the new information if applicable
+    if matches.count == 1
+      return match
+    end
+    # match found, update that model
+  end
+
+  def model_crucial_params(new_model)
+    return unless defined? new_model.class::CRUCIAL_ATTRS
+    Hash[new_model.class::CRUCIAL_ATTRS.map { |a| [a, new_model[a]] }]
+  end
+
+  def model_match_params(new_model)
+    return unless defined? new_model.class::CRUCIAL_ATTRS
+    Hash[new_model.class::CRUCIAL_ATTRS.map { |a| [a, new_model[a]] }]
   end
 
   #################################

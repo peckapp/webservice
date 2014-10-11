@@ -226,7 +226,7 @@ class Personalizer
       return []
     end
 
-    ranked_friends = all_circle_friends.reduce({}) do |acc, friend|
+    ranked_friends = all_circle_friends.each_with_object({}) do |acc, friend|
       acc[friend[0]] ||= 0
       # friend has been seen already
       if acc[friend[1]] == user_id

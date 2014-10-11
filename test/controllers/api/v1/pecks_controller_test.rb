@@ -26,8 +26,8 @@ class PecksControllerTest < UltimateTestHelper
     auth_params = session_create
     auth_params[:authentication_token] = the_user.authentication_token
 
-    c = CircleMember.find(1)
-    p = Peck.find(1)
+    c = CircleMember.take
+    p = Peck.take
 
     # creates the proper relationship between the peck and the circle_member
     c.update_attribute(:accepted, false)
@@ -48,8 +48,8 @@ class PecksControllerTest < UltimateTestHelper
     auth_params = session_create
     auth_params[:authentication_token] = the_user.authentication_token
 
-    c = CircleMember.find(1)
-    p = Peck.find(1)
+    c = CircleMember.take
+    p = Peck.take
 
     # creates the proper relationship between the peck and the circle_member
     c.update_attribute(:accepted, true)
