@@ -79,9 +79,9 @@ namespace :deploy do
   after :updated, :migrate
 
   # compiles new paperclip styles
-  after :compile_assets, :build_missing_paperclip_styles
+  # after :compile_assets, :build_missing_paperclip_styles
 
-  desc "build missing paperclip styles"
+  desc 'build missing paperclip styles'
   task :build_missing_paperclip_styles do
     on roles(:app) do
       execute "cd #{current_path}; RAILS_ENV=production bundle exec rake paperclip:refresh:missing_styles"

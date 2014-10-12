@@ -23,7 +23,7 @@ set :deploy_to, '/home/deployer/apps/webservice_production'
 # eir unicorn application server
 server 'eir.peckapp.com', user: 'deployer', roles: %w(web app db), primary: true
 # ran unicorn application server
-server 'ran.peckapp.com', user: 'deployer', roles: %w(web app db)
+# server 'ran.peckapp.com', user: 'deployer', roles: %w(web app db)
 # server 'magni.peckapp.com', user: 'deployer', roles: %w{db}
 
 # Custom SSH Options
