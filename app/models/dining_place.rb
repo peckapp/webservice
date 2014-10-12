@@ -1,4 +1,5 @@
-class DiningPlace < ActiveRecord::Base
+# locations on campus where dining opportunties occur
+class DiningPlace < ImageContentModel
   include ModelNormalValidations
 
   ###############################
@@ -18,6 +19,10 @@ class DiningPlace < ActiveRecord::Base
 
   # dining opportunities #
   has_and_belongs_to_many :dining_opportunities, join_table: :dining_opportunities_dining_places #
+
+  ### Event Photo Attachments ###
+  # necessary for ImageContentModel superclass
+  self.attach_file_with_root 'dining_places'
 
   ###############################
   ##                           ##
@@ -39,6 +44,7 @@ class DiningPlace < ActiveRecord::Base
   ###############################
 
   private
+
   def correct_dining_place_types
     is_correct_type(name, String, 'string', :name)
     is_correct_type(details_link, String, 'string', :details_link)
