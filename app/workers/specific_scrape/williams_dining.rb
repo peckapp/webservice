@@ -139,7 +139,7 @@ module SpecificScrape
             acc += 1 if result
           end
         end
-        acc # 'return' acc to continue with reduce
+        acc # yeild acc to continue with reduce
       end
       # logger.info "saved #{count} new out of #{rows.count} present valid menu items from opportunity with id: #{opp_id}"
       count

@@ -184,16 +184,24 @@ class NestedTraverseScraper
     # TODO: need better duplicate protection
     crucial_params = model_crucial_params(new_model)
     match_params = model_match_params(new_model)
-    unless crucial_params.nil? || match_params.nil? # should always execute this body
-      match = closest_partial_match(new_model, crucial_params, match_params)
-      if match # either a complete match was found, or no match was found at all
-        logger.info "Updating matching model of type '#{new_model.class}' with id: #{new_model.id}\n"
-        update_matching_model(match, new_model)
-        return
-      end
+
+    return if exact_match?(new_model, crucial_params, match_params)
+
+    match = closest_match(new_model, crucial_params, match_params)
+    if match # either a complete match was found, or no match was found at all
+      logger.info "Updating matching model of type '#{new_model.class}' with id: #{new_model.id}\n"
+      update_matching_model(match, new_model)
+      return
     end
 
     # default relying on solely non-duplicative save
+    default_save(new_model)
+  end
+
+  def update_matching_model(match, new_model)
+  end
+
+  def default_save(new_model)
     if new_model.non_duplicative_save
       logger.info "Saved validated model of type '#{new_model.class}' with id: #{new_model.id}\n"
       return true
@@ -202,15 +210,23 @@ class NestedTraverseScraper
     end
   end
 
+  # determines whether or not an exact match exists for the found parameters
+  def exact_match?(new_model, crucial_params, match_params)
+    matches =  new_model.class.where(crucial_params.merge(match_params))
+    return if matches.nil?
+    logger.warn 'Multiple exact matches found for the scraped new model. Something is wrong' if matches.count > 1
+    true
+  end
+
   # uses match parameters until a singluar match is found
   def closest_match(new_model, crucial_params, match_params)
-    matches = new_model.class.where(crucial_params.merge(col => val))
-    return unless matches.any?
-    # TODO: add code here to handle updating the found alternates with the new information if applicable
-    if matches.count == 1
-      return match
+    matches = new_model.class.where(crucial_params.merge(match_params))
+    return match if matches.count == 1 # if a singular match was found, return it
+    return if match_params.count == 1 # end recursion if no more match params can be ommitted
+    # iteratively makes a recursive call with match params omitting a single parameter
+    match_params.each do |k, _v|
+      matches = closest_partial_match(new_model, crucial_params, match_params.clone.delete(k))
     end
-    # match found, update that model
   end
 
   def model_crucial_params(new_model)
