@@ -1,4 +1,9 @@
+# text-based announcements of information with possible photo attachements
 class Announcement < ActiveRecord::Base
+  # used by the scraping workers to determine model uniqueness
+  CRUCIAL_ATTRS = %w(institution_id)
+  MATCH_ATTRS = %w(title announcement_description category)
+
   include ModelNormalValidations
   ###    Associations    ###
   ### user announcement creator ###
