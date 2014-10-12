@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140829172835) do
+ActiveRecord::Schema.define(version: 20141012140650) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -285,14 +285,18 @@ ActiveRecord::Schema.define(version: 20140829172835) do
   end
 
   create_table "dining_places", force: true do |t|
-    t.integer  "institution_id",            null: false
-    t.string   "name",                      null: false
+    t.integer  "institution_id",                null: false
+    t.string   "name",                          null: false
     t.string   "details_link"
-    t.float    "gps_longitude",  limit: 24
-    t.float    "gps_latitude",   limit: 24
-    t.float    "range",          limit: 24
+    t.float    "gps_longitude",      limit: 24
+    t.float    "gps_latitude",       limit: 24
+    t.float    "range",              limit: 24
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
   end
 
   add_index "dining_places", ["institution_id"], name: "index_dining_places_on_institution_id", using: :btree
