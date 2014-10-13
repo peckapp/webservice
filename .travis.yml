@@ -17,5 +17,4 @@ script:
 
 before_script:
   - mysql -e 'create database peck_test;'
-  - mv config/database.yml.example config/database.yml
-  - bundle exec rake db:test:prepare
+  - mv config/database.travis.yml config/database.yml
