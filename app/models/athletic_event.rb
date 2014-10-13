@@ -3,7 +3,7 @@ class AthleticEvent < ImageContentModel
 
   # used by the scraping workers to determine model uniqueness
   CRUCIAL_ATTRS = %w(institution_id)
-  MATCH_ATTRS = %w(title description athletic_team_id start_time)
+  MATCH_ATTRS = %w(title description athletic_team_id start_date)
 
   acts_as_likeable
 
@@ -30,8 +30,8 @@ class AthleticEvent < ImageContentModel
   validates :institution_id, presence: true, numericality: { only_integer: true }
   validates :athletic_team_id, presence: true, numericality: { only_integer: true }
   validates :location, presence: true
-  validates :start_time, presence: true
-  validates :end_time, presence: true
+  validates :start_date, presence: true
+  validates :end_date, presence: true
   validates :team_score, numericality: true, allow_nil: true
   validates :opponent_score, numericality: true, allow_nil: true
   validates :home_or_away, format: { with: LETTERS_REGEX }, allow_nil: true
@@ -62,6 +62,6 @@ class AthleticEvent < ImageContentModel
     is_correct_type(home_or_away, String, 'string', :home_or_away)
     is_correct_type(location, String, 'string', :location)
     is_correct_type(result, String, 'string', :result)
-    # is_correct_type(start_time, DateTime, 'datetime', :start_time)
+    # is_correct_type(start_date, DateTime, 'datetime', :start_date)
   end
 end

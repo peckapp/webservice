@@ -131,7 +131,7 @@ class NestedScraper
       end
       return result
     else
-      # logger.info new_model.start_time.class
+      # logger.info new_model.start_date.class
       logger.warn "failed to save model with errors #{new_model.errors.messages} and data: #{new_model.inspect}\n"
     end
     false
@@ -174,9 +174,9 @@ class NestedScraper
       when :location
         # logger.warn "Arbitrarily assigning 'Williams College' as the location for athletic event. TODO: follow links for this info"
         event.location = 'Williams College'
-      when :end_time
-        # logger.warn "Arbitrarily assigning end_time to a length of 1 hour. TODO: follow links for this info"
-        event.end_time = event.start_time + 1.hours
+      when :end_date
+        # logger.warn "Arbitrarily assigning end_date to a length of 1 hour. TODO: follow links for this info"
+        event.end_date = event.start_date + 1.hours
       else
         logger.error "repair_athletic_event failed to handle key: #{key}"
       end

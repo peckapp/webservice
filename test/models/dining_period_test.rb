@@ -7,13 +7,13 @@ class DiningPeriodTest < ActiveSupport::TestCase
 
   test 'cur week start time returns correct datetime' do
     DiningPeriod.all.each do |period|
-      cur_week_helper(period.start_time, period.cur_week_start_time, period.day_of_week)
+      cur_week_helper(period.start_date, period.cur_week_start_date, period.day_of_week)
     end
   end
 
   test 'cur week end time returns correct datetime' do
     DiningPeriod.all.each do |period|
-      cur_week_helper(period.end_time, period.cur_week_end_time, period.day_of_week)
+      cur_week_helper(period.end_date, period.cur_week_end_date, period.day_of_week)
     end
   end
 

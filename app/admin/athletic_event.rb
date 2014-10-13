@@ -4,7 +4,7 @@ ActiveAdmin.register AthleticEvent do
   # https://github.com/gregbell/active_admin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
   permit_params :title, :description, :institution_id, :athletic_team_id, :scrape_resource_id, :opponent, :team_score,
-                :opponent_score, :home_or_away, :location, :result, :note, :default_score, :start_time, :end_time,
+                :opponent_score, :home_or_away, :location, :result, :note, :default_score, :start_date, :end_date,
                 :default_score, :image
   #
   # or
@@ -32,8 +32,8 @@ ActiveAdmin.register AthleticEvent do
     column :institution
     column :description
     column :location
-    column :start_time
-    column :end_time
+    column :start_date
+    column :end_date
     column :home_or_away
     column :result
     column :team_score
@@ -55,8 +55,8 @@ ActiveAdmin.register AthleticEvent do
       f.input :institution
       f.input :description
       f.input :location
-      f.input :start_time # as: :just_datetime_picker #, datepicker_options: { min_date: 3.days.ago.to_date, max_date: "+1W +5D" }
-      f.input :end_time # as: :date_picker, datepicker_options: { min_date: 3.days.ago.to_date, max_date: "+1W +5D" }
+      f.input :start_date # as: :just_datetime_picker #, datepicker_options: { min_date: 3.days.ago.to_date, max_date: "+1W +5D" }
+      f.input :end_date # as: :date_picker, datepicker_options: { min_date: 3.days.ago.to_date, max_date: "+1W +5D" }
       f.input :home_or_away
       f.input :result
       f.input :team_score

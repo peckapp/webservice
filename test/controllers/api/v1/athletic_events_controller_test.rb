@@ -4,7 +4,7 @@ require 'ultimate_test_helper'
 class AthleticEventsControllerTest < UltimateTestHelper
   def setup
     @the_controller = Api::V1::AthleticEventsController.new
-    @attributes = [:id, :institution_id, :athletic_team_id, :opponent, :team_score, :opponent_score, :home_or_away, :location, :result, :note, :start_time, :format, :authentication]
+    @attributes = [:id, :institution_id, :athletic_team_id, :opponent, :team_score, :opponent_score, :home_or_away, :location, :result, :note, :start_date, :format, :authentication]
     @params_index = { format: :json, authentication: session_create }
     @params_show = { id: 1, institution_id: 1, athletic_team_id: 1, format: :json, authentication: session_create }
     @params_create = { institution_id: 3, athletic_team_id: 1, location: 'Cole Field' }

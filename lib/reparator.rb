@@ -38,9 +38,9 @@ module Reparator
       when :location
         logger.warn "Arbitrarily assigning 'Williams College' as athletic event location"
         event.location = 'Williams College'
-      when :end_time
-        logger.warn "Arbitrarily assigning end_time to a length of 1 hour"
-        event.end_time = event.start_time + 1.hours
+      when :end_date
+        logger.warn "Arbitrarily assigning end_date to a length of 1 hour"
+        event.end_date = event.start_date + 1.hours
       else
         logger.error "repair_athletic_event failed to handle key: #{key}"
       end

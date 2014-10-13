@@ -60,7 +60,7 @@ def seed_app_dining_periods
       (0..6).each { |dow|
         start_hour = start_hash[opp.dining_opportunity_type]
         if ! start_hour.blank?
-          DiningPeriod.current_or_create_new(start_time: Time.now.change(hour: start_hour, min: rand(60)), end_time: Time.now.change(hour: start_hour + 3, min: rand(60)), day_of_week: dow, dining_opportunity_id: opp.id, dining_place_id: dp.id, institution_id: 1)
+          DiningPeriod.current_or_create_new(start_date: Time.now.change(hour: start_hour, min: rand(60)), end_date: Time.now.change(hour: start_hour + 3, min: rand(60)), day_of_week: dow, dining_opportunity_id: opp.id, dining_place_id: dp.id, institution_id: 1)
         end
       }
     }

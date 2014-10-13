@@ -21,19 +21,19 @@ module Api
             begin_time = DiningPeriod.where({
               "dining_periods.dining_opportunity_id" => params[:dining_opportunity_id],
               "dining_periods.day_of_week" => params[:day_of_week],
-              "dining_periods.dining_place_id" => place.id }).pluck(:start_time)[0]
+              "dining_periods.dining_place_id" => place.id }).pluck(:start_date)[0]
 
             finish_time = DiningPeriod.where({
               "dining_periods.dining_opportunity_id" => params[:dining_opportunity_id],
               "dining_periods.day_of_week" => params[:day_of_week],
-              "dining_periods.dining_place_id" => place.id }).pluck(:end_time)[0]
+              "dining_periods.dining_place_id" => place.id }).pluck(:end_date)[0]
 
             if ! begin_time.blank? && ! finish_time.blank?
-              start_time = begin_time.strftime("%I:%M%p")
-              end_time = finish_time.strftime("%I:%M%p")
+              start_date = begin_time.strftime("%I:%M%p")
+              end_date = finish_time.strftime("%I:%M%p")
             end
 
-            hours = "#{start_time} - #{end_time}"
+            hours = "#{start_date} - #{end_date}"
 
             @service_hours[place.id] = hours
           end

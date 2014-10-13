@@ -44,7 +44,7 @@ end
 
 child :@explore_athletics do
   attributes :id, :institution_id, :athletic_team_id, :opponent, :team_score, :opponent_score, :home_or_away,
-             :location, :result, :note, :start_time, :end_time, :title, :description, :created_at, :updated_at
+             :location, :result, :note, :start_date, :end_date, :title, :description, :created_at, :updated_at
 
   # node :image do |explore_ath_event|
   #   explore_ath_event.image.url

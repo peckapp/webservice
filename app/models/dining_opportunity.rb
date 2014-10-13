@@ -48,7 +48,7 @@ class DiningOpportunity < ActiveRecord::Base
   # returns an array of triples each containing a dining opp with a start and end time given the day of week
   def self.earliest_start_latest_end(day_of_week, inst_id)
     # get all dining opps and their times for a certain day of the week
-    all_times_for_opps = DiningPeriod.where(day_of_week: (day_of_week % 7), institution_id: inst_id).pluck(:dining_opportunity_id, :start_time, :end_time)
+    all_times_for_opps = DiningPeriod.where(day_of_week: (day_of_week % 7), institution_id: inst_id).pluck(:dining_opportunity_id, :start_date, :end_date)
 
     # hash associating opps to an array of its earliest start and latest end
     early_and_late_for_opps = {}
@@ -60,22 +60,22 @@ class DiningOpportunity < ActiveRecord::Base
     all_times_for_opps.each do |opp|
 
       opp_id = opp[0]
-      start_time = Util.date_time_for_week_day(day_of_week, opp[1])
-      end_time = Util.date_time_for_week_day(day_of_week, opp[2])
+      start_date = Util.date_time_for_week_day(day_of_week, opp[1])
+      end_date = Util.date_time_for_week_day(day_of_week, opp[2])
 
       # initializes opp_id value if nil or changes both earliest and latest
-      if early_and_late_for_opps[opp_id].nil? || (start_time < earliest_so_far[opp_id] && end_time > latest_so_far[opp_id])
-        early_and_late_for_opps[opp_id] = [start_time, end_time]
-        earliest_so_far[opp_id] = start_time
-        latest_so_far[opp_id] = end_time
+      if early_and_late_for_opps[opp_id].nil? || (start_date < earliest_so_far[opp_id] && end_date > latest_so_far[opp_id])
+        early_and_late_for_opps[opp_id] = [start_date, end_date]
+        earliest_so_far[opp_id] = start_date
+        latest_so_far[opp_id] = end_date
 
-      elsif start_time < earliest_so_far[opp_id] # updates just the start time
+      elsif start_date < earliest_so_far[opp_id] # updates just the start time
 
-        early_and_late_for_opps[opp_id][0] = start_time
+        early_and_late_for_opps[opp_id][0] = start_date
 
-      elsif end_time > latest_so_far[opp_id] # updates just the end time
+      elsif end_date > latest_so_far[opp_id] # updates just the end time
 
-        early_and_late_for_opps[opp_id][1] = end_time
+        early_and_late_for_opps[opp_id][1] = end_date
 
       end
     end

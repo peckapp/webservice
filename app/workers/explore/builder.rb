@@ -53,7 +53,7 @@ module Explore
 
     def analyze_athletic_events(institution_id)
       analyzer = Explore::Analyzer.new
-      analysis_group = AthleticEvent.where(start_time: Time.now..1.month.from_now)
+      analysis_group = AthleticEvent.where(start_date: Time.now..1.month.from_now)
 
       athletic_scores = analysis_group.reduce([]) do |acc, e|
 

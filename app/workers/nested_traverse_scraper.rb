@@ -174,7 +174,7 @@ class NestedTraverseScraper
     if new_model.valid?
       idempotent_save(new_model)
     else
-      # logger.info new_model.start_time.class
+      # logger.info new_model.start_date.class
       logger.warn "failed to save model with errors #{new_model.errors.messages} and data: #{new_model.inspect}\n"
     end
     false

@@ -24,11 +24,11 @@ node :opportunity_id do |uniq_id|
   @dining_opportunities[uniq_id].id
 end
 
-node :start_time do |uniq_id|
+node :start_date do |uniq_id|
   @service_start[uniq_id].to_f
 end
 
-node :end_time do |uniq_id|
+node :end_date do |uniq_id|
   @service_end[uniq_id].to_f
 end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141012140650) do
+ActiveRecord::Schema.define(version: 20141013193352) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -99,7 +99,7 @@ ActiveRecord::Schema.define(version: 20141012140650) do
     t.string   "location",                                      null: false
     t.string   "result"
     t.text     "note"
-    t.datetime "start_time"
+    t.datetime "start_date"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "scrape_resource_id"
@@ -112,14 +112,14 @@ ActiveRecord::Schema.define(version: 20141012140650) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
-    t.datetime "end_time"
+    t.datetime "end_date"
   end
 
   add_index "athletic_events", ["athletic_team_id"], name: "index_athletic_events_on_athletic_team_id", using: :btree
   add_index "athletic_events", ["institution_id"], name: "index_athletic_events_on_institution_id", using: :btree
   add_index "athletic_events", ["location"], name: "index_athletic_events_on_location", using: :btree
   add_index "athletic_events", ["opponent"], name: "index_athletic_events_on_opponent", using: :btree
-  add_index "athletic_events", ["start_time"], name: "index_athletic_events_on_start_time", using: :btree
+  add_index "athletic_events", ["start_date"], name: "index_athletic_events_on_start_date", using: :btree
 
   create_table "athletic_teams", force: true do |t|
     t.integer  "institution_id",                 null: false
@@ -274,8 +274,8 @@ ActiveRecord::Schema.define(version: 20141012140650) do
   add_index "dining_opportunities_dining_places", ["dining_opportunity_id", "dining_place_id"], name: "dining_opportunities_dining_places_index", using: :btree
 
   create_table "dining_periods", force: true do |t|
-    t.time     "start_time",            null: false
-    t.time     "end_time",              null: false
+    t.time     "start_date",            null: false
+    t.time     "end_date",              null: false
     t.integer  "day_of_week"
     t.datetime "created_at"
     t.datetime "updated_at"

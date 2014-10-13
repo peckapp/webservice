@@ -95,7 +95,7 @@ module Api
 
       def athletic_event_params
         params.require(:athletic_event).permit(:institution_id, :athletic_team_id, :opponent, :team_score,
-                                               :opponent_score, :home_or_away, :location, :result, :note, :start_time)
+                                               :opponent_score, :home_or_away, :location, :result, :note, :start_date)
       end
     end
   end
