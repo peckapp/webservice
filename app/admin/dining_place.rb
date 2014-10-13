@@ -30,4 +30,20 @@ ActiveAdmin.register DiningPlace do
     actions
   end
 
+  show do
+    attributes_table do
+      row :name
+      row :institution
+      row :details_link
+      row :gps_longitude
+      row :gps_latitude
+      row :range
+      row :image do
+        image_tag(dining_place.image.url(:detail))
+      end
+      row :created_at
+      row :updated_at
+    end
+  end
+
 end
