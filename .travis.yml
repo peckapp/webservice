@@ -5,7 +5,17 @@ cache: bundler
 
 # bundler_args: --without production
 
+env:
+  # - DB=sqlite
+  - DB=mysql
+  # - DB=postgresql
+
+script:
+  - RAILS_ENV=test bundle exec rake db:migrate --trace
+  - bundle exec rake db:test:prepare
+  - bundle exec rake
+
 before_script:
-  - mysql -e 'create database myapp_test;'
+  - mysql -e 'create database peck_test;'
   - mv config/database.yml.example config/database.yml
   - bundle exec rake db:test:prepare
