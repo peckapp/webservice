@@ -274,8 +274,8 @@ ActiveRecord::Schema.define(version: 20141013193352) do
   add_index "dining_opportunities_dining_places", ["dining_opportunity_id", "dining_place_id"], name: "dining_opportunities_dining_places_index", using: :btree
 
   create_table "dining_periods", force: true do |t|
-    t.time     "start_date",            null: false
-    t.time     "end_date",              null: false
+    t.time     "start_time",            null: false
+    t.time     "end_time",              null: false
     t.integer  "day_of_week"
     t.datetime "created_at"
     t.datetime "updated_at"
