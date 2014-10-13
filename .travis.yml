@@ -6,5 +6,6 @@ cache: bundler
 # bundler_args: --without production
 
 before_script:
-  - mv config/database.yml.example config/database.yml
   - mysql -e 'create database myapp_test;'
+  - mv config/database.yml.example config/database.yml
+  - rake db:migrate
