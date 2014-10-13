@@ -109,13 +109,12 @@ gem 'silencer'
 ### HOSTED SERVER MONITORING
 gem 'newrelic_rpm'
 
-# dalli for interfacing with memcached
-gem 'dalli'
-
 ### Production Server Deployments using Unicorn
 group :production do
   # unicorn interface gem: http://unicorn.bogomips.org
   gem 'unicorn'
+  # dalli for interfacing with memcached
+  gem 'dalli'
   ## apparently provides 20-30% performance boost to dalli ##
   # gem 'kgio'
 end
