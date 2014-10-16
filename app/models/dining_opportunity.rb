@@ -48,7 +48,7 @@ class DiningOpportunity < ActiveRecord::Base
   # returns an array of triples each containing a dining opp with a start and end time given the day of week
   def self.earliest_start_latest_end(day_of_week, inst_id)
     # get all dining opps and their times for a certain day of the week
-    all_times_for_opps = DiningPeriod.where(day_of_week: (day_of_week % 7), institution_id: inst_id).pluck(:dining_opportunity_id, :start_date, :end_date)
+    all_times_for_opps = DiningPeriod.where(day_of_week: (day_of_week % 7), institution_id: inst_id).pluck(:dining_opportunity_id, :start_time, :end_time)
 
     # hash associating opps to an array of its earliest start and latest end
     early_and_late_for_opps = {}

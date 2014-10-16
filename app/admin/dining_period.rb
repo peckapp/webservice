@@ -23,7 +23,8 @@ ActiveAdmin.register DiningPeriod do
     column :dining_opportunity
     column :institution
     column :day_of_week
-    column :start_date
+    column :start_time
+    column :end_time
     column :end_date
     column :created_at
     column :updated_at

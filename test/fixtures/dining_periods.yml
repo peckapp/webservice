@@ -5,8 +5,8 @@
   dining_place_id: 2
   institution_id: 1
   day_of_week: <%= n % 7 %>
-  start_date: <%= Time.now + n.hours %>
-  end_date: <%= Time.now + n.hours + 2.hours %>
+  start_time: <%= Time.now + n.hours %>
+  end_time: <%= Time.now + n.hours + 2.hours %>
 <% end %>
 
 
@@ -17,8 +17,8 @@
   dining_place_id: 1
   institution_id: 1
   day_of_week: <%= n % 7 %>
-  start_date: <%= Time.now + n.hours %>
-  end_date: <%= Time.now + n.hours + 2.hours %>
+  start_time: <%= Time.now + n.hours %>
+  end_time: <%= Time.now + n.hours + 2.hours %>
 <% end %>
 
 <% (14..21).each do |n| %>
@@ -28,8 +28,8 @@
   dining_place_id: 2
   institution_id: 1
   day_of_week: <%= n % 7 %>
-  start_date: <%= Time.now + n.hours %>
-  end_date: <%= Time.now + n.hours + 2.hours %>
+  start_time: <%= Time.now + n.hours %>
+  end_time: <%= Time.now + n.hours + 2.hours %>
 <% end %>
 
 
@@ -40,6 +40,6 @@
   dining_place_id: 3
   institution_id: 1
   day_of_week: <%= n % 7 %>
-  start_date: <%= Time.now + n.hours %>
-  end_date: <%= Time.now + n.hours + 2.hours %>
+  start_time: <%= Time.now + n.hours %>
+  end_time: <%= Time.now + n.hours + 2.hours %>
 <% end %>

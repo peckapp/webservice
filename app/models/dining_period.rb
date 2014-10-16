@@ -37,12 +37,12 @@ class DiningPeriod < ActiveRecord::Base
   ###############################
 
   # returns the start_date for the current week for this period
-  def cur_week_start_date
-    Util.date_time_for_week_day(day_of_week, start_date)
+  def cur_week_start_time
+    Util.date_time_for_week_day(day_of_week, start_time)
   end
 
-  def cur_week_end_date
-    Util.date_time_for_week_day(day_of_week, end_date)
+  def cur_week_end_time
+    Util.date_time_for_week_day(day_of_week, end_time)
   end
 
   private
