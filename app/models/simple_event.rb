@@ -3,7 +3,7 @@ class SimpleEvent < ImageContentModel
 
   # used by the scraping workers to determine model uniqueness
   CRUCIAL_ATTRS = %w(institution_id organizer_id category)
-  MATCH_ATTRS = %w(title description location start_date)
+  MATCH_ATTRS = %w(title event_description location start_date url)
 
   acts_as_likeable
 
@@ -13,7 +13,7 @@ class SimpleEvent < ImageContentModel
   ##                           ##
   ###############################
 
-  validates :title, presence: true, length: { maximum: 80 }
+  validates :title, presence: true, length: { maximum: 100 }
   validates :institution_id, presence: true, numericality: { only_integer: true }
   validates :user_id, numericality: { only_integer: true }, allow_nil: true
   validates :organizer_id, numericality: { only_integer: true }, allow_nil: true

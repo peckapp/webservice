@@ -48,6 +48,7 @@ class NestedTraverseScraper
         # logger.info "scraping index page with block: #{block}"
 
         # creates a model with default scrape resource info set
+        logger.info 'CREATING NEW TEMPLATE MODEL'
         new_model = ts.model.new(scrape_resource_id: resource.id,
                                  url: r_url.url,
                                  institution_id: resource.institution_id,
@@ -57,6 +58,7 @@ class NestedTraverseScraper
 
         # saves new model and increments count if it was inputted
         acc + 1 if validate_and_save(new_model)
+        return
       end # end items iteration
     end # end selector iteration
     count
@@ -105,7 +107,9 @@ class NestedTraverseScraper
       handle_foreign_key_element(cs, element, new_model)
     when 'link'
       # handles parsing issues with malformed HTML where content isn't captured by the selector (williams rss links)
-      url = element.text.blank? ? next_non_blank(element).text : element.text
+      url = element.text.blank? ? next_non_blank(element).text.squish : element.text.squish
+      # needs to save the url in the model in order to display the detail page rather than the index
+      new_model.assign_attributes(cs.column_name => url)
       detail_page_scrape(cs, url, new_model)
     else
       logger.error "UNKNOWN CONTENT TYPE for child selector #{cs.id}: #{cs.selector}"
@@ -115,7 +119,7 @@ class NestedTraverseScraper
   # parses a simple content element where the text ust has to be assigned to the model attribute
   def handle_content_element(cs, element, new_model)
     if element.blank?
-      logger.warn "MISSING ELEMENT for child selector: #{cs.selector}"
+      logger.warn "MISSING ELEMENT for child selector #{cs.id} (#{cs.info}): #{cs.selector}\nat url: #{new_model.url}"
       return
     end
 
@@ -125,6 +129,7 @@ class NestedTraverseScraper
       # assumes content is the text at this element
       content = element.text.squish
       # handles parsing issues with malformed HTML where content isn't captured by the selector (williams rss links)
+      # logger.warn 'looking for next non blank' if content.blank?
       content = next_non_blank(element).text.squish if content.blank?
     when 'image'
       # logger.info "saving image with url: #{element['url']}"
@@ -175,7 +180,7 @@ class NestedTraverseScraper
       idempotent_save(new_model)
     else
       # logger.info new_model.start_date.class
-      logger.warn "failed to save model with errors #{new_model.errors.messages} and data: #{new_model.inspect}\n"
+      logger.warn "failed to save model with errors #{new_model.errors.messages}\ntitle: #{new_model.title}\nurl: #{new_model.url}"
     end
     false
   end
@@ -185,9 +190,12 @@ class NestedTraverseScraper
     crucial_params = model_crucial_params(new_model)
     match_params = model_match_params(new_model)
 
-    return if exact_match?(new_model, crucial_params, match_params)
+    if exact_match?(new_model, crucial_params, match_params)
+      return
+    end
 
     match = closest_match(new_model, crucial_params, match_params)
+    logger.info "closest_match: #{match.inspect}"
     if match # either a complete match was found, or no match was found at all
       logger.info "Updating matching model of type '#{new_model.class}' with id: #{new_model.id}\n"
       update_matching_model(match, new_model)
@@ -199,6 +207,7 @@ class NestedTraverseScraper
   end
 
   def update_matching_model(match, new_model)
+    logger.error 'update matching model currently UNIMPLEMENTED'
   end
 
   def default_save(new_model)
@@ -212,20 +221,31 @@ class NestedTraverseScraper
 
   # determines whether or not an exact match exists for the found parameters
   def exact_match?(new_model, crucial_params, match_params)
-    matches = new_model.class.where(crucial_params.merge(match_params))
-    return if matches.nil?
-    logger.warn 'Multiple exact matches found for the scraped new model. Something is wrong' if matches.count > 1
+    all_params = crucial_params.merge(match_params)
+    # logger.info "all_params: #{all_params}"
+    matches = new_model.class.where(all_params)
+    return false unless matches.any?
+    if matches.count > 1
+      logger.warn 'Multiple exact matches found for the scraped new model. Something is wrong'
+      logger.info "#{matches.count} matches found for #{new_model.class} with params #{all_params}"
+    end
+    if new_model.class == SimpleEvent
+      logger.info "exact match found for params #{all_params.keys}, moving to next item"
+    end
     true
   end
 
   # uses match parameters until a singluar match is found
   def closest_match(new_model, crucial_params, match_params)
     matches = new_model.class.where(crucial_params.merge(match_params))
-    return match if matches.count == 1 # if a singular match was found, return it
+    logger.info "found #{matches.count} matches for match_params: #{match_params.keys}"
+    return matches.first if matches.count == 1 # if a singular match was found, return it
     return if match_params.count == 1 # end recursion if no more match params can be ommitted
     # iteratively makes a recursive call with match params omitting a single parameter
     match_params.each do |k, _v|
-      matches = closest_partial_match(new_model, crucial_params, match_params.clone.delete(k))
+      new_mp = match_params.clone
+      new_mp.delete(k)
+      matches = closest_match(new_model, crucial_params, new_mp)
     end
   end
 
@@ -236,7 +256,7 @@ class NestedTraverseScraper
 
   def model_match_params(new_model)
     logger.error "MATCH_ATTRS undefined for model #{new_model.class}" unless defined? new_model.class::MATCH_ATTRS
-    Hash[new_model.class::CRUCIAL_ATTRS.map { |a| [a, new_model[a]] }]
+    Hash[new_model.class::MATCH_ATTRS.map { |a| [a, new_model[a]] }]
   end
 
   #################################

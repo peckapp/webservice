@@ -30,6 +30,7 @@ ActiveAdmin.register SimpleEvent do
     column :public
     column :start_date
     column :end_date
+    column :url
     column :deleted
     column :longitude
     column :latitude
@@ -54,6 +55,7 @@ ActiveAdmin.register SimpleEvent do
       row :longitude
       row :latitude
       row :category
+      row :url
       row :image_file_name
       row :image_url do
         simple_event.image.url

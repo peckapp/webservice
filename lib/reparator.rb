@@ -22,13 +22,21 @@ module Reparator
   def self.repair_simple_event(event, logger)
     # logger.info 'repairing simple event'
     err = event.errors.messages
+
+    # set a default event length of 1 hour
     if err.keys.include? :end_date
-      logger.warn 'setting length of event without end date arbitarily to 1 hour'
-      # set a default event length of 1 hour
+      # logger.warn 'setting length of event without end date arbitarily to 1 hour'
       event.end_date = event.start_date + 1.hours if event.start_date
-    else
-      # handle other possible errors
     end
+    # substrings too long titles to 99 characters
+    if contains_match(err[:title], /is too long/)
+      event.title = event.title[0,99]
+    end
+    if contains_match(err[:organizer_id], /can't be blank/)
+      uncategorized = Department.current_or_create_new(name: 'Uncategorized', institution_id: event.institution_id)
+      event.organizer_id = uncategorized.id
+    end
+    # handle other possible errors
   end
 
   def self.repair_athletic_event(event, logger)
@@ -62,5 +70,10 @@ module Reparator
         logger.error "repair_athletic_team failed to handle key: #{key}"
       end
     end
+  end
+
+  def self.contains_match(array, regex)
+    return false unless array
+    array.keep_if { |v| v.match(regex) }.any?
   end
 end
