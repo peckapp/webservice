@@ -15,7 +15,7 @@ class NestedTraverseScraper
   PAGE_LIMIT = 30
 
   def perform(resource_id)
-    logger.error "NestedScraper passed #{resource_id} requires a valid id as a parameter" if resource_id < 1
+    logger.error "NestedScraper was passed #{resource_id} and requires a valid id as a parameter" if resource_id < 1
     return if resource_id < 1
 
     resource = ScrapeResource.find(resource_id)

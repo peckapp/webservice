@@ -2,6 +2,10 @@
 class AthleticTeam < ImageContentModel
   include ModelNormalValidations
 
+  # used by the scraping workers to determine model uniqueness
+  CRUCIAL_ATTRS = %w(institution_id sport_name)
+  MATCH_ATTRS = %w()
+
   # necessary for ImageContentModel superclass
   self.attach_file_with_root 'athletic_teams'
 
