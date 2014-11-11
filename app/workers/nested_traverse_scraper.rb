@@ -9,6 +9,8 @@ class NestedTraverseScraper
   include Sidekiq::Worker
   sidekiq_options queue: :scraping, retry: 5
 
+  STANDARD_COLUMNS = %w(id created_at updated_at image_updated_at)
+
   # leave out of new_relic apdex score
   # newrelic_ignore_apdex
 
@@ -177,7 +179,7 @@ class NestedTraverseScraper
     new_model.errors.clear
     # perform save
     if new_model.valid?
-      idempotent_save(new_model)
+      idempotent_save_or_update(new_model)
     else
       # logger.info new_model.start_date.class
       logger.warn "failed to save model with errors #{new_model.errors.messages}\ntitle: #{new_model.title}\nurl: #{new_model.url}"
@@ -185,7 +187,7 @@ class NestedTraverseScraper
     false
   end
 
-  def idempotent_save(new_model)
+  def idempotent_save_or_update(new_model)
     # TODO: need better duplicate protection
     crucial_params = model_crucial_params(new_model)
     match_params = model_match_params(new_model)
@@ -197,22 +199,27 @@ class NestedTraverseScraper
     match = closest_match(new_model, crucial_params, match_params)
     logger.info "closest_match: #{match.inspect}"
     if match # either a complete match was found, or no match was found at all
-      logger.info "Updating matching model of type '#{new_model.class}' with id: #{new_model.id}\n"
-      update_matching_model(match, new_model)
-      return
+      return update_matching_model(match, new_model)
     end
 
     # default relying on solely non-duplicative save
     default_save(new_model)
   end
 
+  # updates the found match with the parameters in the new model that are more current
   def update_matching_model(match, new_model)
+    changed = 0
     new_model.class.column_names.each do |k|
-      logger.info "XXX #{new_model[k]} <=> #{matches.first[k]}" if new_model[k] != matches.first[k]
+      next if new_model[k] == match[k] || STANDARD_COLUMNS.include? k # nothing to do or column should remain the same
+      changed += 1
+      # logger.info "XXX #{k} XXX old: #{match[k]} => new: #{new_model[k]}" if new_model[k] != match[k]
+      match.update_attributes({ k => new_model[k] })
     end
-    logger.error 'update matching model currently UNIMPLEMENTED'
+    logger.info "Updated matching model of type '#{match.class}' of id: #{match.id}\n with #{changed} modified fields"
+    return match.save
   end
 
+  # executes the default saving behavior with only simple exect duplicate protection
   def default_save(new_model)
     if new_model.non_duplicative_save
       logger.info "Saved validated model of type '#{new_model.class}' with id: #{new_model.id}\n"
@@ -241,34 +248,24 @@ class NestedTraverseScraper
   # uses match parameters until a singluar match is found
   def closest_match(new_model, crucial_params, match_params)
     best_matches = []
+    # for an increasing number of parameters, look for matches with all combinations of that number of match params
+    # looks for the match fitting the highest number of parameters and chooses that one
+    # TODO: can be optimized since certain possibilities can be nipped out of future iterations if their descendants did not have matches
     1.upto(match_params.count-1) do |count|
+      match_found = false
       CombinatorialIterator.new(count, match_params).mapCombinations do |params|
         cur_params = crucial_params.merge(params)
         matches = new_model.class.where(cur_params)
         # logger.info "found #{matches.count} matches for cur_params: #{cur_params.keys}"
         if matches.any?
+          match_found = true
           # logger.info "new_model: #{new_model.inspect}\nmatch: #{matches.first.inspect}"
           best_matches = matches
         end
       end
+      break unless match_found # stop the iteration is no matches were found for this humber of parameters
     end
-
     return best_matches.first
-
-    # do
-    #   matches = new_model.class.where(cur_params)
-    #   logger.info "found #{matches.count} matches for cur_params: #{cur_params.keys}"
-    #   next if matches.count < 1
-    #   return matches.first if matches.count == 1 # if a singular match was found, return it
-    #   # iteratively makes a recursive call with match params omitting a single parameter
-    #   next_used_params = []
-    #   used_params.each do |hash|
-    #     new_params = cur_params.merge({ k => v })
-    #     new_mp = match_params.clone
-    #     new_mp.delete(k)
-    #   end
-    #   used_params = next_used_params
-    # while strength < match_params.count # end iteration if no more match params can be omitted
   end
 
   def model_crucial_params(new_model)
