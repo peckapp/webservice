@@ -210,7 +210,7 @@ class NestedTraverseScraper
   def update_matching_model(match, new_model)
     changed = 0
     new_model.class.column_names.each do |k|
-      next if new_model[k] == match[k] || STANDARD_COLUMNS.include? k # nothing to do or column should remain the same
+      next if (new_model[k] == match[k]) || STANDARD_COLUMNS.include?(k) # nothing to do or column should remain the same
       changed += 1
       # logger.info "XXX #{k} XXX old: #{match[k]} => new: #{new_model[k]}" if new_model[k] != match[k]
       match.update_attributes({ k => new_model[k] })
