@@ -50,7 +50,7 @@ class NestedTraverseScraper
         # logger.info "scraping index page with block: #{block}"
 
         # creates a model with default scrape resource info set
-        logger.info 'CREATING NEW TEMPLATE MODEL'
+        # logger.info 'CREATING NEW TEMPLATE MODEL'
         new_model = ts.model.new(scrape_resource_id: resource.id,
                                  url: r_url.url,
                                  institution_id: resource.institution_id,
@@ -60,7 +60,6 @@ class NestedTraverseScraper
 
         # saves new model and increments count if it was inputted
         acc + 1 if validate_and_save(new_model)
-        return
       end # end items iteration
     end # end selector iteration
     count
@@ -188,7 +187,6 @@ class NestedTraverseScraper
   end
 
   def idempotent_save_or_update(new_model)
-    # TODO: need better duplicate protection
     crucial_params = model_crucial_params(new_model)
     match_params = model_match_params(new_model)
 
@@ -197,7 +195,7 @@ class NestedTraverseScraper
     end
 
     match = closest_match(new_model, crucial_params, match_params)
-    logger.info "closest_match: #{match.inspect}"
+    # logger.info "closest_match: #{match.inspect}"
     if match # either a complete match was found, or no match was found at all
       return update_matching_model(match, new_model)
     end
@@ -215,7 +213,7 @@ class NestedTraverseScraper
       # logger.info "XXX #{k} XXX old: #{match[k]} => new: #{new_model[k]}" if new_model[k] != match[k]
       match.update_attributes({ k => new_model[k] })
     end
-    logger.info "Updated matching model of type '#{match.class}' of id: #{match.id}\n with #{changed} modified fields"
+    logger.info "Updated matching model of type '#{match.class}' of id: #{match.id} with #{changed} modified fields"
     return match.save
   end
 
@@ -228,6 +226,10 @@ class NestedTraverseScraper
       logger.info "Validated model of type '#{new_model.class}' already existed and was not saved"
     end
   end
+
+  #########################################
+  ###  Finding matches in the Database  ###
+  #########################################
 
   # determines whether or not an exact match exists for the found parameters
   def exact_match?(new_model, crucial_params, match_params)
@@ -268,11 +270,11 @@ class NestedTraverseScraper
     return best_matches.first
   end
 
+  # return the params defined in the models that indicate which fields are crucial to match exactly, and which are flexible
   def model_crucial_params(new_model)
     logger.error "CRUCIAL_ATTRS undefined for model #{new_model.class}" unless defined? new_model.class::CRUCIAL_ATTRS
     Hash[new_model.class::CRUCIAL_ATTRS.map { |a| [a, new_model[a]] }]
   end
-
   def model_match_params(new_model)
     logger.error "MATCH_ATTRS undefined for model #{new_model.class}" unless defined? new_model.class::MATCH_ATTRS
     Hash[new_model.class::MATCH_ATTRS.map { |a| [a, new_model[a]] }]
