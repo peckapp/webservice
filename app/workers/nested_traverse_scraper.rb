@@ -207,6 +207,9 @@ class NestedTraverseScraper
   end
 
   def update_matching_model(match, new_model)
+    new_model.class.column_names.each do |k|
+      logger.info "XXX #{new_model[k]} <=> #{matches.first[k]}" if new_model[k] != matches.first[k]
+    end
     logger.error 'update matching model currently UNIMPLEMENTED'
   end
 
@@ -237,16 +240,35 @@ class NestedTraverseScraper
 
   # uses match parameters until a singluar match is found
   def closest_match(new_model, crucial_params, match_params)
-    matches = new_model.class.where(crucial_params.merge(match_params))
-    logger.info "found #{matches.count} matches for match_params: #{match_params.keys}"
-    return matches.first if matches.count == 1 # if a singular match was found, return it
-    return if match_params.count == 1 # end recursion if no more match params can be ommitted
-    # iteratively makes a recursive call with match params omitting a single parameter
-    match_params.each do |k, _v|
-      new_mp = match_params.clone
-      new_mp.delete(k)
-      matches = closest_match(new_model, crucial_params, new_mp)
+    best_matches = []
+    1.upto(match_params.count-1) do |count|
+      CombinatorialIterator.new(count, match_params).mapCombinations do |params|
+        cur_params = crucial_params.merge(params)
+        matches = new_model.class.where(cur_params)
+        # logger.info "found #{matches.count} matches for cur_params: #{cur_params.keys}"
+        if matches.any?
+          # logger.info "new_model: #{new_model.inspect}\nmatch: #{matches.first.inspect}"
+          best_matches = matches
+        end
+      end
     end
+
+    return best_matches.first
+
+    # do
+    #   matches = new_model.class.where(cur_params)
+    #   logger.info "found #{matches.count} matches for cur_params: #{cur_params.keys}"
+    #   next if matches.count < 1
+    #   return matches.first if matches.count == 1 # if a singular match was found, return it
+    #   # iteratively makes a recursive call with match params omitting a single parameter
+    #   next_used_params = []
+    #   used_params.each do |hash|
+    #     new_params = cur_params.merge({ k => v })
+    #     new_mp = match_params.clone
+    #     new_mp.delete(k)
+    #   end
+    #   used_params = next_used_params
+    # while strength < match_params.count # end iteration if no more match params can be omitted
   end
 
   def model_crucial_params(new_model)
