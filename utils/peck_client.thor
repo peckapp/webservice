@@ -10,12 +10,12 @@ require 'active_support/core_ext/hash'
 # not a part of the rails framework, runs as a stand-alone
 class PeckClient < Thor
   # need a way to customize these through the command line
-  # SSL = true
-  # PECK_URL = 'yggdrasil.peckapp.com'
-  # PECK_PORT = 443
-  SSL = false
-  PECK_URL = 'loki.peckapp.com'
-  PECK_PORT = 3500
+  SSL = true
+  PECK_URL = 'yggdrasil.peckapp.com'
+  PECK_PORT = 443
+  # SSL = false
+  # PECK_URL = 'loki.peckapp.com'
+  # PECK_PORT = 3500
 
   # requires these parameters as part of thor superclass
   def initialize(a, b, c)
@@ -36,7 +36,7 @@ class PeckClient < Thor
   desc 'run_all TIMES', 'Runs all currently implemented queries the specified number of TIMES'
   def run_all(iterations = 1)
     begin
-      iterations.times do
+      iterations.to_i.times do
         puts '=> running events_action'
         events_action
         puts '=> running explore_action'

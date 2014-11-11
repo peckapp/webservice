@@ -212,7 +212,7 @@ class NestedTraverseScraper
 
   # determines whether or not an exact match exists for the found parameters
   def exact_match?(new_model, crucial_params, match_params)
-    matches =  new_model.class.where(crucial_params.merge(match_params))
+    matches = new_model.class.where(crucial_params.merge(match_params))
     return if matches.nil?
     logger.warn 'Multiple exact matches found for the scraped new model. Something is wrong' if matches.count > 1
     true
@@ -230,12 +230,12 @@ class NestedTraverseScraper
   end
 
   def model_crucial_params(new_model)
-    return unless defined? new_model.class::CRUCIAL_ATTRS
+    logger.error "CRUCIAL_ATTRS undefined for model #{new_model.class}" unless defined? new_model.class::CRUCIAL_ATTRS
     Hash[new_model.class::CRUCIAL_ATTRS.map { |a| [a, new_model[a]] }]
   end
 
   def model_match_params(new_model)
-    return unless defined? new_model.class::CRUCIAL_ATTRS
+    logger.error "MATCH_ATTRS undefined for model #{new_model.class}" unless defined? new_model.class::MATCH_ATTRS
     Hash[new_model.class::CRUCIAL_ATTRS.map { |a| [a, new_model[a]] }]
   end
 

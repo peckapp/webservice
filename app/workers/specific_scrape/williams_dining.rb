@@ -98,7 +98,6 @@ module SpecificScrape
       cell_max = b.tds(css: 'tr .cbo_nn_menuCell').count
       (1..cell_max).each do |i|
         cell = b.tds(css: 'tr .cbo_nn_menuCell')[i - 1]
-        logger.info 'starting date iteration'
         date = cell.td.text
         logger.info "iterating over date #{date} with #{cell.tds(css: '.cbo_nn_menuLink').count} links"
 
@@ -108,8 +107,8 @@ module SpecificScrape
           cell = b.tds(css: 'tr .cbo_nn_menuCell')[i - 1]
           opp_link = cell.tds(css: '.cbo_nn_menuLink')[j - 1]
 
-          # logger.info "opp_link: #{opp_link}"
-          opp_type = opp_link.text.downcase.camelize # creates a properly cased version of the dining opportunity
+          opp_type = opp_link.text
+          opp_type = opp_type.downcase.camelize # creates a properly cased version of the dining opportunity
           opp = DiningOpportunity.current_or_create_new(institution_id: inst_id, dining_opportunity_type: opp_type)
 
           opp_link.click
@@ -155,7 +154,7 @@ module SpecificScrape
     def be_nice
       # logger.info 'sleeping...'
       # sleeps so as to avoid blasting requests repeatedly in a row
-      sleep 1.0 + rand
+      sleep 2.0 + rand
     end
   end
 end
