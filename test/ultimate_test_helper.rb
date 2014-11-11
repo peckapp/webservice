@@ -49,7 +49,7 @@ class UltimateTestHelper < ActionController::TestCase
     auth_params[:authentication_token] = the_user.authentication_token
 
     @controller = @the_controller
-    puts @controller.class
+    # puts @controller.class
 
     # circles and circle members require logging in.
     if circle_members_controller? || circles_controller?

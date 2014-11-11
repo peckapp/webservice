@@ -22,8 +22,8 @@ class DiningPeriod < ActiveRecord::Base
   ##                           ##
   ###############################
 
-  validates :start_date, presence: true
-  validates :end_date, presence: true
+  validates :start_time, presence: true
+  validates :end_time, presence: true
   validates :day_of_week, numericality: { only_integer: true }, allow_nil: true
   validates :dining_opportunity_id, numericality: { only_integer: true }, allow_nil: true
   validates :dining_place_id, numericality: { only_integer: true }, allow_nil: true
@@ -48,7 +48,7 @@ class DiningPeriod < ActiveRecord::Base
   private
 
   def correct_dining_period_types
-    is_correct_type(start_date, Time, 'time', :start_date)
-    is_correct_type(end_date, Time, 'time', :end_date)
+    is_correct_type(start_time, Time, 'time', :start_time)
+    is_correct_type(end_time, Time, 'time', :end_time)
   end
 end
