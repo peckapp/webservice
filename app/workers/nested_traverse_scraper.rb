@@ -9,7 +9,7 @@ class NestedTraverseScraper
   include Sidekiq::Worker
   sidekiq_options queue: :scraping, retry: 5
 
-  STANDARD_COLUMNS = %w(id created_at updated_at image_updated_at)
+  STANDARD_COLUMNS = %w(id created_at updated_at image_file_name image_content_type image_file_size image_updated_at)
 
   # leave out of new_relic apdex score
   # newrelic_ignore_apdex
