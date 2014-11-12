@@ -1,6 +1,10 @@
 class MenuItem < ActiveRecord::Base
   include ModelNormalValidations
 
+  # used by the scraping workers to determine model uniqueness
+  CRUCIAL_ATTRS = %w(institution_id dining_opportunity_id dining_place_id date_available)
+  MATCH_ATTRS = %w(name category)
+
   ###############################
   ##                           ##
   ##         VALIDATIONS       ##
