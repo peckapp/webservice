@@ -32,10 +32,8 @@ module SpecificScrape
                                                           resource_type_id: resource_type.id)
       end
 
-      logger.info 'creating headless watir browser'
-      headless = Headless.new
-      headless.start
-      b = Watir::Browser.new
+      logger.info 'creating phantomjs watir browser'
+      b = Watir::Browser.new :phantomjs
 
       begin
         resources.each do |r|
