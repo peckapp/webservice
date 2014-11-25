@@ -26,7 +26,7 @@ class ImageContentModel < ActiveRecord::Base
                         blurred: {
                           size: '640x256',
                           offset: '+0+0',
-                          raduis_sigma: '9x4',
+                          raduis_sigma: '12x5',
                           tint: '40',
                           processors: [:blur]
                         },
@@ -47,7 +47,7 @@ class ImageContentModel < ActiveRecord::Base
       blurred: {
         size: '640x256',
         offset: '+0+0',
-        raduis_sigma: '9x4',
+        raduis_sigma: '12x5',
         tint: '40',
         processors: [:blur]
       },
