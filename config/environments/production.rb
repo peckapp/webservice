@@ -11,7 +11,11 @@ Rails.application.configure do
   # allows for the use of a memcache using the dalli gem
   # uses a connection pool to limit sidekiq workers connections
   config.cache_store = :dalli_store, 'magni.peckapp.com', { pool_size: 5 } # , expires_in: 86400,
-                                                            # username: 'cacheuser', password: ENV['MEMCACHED_PASS'] }
+  # username: 'cacheuser', password: ENV['MEMCACHED_PASS'] }
+
+  if ENV['MEMCACHEDCLOUD_SERVERS']
+    config.cache_store = :dalli_store, ENV['MEMCACHEDCLOUD_SERVERS'].split(','), { username: ENV['MEMCACHEDCLOUD_USERNAME'], password: ENV['MEMCACHEDCLOUD_PASSWORD'] }
+  end
 
   # override default memory cache store to use magni memcached server
   # not properly configured at this point
@@ -41,7 +45,7 @@ Rails.application.configure do
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   # temporarily set to true since api calls wont be affected, just active admin and tasks
-  config.assets.compile = true
+  config.assets.compile = false
 
   # Generate digests for assets URLs.
   config.assets.digest = true
