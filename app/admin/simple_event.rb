@@ -21,7 +21,7 @@ ActiveAdmin.register SimpleEvent do
     selectable_column
     id_column
     column :title
-    column :event_description
+    # column :event_description
     column :location
     column :institution
     column :organizer_id
@@ -30,7 +30,7 @@ ActiveAdmin.register SimpleEvent do
     column :public
     column :start_date
     column :end_date
-    column :url
+    # column :url
     column :deleted
     column :longitude
     column :latitude
