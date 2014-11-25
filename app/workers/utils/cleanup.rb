@@ -4,6 +4,7 @@ module Utils
     include Sidekiq::Worker
     sidekiq_options unique: true
 
+    include Sidetiq::Schedulable
     recurrence { weekly }
 
     def perform
