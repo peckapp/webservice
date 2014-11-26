@@ -5,7 +5,7 @@ module Utils
     sidekiq_options unique: true
 
     include Sidetiq::Schedulable
-    recurrence { weekly }
+    recurrence { daily(2) }
 
     def perform
       clear_scraped_menu_items
@@ -14,6 +14,10 @@ module Utils
     end
 
     def clear_old_menu_items
+      logger.info 'deleting menu items older than 5 days for all institutions'
+      MenuItem.where(date_available: 1000.days.ago..5.days.ago).each do |mi|
+        mi.destroy
+      end
     end
 
     def clear_old_simple_events
