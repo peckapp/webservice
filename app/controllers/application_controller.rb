@@ -46,19 +46,9 @@ class ApplicationController < ActionController::Base
     NewRelic::Agent.add_custom_parameters(model: model.name)
 
     search_params = model_search_params(model, params_hash)
-
     # uses authentication institution_id to get initial set
     # result = allowed_model_instances(model, params[:authentication])
-    result = model.all # where(:institution_id => auth[:institution_id])
-
-    # if there is at least one parameter, filter result
-    unless search_params.blank?
-      search_params.each do |p|
-        result = result.where(p => params[p]) if params[p]
-      end
-    end
-
-    result
+    model.where(search_params)
   end
 
   # show instance of model
@@ -169,12 +159,8 @@ class ApplicationController < ActionController::Base
 
   # returns a hash of only the search parameters that apply to the specific model being queried
   def model_search_params(model, params)
-    search_params = []
-    params.keys.each do |key|
-      next unless model.column_names.include?(key)
-      search_params << key
-    end
-    search_params
+    cols = model.column_names
+    params.reject { |k, _v| !cols.include?(k) }
   end
 
   def android_request?

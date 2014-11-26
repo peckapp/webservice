@@ -11,7 +11,6 @@ module Api
       respond_to :json
 
       def index
-
         if params[:user_id]
           # events created
           created_ids = specific_index(SimpleEvent, params).pluck(:id)
