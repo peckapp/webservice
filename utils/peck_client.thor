@@ -11,7 +11,8 @@ require 'active_support/core_ext/hash'
 class PeckClient < Thor
   # need a way to customize these through the command line
   SSL = true
-  PECK_URL = 'yggdrasil.peckapp.com'
+  # PECK_URL = 'yggdrasil.peckapp.com'
+  PECK_URL = 'peckapp.herokuapp.com'
   PECK_PORT = 443
   # SSL = false
   # PECK_URL = 'loki.peckapp.com'
