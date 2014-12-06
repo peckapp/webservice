@@ -21,7 +21,7 @@ set :deploy_to, '/home/deployer/apps/webservice_production'
 
 # Define server(s)
 # eir unicorn application server
-server 'ec2-54-174-123-197.compute-1.amazonaws.com', user: 'deployer', roles: %w(web app db)
+server 'ec2-54-174-123-197.compute-1.amazonaws.com', user: 'deployer', roles: %w(app)
 # server 'eir.peckapp.com', user: 'deployer', roles: %w(web app db), primary: true
 # ran unicorn application server
 # server 'ran.peckapp.com', user: 'deployer', roles: %w(web app db)

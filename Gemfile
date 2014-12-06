@@ -66,11 +66,11 @@ gem 'aws-sdk'
 gem 'ransack', github: 'activerecord-hackery/ransack', branch: 'rails-4.1'
 
 ### SCRAPING
-# Feedjira provides a powerful and dead simple RSS scraping tool
-gem 'feedjira'
+# Feedjira provides a dead simple RSS scraping tool, not currently used
+# gem 'feedjira'
 # nokogiri HTML, XML, SAX, and Reader parser. can search using XPath or CSS selectors
 gem 'nokogiri'
-# mechanize for traversing webpages and links
+# mechanize for traversing webpages and links, used by the crawler
 gem 'mechanize'
 # Restclient for gathering pages
 gem 'rest-client'

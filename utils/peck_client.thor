@@ -51,8 +51,11 @@ class PeckClient < Thor
   end
 
   desc 'events', 'Retreives all the simple events from the server'
-  def events
-    events_action
+  def events(iterations = 1)
+    iterations.to_i.times do
+      puts '=> running events_action'
+      events_action
+    end
     destroy_user_action
   end
 

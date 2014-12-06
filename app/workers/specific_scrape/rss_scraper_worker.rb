@@ -24,7 +24,6 @@ module SpecificScrape
     private
 
     def parse_and_store(url, institution_id)
-      # feed = Feedjira::Feed.fetch_and_parse(url)
       logger.info 'in parse_and_store'
 
       page = Nokogiri::XML(RestClient.get(url))
