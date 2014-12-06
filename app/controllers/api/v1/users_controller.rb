@@ -58,37 +58,41 @@ module Api
       # either returns an existing user with matching udid
       # or creates new user
       def user_for_udid
-        if params[:udid]
-          # see if udid exist in db
-          the_udid = UniqueDeviceIdentifier.where(udid: params[:udid], device_type: params[:device_type]).sorted.last
-
-          if the_udid
-
-            # ID of most recent user to use this device
-            id = UdidUser.where(unique_device_identifier: the_udid.id).sorted.last.user_id
-
-            # return that user
-            @user = specific_show(User, id)
-
-            # this user was already in db
-            @user.newly_created_user = false
-          else
-            # create user and a udid in db and pair them up in join table
-            udid = UniqueDeviceIdentifier.create(udid: params[:udid], device_type: params[:device_type])
-            @user = User.create
-            @user.unique_device_identifiers << udid
-
-            udid_user = UdidUser.current_or_create_new(unique_device_identifier_id: udid.id, user_id: @user.id)
-
-            @user.newly_created_user = true
-          end
-          # start session as in normal creation
-          session[:user_id] = @user.id
-          session[:api_key] = @user.api_key
-        else
+        unless params[:udid]
           head :bad_request
-          logger.warn 'tried to not send a udid'
+          logger.warn 'did not send a udid'
+          return
         end
+
+        # see if udid exist in db
+        the_udid = UniqueDeviceIdentifier.where(udid: params[:udid], device_type: params[:device_type]).sorted.last
+        udid_user = the_udid ? nil : UdidUser.where(unique_device_identifier: the_udid.id).sorted.last
+        if the_udid && udid_user
+
+          # ID of most recent user to use this device
+
+          id = udid_user.user_id
+
+          # return that user
+          @user = specific_show(User, id)
+
+          # this user was already in db
+          @user.newly_created_user = false
+        else
+          # create user and a udid in db and pair them up in join table
+          udid = UniqueDeviceIdentifier.current_or_create_new(udid: params[:udid], device_type: params[:device_type])
+          @user = User.create
+          @user.unique_device_identifiers << udid
+
+          UdidUser.current_or_create_new(unique_device_identifier_id: udid.id, user_id: @user.id)
+
+          @user.newly_created_user = true
+        end
+        @user.save
+
+        # start session as in normal creation
+        session[:user_id] = @user.id
+        session[:api_key] = @user.api_key
       end
 
       # user registration
