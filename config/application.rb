@@ -45,7 +45,7 @@ module Webservice
     # filters sensitive parameters out of the logs
     config.filter_parameters << :authentication_token << :api_key << :token
 
-    # loads environment variables from rails-specfiic yml file
+    # loads environment variables from rails-specific yml file
     config.before_configuration do
       env_file = Rails.root.join('config', 'environment_variables.yml').to_s
       if File.exist?(env_file)

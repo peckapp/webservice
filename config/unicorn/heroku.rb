@@ -10,10 +10,10 @@ before_fork do |_server, _worker|
     Process.kill 'QUIT', Process.pid
   end
 
-  # unless Rails.env.production?
-  #   # start sidekiq on this same dyno to avoid needing a second one
-  #   @sidekiq_pid ||= spawn('bundle exec sidekiq -c 2')
-  # end
+  unless Rails.env.production?
+    # start sidekiq on this same dyno to avoid needing a second one
+    @sidekiq_pid ||= spawn('bundle exec sidekiq -c 2')
+  end
 
   defined?(ActiveRecord::Base) and
   ActiveRecord::Base.connection.disconnect!
