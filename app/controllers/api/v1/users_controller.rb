@@ -66,7 +66,7 @@ module Api
 
         # see if udid exist in db
         the_udid = UniqueDeviceIdentifier.where(udid: params[:udid], device_type: params[:device_type]).sorted.last
-        udid_user = the_udid ? nil : UdidUser.where(unique_device_identifier: the_udid.id).sorted.last
+        udid_user = the_udid ? UdidUser.where(unique_device_identifier: the_udid.id).sorted.last : nil
         if the_udid && udid_user
 
           # ID of most recent user to use this device
