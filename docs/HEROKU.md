@@ -1,6 +1,9 @@
 # Heroku Docs
 Documentation for the services, configuration, and addons used on heroku
 
+### Managing Environments
+- https://devcenter.heroku.com/articles/multiple-environments#managing-staging-and-production-configurations
+
 ## Setup Checklist
 
 ### Completed
